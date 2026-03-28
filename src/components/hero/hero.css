@@ -32,6 +32,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  justify-content: inherit;
 }
 
+.c-hero--align-center .c-hero__actions {
+  justify-content: center;
+}
