@@ -1,0 +1,39 @@
+.c-faq {
+  padding-block: var(--space-7);
+}
+
+.c-faq__inner {
+  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.c-faq__title {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-heading);
+}
+
+.c-faq__items {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.c-faq__item {
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.c-faq__question {
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.c-faq__answer {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-muted);
+}
