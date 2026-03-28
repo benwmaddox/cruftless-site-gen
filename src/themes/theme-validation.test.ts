@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import { themes } from "./index.js";
 import { assertExactThemeTokens } from "./tokens.js";
-import { findUnknownCssVarTokens, validateThemeDefinition } from "../validation/theme-validation.js";
+import {
+  findCruftlessCssPolicyViolations,
+  findUnknownCssVarTokens,
+  validateThemeDefinition,
+} from "../validation/theme-validation.js";
 
 describe("theme validation", () => {
   it("accepts the registered themes", () => {
@@ -24,5 +28,34 @@ describe("theme validation", () => {
       "--not-a-token",
     ]);
   });
-});
 
+  it("rejects cruftless-disallowed CSS properties and vendor prefixes", () => {
+    expect(
+      findCruftlessCssPolicyViolations(`
+        .demo {
+          margin-left: 1rem;
+          float: left;
+          -webkit-user-select: none;
+          display: -webkit-box;
+        }
+      `),
+    ).toEqual([
+      {
+        lineNumber: 3,
+        message: "disallowed CSS property 'margin-left' from cruftless policy",
+      },
+      {
+        lineNumber: 4,
+        message: "disallowed CSS property 'float' from cruftless policy",
+      },
+      {
+        lineNumber: 5,
+        message: "vendor-prefixed property '-webkit-user-select' is not allowed",
+      },
+      {
+        lineNumber: 6,
+        message: "vendor-prefixed value '-webkit-box' is not allowed",
+      },
+    ]);
+  });
+});
