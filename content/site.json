@@ -27,6 +27,24 @@
           "align": "start"
         },
         {
+          "type": "feature-list",
+          "title": "Keep the content contract tight",
+          "items": [
+            {
+              "title": "Model every block explicitly",
+              "body": "Content picks a known component instead of inventing markup."
+            },
+            {
+              "title": "Reject extra fields",
+              "body": "Unexpected keys fail before they can drift into production."
+            },
+            {
+              "title": "Review small diffs",
+              "body": "Stable HTML keeps generated output easy to inspect."
+            }
+          ]
+        },
+        {
           "type": "feature-grid",
           "title": "Why this approach works",
           "items": [
@@ -70,6 +88,20 @@
           "align": "center"
         },
         {
+          "type": "faq",
+          "title": "Questions teams ask before switching",
+          "items": [
+            {
+              "question": "Can this framework accept arbitrary HTML from JSON?",
+              "answer": "No. Components own the markup so validation stays strict and predictable."
+            },
+            {
+              "question": "Do themes change the structure of a page?",
+              "answer": "No. Themes only change tokens like color, spacing, and typography."
+            }
+          ]
+        },
+        {
           "type": "cta-band",
           "headline": "Need a stricter content pipeline?",
           "primaryCta": {
@@ -81,4 +113,3 @@
     }
   ]
 }
-

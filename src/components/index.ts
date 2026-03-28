@@ -3,6 +3,13 @@ import { z } from "zod";
 
 import { CtaBandSchema } from "./cta-band/cta-band.schema.js";
 import { ctaBandClassNames, renderCtaBand } from "./cta-band/cta-band.render.js";
+import { FaqSchema } from "./faq/faq.schema.js";
+import { faqClassNames, renderFaq } from "./faq/faq.render.js";
+import { FeatureListSchema } from "./feature-list/feature-list.schema.js";
+import {
+  featureListClassNames,
+  renderFeatureList,
+} from "./feature-list/feature-list.render.js";
 import {
   FeatureGridSchema,
 } from "./feature-grid/feature-grid.schema.js";
@@ -15,7 +22,9 @@ import { heroClassNames, renderHero } from "./hero/hero.render.js";
 
 export const ComponentSchemaBase = z.discriminatedUnion("type", [
   HeroSchemaBase,
+  FeatureListSchema,
   FeatureGridSchema,
+  FaqSchema,
   CtaBandSchema,
 ]);
 
@@ -58,10 +67,22 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: heroClassNames,
   },
   {
+    type: "feature-list",
+    render: (data) => renderFeatureList(FeatureListSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./feature-list/feature-list.css", import.meta.url)),
+    classNames: featureListClassNames,
+  },
+  {
     type: "feature-grid",
     render: (data) => renderFeatureGrid(FeatureGridSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./feature-grid/feature-grid.css", import.meta.url)),
     classNames: featureGridClassNames,
+  },
+  {
+    type: "faq",
+    render: (data) => renderFaq(FaqSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./faq/faq.css", import.meta.url)),
+    classNames: faqClassNames,
   },
   {
     type: "cta-band",
@@ -79,8 +100,12 @@ export const renderComponent = (data: ComponentData): string => {
   switch (data.type) {
     case "hero":
       return renderHero(data);
+    case "feature-list":
+      return renderFeatureList(data);
     case "feature-grid":
       return renderFeatureGrid(data);
+    case "faq":
+      return renderFaq(data);
     case "cta-band":
       return renderCtaBand(data);
     default: {
