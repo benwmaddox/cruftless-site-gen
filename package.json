@@ -1,0 +1,26 @@
+{
+  "name": "cruftless-site-gen",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsx src/build/build.ts",
+    "validate": "tsx src/build/validate.ts",
+    "lint:ts": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run lint:ts && npm run test && npm run validate && npm run build"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.5"
+  }
+}
+
