@@ -1,0 +1,162 @@
+{
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "rules": {
+    "unit-allowed-list": [
+      [
+        "px",
+        "%",
+        "deg",
+        "fr",
+        "rem",
+        "vh",
+        "vw"
+      ],
+      {
+        "ignoreProperties": {
+          "/^animation/": [
+            "s",
+            "ms"
+          ],
+          "/^transition/": [
+            "s",
+            "ms"
+          ]
+        }
+      }
+    ],
+    "declaration-property-value-allowed-list": {
+      "display": [
+        "block",
+        "inline",
+        "flex",
+        "grid",
+        "inline-flex",
+        "none"
+      ],
+      "position": [
+        "relative",
+        "absolute",
+        "sticky"
+      ],
+      "justify-content": [
+        "start",
+        "center",
+        "end",
+        "space-between",
+        "space-around"
+      ],
+      "align-items": [
+        "start",
+        "center",
+        "end",
+        "stretch",
+        "baseline"
+      ],
+      "place-items": [
+        "start",
+        "center",
+        "end",
+        "stretch"
+      ],
+      "place-content": [
+        "start",
+        "center",
+        "end",
+        "space-between",
+        "space-around"
+      ],
+      "overflow": [
+        "visible",
+        "hidden",
+        "auto",
+        "scroll"
+      ]
+    },
+    "property-allowed-list": [
+      "display",
+      "position",
+      "top",
+      "right",
+      "bottom",
+      "left",
+      "z-index",
+      "width",
+      "height",
+      "min-width",
+      "max-width",
+      "min-height",
+      "max-height",
+      "aspect-ratio",
+      "box-sizing",
+      "color-scheme",
+      "flex-grow",
+      "flex-shrink",
+      "flex-basis",
+      "flex-wrap",
+      "justify-content",
+      "align-items",
+      "gap",
+      "grid-template-columns",
+      "grid-template-rows",
+      "grid-column",
+      "grid-row",
+      "grid-area",
+      "place-items",
+      "place-content",
+      "place-self",
+      "padding-inline",
+      "padding-block",
+      "padding",
+      "margin-inline",
+      "margin-block",
+      "margin",
+      "color",
+      "background",
+      "border",
+      "border-color",
+      "border-radius",
+      "box-shadow",
+      "opacity",
+      "font-size",
+      "font-weight",
+      "font-family",
+      "line-height",
+      "letter-spacing",
+      "text-align",
+      "text-decoration",
+      "white-space",
+      "overflow-wrap",
+      "list-style",
+      "outline",
+      "outline-offset",
+      "cursor",
+      "transition",
+      "transform"
+    ],
+    "selector-class-pattern": [
+      "^([a-z][a-z0-9]*)(-[a-z0-9]+)*(__(?:[a-z0-9]+(?:-[a-z0-9]+)*))?(--(?:[a-z0-9]+(?:-[a-z0-9]+)*))?$",
+      {
+        "message": "Expected class selector to use the repo's kebab-case BEM form"
+      }
+    ],
+    "property-disallowed-list": [
+      "float",
+      "clear",
+      "columns",
+      "column-count",
+      "column-gap",
+      "column-rule",
+      "column-span",
+      "column-width",
+      "margin-left",
+      "margin-right",
+      "padding-left",
+      "padding-right"
+    ],
+    "property-no-vendor-prefix": true,
+    "selector-type-no-unknown": true,
+    "value-no-vendor-prefix": true
+  }
+}

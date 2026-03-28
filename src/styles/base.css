@@ -68,8 +68,7 @@ button:focus-visible {
 }
 
 .c-button--secondary {
-  border-color: currentColor;
+  border-color: currentcolor;
   background: transparent;
   color: inherit;
 }
-
