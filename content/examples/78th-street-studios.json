@@ -1,0 +1,131 @@
+{
+  "site": {
+    "name": "78th Street Studios",
+    "baseUrl": "https://78thstreetstudios.com",
+    "theme": "brutalism"
+  },
+  "pages": [
+    {
+      "slug": "/",
+      "title": "Home",
+      "metadata": {
+        "description": "A test home page for 78th Street Studios built from existing public site copy and structure."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "Northeast Ohio's eclectic arts maze",
+          "subheadline": "A test remake of the current 78th Street Studios site, centered on the Cleveland arts complex, Third Fridays, and event rentals.",
+          "primaryCta": {
+            "label": "About the studios",
+            "href": "/about"
+          },
+          "secondaryCta": {
+            "label": "Watch the video",
+            "href": "http://vimeo.com/96268836"
+          },
+          "align": "center"
+        },
+        {
+          "type": "feature-grid",
+          "title": "What the current site says matters most",
+          "items": [
+            {
+              "title": "Largest fine arts complex",
+              "body": "The home page describes 78th Street Studios as the largest fine arts complex in Northeast Ohio, with more than 60 galleries, studios, and creative businesses."
+            },
+            {
+              "title": "Third Fridays",
+              "body": "The current site promotes a monthly Third Fridays event and, as of March 28, 2026, lists the next date as April 17, 2026."
+            },
+            {
+              "title": "Venue and rental use",
+              "body": "The public messaging leans hard on private events and weddings, not just artist studios, so the test page keeps that dual use visible."
+            }
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "Visit, explore, or book the building",
+          "body": "This sample keeps the strongest actions from the live site: learn the backstory, view the building, or follow the event and venue paths.",
+          "primaryCta": {
+            "label": "Read the about page",
+            "href": "/about"
+          },
+          "secondaryCta": {
+            "label": "View maps",
+            "href": "https://indd.adobe.com/view/2f035fe7-2b64-4af6-823a-1e20aaf8958e"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "/about",
+      "title": "About",
+      "metadata": {
+        "description": "A test about page for 78th Street Studios based on the live site's history, event, and building summary."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "A 170,000-square-foot arts and design complex in Cleveland",
+          "subheadline": "The live About page mixes building history, artist access, monthly public programming, and venue rentals. This sample condenses that into a cleaner two-page structure.",
+          "primaryCta": {
+            "label": "See maps",
+            "href": "https://78thstreetstudios.com/maps"
+          },
+          "secondaryCta": {
+            "label": "Rent space",
+            "href": "https://78thstreetstudios.com/rent-space"
+          },
+          "align": "start"
+        },
+        {
+          "type": "feature-grid",
+          "title": "How the existing About page describes the place",
+          "items": [
+            {
+              "title": "What it is",
+              "body": "78th Street Studios presents itself as a 170,000-square-foot complex of galleries, artist studios, performance spaces, and music recording studios."
+            },
+            {
+              "title": "Public access",
+              "body": "Viewing hours are framed as free and open to the public, with the strongest recurring invitation centered on the monthly Third Fridays event."
+            },
+            {
+              "title": "Third Fridays",
+              "body": "The live copy describes Third Fridays as a multisensory event with visual art, ambient music, food, and pop-up vendors across four floors."
+            }
+          ]
+        },
+        {
+          "type": "feature-grid",
+          "title": "History and notable context",
+          "items": [
+            {
+              "title": "1905 origins",
+              "body": "The building dates to 1905 and originally housed the Baker Electric Motor Vehicle Company, which explains the industrial shell that still shapes the experience."
+            },
+            {
+              "title": "Creative reuse",
+              "body": "The site highlights later use by American Greetings' creative studios, reinforcing the building's shift from manufacturing to long-term creative production."
+            },
+            {
+              "title": "Regional draw",
+              "body": "Much of the About page is social proof: awards, notable tenants, music recorded onsite, and the broader Gordon Square connection."
+            }
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "The current content is strong, but the structure is carrying too much",
+          "body": "This test page shows the content can be reorganized into a simpler home-plus-about flow, though the framework still needs richer content blocks for long-form storytelling.",
+          "primaryCta": {
+            "label": "Back to home",
+            "href": "/"
+          }
+        }
+      ]
+    }
+  ]
+}
