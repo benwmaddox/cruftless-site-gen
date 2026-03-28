@@ -1,0 +1,84 @@
+{
+  "site": {
+    "name": "LaunchKit",
+    "baseUrl": "https://launchkit.example",
+    "theme": "app-announcement"
+  },
+  "pages": [
+    {
+      "slug": "/",
+      "title": "LaunchKit",
+      "metadata": {
+        "description": "Strict JSON, stable markup, and theme-driven static pages."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "Announce your app with clean structure",
+          "subheadline": "Strict JSON, fixed components, and theme-driven presentation.",
+          "primaryCta": {
+            "label": "Start now",
+            "href": "/start"
+          },
+          "secondaryCta": {
+            "label": "See demo",
+            "href": "/demo"
+          },
+          "align": "start"
+        },
+        {
+          "type": "feature-grid",
+          "title": "Why this approach works",
+          "items": [
+            {
+              "title": "Strict validation",
+              "body": "Unknown keys fail the build."
+            },
+            {
+              "title": "Stable markup",
+              "body": "Components own structure, not content JSON."
+            },
+            {
+              "title": "Theme discipline",
+              "body": "Themes define exactly one token contract."
+            }
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "Build reviewable static pages",
+          "body": "Run validation before every build and keep the markup intentionally boring.",
+          "primaryCta": {
+            "label": "Read docs",
+            "href": "/docs"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "/pricing",
+      "title": "Pricing",
+      "components": [
+        {
+          "type": "hero",
+          "headline": "Launch with less front-end drift",
+          "subheadline": "A narrow framework is easier to validate, review, and keep consistent.",
+          "primaryCta": {
+            "label": "Start free",
+            "href": "/signup"
+          },
+          "align": "center"
+        },
+        {
+          "type": "cta-band",
+          "headline": "Need a stricter content pipeline?",
+          "primaryCta": {
+            "label": "Contact sales",
+            "href": "/contact"
+          }
+        }
+      ]
+    }
+  ]
+}
+
