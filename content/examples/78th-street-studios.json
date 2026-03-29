@@ -1,0 +1,166 @@
+{
+  "site": {
+    "name": "78th Street Studios",
+    "baseUrl": "https://78thstreetstudios.com/",
+    "theme": "brutalism"
+  },
+  "pages": [
+    {
+      "slug": "/",
+      "title": "78th Street Studios",
+      "metadata": {
+        "description": "Test home page for 78th Street Studios based on the live home page and about page."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "Northeast Ohio's eclectic arts maze",
+          "subheadline": "A test home page built from the live site for a Cleveland arts complex with more than 60 galleries, studios, and creative businesses.",
+          "primaryCta": {
+            "label": "Read about the building",
+            "href": "/about"
+          },
+          "secondaryCta": {
+            "label": "Visit the live site",
+            "href": "https://78thstreetstudios.com/"
+          },
+          "align": "center"
+        },
+        {
+          "type": "feature-grid",
+          "title": "Why visitors come here",
+          "items": [
+            {
+              "title": "Third Fridays",
+              "body": "Each third Friday, venues across the building open together for exhibits, music, food, and pop-up vendors."
+            },
+            {
+              "title": "Creative mix",
+              "body": "The complex brings together galleries, artist studios, design services, photo and film spaces, and entertainment tenants."
+            },
+            {
+              "title": "Event venue",
+              "body": "The industrial setting is also promoted as a strong fit for weddings, private events, and corporate gatherings."
+            }
+          ]
+        },
+        {
+          "type": "feature-list",
+          "title": "What stands out in the source material",
+          "items": [
+            {
+              "title": "Regional scale",
+              "body": "The site describes 78th Street Studios as the largest fine arts complex in Northeast Ohio."
+            },
+            {
+              "title": "Public access",
+              "body": "Viewing hours and the monthly Third Fridays program are presented as free and open to the public."
+            },
+            {
+              "title": "Cleveland home",
+              "body": "The building is located at 1300 West 78th Street in Cleveland and ties itself to the Gordon Square area."
+            }
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "Plan a visit or continue on the live site",
+          "body": "This generator output stays narrow on purpose and leaves the full tenant list, maps, and event details on the original site.",
+          "primaryCta": {
+            "label": "Open the live site",
+            "href": "https://78thstreetstudios.com/"
+          },
+          "secondaryCta": {
+            "label": "See the about page",
+            "href": "/about"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "/about",
+      "title": "About",
+      "metadata": {
+        "description": "Test about page for 78th Street Studios based on the live about page."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "What is 78th Street Studios?",
+          "subheadline": "A 170,000-square-foot art and design complex in Cleveland with galleries, artist studios, performance spaces, and recording studios.",
+          "primaryCta": {
+            "label": "Back to home",
+            "href": "/"
+          },
+          "secondaryCta": {
+            "label": "Open the live about page",
+            "href": "https://78thstreetstudios.com/about"
+          }
+        },
+        {
+          "type": "feature-list",
+          "title": "What the about page says",
+          "items": [
+            {
+              "title": "Largest in Northeast Ohio",
+              "body": "The about page positions the building as the region's largest art and design complex."
+            },
+            {
+              "title": "Third Fridays anchor the story",
+              "body": "A monthly open-house event brings more than 60 venues together from 5 to 9 pm."
+            },
+            {
+              "title": "More than fine art",
+              "body": "The mix extends into product design, publishing, music, and special events."
+            }
+          ]
+        },
+        {
+          "type": "feature-grid",
+          "title": "Building history",
+          "items": [
+            {
+              "title": "1905 origins",
+              "body": "The structure was built in 1905 and originally housed the Baker Electric Motor Vehicle Company."
+            },
+            {
+              "title": "American Greetings era",
+              "body": "The building later housed American Greetings' creative studios through the 1980s."
+            },
+            {
+              "title": "Industrial character",
+              "body": "Original hardwood floors, freight elevators, and track doors still shape the atmosphere described on the site."
+            }
+          ]
+        },
+        {
+          "type": "faq",
+          "title": "Useful visit details",
+          "items": [
+            {
+              "question": "When does Third Fridays happen?",
+              "answer": "The current about page says it runs every third Friday from 5 to 9 pm with many venues open at once."
+            },
+            {
+              "question": "Is it only for private events?",
+              "answer": "No. The site highlights free public viewing hours and also notes that spaces can be rented for private functions."
+            },
+            {
+              "question": "Where is the building?",
+              "answer": "78th Street Studios lists its address as 1300 West 78th Street, Cleveland, Ohio 44102."
+            }
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "Need the full tenant list and event details?",
+          "body": "This test build stops at a clean home page and about page. The live site still carries the deeper directory and event pages.",
+          "primaryCta": {
+            "label": "Browse the live site",
+            "href": "https://78thstreetstudios.com/"
+          }
+        }
+      ]
+    }
+  ]
+}
