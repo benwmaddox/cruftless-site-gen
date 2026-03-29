@@ -1,0 +1,38 @@
+.c-prose {
+  padding-block: var(--space-7);
+}
+
+.c-prose__inner {
+  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.c-prose__title,
+.c-prose__lead,
+.c-prose__paragraph {
+  margin: 0;
+}
+
+.c-prose__title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-heading);
+}
+
+.c-prose__lead {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-loose);
+}
+
+.c-prose__content {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.c-prose__paragraph {
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-loose);
+}

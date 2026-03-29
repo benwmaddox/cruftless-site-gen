@@ -19,6 +19,10 @@ import {
 } from "./feature-grid/feature-grid.render.js";
 import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
+import { MediaSchema } from "./media/media.schema.js";
+import { mediaClassNames, renderMedia } from "./media/media.render.js";
+import { ProseSchema } from "./prose/prose.schema.js";
+import { proseClassNames, renderProse } from "./prose/prose.render.js";
 
 export const ComponentSchemaBase = z.discriminatedUnion("type", [
   HeroSchemaBase,
@@ -26,6 +30,8 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
   FeatureGridSchema,
   FaqSchema,
   CtaBandSchema,
+  MediaSchema,
+  ProseSchema,
 ]);
 
 export const ComponentSchema = ComponentSchemaBase.superRefine((value, ctx) => {
@@ -90,6 +96,18 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     cssPath: fileURLToPath(new URL("./cta-band/cta-band.css", import.meta.url)),
     classNames: ctaBandClassNames,
   },
+  {
+    type: "media",
+    render: (data) => renderMedia(MediaSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./media/media.css", import.meta.url)),
+    classNames: mediaClassNames,
+  },
+  {
+    type: "prose",
+    render: (data) => renderProse(ProseSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./prose/prose.css", import.meta.url)),
+    classNames: proseClassNames,
+  },
 ];
 
 export const componentTypeNames = componentDefinitions.map(
@@ -108,6 +126,10 @@ export const renderComponent = (data: ComponentData): string => {
       return renderFaq(data);
     case "cta-band":
       return renderCtaBand(data);
+    case "media":
+      return renderMedia(data);
+    case "prose":
+      return renderProse(data);
     default: {
       throw new Error(`No renderer exists for component '${JSON.stringify(data)}'`);
     }

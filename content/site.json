@@ -110,6 +110,55 @@
           }
         }
       ]
+    },
+    {
+      "slug": "/about",
+      "title": "About",
+      "metadata": {
+        "description": "Long-form narrative and supporting media for the team behind LaunchKit."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "A stricter generator should still leave room for character",
+          "subheadline": "Structured blocks are useful, but some pages need a real image and enough copy to tell the story cleanly.",
+          "primaryCta": {
+            "label": "See pricing",
+            "href": "/pricing"
+          },
+          "secondaryCta": {
+            "label": "Back home",
+            "href": "/"
+          },
+          "align": "start"
+        },
+        {
+          "type": "media",
+          "src": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+          "alt": "Sunlit studio workspace with notebooks, a laptop, and a camera on the table",
+          "caption": "A visual section gives the page an anchor before the longer story begins.",
+          "size": "wide"
+        },
+        {
+          "type": "prose",
+          "title": "Why this needed a different section",
+          "lead": "About pages usually read as a sequence, not a set of interchangeable cards.",
+          "paragraphs": [
+            "LaunchKit started as a reaction to site generators that let content shape the markup until nothing was predictable enough to review. The structure here stays narrow on purpose, but the original version still flattened every story into the same compact block.",
+            "That tradeoff worked for feature callouts and FAQs, yet it stripped the personality out of pages that were supposed to feel human. A long-form prose section restores the pacing of a real narrative so a team can explain where the product came from, what it values, and why it exists without breaking the schema contract.",
+            "The media block does the same thing visually. Instead of forcing every page to rely on text-only layout, it gives a visually driven site a stable figure component with alt text, captions, and predictable sizing."
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "Use structured content without flattening the story",
+          "body": "The generator can stay strict while still supporting narrative pages that feel intentional.",
+          "primaryCta": {
+            "label": "Start now",
+            "href": "/start"
+          }
+        }
+      ]
     }
   ]
 }
