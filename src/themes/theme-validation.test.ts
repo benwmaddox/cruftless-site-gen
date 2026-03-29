@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { themes } from "./index.js";
-import { assertExactThemeTokens } from "./tokens.js";
+import { assertExactThemeTokens, defaultThemeTokens } from "./tokens.js";
 import {
   findCruftlessCssPolicyViolations,
   findUnknownCssVarTokens,
@@ -13,6 +13,25 @@ describe("theme validation", () => {
     for (const [themeName, theme] of Object.entries(themes)) {
       expect(validateThemeDefinition(themeName, theme)).toEqual([]);
       expect(() => assertExactThemeTokens(theme)).not.toThrow();
+    }
+  });
+
+  it("keeps non-color theme expression distinct", () => {
+    const expressiveTokens = [
+      "--page-gradient",
+      "--surface-gradient",
+      "--cta-gradient",
+      "--font-family-heading",
+      "--heading-letter-spacing",
+      "--radius-lg",
+    ] as const;
+
+    for (const theme of Object.values(themes)) {
+      const differingExpressiveTokenCount = expressiveTokens.filter(
+        (tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName],
+      ).length;
+
+      expect(differingExpressiveTokenCount).toBeGreaterThanOrEqual(4);
     }
   });
 

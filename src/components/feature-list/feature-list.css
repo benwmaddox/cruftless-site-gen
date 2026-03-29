@@ -13,6 +13,8 @@
   margin: 0;
   font-family: var(--font-family-heading);
   font-size: var(--font-size-4);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--heading-letter-spacing);
   line-height: var(--line-height-heading);
 }
 
@@ -29,7 +31,8 @@
   padding: var(--space-4);
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: var(--surface-gradient);
+  box-shadow: var(--shadow-sm);
 }
 
 .c-feature-list__item-title {

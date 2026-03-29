@@ -13,12 +13,16 @@ export const corporateTheme = createThemeDefinition({
   "--color-link": "#004e8f",
   "--color-link-hover": "#003765",
   "--color-focus-ring": "#2f80ed",
+  "--page-gradient": "linear-gradient(180deg, #f9fbfd 0%, #edf3f8 100%)",
+  "--surface-gradient": "linear-gradient(180deg, #ffffff 0%, #f5f8fb 100%)",
+  "--cta-gradient": "linear-gradient(135deg, #004e8f 0%, #4f7cac 100%)",
   "--font-family-body": "\"Source Sans 3\", Arial, sans-serif",
   "--font-family-heading": "\"Merriweather Sans\", Arial, sans-serif",
+  "--heading-letter-spacing": "0.015em",
+  "--radius-md": "0.375rem",
   "--radius-lg": "0.5rem",
   "--radius-xl": "0.75rem",
   "--shadow-sm": "0 1px 2px rgb(16 24 40 / 0.05)",
   "--shadow-md": "0 6px 18px rgb(16 24 40 / 0.1)",
   "--shadow-lg": "0 16px 40px rgb(16 24 40 / 0.12)",
 });
-

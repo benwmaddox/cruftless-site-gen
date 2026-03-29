@@ -13,14 +13,19 @@ export const appAnnouncementTheme = createThemeDefinition({
   "--color-link": "#c64a12",
   "--color-link-hover": "#9b3709",
   "--color-focus-ring": "#ff6b2c",
+  "--page-gradient":
+    "radial-gradient(circle at top left, rgb(255 107 44 / 0.16), transparent 32%), linear-gradient(180deg, #fff9f1 0%, #fff3e5 100%)",
+  "--surface-gradient": "linear-gradient(180deg, #ffffff 0%, #fff2e1 100%)",
+  "--cta-gradient": "linear-gradient(135deg, #ff6b2c 0%, #ff9c5b 45%, #1b998b 100%)",
   "--font-family-body": "\"Plus Jakarta Sans\", Arial, sans-serif",
   "--font-family-heading": "\"Sora\", Arial, sans-serif",
+  "--heading-letter-spacing": "-0.03em",
   "--font-size-5": "2.5rem",
   "--font-size-6": "3.5rem",
+  "--radius-md": "0.875rem",
   "--radius-lg": "1rem",
   "--radius-xl": "1.5rem",
   "--shadow-sm": "0 3px 8px rgb(60 33 16 / 0.08)",
   "--shadow-md": "0 12px 28px rgb(60 33 16 / 0.14)",
   "--shadow-lg": "0 20px 48px rgb(60 33 16 / 0.18)",
 });
-
