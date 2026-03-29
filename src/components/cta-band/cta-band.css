@@ -10,11 +10,7 @@
   gap: var(--space-4);
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-xl);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-accent)
-  );
+  background: var(--gradient-cta);
   color: var(--color-primary-contrast);
   box-shadow: var(--shadow-md);
 }
@@ -35,4 +31,3 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
-

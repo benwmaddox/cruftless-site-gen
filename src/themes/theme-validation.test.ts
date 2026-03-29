@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { themes } from "./index.js";
-import { assertExactThemeTokens } from "./tokens.js";
+import { assertExactThemeTokens, defaultThemeTokens } from "./tokens.js";
 import {
   findCruftlessCssPolicyViolations,
   findUnknownCssVarTokens,
@@ -13,6 +13,40 @@ describe("theme validation", () => {
     for (const [themeName, theme] of Object.entries(themes)) {
       expect(validateThemeDefinition(themeName, theme)).toEqual([]);
       expect(() => assertExactThemeTokens(theme)).not.toThrow();
+    }
+  });
+
+  it("keeps every theme visually distinct beyond color", () => {
+    const typographyTokens = [
+      "--font-family-body",
+      "--font-family-heading",
+      "--font-size-5",
+      "--font-size-6",
+      "--letter-spacing-tight",
+    ] as const;
+    const surfaceTokens = [
+      "--radius-md",
+      "--radius-lg",
+      "--radius-xl",
+      "--shadow-sm",
+      "--shadow-md",
+      "--button-letter-spacing",
+    ] as const;
+    const gradientTokens = ["--gradient-page", "--gradient-surface", "--gradient-cta"] as const;
+
+    for (const [themeName, theme] of Object.entries(themes)) {
+      expect(
+        typographyTokens.some((tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName]),
+        `${themeName} should change at least one typography token`,
+      ).toBe(true);
+      expect(
+        surfaceTokens.some((tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName]),
+        `${themeName} should change at least one surface or control token`,
+      ).toBe(true);
+      expect(
+        gradientTokens.some((tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName]),
+        `${themeName} should change at least one gradient token`,
+      ).toBe(true);
     }
   });
 

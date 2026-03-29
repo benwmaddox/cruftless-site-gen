@@ -25,7 +25,8 @@
   padding: var(--space-4) var(--space-5);
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: var(--gradient-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .c-faq__question {

@@ -16,8 +16,19 @@ export const darkSaasTheme = createThemeDefinition({
   "--color-warning": "#bf8700",
   "--color-danger": "#f85149",
   "--color-focus-ring": "#6cb6ff",
+  "--gradient-page":
+    "radial-gradient(circle at top, rgb(77 163 255 / 0.24), transparent 35%), linear-gradient(180deg, #0d1117 0%, #111927 100%)",
+  "--gradient-surface": "linear-gradient(180deg, rgb(33 41 54 / 0.96), rgb(22 27 34 / 0.96))",
+  "--gradient-cta": "linear-gradient(135deg, #4da3ff 0%, #8b7dff 100%)",
+  "--font-family-body": "\"Segoe UI\", Helvetica, Arial, sans-serif",
+  "--font-family-heading": "\"Courier New\", \"SFMono-Regular\", monospace",
+  "--font-size-5": "2.35rem",
+  "--font-size-6": "3.35rem",
+  "--radius-md": "999px",
+  "--radius-lg": "1.5rem",
+  "--radius-xl": "2rem",
   "--shadow-sm": "0 1px 2px rgb(0 0 0 / 0.25)",
   "--shadow-md": "0 6px 18px rgb(0 0 0 / 0.35)",
   "--shadow-lg": "0 12px 32px rgb(0 0 0 / 0.45)",
+  "--button-letter-spacing": "0.05em",
 });
-
