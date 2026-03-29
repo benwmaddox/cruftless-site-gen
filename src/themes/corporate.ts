@@ -1,6 +1,7 @@
 import { createThemeDefinition } from "./tokens.js";
 
 export const corporateTheme = createThemeDefinition({
+  "--color-scheme": "light",
   "--color-bg": "#f7f8fb",
   "--color-surface": "#ffffff",
   "--color-surface-alt": "#eef2f7",
@@ -13,12 +14,22 @@ export const corporateTheme = createThemeDefinition({
   "--color-link": "#004e8f",
   "--color-link-hover": "#003765",
   "--color-focus-ring": "#2f80ed",
-  "--font-family-body": "\"Source Sans 3\", Arial, sans-serif",
-  "--font-family-heading": "\"Merriweather Sans\", Arial, sans-serif",
+  "--page-background": "linear-gradient(180deg, #fbfcfe 0%, #edf3fb 100%)",
+  "--surface-background": "linear-gradient(180deg, #ffffff 0%, #f5f9fd 100%)",
+  "--hero-background": "linear-gradient(135deg, #ffffff 0%, #eef4fb 100%)",
+  "--cta-background": "linear-gradient(135deg, #004e8f 0%, #4f7cac 100%)",
+  "--font-family-body": "\"Helvetica Neue\", Arial, sans-serif",
+  "--font-family-heading": "Georgia, \"Times New Roman\", serif",
+  "--heading-letter-spacing": "0.015em",
+  "--font-size-5": "2rem",
+  "--font-size-6": "2.8rem",
+  "--line-height-heading": "1.15",
+  "--font-weight-semibold": "700",
+  "--button-letter-spacing": "0.08em",
+  "--radius-md": "0.375rem",
   "--radius-lg": "0.5rem",
   "--radius-xl": "0.75rem",
   "--shadow-sm": "0 1px 2px rgb(16 24 40 / 0.05)",
   "--shadow-md": "0 6px 18px rgb(16 24 40 / 0.1)",
   "--shadow-lg": "0 16px 40px rgb(16 24 40 / 0.12)",
 });
-

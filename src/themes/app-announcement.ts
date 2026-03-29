@@ -1,6 +1,7 @@
 import { createThemeDefinition } from "./tokens.js";
 
 export const appAnnouncementTheme = createThemeDefinition({
+  "--color-scheme": "light",
   "--color-bg": "#fff9f1",
   "--color-surface": "#ffffff",
   "--color-surface-alt": "#fff1df",
@@ -13,14 +14,23 @@ export const appAnnouncementTheme = createThemeDefinition({
   "--color-link": "#c64a12",
   "--color-link-hover": "#9b3709",
   "--color-focus-ring": "#ff6b2c",
-  "--font-family-body": "\"Plus Jakarta Sans\", Arial, sans-serif",
-  "--font-family-heading": "\"Sora\", Arial, sans-serif",
-  "--font-size-5": "2.5rem",
-  "--font-size-6": "3.5rem",
-  "--radius-lg": "1rem",
-  "--radius-xl": "1.5rem",
+  "--page-background": "linear-gradient(180deg, #fff9f1 0%, #ffe6d3 100%)",
+  "--surface-background": "linear-gradient(180deg, #ffffff 0%, #fff4e8 100%)",
+  "--hero-background":
+    "radial-gradient(circle at top right, rgb(255 107 44 / 0.18), transparent 36%), linear-gradient(135deg, #ffffff 0%, #fff1df 100%)",
+  "--cta-background": "linear-gradient(135deg, #ff6b2c 0%, #ffb26b 60%, #1b998b 100%)",
+  "--font-family-body": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+  "--font-family-heading": "\"Arial Rounded MT Bold\", \"Trebuchet MS\", sans-serif",
+  "--heading-letter-spacing": "-0.03em",
+  "--font-size-5": "2.6rem",
+  "--font-size-6": "3.6rem",
+  "--line-height-heading": "1",
+  "--button-letter-spacing": "0.02em",
+  "--radius-md": "999px",
+  "--radius-lg": "1.25rem",
+  "--radius-xl": "2rem",
   "--shadow-sm": "0 3px 8px rgb(60 33 16 / 0.08)",
   "--shadow-md": "0 12px 28px rgb(60 33 16 / 0.14)",
   "--shadow-lg": "0 20px 48px rgb(60 33 16 / 0.18)",
+  "--button-hover-transform": "translateY(-2px) scale(1.01)",
 });
-

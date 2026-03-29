@@ -137,18 +137,37 @@ export const validateThemeDefinition = (
   themeName: string,
   theme: ThemeDefinition,
 ): ValidationIssue[] => {
+  const issues: ValidationIssue[] = [];
+  const themeCss = theme.css ?? "";
+
   try {
-    assertExactThemeTokens(theme);
-    return [];
+    assertExactThemeTokens(theme.tokens);
   } catch (error) {
-    return [
-      {
-        path: [],
-        source: `theme:${themeName}`,
-        message: error instanceof Error ? error.message : String(error),
-      },
-    ];
+    issues.push({
+      path: [],
+      source: `theme:${themeName}`,
+      message: error instanceof Error ? error.message : String(error),
+    });
   }
+
+  const unknownTokens = findUnknownCssVarTokens(themeCss);
+  if (unknownTokens.length > 0) {
+    issues.push({
+      path: [],
+      source: `theme:${themeName}`,
+      message: `unknown theme token reference(s): ${unknownTokens.join(", ")}`,
+    });
+  }
+
+  for (const violation of findCruftlessCssPolicyViolations(themeCss)) {
+    issues.push({
+      path: [],
+      source: `theme:${themeName}:${violation.lineNumber}`,
+      message: violation.message,
+    });
+  }
+
+  return issues;
 };
 
 export const validateCssTokenUsage = async (
