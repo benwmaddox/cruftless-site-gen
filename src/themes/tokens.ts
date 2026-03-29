@@ -1,4 +1,5 @@
 const canonicalThemeTokens = {
+  "--color-scheme": "light",
   "--color-bg": "#ffffff",
   "--color-surface": "#f8f8f8",
   "--color-surface-alt": "#efefef",
@@ -14,11 +15,12 @@ const canonicalThemeTokens = {
   "--color-warning": "#a15c00",
   "--color-danger": "#b42318",
   "--color-focus-ring": "#1f6fff",
-  "--page-gradient": "linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)",
-  "--surface-gradient": "linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)",
-  "--cta-gradient": "linear-gradient(135deg, #0057ff 0%, #7a3cff 100%)",
-  "--font-family-body": "Inter, Arial, sans-serif",
-  "--font-family-heading": "Inter, Arial, sans-serif",
+  "--page-background": "var(--color-bg)",
+  "--surface-background": "var(--color-surface)",
+  "--hero-background": "var(--color-surface)",
+  "--cta-background": "linear-gradient(135deg, var(--color-primary), var(--color-accent))",
+  "--font-family-body": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+  "--font-family-heading": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
   "--font-family-mono": "\"SFMono-Regular\", Consolas, monospace",
   "--font-size-0": "0.875rem",
   "--font-size-1": "1rem",
@@ -39,6 +41,7 @@ const canonicalThemeTokens = {
   "--letter-spacing-normal": "0",
   "--letter-spacing-wide": "0.04em",
   "--heading-letter-spacing": "-0.02em",
+  "--button-letter-spacing": "0",
   "--space-0": "0",
   "--space-1": "0.25rem",
   "--space-2": "0.5rem",
@@ -73,6 +76,7 @@ const canonicalThemeTokens = {
   "--duration-slow": "260ms",
   "--ease-standard": "ease",
   "--ease-emphasized": "cubic-bezier(0.2, 0, 0, 1)",
+  "--button-hover-transform": "translateY(-1px)",
   "--z-base": "1",
   "--z-header": "10",
   "--z-overlay": "100",
@@ -80,7 +84,11 @@ const canonicalThemeTokens = {
 } as const;
 
 export type ThemeTokenName = keyof typeof canonicalThemeTokens;
-export type ThemeDefinition = Record<ThemeTokenName, string>;
+export type ThemeTokens = Record<ThemeTokenName, string>;
+export interface ThemeDefinition {
+  tokens: ThemeTokens;
+  css?: string;
+}
 
 export const themeTokenNames = Object.keys(canonicalThemeTokens) as ThemeTokenName[];
 export const themeTokenSet = new Set<ThemeTokenName>(themeTokenNames);
@@ -94,11 +102,11 @@ export const allowedThemeOverrideTokens = [
   "--color-focus-ring",
 ] as const satisfies readonly ThemeTokenName[];
 
-export const defaultThemeTokens: ThemeDefinition = { ...canonicalThemeTokens };
+export const defaultThemeTokens: ThemeTokens = { ...canonicalThemeTokens };
 
 export const assertExactThemeTokens: (
   theme: Record<string, string>,
-) => asserts theme is ThemeDefinition = (theme) => {
+) => asserts theme is ThemeTokens = (theme) => {
   const keys = Object.keys(theme);
   const missing = themeTokenNames.filter((name) => !(name in theme));
   const extra = keys.filter((key) => !themeTokenSet.has(key as ThemeTokenName));
@@ -116,13 +124,17 @@ export const assertExactThemeTokens: (
 };
 
 export const createThemeDefinition = (
-  overrides: Partial<ThemeDefinition>,
+  overrides: Partial<ThemeTokens>,
+  css?: string,
 ): ThemeDefinition => {
-  const theme: ThemeDefinition = {
+  const theme: ThemeTokens = {
     ...defaultThemeTokens,
     ...overrides,
   };
 
   assertExactThemeTokens(theme);
-  return theme;
+  return {
+    tokens: theme,
+    css: css?.trim(),
+  };
 };

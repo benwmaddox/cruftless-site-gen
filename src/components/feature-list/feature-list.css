@@ -11,7 +11,6 @@
 
 .c-feature-list__title {
   margin: 0;
-  font-family: var(--font-family-heading);
   font-size: var(--font-size-4);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--heading-letter-spacing);
@@ -31,12 +30,13 @@
   padding: var(--space-4);
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--surface-gradient);
+  background: var(--surface-background);
   box-shadow: var(--shadow-sm);
 }
 
 .c-feature-list__item-title {
   margin: 0;
+  font-family: var(--font-family-heading);
   font-size: var(--font-size-2);
 }
 

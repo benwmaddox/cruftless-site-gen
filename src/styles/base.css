@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: var(--color-scheme);
 }
 
 *,
@@ -11,15 +11,22 @@
 html {
   font-family: var(--font-family-body);
   line-height: var(--line-height-body);
-  background: var(--color-bg);
+  background: var(--page-background);
   color: var(--color-text);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--page-gradient);
+  background: transparent;
   color: var(--color-text);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-family-heading);
+  letter-spacing: var(--heading-letter-spacing);
 }
 
 a {
@@ -51,11 +58,11 @@ button:focus-visible {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   font-family: var(--font-family-heading);
+  letter-spacing: var(--button-letter-spacing);
   font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--heading-letter-spacing);
   text-decoration: none;
   transition:
-    background-color var(--duration-normal) var(--ease-standard),
+    background var(--duration-normal) var(--ease-standard),
     border-color var(--duration-normal) var(--ease-standard),
     box-shadow var(--duration-normal) var(--ease-standard),
     color var(--duration-normal) var(--ease-standard),
@@ -63,18 +70,17 @@ button:focus-visible {
 }
 
 .c-button:hover {
-  transform: translateY(-2px);
+  transform: var(--button-hover-transform);
   box-shadow: var(--shadow-md);
 }
 
 .c-button--primary {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--cta-background);
   color: var(--color-primary-contrast);
 }
 
 .c-button--secondary {
-  border-color: currentcolor;
-  background: var(--surface-gradient);
+  border-color: var(--color-border);
+  background: var(--surface-background);
   color: inherit;
 }

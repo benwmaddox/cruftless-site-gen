@@ -10,7 +10,7 @@
   gap: var(--space-4);
   border: var(--border-width-2) solid var(--color-border);
   border-radius: var(--radius-xl);
-  background: var(--cta-gradient);
+  background: var(--cta-background);
   color: var(--color-primary-contrast);
   box-shadow: var(--shadow-md);
 }
@@ -21,7 +21,6 @@
 }
 
 .c-cta-band__headline {
-  font-family: var(--font-family-heading);
   font-size: var(--font-size-4);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--heading-letter-spacing);
