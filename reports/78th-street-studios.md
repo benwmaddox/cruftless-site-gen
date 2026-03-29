@@ -1,13 +1,13 @@
-# 78th Street Studios test site report
+# 78th Street Studios test-site report
 
-## Source pages used
+Source pages used on 2026-03-29:
 
 - https://78thstreetstudios.com/
 - https://78thstreetstudios.com/about
 
 ## Approach used
 
-I used the current live home page and about page as the source material, then translated that material into the generator's existing JSON component model instead of adding new rendering primitives. The test site lives in `content/examples/78th-street-studios.json` and stays separate from the default sample content.
+I used the live home page and live `/about` page as the source material, then translated that material into the generator's existing JSON component model instead of adding new rendering primitives. The test site lives in `content/examples/78th-street-studios.json` and stays separate from the default sample content.
 
 I kept the scope to two generated pages:
 
@@ -16,12 +16,14 @@ I kept the scope to two generated pages:
 
 The current `hero`, `feature-list`, `feature-grid`, `faq`, and `cta-band` components were enough to produce a readable first pass, so the framework itself did not need to change for this issue.
 
+I did not hard-code the live "next up" Third Fridays date into the report because that value is date-sensitive and will go stale quickly.
+
 ## What worked well
 
 - The current JSON schema made it straightforward to build a clean, bounded prototype from real site copy.
 - The existing build commands already accept an alternate content file and output directory, so no build-system change was needed.
 - Breaking the source material into short, named sections mapped well to the current component set.
-- The stricter test coverage makes this fixture part of routine validation instead of an afterthought.
+- The stricter fixture coverage makes this sample part of routine validation instead of an afterthought.
 
 ## What did not work well
 
