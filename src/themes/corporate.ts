@@ -26,4 +26,44 @@ export const corporateTheme = createThemeDefinition({
   "--shadow-md": "0 6px 18px rgb(16 24 40 / 0.1)",
   "--shadow-lg": "0 16px 40px rgb(16 24 40 / 0.12)",
   "--button-letter-spacing": "0.03em",
-});
+}, `
+body[data-theme="corporate"] {
+  background: linear-gradient(180deg, #ffffff 0, var(--color-bg) 14rem, var(--color-bg) 100%);
+}
+
+body[data-theme="corporate"] .c-button {
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  font-size: var(--font-size-0);
+}
+
+body[data-theme="corporate"] .c-button--primary {
+  background: linear-gradient(135deg, #0a5ea8, var(--color-primary));
+}
+
+body[data-theme="corporate"] .c-hero__body {
+  gap: var(--space-4);
+}
+
+body[data-theme="corporate"] .c-hero__headline,
+body[data-theme="corporate"] .c-feature-grid__title,
+body[data-theme="corporate"] .c-feature-list__title,
+body[data-theme="corporate"] .c-faq__title,
+body[data-theme="corporate"] .c-cta-band__headline {
+  letter-spacing: 0.01em;
+}
+
+body[data-theme="corporate"] .c-feature-grid__item,
+body[data-theme="corporate"] .c-feature-list__item,
+body[data-theme="corporate"] .c-faq__item {
+  background: linear-gradient(180deg, #ffffff 0, var(--color-surface-alt) 100%);
+  border-color: #b8c6d8;
+  box-shadow: none;
+}
+
+body[data-theme="corporate"] .c-cta-band__inner {
+  border-color: transparent;
+  background: linear-gradient(135deg, #0c4b87, #2d6ea8);
+}
+`);

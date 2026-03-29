@@ -12,7 +12,7 @@ describe("theme validation", () => {
   it("accepts the registered themes", () => {
     for (const [themeName, theme] of Object.entries(themes)) {
       expect(validateThemeDefinition(themeName, theme)).toEqual([]);
-      expect(() => assertExactThemeTokens(theme)).not.toThrow();
+      expect(() => assertExactThemeTokens(theme.tokens)).not.toThrow();
     }
   });
 
@@ -36,15 +36,19 @@ describe("theme validation", () => {
 
     for (const [themeName, theme] of Object.entries(themes)) {
       expect(
-        typographyTokens.some((tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName]),
+        typographyTokens.some(
+          (tokenName) => theme.tokens[tokenName] !== defaultThemeTokens[tokenName],
+        ),
         `${themeName} should change at least one typography token`,
       ).toBe(true);
       expect(
-        surfaceTokens.some((tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName]),
+        surfaceTokens.some((tokenName) => theme.tokens[tokenName] !== defaultThemeTokens[tokenName]),
         `${themeName} should change at least one surface or control token`,
       ).toBe(true);
       expect(
-        gradientTokens.some((tokenName) => theme[tokenName] !== defaultThemeTokens[tokenName]),
+        gradientTokens.some(
+          (tokenName) => theme.tokens[tokenName] !== defaultThemeTokens[tokenName],
+        ),
         `${themeName} should change at least one gradient token`,
       ).toBe(true);
     }
@@ -53,13 +57,28 @@ describe("theme validation", () => {
   it("rejects extra theme tokens and unknown CSS variable usage", () => {
     expect(() =>
       assertExactThemeTokens({
-        ...themes["dark-saas"],
+        ...themes["dark-saas"].tokens,
         "--hero-glow-color": "#fff",
       }),
     ).toThrow(/Extra theme tokens/);
 
     expect(findUnknownCssVarTokens(".demo { color: var(--not-a-token); }")).toEqual([
       "--not-a-token",
+    ]);
+  });
+
+  it("rejects theme CSS that references unknown tokens", () => {
+    expect(
+      validateThemeDefinition("demo", {
+        tokens: themes.corporate.tokens,
+        css: ".demo { color: var(--not-a-token); }",
+      }),
+    ).toEqual([
+      {
+        path: [],
+        source: "theme:demo",
+        message: "unknown theme token reference(s): --not-a-token",
+      },
     ]);
   });
 

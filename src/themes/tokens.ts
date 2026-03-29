@@ -81,7 +81,11 @@ const canonicalThemeTokens = {
 } as const;
 
 export type ThemeTokenName = keyof typeof canonicalThemeTokens;
-export type ThemeDefinition = Record<ThemeTokenName, string>;
+export type ThemeTokens = Record<ThemeTokenName, string>;
+export interface ThemeDefinition {
+  tokens: ThemeTokens;
+  css?: string;
+}
 
 export const themeTokenNames = Object.keys(canonicalThemeTokens) as ThemeTokenName[];
 export const themeTokenSet = new Set<ThemeTokenName>(themeTokenNames);
@@ -95,11 +99,11 @@ export const allowedThemeOverrideTokens = [
   "--color-focus-ring",
 ] as const satisfies readonly ThemeTokenName[];
 
-export const defaultThemeTokens: ThemeDefinition = { ...canonicalThemeTokens };
+export const defaultThemeTokens: ThemeTokens = { ...canonicalThemeTokens };
 
 export const assertExactThemeTokens: (
   theme: Record<string, string>,
-) => asserts theme is ThemeDefinition = (theme) => {
+) => asserts theme is ThemeTokens = (theme) => {
   const keys = Object.keys(theme);
   const missing = themeTokenNames.filter((name) => !(name in theme));
   const extra = keys.filter((key) => !themeTokenSet.has(key as ThemeTokenName));
@@ -117,13 +121,17 @@ export const assertExactThemeTokens: (
 };
 
 export const createThemeDefinition = (
-  overrides: Partial<ThemeDefinition>,
+  overrides: Partial<ThemeTokens>,
+  css?: string,
 ): ThemeDefinition => {
-  const theme: ThemeDefinition = {
+  const theme: ThemeTokens = {
     ...defaultThemeTokens,
     ...overrides,
   };
 
   assertExactThemeTokens(theme);
-  return theme;
+  return {
+    tokens: theme,
+    css: css?.trim(),
+  };
 };
