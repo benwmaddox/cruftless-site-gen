@@ -11,7 +11,6 @@
 
 .c-feature-grid__title {
   margin: 0;
-  font-family: var(--font-family-heading);
   font-size: var(--font-size-4);
   line-height: var(--line-height-heading);
 }
@@ -29,12 +28,13 @@
   padding: var(--space-5);
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--gradient-surface);
+  background: var(--surface-background);
   box-shadow: var(--shadow-sm);
 }
 
 .c-feature-grid__item-title {
   margin: 0 0 var(--space-2);
+  font-family: var(--font-family-heading);
   font-size: var(--font-size-3);
 }
 

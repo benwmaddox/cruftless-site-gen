@@ -9,10 +9,11 @@ import { SiteContentSchema } from "../src/schemas/site.schema.js";
 import { themeNames, type ThemeName } from "../src/themes/index.js";
 
 const themeMarkers: Record<ThemeName, string> = {
-  brutalism: 'body[data-theme="brutalism"] .c-feature-list__items',
-  "dark-saas": 'body[data-theme="dark-saas"] .c-hero__body',
-  corporate: 'body[data-theme="corporate"] .c-button',
-  "app-announcement": 'body[data-theme="app-announcement"] .c-hero__body',
+  brutalism: "--button-height: 3rem;",
+  "dark-saas": "--color-scheme: dark;",
+  corporate: '--font-family-heading: Georgia, "Times New Roman", serif;',
+  "app-announcement":
+    '--font-family-heading: "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;',
 };
 
 const createSite = (theme: ThemeName) =>
@@ -42,7 +43,7 @@ const createSite = (theme: ThemeName) =>
   });
 
 describe("buildSite theme CSS", () => {
-  it.each(themeNames)("emits theme-specific presentation CSS for %s", async (theme) => {
+  it.each(themeNames)("emits theme-specific token CSS for %s", async (theme) => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-"));
 
     try {

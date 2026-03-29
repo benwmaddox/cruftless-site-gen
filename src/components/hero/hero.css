@@ -5,25 +5,24 @@
 .c-hero__body {
   width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
   margin-inline: auto;
-  padding: var(--space-6);
+  padding: clamp(var(--space-6), 8vw, var(--space-8));
   display: grid;
   gap: var(--space-5);
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-xl);
-  background: var(--gradient-surface);
+  background: var(--hero-background);
   box-shadow: var(--shadow-md);
 }
 
 .c-hero--align-center .c-hero__body {
   text-align: center;
+  place-items: center;
 }
 
 .c-hero__headline {
   margin: 0;
-  font-family: var(--font-family-heading);
   font-size: clamp(var(--font-size-5), 5vw, var(--font-size-6));
   line-height: var(--line-height-heading);
-  letter-spacing: var(--letter-spacing-tight);
 }
 
 .c-hero__subheadline {

@@ -1,14 +1,15 @@
 import { createThemeDefinition } from "./tokens.js";
 
 export const darkSaasTheme = createThemeDefinition({
-  "--color-bg": "#0d1117",
-  "--color-surface": "#161b22",
-  "--color-surface-alt": "#1f2630",
+  "--color-scheme": "dark",
+  "--color-bg": "#0b1020",
+  "--color-surface": "#141b2d",
+  "--color-surface-alt": "#19233a",
   "--color-text": "#e6edf3",
   "--color-text-muted": "#9da7b3",
-  "--color-border": "#2f3945",
+  "--color-border": "#2b3855",
   "--color-primary": "#4da3ff",
-  "--color-primary-contrast": "#081018",
+  "--color-primary-contrast": "#f5f9ff",
   "--color-accent": "#8b7dff",
   "--color-link": "#6cb6ff",
   "--color-link-hover": "#9cccff",
@@ -16,58 +17,23 @@ export const darkSaasTheme = createThemeDefinition({
   "--color-warning": "#bf8700",
   "--color-danger": "#f85149",
   "--color-focus-ring": "#6cb6ff",
-  "--gradient-page":
-    "radial-gradient(circle at top, rgb(77 163 255 / 0.24), transparent 35%), linear-gradient(180deg, #0d1117 0%, #111927 100%)",
-  "--gradient-surface": "linear-gradient(180deg, rgb(33 41 54 / 0.96), rgb(22 27 34 / 0.96))",
-  "--gradient-cta": "linear-gradient(135deg, #4da3ff 0%, #8b7dff 100%)",
-  "--font-family-body": "\"Segoe UI\", Helvetica, Arial, sans-serif",
-  "--font-family-heading": "\"Courier New\", \"SFMono-Regular\", monospace",
-  "--font-size-5": "2.35rem",
-  "--font-size-6": "3.35rem",
+  "--page-background":
+    "radial-gradient(circle at top, rgb(77 163 255 / 0.18), transparent 32%), linear-gradient(180deg, #0b1020 0%, #111827 100%)",
+  "--surface-background":
+    "linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.02)), #141b2d",
+  "--hero-background":
+    "radial-gradient(circle at top right, rgb(77 163 255 / 0.16), transparent 38%), linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03))",
+  "--cta-background": "linear-gradient(135deg, #1d3b64 0%, #6b5cff 100%)",
+  "--font-family-body": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+  "--font-family-heading": "\"Segoe UI\", \"Helvetica Neue\", Arial, sans-serif",
+  "--line-height-heading": "1.05",
+  "--letter-spacing-tight": "-0.03em",
+  "--button-letter-spacing": "0.015em",
   "--radius-md": "999px",
-  "--radius-lg": "1.5rem",
-  "--radius-xl": "2rem",
-  "--shadow-sm": "0 1px 2px rgb(0 0 0 / 0.25)",
-  "--shadow-md": "0 6px 18px rgb(0 0 0 / 0.35)",
-  "--shadow-lg": "0 12px 32px rgb(0 0 0 / 0.45)",
-  "--button-letter-spacing": "0.05em",
-}, `
-body[data-theme="dark-saas"] {
-  color-scheme: dark;
-  background:
-    radial-gradient(circle at top, rgb(77 163 255 / 0.18), transparent 28rem),
-    radial-gradient(circle at bottom right, rgb(139 125 255 / 0.16), transparent 24rem),
-    var(--color-bg);
-}
-
-body[data-theme="dark-saas"] .c-button {
-  border-radius: 999px;
-}
-
-body[data-theme="dark-saas"] .c-button--primary {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-  box-shadow: 0 12px 30px rgb(8 16 24 / 0.35);
-}
-
-body[data-theme="dark-saas"] .c-hero__body,
-body[data-theme="dark-saas"] .c-feature-grid__item,
-body[data-theme="dark-saas"] .c-feature-list__item,
-body[data-theme="dark-saas"] .c-faq__item {
-  border-color: rgb(255 255 255 / 0.08);
-  background: rgb(22 27 34 / 0.88);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.04),
-    var(--shadow-md);
-}
-
-body[data-theme="dark-saas"] .c-hero__body {
-  padding: var(--space-7);
-  border: var(--border-width-1) solid rgb(255 255 255 / 0.08);
-  border-radius: var(--radius-xl);
-}
-
-body[data-theme="dark-saas"] .c-hero__headline {
-  max-width: 11ch;
-  letter-spacing: -0.04em;
-}
-`);
+  "--radius-lg": "1.25rem",
+  "--radius-xl": "1.75rem",
+  "--shadow-sm": "0 8px 24px rgb(0 0 0 / 0.22)",
+  "--shadow-md": "0 18px 48px rgb(0 0 0 / 0.28)",
+  "--shadow-lg": "0 28px 72px rgb(0 0 0 / 0.34)",
+  "--button-hover-transform": "translateY(-2px)",
+});

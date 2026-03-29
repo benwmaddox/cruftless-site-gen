@@ -1,12 +1,41 @@
 import { describe, expect, it } from "vitest";
 
 import { themes } from "./index.js";
-import { assertExactThemeTokens, defaultThemeTokens } from "./tokens.js";
+import { assertExactThemeTokens, defaultThemeTokens, themeTokenNames } from "./tokens.js";
 import {
   findCruftlessCssPolicyViolations,
   findUnknownCssVarTokens,
   validateThemeDefinition,
 } from "../validation/theme-validation.js";
+
+const typographyTokens = new Set([
+  "--font-family-body",
+  "--font-family-heading",
+  "--font-size-5",
+  "--font-size-6",
+  "--line-height-heading",
+  "--letter-spacing-tight",
+  "--button-letter-spacing",
+]);
+
+const shapeTokens = new Set([
+  "--radius-md",
+  "--radius-lg",
+  "--radius-xl",
+  "--button-height",
+  "--shadow-sm",
+  "--shadow-md",
+  "--shadow-lg",
+  "--button-hover-transform",
+]);
+
+const surfaceTokens = new Set([
+  "--color-scheme",
+  "--page-background",
+  "--surface-background",
+  "--hero-background",
+  "--cta-background",
+]);
 
 describe("theme validation", () => {
   it("accepts the registered themes", () => {
@@ -16,41 +45,30 @@ describe("theme validation", () => {
     }
   });
 
-  it("keeps every theme visually distinct beyond color", () => {
-    const typographyTokens = [
-      "--font-family-body",
-      "--font-family-heading",
-      "--font-size-5",
-      "--font-size-6",
-      "--letter-spacing-tight",
-    ] as const;
-    const surfaceTokens = [
-      "--radius-md",
-      "--radius-lg",
-      "--radius-xl",
-      "--shadow-sm",
-      "--shadow-md",
-      "--button-letter-spacing",
-    ] as const;
-    const gradientTokens = ["--gradient-page", "--gradient-surface", "--gradient-cta"] as const;
-
+  it("keeps every built-in theme distinct beyond color alone", () => {
     for (const [themeName, theme] of Object.entries(themes)) {
+      const changedNonColorTokens = themeTokenNames.filter(
+        (tokenName) =>
+          !tokenName.startsWith("--color-") &&
+          theme.tokens[tokenName] !== defaultThemeTokens[tokenName],
+      );
+
       expect(
-        typographyTokens.some(
-          (tokenName) => theme.tokens[tokenName] !== defaultThemeTokens[tokenName],
-        ),
-        `${themeName} should change at least one typography token`,
+        changedNonColorTokens.some((tokenName) => typographyTokens.has(tokenName)),
+        `${themeName} should customize typography tokens`,
       ).toBe(true);
       expect(
-        surfaceTokens.some((tokenName) => theme.tokens[tokenName] !== defaultThemeTokens[tokenName]),
-        `${themeName} should change at least one surface or control token`,
+        changedNonColorTokens.some((tokenName) => shapeTokens.has(tokenName)),
+        `${themeName} should customize shape or motion tokens`,
       ).toBe(true);
       expect(
-        gradientTokens.some(
-          (tokenName) => theme.tokens[tokenName] !== defaultThemeTokens[tokenName],
-        ),
-        `${themeName} should change at least one gradient token`,
+        changedNonColorTokens.some((tokenName) => surfaceTokens.has(tokenName)),
+        `${themeName} should customize gradients or surface treatments`,
       ).toBe(true);
+      expect(
+        changedNonColorTokens.length,
+        `${themeName} should change multiple non-color tokens`,
+      ).toBeGreaterThanOrEqual(8);
     }
   });
 
