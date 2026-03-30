@@ -1,3 +1,7 @@
+import {
+  countPageContentSlots,
+  resolvePageComponentEntries,
+} from "../layout/page-layout.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
 
 export interface ValidationIssue {
@@ -12,6 +16,18 @@ export const collectSiteValidationIssues = (
 ): ValidationIssue[] => {
   const issues: ValidationIssue[] = [];
   const slugIndexMap = new Map<string, number>();
+  const layoutComponents = siteContent.site.layout?.components;
+  const hasValidLayoutSlotCount =
+    !layoutComponents || countPageContentSlots(layoutComponents) === 1;
+
+  if (layoutComponents) {
+    if (!hasValidLayoutSlotCount) {
+      issues.push({
+        path: ["site", "layout", "components"],
+        message: "site layout must include exactly one 'page-content' slot",
+      });
+    }
+  }
 
   siteContent.pages.forEach((page, pageIndex) => {
     const existingPageIndex = slugIndexMap.get(page.slug);
@@ -26,7 +42,16 @@ export const collectSiteValidationIssues = (
     }
 
     let heroCount = 0;
-    page.components.forEach((component, componentIndex) => {
+    const resolvedEntries = hasValidLayoutSlotCount
+      ? resolvePageComponentEntries(siteContent.site, page, pageIndex)
+      : page.components.map((component, componentIndex) => ({
+          component,
+          path: ["pages", pageIndex, "components", componentIndex],
+        }));
+
+    resolvedEntries.forEach((entry) => {
+      const { component } = entry;
+
       if (component.type !== "hero") {
         return;
       }
@@ -34,7 +59,7 @@ export const collectSiteValidationIssues = (
       heroCount += 1;
       if (heroCount > 1) {
         issues.push({
-          path: ["pages", pageIndex, "components", componentIndex],
+          path: entry.path,
           componentType: "hero",
           message: "only one hero is allowed per page",
         });
@@ -44,4 +69,3 @@ export const collectSiteValidationIssues = (
 
   return issues;
 };
-

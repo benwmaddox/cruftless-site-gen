@@ -23,20 +23,20 @@ export const vscodeSettingsPath = fileURLToPath(new URL("../../.vscode/settings.
 const isJsonSchemaObject = (value: JsonSchemaValue | undefined): value is JsonSchemaObject =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const findHeroComponentSchema = (value: JsonSchemaValue | undefined): JsonSchemaObject | undefined => {
+const findHeroComponentSchemas = (
+  value: JsonSchemaValue | undefined,
+  matches: JsonSchemaObject[] = [],
+): JsonSchemaObject[] => {
   if (Array.isArray(value)) {
     for (const item of value) {
-      const match = findHeroComponentSchema(item);
-      if (match) {
-        return match;
-      }
+      findHeroComponentSchemas(item, matches);
     }
 
-    return undefined;
+    return matches;
   }
 
   if (!isJsonSchemaObject(value)) {
-    return undefined;
+    return matches;
   }
 
   const typeProperty = value.properties;
@@ -45,18 +45,15 @@ const findHeroComponentSchema = (value: JsonSchemaValue | undefined): JsonSchema
     const typeEntry = typeProperty.type;
 
     if (isJsonSchemaObject(typeEntry) && typeEntry.const === "hero") {
-      return value;
+      matches.push(value);
     }
   }
 
   for (const nestedValue of Object.values(value)) {
-    const match = findHeroComponentSchema(nestedValue);
-    if (match) {
-      return match;
-    }
+    findHeroComponentSchemas(nestedValue, matches);
   }
 
-  return undefined;
+  return matches;
 };
 
 export const buildSiteContentJsonSchema = (): JsonSchemaObject => {
@@ -66,16 +63,18 @@ export const buildSiteContentJsonSchema = (): JsonSchemaObject => {
   schema.description =
     "Schema for cruftless-site-gen site content files under content/**/*.json.";
 
-  const heroComponentSchema = findHeroComponentSchema(schema);
+  const heroComponentSchemas = findHeroComponentSchemas(schema);
 
-  if (!heroComponentSchema) {
+  if (heroComponentSchemas.length === 0) {
     throw new Error("Could not find hero component schema in generated JSON schema output");
   }
 
-  heroComponentSchema.anyOf = [
-    { required: ["primaryCta"] },
-    { required: ["secondaryCta"] },
-  ];
+  for (const heroComponentSchema of heroComponentSchemas) {
+    heroComponentSchema.anyOf = [
+      { required: ["primaryCta"] },
+      { required: ["secondaryCta"] },
+    ];
+  }
 
   return schema;
 };
