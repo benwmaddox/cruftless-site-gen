@@ -88,6 +88,37 @@ describe("collectSiteValidationIssues", () => {
     ]);
   });
 
+  it("rejects shared site layouts with more than one page-content slot", () => {
+    const invalidSite = SiteContentSchema.parse({
+      ...validSite,
+      site: {
+        ...validSite.site,
+        layout: {
+          components: [
+            {
+              type: "page-content",
+            },
+            {
+              type: "prose",
+              title: "Shared note",
+              paragraphs: ["This should only wrap the page once."],
+            },
+            {
+              type: "page-content",
+            },
+          ],
+        },
+      },
+    });
+
+    expect(collectSiteValidationIssues(invalidSite)).toEqual([
+      {
+        path: ["site", "layout", "components"],
+        message: "site layout must include exactly one 'page-content' slot",
+      },
+    ]);
+  });
+
   it("counts shared layout heroes against each rendered page", () => {
     const invalidSite = SiteContentSchema.parse({
       ...validSite,
