@@ -3,7 +3,42 @@
     "name": "78th Street Studios",
     "baseUrl": "https://78thstreetstudios.com",
     "theme": "studio-industrial",
-    "pageBackgroundImageUrl": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX"
+    "pageBackgroundImageUrl": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX",
+    "layout": {
+      "components": [
+        {
+          "type": "prose",
+          "title": "Explore the building",
+          "lead": "The live site keeps the same core visit paths in view on every page.",
+          "paragraphs": [
+            "Use About for the building story, Art Tours for guided visits, Maps for directions, Rent Space for private events, and Press for coverage."
+          ]
+        },
+        {
+          "type": "page-content"
+        },
+        {
+          "type": "cta-band",
+          "headline": "Third Fridays return on Friday, April 17, 2026",
+          "body": "The live site repeats the monthly event callout across the home and about pages, with free public hours from 5 to 9 pm and more than 60 venues participating.",
+          "primaryCta": {
+            "label": "View Maps",
+            "href": "https://78thstreetstudios.com/maps"
+          },
+          "secondaryCta": {
+            "label": "Join the List",
+            "href": "https://lp.constantcontactpages.com/sl/giYbYgh/78thstreetstudios"
+          }
+        },
+        {
+          "type": "prose",
+          "title": "Contact 78th Street Studios",
+          "paragraphs": [
+            "Studios at 78th Street, LLC lists 78thstreetstudios@gmail.com and 1300 West 78th Street, Cleveland, Ohio 44102 in the shared footer."
+          ]
+        }
+      ]
+    }
   },
   "pages": [
     {
@@ -58,15 +93,15 @@
         },
         {
           "type": "cta-band",
-          "headline": "Third Fridays light up the building every month",
-          "body": "The live site currently promotes Friday, April 17, 2026 as the next public event, alongside venue rental and vendor opportunities.",
+          "headline": "Host an event inside Cleveland's best-known arts maze",
+          "body": "The live homepage now pairs its arts pitch with a venue-rental push for weddings, corporate events, and vendor opportunities inside the same industrial setting.",
           "primaryCta": {
-            "label": "See the Live Schedule",
-            "href": "https://78thstreetstudios.com/about"
+            "label": "Learn About Events",
+            "href": "https://venuesat78thstreetstudios.com"
           },
           "secondaryCta": {
-            "label": "Rent Space",
-            "href": "https://78thstreetstudios.com/rent-space"
+            "label": "Apply as a Vendor",
+            "href": "https://northcoastpromo.com"
           }
         }
       ]
@@ -109,12 +144,34 @@
         {
           "type": "prose",
           "title": "Why the building matters",
-          "lead": "78th Street Studios combines art destination, working studio building, and event venue in one sprawling piece of Cleveland industrial history.",
+          "lead": "The live about page frames 78th Street Studios as both the largest art and design complex in Northeast Ohio and a free recurring public event destination.",
           "paragraphs": [
-            "The complex is known as the largest art and design hub in Northeast Ohio. Its galleries, artist workspaces, performance rooms, and recording spaces make it feel less like a single venue and more like a building-sized creative district.",
-            "Third Fridays remain the clearest example of that energy. Once a month the public moves through multiple floors of exhibitions, music, food, and pop-up vendors, turning the property into one of Cleveland's most recognizable recurring arts events.",
+            "The about page now leads with the same core facts as the live site: 170,000 square feet, more than 60 venues, and a mix of galleries, artist studios, performance rooms, music recording spaces, and creative businesses under one roof.",
+            "Third Fridays remain the clearest example of that energy. On the live site they are described as a free monthly viewing night from 5 to 9 pm, with exhibits, ambient music, cuisine, pop-up vendors, and a district-wide spillover into Gordon Square.",
             "The structure itself predates that cultural role. Built in 1905 for the Baker Electric Motor Vehicle Company, it later became home to American Greetings' creative studios before its current life as a center for artists, designers, makers, and events.",
             "That layered history explains why the place feels different from a typical gallery building. The old freight infrastructure, hardwood floors, and warehouse scale are still present, but they now frame a mix of contemporary studios, exhibitions, and public gatherings."
+          ]
+        },
+        {
+          "type": "feature-grid",
+          "title": "Who's inside the building",
+          "items": [
+            {
+              "title": "Art studios",
+              "body": "The current directory highlights Allen Kradlak Studio, Hilary Gent Studio, Megan Frankenfield Studio, Studio Brennan, and other working artist spaces."
+            },
+            {
+              "title": "Art galleries",
+              "body": "ARTneo Museum, Derek Hess Gallery, HEDGE Gallery, Kenneth Paul Lesko Gallery, and White Lotus Gallery are part of the gallery roster on the live about page."
+            },
+            {
+              "title": "Design and conservation",
+              "body": "Antonym Collective, Canopy Press, Fresh Eggs Design, Galloway Art Conservation, and Walken Frame & Art show how the directory extends beyond gallery walls."
+            },
+            {
+              "title": "Photo, film, and entertainment",
+              "body": "Bounce Light Studios, Cleveland Film Factory, Bent Crayon Records, CAN Journal, and Talespinner Children's Theatre broaden the tenant mix."
+            }
           ]
         },
         {
@@ -146,7 +203,7 @@
         {
           "type": "cta-band",
           "headline": "Visit the building or follow the next event",
-          "body": "Use the live site for maps, the mailing list, and current public-event details beyond this sample build.",
+          "body": "Use the live site for the full tenant directory, maps, the mailing list, and current public-event details beyond this sample build.",
           "primaryCta": {
             "label": "View the Live About Page",
             "href": "https://78thstreetstudios.com/about"
