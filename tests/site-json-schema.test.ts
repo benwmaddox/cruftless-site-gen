@@ -6,8 +6,11 @@ import type { ErrorObject } from "ajv";
 import { describe, expect, it } from "vitest";
 
 import {
+  buildVsCodeSettings,
   buildSiteContentJsonSchema,
+  contentJsonFileMatches,
   siteContentJsonSchemaPath,
+  vscodeSettingsPath,
 } from "../src/schemas/site-json-schema.js";
 
 const contentRoot = path.resolve(process.cwd(), "content");
@@ -42,6 +45,12 @@ describe("site JSON schema", async () => {
     const checkedInSchema = await readJsonFile(siteContentJsonSchemaPath);
 
     expect(checkedInSchema).toEqual(buildSiteContentJsonSchema());
+  });
+
+  it("matches the checked-in VS Code settings artifact", async () => {
+    const checkedInSettings = await readJsonFile(vscodeSettingsPath);
+
+    expect(checkedInSettings).toEqual(buildVsCodeSettings());
   });
 
   it("validates all repo content fixtures", async () => {
@@ -88,5 +97,16 @@ describe("site JSON schema", async () => {
 
     expect(isValid).toBe(false);
     expect(validate.errors?.some((issue: ErrorObject) => issue.keyword === "anyOf")).toBe(true);
+  });
+
+  it("maps all content JSON files to the generated schema in VS Code", () => {
+    expect(buildVsCodeSettings()).toEqual({
+      "json.schemas": [
+        {
+          fileMatch: contentJsonFileMatches,
+          url: "./schemas/site-content.schema.json",
+        },
+      ],
+    });
   });
 });

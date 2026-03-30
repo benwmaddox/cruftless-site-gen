@@ -14,9 +14,11 @@ type JsonSchemaValue =
 
 type JsonSchemaObject = { [key: string]: JsonSchemaValue };
 
+export const contentJsonFileMatches = ["/content/*.json", "/content/**/*.json"];
 export const siteContentJsonSchemaPath = fileURLToPath(
   new URL("../../schemas/site-content.schema.json", import.meta.url),
 );
+export const vscodeSettingsPath = fileURLToPath(new URL("../../.vscode/settings.json", import.meta.url));
 
 const isJsonSchemaObject = (value: JsonSchemaValue | undefined): value is JsonSchemaObject =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -77,3 +79,12 @@ export const buildSiteContentJsonSchema = (): JsonSchemaObject => {
 
   return schema;
 };
+
+export const buildVsCodeSettings = (): JsonSchemaObject => ({
+  "json.schemas": [
+    {
+      fileMatch: contentJsonFileMatches,
+      url: "./schemas/site-content.schema.json",
+    },
+  ],
+});
