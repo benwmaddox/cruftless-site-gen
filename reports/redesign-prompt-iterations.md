@@ -92,10 +92,62 @@ I added a hard steelman phase and a stricter readiness gate:
 - It makes image retention and page retention first-class checks instead of side notes.
 - It gives a future reviewer a concrete audit trail instead of a trust-me answer.
 
+### What still failed
+
+- The prompt still depended too heavily on a model's idea of "the full site navigation."
+- A model could still miss footer-only pages, contact-page outbound links, or low-traffic pages that were only linked from body copy.
+- It also did not say what to do when source inspection itself was incomplete, which left too much room for a premature "ready" verdict.
+
+### Verdict
+
+Better, but still not strong enough.
+
+## Iteration 4
+
+### What changed
+
+I hardened the source-inspection phase:
+
+- require a cross-check against header navigation, footer navigation, contact/about links, and obvious in-content public links
+- require a source coverage note for any page, asset, or linked destination that could not be inspected fully
+- block a "ready" verdict if a meaningful page or required asset could not be inspected
+
+### What improved
+
+- This closes a real blind spot from the earlier versions: many small business sites bury meaningful pages outside the homepage and primary nav.
+- It would better protect Baird Automotive's lower-visibility community material and similar footer-only pages on future migrations.
+- It also makes source-access limits explicit instead of letting the model quietly assume completeness.
+
+### What still failed
+
+- The prompt still did not force enough traceability from source material into the final output.
+- A model could claim that a page or image was retained without clearly naming where that retained content landed in the generated site.
+
+### Verdict
+
+Stronger, but traceability was still too loose.
+
+## Iteration 5
+
+### What changed
+
+I tightened the mapping and audit requirements:
+
+- require each source page to name the destination page or section where its retained content will live
+- require the steelman review to cite the output page or section that carries each retained source page and each retained image
+- keep the explicit image ledger, gap ledger, and readiness gate from earlier iterations
+
+### What improved
+
+- This turns retention from a promise into a checkable mapping.
+- It gives a reviewer a direct path from source page to generated section instead of making them infer the mapping.
+- It works well with the existing Baird Automotive and 78th Street Studios examples because both already have concrete cases where content is preserved in a different shape than the source.
+- It upgrades the final review from a generic self-check into a traceable steelman audit.
+
 ### Residual risk
 
 - The prompt still depends on the model actually being able to inspect the source site thoroughly.
-- If the source site hides pages behind script-only navigation or blocked assets, the model can only be as complete as the source inspection step allows.
+- If the source site hides pages behind script-only navigation, blocked assets, or brittle markup, the coverage note can only report that limit; it cannot remove it.
 - The generator still cannot perfectly represent every source-site feature, so the gap ledger remains necessary.
 
 ### Verdict
@@ -106,4 +158,4 @@ High quality. This is the first version that is strong enough to use as the defa
 
 Use the prompt in `docs/redesign-one-shot-prompt.md` as the default one-shot redesign prompt for this repo.
 
-It went well overall. The fastest improvement came from treating missing-page risk and missing-image risk as prompt design failures instead of output cleanup tasks. The smallest repeatable process fix that made the next iteration better was simple: require the source inventory and the steelman audit before allowing any readiness claim.
+It went well overall. The extra passes were worth doing because the remaining weaknesses were not about tone, they were about evidence: source coverage and mapping traceability. The smallest repeatable process fix that made the next iteration better was simple: once the prompt looked "good enough," force one more pass that asks what proof is still missing before accepting the result.

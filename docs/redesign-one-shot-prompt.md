@@ -26,6 +26,7 @@ Required workflow:
 
 1. Source inventory
 - Crawl or inspect the full public site navigation and obvious linked public pages.
+- Cross-check header navigation, footer navigation, contact/about links, and obvious in-content public links so low-traffic pages are not skipped just because they are not featured on the homepage.
 - Produce a page inventory with:
   - URL
   - page purpose
@@ -37,10 +38,12 @@ Required workflow:
   - image URL
   - why it matters
   - where it will appear in the redesigned output
+- Produce a source coverage note that lists any public page, asset, or linked destination you could not inspect fully and why.
 
 2. Mapping plan
 - Choose the best existing theme from this repo and explain why.
 - Map each source page into the generator structure page by page.
+- For each source page, name the destination page or section where its retained content will live.
 - Reuse shared site-level layout components when content is genuinely repeated across pages.
 - Prefer preserving substance over decorative churn. The redesign should improve clarity and presentation, not erase the original business story.
 
@@ -53,9 +56,11 @@ Required workflow:
 4. Steelman review before declaring readiness
 - Assume a skeptical reviewer is trying to prove the redesign dropped important content.
 - Compare the source inventory against the output page by page.
+- Cite the output page or section that carries each retained source page and each retained image.
 - List anything that was condensed, normalized, or omitted.
 - For each omission, explain whether it was duplicated boilerplate, unsupported CMS chrome, broken source markup, or a true limitation in the current generator.
 - If an image, page, or site detail from the source is not clearly represented, the work is not ready.
+- If you could not fully inspect a meaningful public page or required asset, the work is not ready.
 
 5. Readiness gate
 - Only say "ready for customer review" if all of the following are true:
@@ -63,6 +68,7 @@ Required workflow:
   - all important images are retained or explicitly explained
   - all unique business details and strong copy points are retained or explicitly explained
   - all unsupported source elements are listed in a gap ledger
+  - any source inspection limits are listed plainly
   - the final output matches the source site facts and uses exact dates where relevant
 - If any of those checks fail, do not say it is ready. Revise the output first.
 
