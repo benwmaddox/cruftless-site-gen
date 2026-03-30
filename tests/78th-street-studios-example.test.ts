@@ -16,6 +16,7 @@ describe("78th Street Studios example", () => {
     const siteContent = await loadValidatedSite(exampleContentPath);
 
     expect(siteContent.site.name).toBe("78th Street Studios");
+    expect(siteContent.site.layout?.components).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual(["/", "/about"]);
 
     const outDir = await mkdtemp(path.join(os.tmpdir(), "78th-street-studios-"));
@@ -27,12 +28,31 @@ describe("78th Street Studios example", () => {
       const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
 
+      expect(homeHtml).toContain("Explore the building");
       expect(homeHtml).toContain("Northeast Ohio&#39;s Eclectic Arts Maze");
-      expect(homeHtml).toContain("Third Fridays");
+      expect(homeHtml).toContain("Host an event inside Cleveland&#39;s best-known arts maze");
       expect(homeHtml).toContain("Featured gallery image from inside 78th Street Studios");
+      expect(homeHtml).toContain("Third Fridays return on Friday, April 17, 2026");
+      expect(homeHtml).toContain("Contact 78th Street Studios");
       expect(aboutHtml).toContain("Built in 1905, still full of working creatives");
       expect(aboutHtml).toContain("Baker Electric Motor Vehicle Company");
+      expect(aboutHtml).toContain("Who&#39;s inside the building");
+      expect(aboutHtml).toContain("ARTneo Museum");
       expect(aboutHtml).toContain("Old freight doors, long corridors, and raw industrial surfaces");
+      expect(aboutHtml).toContain("Third Fridays return on Friday, April 17, 2026");
+      expect(aboutHtml).toContain("Contact 78th Street Studios");
+      expect(homeHtml.indexOf("Explore the building")).toBeLessThan(
+        homeHtml.indexOf("Northeast Ohio&#39;s Eclectic Arts Maze"),
+      );
+      expect(homeHtml.indexOf("Northeast Ohio&#39;s Eclectic Arts Maze")).toBeLessThan(
+        homeHtml.indexOf("Contact 78th Street Studios"),
+      );
+      expect(aboutHtml.indexOf("Explore the building")).toBeLessThan(
+        aboutHtml.indexOf("Built in 1905, still full of working creatives"),
+      );
+      expect(aboutHtml.indexOf("Built in 1905, still full of working creatives")).toBeLessThan(
+        aboutHtml.indexOf("Contact 78th Street Studios"),
+      );
       expect(homeHtml).toContain('data-theme="studio-industrial"');
       expect(css).toContain('--font-family-heading: "Bookman Old Style", "Palatino Linotype", serif;');
       expect(css).toContain("--site-page-background-image:");

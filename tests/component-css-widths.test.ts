@@ -45,4 +45,13 @@ describe("component width tokens", () => {
 
     expect(css).toContain("color: var(--button-secondary-text);");
   });
+
+  it("keeps google maps width modes split between content and container tokens", async () => {
+    const css = await readComponentCss("google-maps");
+
+    expect(css).toContain(".c-google-maps--size-content");
+    expect(css).toContain("var(--content-max)");
+    expect(css).toContain(".c-google-maps--size-wide");
+    expect(css).toContain("var(--container-max)");
+  });
 });
