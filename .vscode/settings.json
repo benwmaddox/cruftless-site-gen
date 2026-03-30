@@ -1,0 +1,11 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/content/*.json",
+        "/content/**/*.json"
+      ],
+      "url": "./schemas/site-content.schema.json"
+    }
+  ]
+}
