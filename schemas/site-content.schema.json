@@ -25,6 +25,10 @@
                 "app-announcement",
                 "studio-industrial"
               ]
+            },
+            "pageBackgroundImageUrl": {
+              "type": "string",
+              "format": "uri"
             }
           },
           "required": [
