@@ -18,7 +18,7 @@
     "lint:css": "stylelint \"src/**/*.css\"",
     "lint:ts": "tsc --noEmit",
     "test": "vitest run",
-    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run validate && npm run build",
+    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run build && npm run build:example:78th && npm run build:example:baird",
     "check": "npm run validate:strict"
   },
   "dependencies": {
