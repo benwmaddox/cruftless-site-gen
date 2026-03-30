@@ -1,112 +1,71 @@
 {
   "site": {
-    "name": "LaunchKit",
-    "baseUrl": "https://launchkit.example",
-    "theme": "app-announcement"
+    "name": "78th Street Studios",
+    "baseUrl": "https://78thstreetstudios.com",
+    "theme": "studio-industrial"
   },
   "pages": [
     {
       "slug": "/",
-      "title": "LaunchKit",
+      "title": "78th Street Studios",
       "metadata": {
-        "description": "Strict JSON, stable markup, and theme-driven static pages."
+        "description": "Northeast Ohio's eclectic arts maze with galleries, studios, events, and industrial character."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "Announce your app with clean structure",
-          "subheadline": "Strict JSON, fixed components, and theme-driven presentation.",
+          "headline": "Northeast Ohio's Eclectic Arts Maze",
+          "subheadline": "A 170,000-square-foot Cleveland landmark filled with galleries, artist studios, performance spaces, recording rooms, and year-round events.",
           "primaryCta": {
-            "label": "Start now",
-            "href": "/start"
+            "label": "Explore the Story",
+            "href": "/about"
           },
           "secondaryCta": {
-            "label": "See demo",
-            "href": "/demo"
-          },
-          "align": "start"
-        },
-        {
-          "type": "feature-list",
-          "title": "Keep the content contract tight",
-          "items": [
-            {
-              "title": "Model every block explicitly",
-              "body": "Content picks a known component instead of inventing markup."
-            },
-            {
-              "title": "Reject extra fields",
-              "body": "Unexpected keys fail before they can drift into production."
-            },
-            {
-              "title": "Review small diffs",
-              "body": "Stable HTML keeps generated output easy to inspect."
-            }
-          ]
-        },
-        {
-          "type": "feature-grid",
-          "title": "Why this approach works",
-          "items": [
-            {
-              "title": "Strict validation",
-              "body": "Unknown keys fail the build."
-            },
-            {
-              "title": "Stable markup",
-              "body": "Components own structure, not content JSON."
-            },
-            {
-              "title": "Theme discipline",
-              "body": "Themes define exactly one token contract."
-            }
-          ]
-        },
-        {
-          "type": "cta-band",
-          "headline": "Build reviewable static pages",
-          "body": "Run validation before every build and keep the markup intentionally boring.",
-          "primaryCta": {
-            "label": "Read docs",
-            "href": "/docs"
-          }
-        }
-      ]
-    },
-    {
-      "slug": "/pricing",
-      "title": "Pricing",
-      "components": [
-        {
-          "type": "hero",
-          "headline": "Launch with less front-end drift",
-          "subheadline": "A narrow framework is easier to validate, review, and keep consistent.",
-          "primaryCta": {
-            "label": "Start free",
-            "href": "/signup"
+            "label": "Plan a Visit",
+            "href": "https://78thstreetstudios.com/maps"
           },
           "align": "center"
         },
         {
-          "type": "faq",
-          "title": "Questions teams ask before switching",
+          "type": "media",
+          "src": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/five_twenty_eight_by_one_eighty/public/media/images/featured/78SSHedgeThumbnail.jpg?itok=5D1ckRtm",
+          "alt": "Featured gallery image from inside 78th Street Studios",
+          "caption": "A glimpse of the galleries and long industrial corridors that define the building's atmosphere.",
+          "size": "wide"
+        },
+        {
+          "type": "feature-grid",
+          "title": "What the building holds",
           "items": [
             {
-              "question": "Can this framework accept arbitrary HTML from JSON?",
-              "answer": "No. Components own the markup so validation stays strict and predictable."
+              "title": "Art Galleries",
+              "body": "More than sixty venues and creative businesses make the complex a destination for collectors, visitors, and working artists."
             },
             {
-              "question": "Do themes change the structure of a page?",
-              "answer": "No. Themes only change tokens like color, spacing, and typography."
+              "title": "Working Studios",
+              "body": "Artists, designers, photographers, and publishers work in the same industrial footprint that visitors tour each month."
+            },
+            {
+              "title": "Third Fridays",
+              "body": "Free public viewing hours bring exhibits, ambient music, food, and pop-up vendors together across four floors."
+            },
+            {
+              "title": "Private Events",
+              "body": "The same warehouse atmosphere that draws art crowds is also used for weddings, corporate gatherings, and special events."
             }
           ]
         },
         {
           "type": "cta-band",
-          "headline": "Need a stricter content pipeline?",
+          "headline": "Third Fridays light up the building every month",
+          "body": "The live site currently promotes Friday, April 17, 2026 as the next public event, alongside venue rental and vendor opportunities.",
           "primaryCta": {
-            "label": "Contact sales",
-            "href": "/contact"
+            "label": "See the Live Schedule",
+            "href": "https://78thstreetstudios.com/about"
+          },
+          "secondaryCta": {
+            "label": "Rent Space",
+            "href": "https://78thstreetstudios.com/rent-space"
           }
         }
       ]
@@ -115,47 +74,78 @@
       "slug": "/about",
       "title": "About",
       "metadata": {
-        "description": "Long-form narrative and supporting media for the team behind LaunchKit."
+        "description": "The history, monthly events, and cultural reach of 78th Street Studios in Cleveland."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "A stricter generator should still leave room for character",
-          "subheadline": "Structured blocks are useful, but some pages need a real image and enough copy to tell the story cleanly.",
+          "headline": "Built in 1905, still full of working creatives",
+          "subheadline": "The former Baker Electric Motor Vehicle building later housed American Greetings' creative teams and now anchors one of Cleveland's most distinctive art destinations.",
           "primaryCta": {
-            "label": "See pricing",
-            "href": "/pricing"
+            "label": "Plan a Visit",
+            "href": "https://78thstreetstudios.com/maps"
           },
           "secondaryCta": {
-            "label": "Back home",
+            "label": "Back Home",
             "href": "/"
           },
           "align": "start"
         },
         {
           "type": "media",
-          "src": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
-          "alt": "Sunlit studio workspace with notebooks, a laptop, and a camera on the table",
-          "caption": "A visual section gives the page an anchor before the longer story begins.",
+          "src": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/20120217_393_5DMarkII_78th_street_studios.jpg?itok=3kSoNgLS",
+          "alt": "Interior view of the historic warehouse at 78th Street Studios",
+          "caption": "Old freight doors, long corridors, and raw industrial surfaces still shape the way the building feels.",
           "size": "wide"
         },
         {
           "type": "prose",
-          "title": "Why this needed a different section",
-          "lead": "About pages usually read as a sequence, not a set of interchangeable cards.",
+          "title": "Why the building matters",
+          "lead": "78th Street Studios combines art destination, working studio building, and event venue in one sprawling piece of Cleveland industrial history.",
           "paragraphs": [
-            "LaunchKit started as a reaction to site generators that let content shape the markup until nothing was predictable enough to review. The structure here stays narrow on purpose, but the original version still flattened every story into the same compact block.",
-            "That tradeoff worked for feature callouts and FAQs, yet it stripped the personality out of pages that were supposed to feel human. A long-form prose section restores the pacing of a real narrative so a team can explain where the product came from, what it values, and why it exists without breaking the schema contract.",
-            "The media block does the same thing visually. Instead of forcing every page to rely on text-only layout, it gives a visually driven site a stable figure component with alt text, captions, and predictable sizing."
+            "The complex is known as the largest art and design hub in Northeast Ohio. Its galleries, artist workspaces, performance rooms, and recording spaces make it feel less like a single venue and more like a building-sized creative district.",
+            "Third Fridays remain the clearest example of that energy. Once a month the public moves through multiple floors of exhibitions, music, food, and pop-up vendors, turning the property into one of Cleveland's most recognizable recurring arts events.",
+            "The structure itself predates that cultural role. Built in 1905 for the Baker Electric Motor Vehicle Company, it later became home to American Greetings' creative studios before its current life as a center for artists, designers, makers, and events.",
+            "That layered history explains why the place feels different from a typical gallery building. The old freight infrastructure, hardwood floors, and warehouse scale are still present, but they now frame a mix of contemporary studios, exhibitions, and public gatherings."
+          ]
+        },
+        {
+          "type": "feature-list",
+          "title": "A few facts the live site highlights",
+          "items": [
+            {
+              "title": "Magazine and catalog shoots",
+              "body": "The building has been used for Cleveland Magazine photography and for industrial-style Arhaus catalog work."
+            },
+            {
+              "title": "Printing and apparel roots",
+              "body": "Jakprints and Strhess Clothing are both part of the building's longer creative-business history."
+            },
+            {
+              "title": "Recording history",
+              "body": "The former Lava Room Recording space hosted projects connected to INXS, Creed, Papa Roach, Warrant, and The Pussycat Dolls."
+            },
+            {
+              "title": "Event history",
+              "body": "smARTspace at 78th has hosted fan events, and the property is still used for private gatherings alongside public arts programming."
+            },
+            {
+              "title": "Publishing ties",
+              "body": "Alternative Press remained in the building until late 2021, extending its role beyond galleries into music and media."
+            }
           ]
         },
         {
           "type": "cta-band",
-          "headline": "Use structured content without flattening the story",
-          "body": "The generator can stay strict while still supporting narrative pages that feel intentional.",
+          "headline": "Visit the building or follow the next event",
+          "body": "Use the live site for maps, the mailing list, and current public-event details beyond this sample build.",
           "primaryCta": {
-            "label": "Start now",
-            "href": "/start"
+            "label": "View the Live About Page",
+            "href": "https://78thstreetstudios.com/about"
+          },
+          "secondaryCta": {
+            "label": "Join the Mailing List",
+            "href": "https://lp.constantcontactpages.com/sl/giYbYgh/78thstreetstudios"
           }
         }
       ]
