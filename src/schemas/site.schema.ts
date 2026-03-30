@@ -24,6 +24,7 @@ export const SiteSchema = z
     name: z.string().min(1).max(80),
     baseUrl: z.string().url(),
     theme: z.enum(themeNames),
+    pageBackgroundImageUrl: z.string().url().optional(),
   })
   .strict();
 
@@ -37,4 +38,3 @@ export const SiteContentSchema = z
 export type PageData = z.infer<typeof PageSchema>;
 export type SiteData = z.infer<typeof SiteSchema>;
 export type SiteContentData = z.infer<typeof SiteContentSchema>;
-

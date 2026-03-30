@@ -35,6 +35,10 @@ describe("78th Street Studios example", () => {
       expect(aboutHtml).toContain("Old freight doors, long corridors, and raw industrial surfaces");
       expect(homeHtml).toContain('data-theme="studio-industrial"');
       expect(css).toContain('--font-family-heading: "Bookman Old Style", "Palatino Linotype", serif;');
+      expect(css).toContain("--site-page-background-image:");
+      expect(css).toContain(
+        'url("https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX")',
+      );
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }

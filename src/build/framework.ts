@@ -10,6 +10,7 @@ import {
 } from "../components/index.js";
 import {
   SiteContentSchema,
+  type SiteData,
   type SiteContentData,
 } from "../schemas/site.schema.js";
 import { renderPageDocument } from "../renderer/render-page.js";
@@ -216,7 +217,20 @@ const pageSlugToOutputPath = (slug: string, outDir: string): string => {
   return path.join(outDir, slug.replace(/^\//, ""), "index.html");
 };
 
-const renderSiteCss = async (themeName: keyof typeof themes): Promise<string> => {
+const escapeCssString = (value: string): string =>
+  value
+    .replaceAll("\\", "\\\\")
+    .replaceAll("\"", "\\\"");
+
+const emitSiteCss = (site: SiteData): string => {
+  if (!site.pageBackgroundImageUrl) {
+    return "";
+  }
+
+  return `:root {\n  --site-page-background-image: url("${escapeCssString(site.pageBackgroundImageUrl)}");\n}\n`;
+};
+
+const renderSiteCss = async (site: SiteData): Promise<string> => {
   const componentCssChunks = await Promise.all(
     componentDefinitions.map(async (componentDefinition) => {
       const css = await readFile(componentDefinition.cssPath, "utf8");
@@ -227,12 +241,16 @@ const renderSiteCss = async (themeName: keyof typeof themes): Promise<string> =>
   const baseCss = await readFile(baseCssPath, "utf8");
 
   return [
+    "/* site */",
+    emitSiteCss(site).trim(),
     "/* theme */",
-    emitThemeCss(themes[themeName]),
+    emitThemeCss(themes[site.theme]),
     "/* base */",
     baseCss,
     ...componentCssChunks,
-  ].join("\n\n");
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 };
 
 export const buildSite = async (
@@ -242,7 +260,7 @@ export const buildSite = async (
   await rm(outDir, { recursive: true, force: true });
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
-  const css = await renderSiteCss(siteContent.site.theme);
+  const css = await renderSiteCss(siteContent.site);
   await writeFile(path.join(outDir, "assets", "site.css"), css, "utf8");
 
   for (const page of siteContent.pages) {
