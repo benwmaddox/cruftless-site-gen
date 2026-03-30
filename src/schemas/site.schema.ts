@@ -19,12 +19,27 @@ export const PageSchema = z
   })
   .strict();
 
+export const PageContentSlotSchema = z
+  .object({
+    type: z.literal("page-content"),
+  })
+  .strict();
+
+export const SiteLayoutComponentSchema = z.union([ComponentSchema, PageContentSlotSchema]);
+
+export const SiteLayoutSchema = z
+  .object({
+    components: z.array(SiteLayoutComponentSchema).min(1),
+  })
+  .strict();
+
 export const SiteSchema = z
   .object({
     name: z.string().min(1).max(80),
     baseUrl: z.string().url(),
     theme: z.enum(themeNames),
     pageBackgroundImageUrl: z.string().url().optional(),
+    layout: SiteLayoutSchema.optional(),
   })
   .strict();
 
@@ -36,5 +51,8 @@ export const SiteContentSchema = z
   .strict();
 
 export type PageData = z.infer<typeof PageSchema>;
+export type PageContentSlotData = z.infer<typeof PageContentSlotSchema>;
+export type SiteLayoutComponentData = z.infer<typeof SiteLayoutComponentSchema>;
+export type SiteLayoutData = z.infer<typeof SiteLayoutSchema>;
 export type SiteData = z.infer<typeof SiteSchema>;
 export type SiteContentData = z.infer<typeof SiteContentSchema>;

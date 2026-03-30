@@ -2,7 +2,29 @@
   "site": {
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
-    "theme": "app-announcement"
+    "theme": "app-announcement",
+    "layout": {
+      "components": [
+        {
+          "type": "prose",
+          "title": "Shared site header",
+          "lead": "One layout can wrap every page.",
+          "paragraphs": [
+            "This shared block is declared once at the site level instead of being copied into every page."
+          ]
+        },
+        {
+          "type": "page-content"
+        },
+        {
+          "type": "prose",
+          "title": "Shared site footer",
+          "paragraphs": [
+            "The page-content slot keeps page-specific sections in the middle while shared content stays centralized."
+          ]
+        }
+      ]
+    }
   },
   "pages": [
     {
