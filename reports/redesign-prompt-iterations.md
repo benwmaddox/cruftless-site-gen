@@ -158,10 +158,10 @@ High quality. This is the first version that is strong enough to use as the defa
 
 Use the prompt in `docs/redesign-one-shot-prompt.md` as the default one-shot redesign prompt for this repo.
 
-Auto researcher makes sense here as an optional source-discovery pre-pass, not as a replacement for the redesign prompt itself.
+Auto researcher makes more sense here as an optional prompt-hardening aid during iteration, not as an instruction embedded in the shipped redesign prompt.
 
-- It can help surface footer-only pages, weakly linked pages, and assets that a quick manual crawl might miss.
-- It is most useful before generation, when the goal is to widen the candidate inventory and reduce source-coverage gaps.
-- It is not enough on its own because the final output still needs a page-by-page mapping, an image ledger, a gap ledger, and a steelman audit tied directly to the generated site.
+- Use it while refining the prompt to ask what retention, source-coverage, or traceability failures a weaker version of the prompt would still allow.
+- That kind of critique is what helped push this prompt toward explicit source coverage notes, page-to-output mapping, image mapping, and the stricter readiness gate.
+- Keep the shipped prompt tool-agnostic. The runtime prompt should require the evidence directly, regardless of what helper tools were used while drafting it.
 
 It went well overall. The extra passes were worth doing because the remaining weaknesses were not about tone, they were about evidence: source coverage and mapping traceability. The smallest repeatable process fix that made the next iteration better was simple: once the prompt looked "good enough," force one more pass that asks what proof is still missing before accepting the result.

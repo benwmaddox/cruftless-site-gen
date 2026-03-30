@@ -26,8 +26,6 @@ Required workflow:
 
 1. Source inventory
 - Crawl or inspect the full public site navigation and obvious linked public pages.
-- If an auto researcher is available, you may use it as a discovery aid to widen page and asset coverage, especially when the source site has weak navigation, footer-only pages, or brittle markup.
-- Treat auto researcher output as a lead list to verify, not as proof that coverage is complete.
 - Cross-check header navigation, footer navigation, contact/about links, and obvious in-content public links so low-traffic pages are not skipped just because they are not featured on the homepage.
 - Produce a page inventory with:
   - URL
@@ -59,7 +57,7 @@ Required workflow:
 - Assume a skeptical reviewer is trying to prove the redesign dropped important content.
 - Compare the source inventory against the output page by page.
 - Cite the output page or section that carries each retained source page and each retained image.
-- Do not treat an auto researcher summary as sufficient evidence on its own; the final audit must still map retained content into the generated output.
+- Do not treat a high-level crawl summary as sufficient evidence on its own; the final audit must still map retained content into the generated output.
 - List anything that was condensed, normalized, or omitted.
 - For each omission, explain whether it was duplicated boilerplate, unsupported CMS chrome, broken source markup, or a true limitation in the current generator.
 - If an image, page, or site detail from the source is not clearly represented, the work is not ready.
