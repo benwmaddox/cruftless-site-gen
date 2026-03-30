@@ -17,11 +17,6 @@ import {
   featureGridClassNames,
   renderFeatureGrid,
 } from "./feature-grid/feature-grid.render.js";
-import { GoogleMapsSchema } from "./google-maps/google-maps.schema.js";
-import {
-  googleMapsClassNames,
-  renderGoogleMaps,
-} from "./google-maps/google-maps.render.js";
 import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
 import { MediaSchema } from "./media/media.schema.js";
@@ -35,7 +30,6 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
   FeatureGridSchema,
   FaqSchema,
   CtaBandSchema,
-  GoogleMapsSchema,
   MediaSchema,
   ProseSchema,
 ]);
@@ -103,12 +97,6 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: ctaBandClassNames,
   },
   {
-    type: "google-maps",
-    render: (data) => renderGoogleMaps(GoogleMapsSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./google-maps/google-maps.css", import.meta.url)),
-    classNames: googleMapsClassNames,
-  },
-  {
     type: "media",
     render: (data) => renderMedia(MediaSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./media/media.css", import.meta.url)),
@@ -138,8 +126,6 @@ export const renderComponent = (data: ComponentData): string => {
       return renderFaq(data);
     case "cta-band":
       return renderCtaBand(data);
-    case "google-maps":
-      return renderGoogleMaps(data);
     case "media":
       return renderMedia(data);
     case "prose":

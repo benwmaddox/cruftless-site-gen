@@ -273,44 +273,6 @@
                             "properties": {
                               "type": {
                                 "type": "string",
-                                "const": "google-maps"
-                              },
-                              "embedUrl": {
-                                "type": "string",
-                                "format": "uri",
-                                "maxLength": 2048
-                              },
-                              "title": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "caption": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 280
-                              },
-                              "size": {
-                                "type": "string",
-                                "enum": [
-                                  "content",
-                                  "wide"
-                                ],
-                                "default": "wide"
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "embedUrl",
-                              "title"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
                                 "const": "media"
                               },
                               "src": {

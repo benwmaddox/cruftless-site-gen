@@ -100,13 +100,6 @@
           "size": "wide"
         },
         {
-          "type": "google-maps",
-          "embedUrl": "https://www.google.com/maps?q=78th+Street+Studios+Cleveland+OH&output=embed&z=15",
-          "title": "78th Street Studios map",
-          "caption": "Use the embedded map to get directions to the building in Cleveland.",
-          "size": "wide"
-        },
-        {
           "type": "prose",
           "title": "Why the building matters",
           "lead": "78th Street Studios combines art destination, working studio building, and event venue in one sprawling piece of Cleveland industrial history.",
