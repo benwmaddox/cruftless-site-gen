@@ -9,11 +9,13 @@ import { SiteContentSchema } from "../src/schemas/site.schema.js";
 import { themeNames, type ThemeName } from "../src/themes/index.js";
 
 const themeMarkers: Record<ThemeName, string> = {
-  brutalism: "--button-height: 3rem;",
-  "dark-saas": "--color-scheme: dark;",
+  brutalism: "--button-hover-transform: translate(-3px, -3px);",
+  "dark-saas": "--color-primary: #4da3ff;",
   corporate: '--font-family-heading: Georgia, "Times New Roman", serif;',
   "app-announcement":
     '--font-family-heading: "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;',
+  "studio-industrial":
+    '--font-family-heading: "Bookman Old Style", "Palatino Linotype", serif;',
 };
 
 const createSite = (theme: ThemeName) =>
