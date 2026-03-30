@@ -29,6 +29,379 @@
             "pageBackgroundImageUrl": {
               "type": "string",
               "format": "uri"
+            },
+            "layout": {
+              "type": "object",
+              "properties": {
+                "components": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "hero"
+                              },
+                              "headline": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "subheadline": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 240
+                              },
+                              "primaryCta": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "href": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "required": [
+                                  "label",
+                                  "href"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "secondaryCta": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta"
+                              },
+                              "align": {
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "center"
+                                ],
+                                "default": "start"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "headline"
+                            ],
+                            "additionalProperties": false,
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "primaryCta"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "secondaryCta"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "feature-list"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "title": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80
+                                    },
+                                    "body": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 240
+                                    }
+                                  },
+                                  "required": [
+                                    "title",
+                                    "body"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 1,
+                                "maxItems": 6
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "title",
+                              "items"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "feature-grid"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "title": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "body": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "required": [
+                                    "title",
+                                    "body"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 1,
+                                "maxItems": 6
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "title",
+                              "items"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "faq"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "question": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 140
+                                    },
+                                    "answer": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 320
+                                    }
+                                  },
+                                  "required": [
+                                    "question",
+                                    "answer"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 1,
+                                "maxItems": 8
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "title",
+                              "items"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "cta-band"
+                              },
+                              "headline": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "body": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 240
+                              },
+                              "primaryCta": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta"
+                              },
+                              "secondaryCta": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "headline",
+                              "primaryCta"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "google-maps"
+                              },
+                              "embedUrl": {
+                                "type": "string",
+                                "format": "uri",
+                                "maxLength": 2048
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "caption": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "size": {
+                                "type": "string",
+                                "enum": [
+                                  "content",
+                                  "wide"
+                                ],
+                                "default": "wide"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "embedUrl",
+                              "title"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "media"
+                              },
+                              "src": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2048
+                              },
+                              "alt": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              },
+                              "caption": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "size": {
+                                "type": "string",
+                                "enum": [
+                                  "content",
+                                  "wide"
+                                ],
+                                "default": "wide"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "src",
+                              "alt"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "prose"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "lead": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "paragraphs": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1200
+                                },
+                                "minItems": 1,
+                                "maxItems": 12
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "paragraphs"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "page-content"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "components"
+              ],
+              "additionalProperties": false
             }
           },
           "required": [
@@ -71,347 +444,7 @@
               "components": {
                 "type": "array",
                 "items": {
-                  "anyOf": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "hero"
-                        },
-                        "headline": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "subheadline": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 240
-                        },
-                        "primaryCta": {
-                          "type": "object",
-                          "properties": {
-                            "label": {
-                              "type": "string",
-                              "minLength": 1
-                            },
-                            "href": {
-                              "type": "string",
-                              "minLength": 1
-                            }
-                          },
-                          "required": [
-                            "label",
-                            "href"
-                          ],
-                          "additionalProperties": false
-                        },
-                        "secondaryCta": {
-                          "$ref": "#/definitions/SiteContent/properties/pages/items/properties/components/items/anyOf/0/properties/primaryCta"
-                        },
-                        "align": {
-                          "type": "string",
-                          "enum": [
-                            "start",
-                            "center"
-                          ],
-                          "default": "start"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "headline"
-                      ],
-                      "additionalProperties": false,
-                      "anyOf": [
-                        {
-                          "required": [
-                            "primaryCta"
-                          ]
-                        },
-                        {
-                          "required": [
-                            "secondaryCta"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "feature-list"
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "title": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 80
-                              },
-                              "body": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 240
-                              }
-                            },
-                            "required": [
-                              "title",
-                              "body"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "minItems": 1,
-                          "maxItems": 6
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "title",
-                        "items"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "feature-grid"
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "title": {
-                                "type": "string",
-                                "minLength": 1
-                              },
-                              "body": {
-                                "type": "string",
-                                "minLength": 1
-                              }
-                            },
-                            "required": [
-                              "title",
-                              "body"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "minItems": 1,
-                          "maxItems": 6
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "title",
-                        "items"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "faq"
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "question": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 140
-                              },
-                              "answer": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 320
-                              }
-                            },
-                            "required": [
-                              "question",
-                              "answer"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "minItems": 1,
-                          "maxItems": 8
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "title",
-                        "items"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "cta-band"
-                        },
-                        "headline": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "body": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 240
-                        },
-                        "primaryCta": {
-                          "$ref": "#/definitions/SiteContent/properties/pages/items/properties/components/items/anyOf/0/properties/primaryCta"
-                        },
-                        "secondaryCta": {
-                          "$ref": "#/definitions/SiteContent/properties/pages/items/properties/components/items/anyOf/0/properties/primaryCta"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "headline",
-                        "primaryCta"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "google-maps"
-                        },
-                        "embedUrl": {
-                          "type": "string",
-                          "format": "uri",
-                          "maxLength": 2048
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "caption": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 280
-                        },
-                        "size": {
-                          "type": "string",
-                          "enum": [
-                            "content",
-                            "wide"
-                          ],
-                          "default": "wide"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "embedUrl",
-                        "title"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "media"
-                        },
-                        "src": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 2048
-                        },
-                        "alt": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 200
-                        },
-                        "caption": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 280
-                        },
-                        "size": {
-                          "type": "string",
-                          "enum": [
-                            "content",
-                            "wide"
-                          ],
-                          "default": "wide"
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "src",
-                        "alt"
-                      ],
-                      "additionalProperties": false
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "const": "prose"
-                        },
-                        "title": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 120
-                        },
-                        "lead": {
-                          "type": "string",
-                          "minLength": 1,
-                          "maxLength": 280
-                        },
-                        "paragraphs": {
-                          "type": "array",
-                          "items": {
-                            "type": "string",
-                            "minLength": 1,
-                            "maxLength": 1200
-                          },
-                          "minItems": 1,
-                          "maxItems": 12
-                        }
-                      },
-                      "required": [
-                        "type",
-                        "paragraphs"
-                      ],
-                      "additionalProperties": false
-                    }
-                  ]
+                  "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0"
                 },
                 "minItems": 1
               }

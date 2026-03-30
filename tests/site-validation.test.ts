@@ -62,4 +62,93 @@ describe("collectSiteValidationIssues", () => {
     expect(issues.some((issue) => issue.message.includes("duplicate slug"))).toBe(true);
     expect(issues.some((issue) => issue.message.includes("only one hero"))).toBe(true);
   });
+
+  it("requires a shared site layout to include exactly one page-content slot", () => {
+    const invalidSite = SiteContentSchema.parse({
+      ...validSite,
+      site: {
+        ...validSite.site,
+        layout: {
+          components: [
+            {
+              type: "prose",
+              title: "Shared intro",
+              paragraphs: ["This shows up on every page."],
+            },
+          ],
+        },
+      },
+    });
+
+    expect(collectSiteValidationIssues(invalidSite)).toEqual([
+      {
+        path: ["site", "layout", "components"],
+        message: "site layout must include exactly one 'page-content' slot",
+      },
+    ]);
+  });
+
+  it("rejects shared site layouts with more than one page-content slot", () => {
+    const invalidSite = SiteContentSchema.parse({
+      ...validSite,
+      site: {
+        ...validSite.site,
+        layout: {
+          components: [
+            {
+              type: "page-content",
+            },
+            {
+              type: "prose",
+              title: "Shared note",
+              paragraphs: ["This should only wrap the page once."],
+            },
+            {
+              type: "page-content",
+            },
+          ],
+        },
+      },
+    });
+
+    expect(collectSiteValidationIssues(invalidSite)).toEqual([
+      {
+        path: ["site", "layout", "components"],
+        message: "site layout must include exactly one 'page-content' slot",
+      },
+    ]);
+  });
+
+  it("counts shared layout heroes against each rendered page", () => {
+    const invalidSite = SiteContentSchema.parse({
+      ...validSite,
+      site: {
+        ...validSite.site,
+        layout: {
+          components: [
+            {
+              type: "hero",
+              headline: "Shared site hero",
+              primaryCta: {
+                label: "Learn more",
+                href: "/learn-more",
+              },
+            },
+            {
+              type: "page-content",
+            },
+          ],
+        },
+      },
+    });
+
+    const issues = collectSiteValidationIssues(invalidSite);
+
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toEqual({
+      path: ["pages", 0, "components", 0],
+      componentType: "hero",
+      message: "only one hero is allowed per page",
+    });
+  });
 });

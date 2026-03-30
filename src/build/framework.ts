@@ -8,6 +8,7 @@ import {
   componentDefinitions,
   renderComponent,
 } from "../components/index.js";
+import { resolvePageComponents } from "../layout/page-layout.js";
 import {
   SiteContentSchema,
   type SiteData,
@@ -81,12 +82,18 @@ const getComponentTypeForIssue = (
   rawData: unknown,
   pathSegments: Array<string | number>,
 ): string | undefined => {
-  if (
-    pathSegments[0] !== "pages" ||
-    typeof pathSegments[1] !== "number" ||
-    pathSegments[2] !== "components" ||
-    typeof pathSegments[3] !== "number"
-  ) {
+  const isPageComponentPath =
+    pathSegments[0] === "pages" &&
+    typeof pathSegments[1] === "number" &&
+    pathSegments[2] === "components" &&
+    typeof pathSegments[3] === "number";
+  const isSiteLayoutComponentPath =
+    pathSegments[0] === "site" &&
+    pathSegments[1] === "layout" &&
+    pathSegments[2] === "components" &&
+    typeof pathSegments[3] === "number";
+
+  if (!isPageComponentPath && !isSiteLayoutComponentPath) {
     return undefined;
   }
 
@@ -263,8 +270,10 @@ export const buildSite = async (
   const css = await renderSiteCss(siteContent.site);
   await writeFile(path.join(outDir, "assets", "site.css"), css, "utf8");
 
-  for (const page of siteContent.pages) {
-    const bodyHtml = page.components.map((component) => renderComponent(component)).join("\n");
+  for (const [pageIndex, page] of siteContent.pages.entries()) {
+    const bodyHtml = resolvePageComponents(siteContent.site, page, pageIndex)
+      .map((component) => renderComponent(component))
+      .join("\n");
     const documentHtml = renderPageDocument({
       site: siteContent.site,
       page,
