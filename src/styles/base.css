@@ -82,5 +82,5 @@ button:focus-visible {
 .c-button--secondary {
   border-color: var(--color-border);
   background: var(--surface-background);
-  color: inherit;
+  color: var(--button-secondary-text);
 }

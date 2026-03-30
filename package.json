@@ -8,15 +8,17 @@
   },
   "scripts": {
     "build": "tsx src/build/build.ts",
+    "build:example:baird": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive",
     "build:example:78th": "tsx src/build/build.ts content/examples/78th-street-studios.json dist/78th-street-studios",
     "schema:generate": "tsx src/build/generate-json-schema.ts",
     "schema:check": "tsx src/build/generate-json-schema.ts --check",
     "validate": "tsx src/build/validate.ts",
+    "validate:example:baird": "tsx src/build/validate.ts content/examples/baird-automotive.json",
     "validate:example:78th": "tsx src/build/validate.ts content/examples/78th-street-studios.json",
     "lint:css": "stylelint \"src/**/*.css\"",
     "lint:ts": "tsc --noEmit",
     "test": "vitest run",
-    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run validate && npm run build",
+    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run build && npm run build:example:78th && npm run build:example:baird",
     "check": "npm run validate:strict"
   },
   "dependencies": {
