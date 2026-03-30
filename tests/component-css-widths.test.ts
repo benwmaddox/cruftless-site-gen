@@ -7,6 +7,7 @@ const repoRoot = path.resolve(import.meta.dirname, "..");
 
 const readComponentCss = async (componentName: string) =>
   readFile(path.join(repoRoot, "src", "components", componentName, `${componentName}.css`), "utf8");
+const readBaseCss = async () => readFile(path.join(repoRoot, "src", "styles", "base.css"), "utf8");
 
 describe("component width tokens", () => {
   it("uses content-max for standard component wrappers", async () => {
@@ -34,5 +35,14 @@ describe("component width tokens", () => {
     expect(css).toContain("var(--content-max)");
     expect(css).toContain(".c-media--size-wide");
     expect(css).toContain("var(--container-max)");
+    expect(css).toContain("width: auto;");
+    expect(css).toContain("max-width: 100%;");
+    expect(css).toContain("margin-inline: auto;");
+  });
+
+  it("uses a dedicated readable text color for secondary buttons", async () => {
+    const css = await readBaseCss();
+
+    expect(css).toContain("color: var(--button-secondary-text);");
   });
 });

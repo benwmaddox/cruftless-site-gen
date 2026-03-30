@@ -42,6 +42,7 @@ const canonicalThemeTokens = {
   "--letter-spacing-wide": "0.04em",
   "--heading-letter-spacing": "-0.02em",
   "--button-letter-spacing": "0",
+  "--button-secondary-text": "var(--color-text)",
   "--space-0": "0",
   "--space-1": "0.25rem",
   "--space-2": "0.5rem",

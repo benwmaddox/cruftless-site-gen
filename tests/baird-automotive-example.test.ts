@@ -14,6 +14,7 @@ describe("Baird Automotive example", () => {
 
     expect(siteContent.site.name).toBe("Baird Automotive");
     expect(siteContent.site.theme).toBe("corporate");
+    expect(siteContent.site.layout?.components).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual([
       "/",
       "/our-story",
@@ -40,24 +41,36 @@ describe("Baird Automotive example", () => {
       expect(homeHtml).toContain("Established Arlington auto repair with long local roots");
       expect(homeHtml).toContain("sunroof owners to clear drain tubes every fall");
       expect(homeHtml).toContain("https://www.bairdautomotive.com/images/content/baird_auto.jpg");
+      expect(homeHtml).toContain("Book service or plan your visit");
+      expect(homeHtml).toContain("Baird Automotive shop details");
 
       expect(storyHtml).toContain("Built on loyal customers and decades of shop experience");
       expect(storyHtml).toContain("Washington Consumers&#39; CHECKBOOK Magazine");
       expect(storyHtml).toContain("https://www.bairdautomotive.com/images/content/baird_guys.jpg");
+      expect(storyHtml).toContain("Book service or plan your visit");
 
       expect(servicesHtml).toContain(
         "Full-service repair for domestic, Asian, and European vehicles",
       );
       expect(servicesHtml).toContain("Computerized alignment, tire balancing and rotation");
       expect(servicesHtml).toContain("https://www.bairdautomotive.com/images/content/ase.jpg");
+      expect(servicesHtml).toContain("Baird Automotive shop details");
 
       expect(communityHtml).toContain("Community support is part of the Baird Automotive identity");
       expect(communityHtml).toContain("Arlington Little League Rookies");
       expect(communityHtml).toContain("http://www.clarendon.org/mardi.html");
+      expect(communityHtml).toContain("Book service or plan your visit");
 
       expect(contactHtml).toContain("Find the shop in Arlington and get in touch directly");
       expect(contactHtml).toContain("mailto:joey@bairdautomotive.com");
       expect(contactHtml).toContain("3427 Washington Blvd., Arlington, VA 22201.");
+      expect(contactHtml).toContain("Baird Automotive shop details");
+      expect(homeHtml.indexOf("Established Arlington auto repair with long local roots")).toBeLessThan(
+        homeHtml.indexOf("Baird Automotive shop details"),
+      );
+      expect(contactHtml.indexOf("Find the shop in Arlington and get in touch directly")).toBeLessThan(
+        contactHtml.indexOf("Baird Automotive shop details"),
+      );
 
       expect(homeHtml).toContain('data-theme="corporate"');
       expect(css).toContain('--font-family-heading: Georgia, "Times New Roman", serif;');

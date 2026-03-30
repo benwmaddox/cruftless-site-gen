@@ -15,7 +15,10 @@
 
 .c-media__image {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
   border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-xl);
   background: var(--color-surface-alt);

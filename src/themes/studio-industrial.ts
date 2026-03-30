@@ -31,6 +31,7 @@ export const studioIndustrialTheme = createThemeDefinition(
     "--font-weight-semibold": "700",
     "--font-weight-bold": "800",
     "--button-letter-spacing": "0.12em",
+    "--button-secondary-text": "var(--color-primary-contrast)",
     "--space-7": "3.5rem",
     "--space-8": "4.5rem",
     "--container-max": "70rem",
