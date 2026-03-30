@@ -2,77 +2,70 @@
   "site": {
     "name": "78th Street Studios",
     "baseUrl": "https://78thstreetstudios.com",
-    "theme": "brutalism"
+    "theme": "studio-industrial"
   },
   "pages": [
     {
       "slug": "/",
-      "title": "Home",
+      "title": "78th Street Studios",
       "metadata": {
-        "description": "Test home page for 78th Street Studios generated from the current live site content."
+        "description": "Northeast Ohio's eclectic arts maze with galleries, studios, events, and industrial character."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "Northeast Ohio's eclectic arts maze",
-          "subheadline": "A generated test homepage shaped from the current live site, centered on monthly art nights, studio discovery, and event-ready industrial space.",
+          "headline": "Northeast Ohio's Eclectic Arts Maze",
+          "subheadline": "A 170,000-square-foot Cleveland landmark filled with galleries, artist studios, performance spaces, recording rooms, and year-round events.",
           "primaryCta": {
-            "label": "Read the story",
+            "label": "Explore the Story",
             "href": "/about"
           },
           "secondaryCta": {
-            "label": "Plan a visit",
-            "href": "https://78thstreetstudios.com/about"
+            "label": "Plan a Visit",
+            "href": "https://78thstreetstudios.com/maps"
           },
-          "align": "start"
+          "align": "center"
+        },
+        {
+          "type": "media",
+          "src": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/five_twenty_eight_by_one_eighty/public/media/images/featured/78SSHedgeThumbnail.jpg?itok=5D1ckRtm",
+          "alt": "Featured gallery image from inside 78th Street Studios",
+          "caption": "A glimpse of the galleries and long industrial corridors that define the building's atmosphere.",
+          "size": "wide"
         },
         {
           "type": "feature-grid",
-          "title": "Why people come here",
+          "title": "What the building holds",
           "items": [
             {
-              "title": "Large creative campus",
-              "body": "The live site describes 170,000 square feet of galleries, studios, performance space, and music recording rooms inside one Cleveland complex."
+              "title": "Art Galleries",
+              "body": "More than sixty venues and creative businesses make the complex a destination for collectors, visitors, and working artists."
             },
             {
-              "title": "Deep mix of tenants",
-              "body": "The public-facing pitch highlights more than 60 galleries, artist studios, and creative businesses working under one roof."
+              "title": "Working Studios",
+              "body": "Artists, designers, photographers, and publishers work in the same industrial footprint that visitors tour each month."
             },
-            {
-              "title": "Third Fridays draw people in",
-              "body": "Once a month, the building opens across multiple floors for exhibitions, music, food, and vendors in a single shared event window."
-            }
-          ]
-        },
-        {
-          "type": "feature-list",
-          "title": "Plan a first visit",
-          "items": [
             {
               "title": "Third Fridays",
-              "body": "The current about page says the public event runs every third Friday from 5 to 9 pm."
+              "body": "Free public viewing hours bring exhibits, ambient music, food, and pop-up vendors together across four floors."
             },
             {
-              "title": "Cleveland location",
-              "body": "The site lists the address as 1300 West 78th Street in Cleveland, Ohio 44102."
-            },
-            {
-              "title": "More than art viewing",
-              "body": "The venue also promotes private rentals, wedding and event hosting, and year-round use of its industrial spaces."
+              "title": "Private Events",
+              "body": "The same warehouse atmosphere that draws art crowds is also used for weddings, corporate gatherings, and special events."
             }
           ]
         },
         {
           "type": "cta-band",
-          "headline": "See the building history and who works inside",
-          "body": "The about page is where the current site explains the building story, the rise of Third Fridays, and the tenant mix.",
+          "headline": "Third Fridays light up the building every month",
+          "body": "The live site currently promotes Friday, April 17, 2026 as the next public event, alongside venue rental and vendor opportunities.",
           "primaryCta": {
-            "label": "Open the about page",
-            "href": "/about"
+            "label": "See the Live Schedule",
+            "href": "https://78thstreetstudios.com/about"
           },
           "secondaryCta": {
-            "label": "Official site",
-            "href": "https://78thstreetstudios.com"
+            "label": "Rent Space",
+            "href": "https://78thstreetstudios.com/rent-space"
           }
         }
       ]
@@ -81,100 +74,78 @@
       "slug": "/about",
       "title": "About",
       "metadata": {
-        "description": "Test about page for 78th Street Studios generated from the current live site content."
+        "description": "The history, monthly events, and cultural reach of 78th Street Studios in Cleveland."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "A century-old building turned creative hub",
-          "subheadline": "This version condenses the current site history into a simpler page about an early auto factory, the American Greetings years, and the present-day arts campus.",
+          "headline": "Built in 1905, still full of working creatives",
+          "subheadline": "The former Baker Electric Motor Vehicle building later housed American Greetings' creative teams and now anchors one of Cleveland's most distinctive art destinations.",
           "primaryCta": {
-            "label": "Back to home",
-            "href": "/"
+            "label": "Plan a Visit",
+            "href": "https://78thstreetstudios.com/maps"
           },
           "secondaryCta": {
-            "label": "Rent space",
-            "href": "https://78thstreetstudios.com/rent-space"
+            "label": "Back Home",
+            "href": "/"
           },
           "align": "start"
         },
         {
+          "type": "media",
+          "src": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/20120217_393_5DMarkII_78th_street_studios.jpg?itok=3kSoNgLS",
+          "alt": "Interior view of the historic warehouse at 78th Street Studios",
+          "caption": "Old freight doors, long corridors, and raw industrial surfaces still shape the way the building feels.",
+          "size": "wide"
+        },
+        {
+          "type": "prose",
+          "title": "Why the building matters",
+          "lead": "78th Street Studios combines art destination, working studio building, and event venue in one sprawling piece of Cleveland industrial history.",
+          "paragraphs": [
+            "The complex is known as the largest art and design hub in Northeast Ohio. Its galleries, artist workspaces, performance rooms, and recording spaces make it feel less like a single venue and more like a building-sized creative district.",
+            "Third Fridays remain the clearest example of that energy. Once a month the public moves through multiple floors of exhibitions, music, food, and pop-up vendors, turning the property into one of Cleveland's most recognizable recurring arts events.",
+            "The structure itself predates that cultural role. Built in 1905 for the Baker Electric Motor Vehicle Company, it later became home to American Greetings' creative studios before its current life as a center for artists, designers, makers, and events.",
+            "That layered history explains why the place feels different from a typical gallery building. The old freight infrastructure, hardwood floors, and warehouse scale are still present, but they now frame a mix of contemporary studios, exhibitions, and public gatherings."
+          ]
+        },
+        {
           "type": "feature-list",
-          "title": "What the current site says 78th Street Studios is",
+          "title": "A few facts the live site highlights",
           "items": [
             {
-              "title": "Arts and design complex",
-              "body": "The live about page presents the building as the largest art and design complex in Northeast Ohio with galleries, studios, performance areas, and recording space."
+              "title": "Magazine and catalog shoots",
+              "body": "The building has been used for Cleveland Magazine photography and for industrial-style Arhaus catalog work."
             },
             {
-              "title": "Monthly public event",
-              "body": "Third Fridays is framed as the signature recurring event, bringing visual exhibits, music, food, and pop-up vendors together across the building."
+              "title": "Printing and apparel roots",
+              "body": "Jakprints and Strhess Clothing are both part of the building's longer creative-business history."
             },
             {
-              "title": "Private event venue",
-              "body": "Outside of its own programming, the site says spaces throughout the building are rented for private functions."
-            }
-          ]
-        },
-        {
-          "type": "faq",
-          "title": "History and context",
-          "items": [
-            {
-              "question": "How did the building start?",
-              "answer": "The current site says the structure dates to 1905 and originally housed the Baker Electric Motor Vehicle Company."
+              "title": "Recording history",
+              "body": "The former Lava Room Recording space hosted projects connected to INXS, Creed, Papa Roach, Warrant, and The Pussycat Dolls."
             },
             {
-              "question": "What came after the auto era?",
-              "answer": "It later became home to American Greetings' creative studios before evolving into today's arts-focused tenant mix."
+              "title": "Event history",
+              "body": "smARTspace at 78th has hosted fan events, and the property is still used for private gatherings alongside public arts programming."
             },
             {
-              "question": "Why does Third Fridays matter?",
-              "answer": "The site describes it as a small early-2000s gathering that grew into a monthly arts destination and then into a wider district event."
-            }
-          ]
-        },
-        {
-          "type": "feature-grid",
-          "title": "Who the about page highlights inside the building",
-          "items": [
-            {
-              "title": "Art studios",
-              "body": "The tenant list starts with working artists and studio practices spread across the building."
-            },
-            {
-              "title": "Art galleries",
-              "body": "Multiple gallery tenants are named as anchors for visitors who want to browse exhibitions."
-            },
-            {
-              "title": "Design services",
-              "body": "The current site groups conservation, framing, publishing, and other design-led businesses together."
-            },
-            {
-              "title": "Photo and film",
-              "body": "Studios for photography and film production are presented as part of the broader creative ecosystem."
-            },
-            {
-              "title": "Business services",
-              "body": "The building also hosts business tenants, not just arts-focused occupants."
-            },
-            {
-              "title": "Entertainment and events",
-              "body": "Recording, theatre, publishing, and event-oriented groups round out the mix described on the site."
+              "title": "Publishing ties",
+              "body": "Alternative Press remained in the building until late 2021, extending its role beyond galleries into music and media."
             }
           ]
         },
         {
           "type": "cta-band",
-          "headline": "Use the live site for full tenant lists and event details",
-          "body": "This generated version is intentionally compressed. The live site still carries the directory, maps, and current event details.",
+          "headline": "Visit the building or follow the next event",
+          "body": "Use the live site for maps, the mailing list, and current public-event details beyond this sample build.",
           "primaryCta": {
-            "label": "Visit 78thStreetStudios.com",
-            "href": "https://78thstreetstudios.com"
+            "label": "View the Live About Page",
+            "href": "https://78thstreetstudios.com/about"
           },
           "secondaryCta": {
-            "label": "Join the list",
-            "href": "https://78thstreetstudios.com/contact"
+            "label": "Join the Mailing List",
+            "href": "https://lp.constantcontactpages.com/sl/giYbYgh/78thstreetstudios"
           }
         }
       ]

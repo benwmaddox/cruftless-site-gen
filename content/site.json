@@ -1,151 +1,112 @@
 {
   "site": {
-    "name": "78th Street Studios",
-    "baseUrl": "https://78thstreetstudios.com",
-    "theme": "studio-industrial"
+    "name": "LaunchKit",
+    "baseUrl": "https://launchkit.example",
+    "theme": "app-announcement"
   },
   "pages": [
     {
       "slug": "/",
-      "title": "78th Street Studios",
+      "title": "LaunchKit",
       "metadata": {
-        "description": "Northeast Ohio's eclectic arts maze with galleries, studios, events, and industrial character."
+        "description": "Strict JSON, stable markup, and theme-driven static pages."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "Northeast Ohio's Eclectic Arts Maze",
-          "subheadline": "A 170,000-square-foot Cleveland landmark filled with galleries, artist studios, performance spaces, recording rooms, and year-round events.",
+          "headline": "Announce your app with clean structure",
+          "subheadline": "Strict JSON, fixed components, and theme-driven presentation.",
           "primaryCta": {
-            "label": "Explore the Story",
-            "href": "/about"
+            "label": "Start now",
+            "href": "/start"
           },
           "secondaryCta": {
-            "label": "Plan a Visit",
-            "href": "https://78thstreetstudios.com/maps"
+            "label": "See demo",
+            "href": "/demo"
           },
-          "align": "center"
+          "align": "start"
         },
         {
-          "type": "media",
-          "src": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/five_twenty_eight_by_one_eighty/public/media/images/featured/78SSHedgeThumbnail.jpg?itok=5D1ckRtm",
-          "alt": "Featured gallery image from inside 78th Street Studios",
-          "caption": "A glimpse of the galleries and long industrial corridors that define the building's atmosphere.",
-          "size": "wide"
+          "type": "feature-list",
+          "title": "Keep the content contract tight",
+          "items": [
+            {
+              "title": "Model every block explicitly",
+              "body": "Content picks a known component instead of inventing markup."
+            },
+            {
+              "title": "Reject extra fields",
+              "body": "Unexpected keys fail before they can drift into production."
+            },
+            {
+              "title": "Review small diffs",
+              "body": "Stable HTML keeps generated output easy to inspect."
+            }
+          ]
         },
         {
           "type": "feature-grid",
-          "title": "What the building holds",
+          "title": "Why this approach works",
           "items": [
             {
-              "title": "Art Galleries",
-              "body": "More than sixty venues and creative businesses make the complex a destination for collectors, visitors, and working artists."
+              "title": "Strict validation",
+              "body": "Unknown keys fail the build."
             },
             {
-              "title": "Working Studios",
-              "body": "Artists, designers, photographers, and publishers work in the same industrial footprint that visitors tour each month."
+              "title": "Stable markup",
+              "body": "Components own structure, not content JSON."
             },
             {
-              "title": "Third Fridays",
-              "body": "Free public viewing hours bring exhibits, ambient music, food, and pop-up vendors together across four floors."
-            },
-            {
-              "title": "Private Events",
-              "body": "The same warehouse atmosphere that draws art crowds is also used for weddings, corporate gatherings, and special events."
+              "title": "Theme discipline",
+              "body": "Themes define exactly one token contract."
             }
           ]
         },
         {
           "type": "cta-band",
-          "headline": "Third Fridays light up the building every month",
-          "body": "The live site currently promotes Friday, April 17, 2026 as the next public event, alongside venue rental and vendor opportunities.",
+          "headline": "Build reviewable static pages",
+          "body": "Run validation before every build and keep the markup intentionally boring.",
           "primaryCta": {
-            "label": "See the Live Schedule",
-            "href": "https://78thstreetstudios.com/about"
-          },
-          "secondaryCta": {
-            "label": "Rent Space",
-            "href": "https://78thstreetstudios.com/rent-space"
+            "label": "Read docs",
+            "href": "/docs"
           }
         }
       ]
     },
     {
-      "slug": "/about",
-      "title": "About",
-      "metadata": {
-        "description": "The history, monthly events, and cultural reach of 78th Street Studios in Cleveland."
-      },
+      "slug": "/pricing",
+      "title": "Pricing",
       "components": [
         {
           "type": "hero",
-          "headline": "Built in 1905, still full of working creatives",
-          "subheadline": "The former Baker Electric Motor Vehicle building later housed American Greetings' creative teams and now anchors one of Cleveland's most distinctive art destinations.",
+          "headline": "Launch with less front-end drift",
+          "subheadline": "A narrow framework is easier to validate, review, and keep consistent.",
           "primaryCta": {
-            "label": "Plan a Visit",
-            "href": "https://78thstreetstudios.com/maps"
+            "label": "Start free",
+            "href": "/signup"
           },
-          "secondaryCta": {
-            "label": "Back Home",
-            "href": "/"
-          },
-          "align": "start"
+          "align": "center"
         },
         {
-          "type": "media",
-          "src": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/20120217_393_5DMarkII_78th_street_studios.jpg?itok=3kSoNgLS",
-          "alt": "Interior view of the historic warehouse at 78th Street Studios",
-          "caption": "Old freight doors, long corridors, and raw industrial surfaces still shape the way the building feels.",
-          "size": "wide"
-        },
-        {
-          "type": "prose",
-          "title": "Why the building matters",
-          "lead": "78th Street Studios combines art destination, working studio building, and event venue in one sprawling piece of Cleveland industrial history.",
-          "paragraphs": [
-            "The complex is known as the largest art and design hub in Northeast Ohio. Its galleries, artist workspaces, performance rooms, and recording spaces make it feel less like a single venue and more like a building-sized creative district.",
-            "Third Fridays remain the clearest example of that energy. Once a month the public moves through multiple floors of exhibitions, music, food, and pop-up vendors, turning the property into one of Cleveland's most recognizable recurring arts events.",
-            "The structure itself predates that cultural role. Built in 1905 for the Baker Electric Motor Vehicle Company, it later became home to American Greetings' creative studios before its current life as a center for artists, designers, makers, and events.",
-            "That layered history explains why the place feels different from a typical gallery building. The old freight infrastructure, hardwood floors, and warehouse scale are still present, but they now frame a mix of contemporary studios, exhibitions, and public gatherings."
-          ]
-        },
-        {
-          "type": "feature-list",
-          "title": "A few facts the live site highlights",
+          "type": "faq",
+          "title": "Questions teams ask before switching",
           "items": [
             {
-              "title": "Magazine and catalog shoots",
-              "body": "The building has been used for Cleveland Magazine photography and for industrial-style Arhaus catalog work."
+              "question": "Can this framework accept arbitrary HTML from JSON?",
+              "answer": "No. Components own the markup so validation stays strict and predictable."
             },
             {
-              "title": "Printing and apparel roots",
-              "body": "Jakprints and Strhess Clothing are both part of the building's longer creative-business history."
-            },
-            {
-              "title": "Recording history",
-              "body": "The former Lava Room Recording space hosted projects connected to INXS, Creed, Papa Roach, Warrant, and The Pussycat Dolls."
-            },
-            {
-              "title": "Event history",
-              "body": "smARTspace at 78th has hosted fan events, and the property is still used for private gatherings alongside public arts programming."
-            },
-            {
-              "title": "Publishing ties",
-              "body": "Alternative Press remained in the building until late 2021, extending its role beyond galleries into music and media."
+              "question": "Do themes change the structure of a page?",
+              "answer": "No. Themes only change tokens like color, spacing, and typography."
             }
           ]
         },
         {
           "type": "cta-band",
-          "headline": "Visit the building or follow the next event",
-          "body": "Use the live site for maps, the mailing list, and current public-event details beyond this sample build.",
+          "headline": "Need a stricter content pipeline?",
           "primaryCta": {
-            "label": "View the Live About Page",
-            "href": "https://78thstreetstudios.com/about"
-          },
-          "secondaryCta": {
-            "label": "Join the Mailing List",
-            "href": "https://lp.constantcontactpages.com/sl/giYbYgh/78thstreetstudios"
+            "label": "Contact sales",
+            "href": "/contact"
           }
         }
       ]

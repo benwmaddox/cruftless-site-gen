@@ -27,12 +27,14 @@ describe("78th Street Studios example", () => {
       const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
 
-      expect(homeHtml).toContain("Northeast Ohio&#39;s eclectic arts maze");
+      expect(homeHtml).toContain("Northeast Ohio&#39;s Eclectic Arts Maze");
       expect(homeHtml).toContain("Third Fridays");
-      expect(aboutHtml).toContain("A century-old building turned creative hub");
+      expect(homeHtml).toContain("Featured gallery image from inside 78th Street Studios");
+      expect(aboutHtml).toContain("Built in 1905, still full of working creatives");
       expect(aboutHtml).toContain("Baker Electric Motor Vehicle Company");
-      expect(homeHtml).toContain('data-theme="brutalism"');
-      expect(css).toContain("--color-bg: #fff7e8;");
+      expect(aboutHtml).toContain("Old freight doors, long corridors, and raw industrial surfaces");
+      expect(homeHtml).toContain('data-theme="studio-industrial"');
+      expect(css).toContain('--font-family-heading: "Bookman Old Style", "Palatino Linotype", serif;');
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }
