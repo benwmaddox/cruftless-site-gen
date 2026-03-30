@@ -16,7 +16,7 @@ export const studioIndustrialTheme = createThemeDefinition(
     "--color-link-hover": "#b13f21",
     "--color-focus-ring": "#d39b4c",
     "--page-background":
-      "linear-gradient(rgb(27 19 14 / 0.78), rgb(27 19 14 / 0.88)), url(\"https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX\") center / cover fixed #1b130e",
+      "linear-gradient(rgb(27 19 14 / 0.78), rgb(27 19 14 / 0.88)), var(--site-page-background-image, none) center / cover fixed #1b130e",
     "--surface-background":
       "linear-gradient(180deg, rgb(243 237 227 / 0.97) 0%, rgb(229 219 203 / 0.95) 100%)",
     "--hero-background":

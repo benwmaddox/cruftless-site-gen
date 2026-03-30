@@ -56,6 +56,7 @@ describe("buildSite theme CSS", () => {
 
       expect(css).toContain(themeMarkers[theme]);
       expect(html).toContain(`data-theme="${theme}"`);
+      expect(css).not.toContain("78thstreetstudios.com");
 
       for (const otherTheme of themeNames) {
         if (otherTheme === theme) {
