@@ -78,6 +78,7 @@ describe("Baird Automotive example", () => {
 
       expect(homeHtml).toContain('data-theme="corporate"');
       expect(css).toContain('--font-family-heading: "IBM Plex Sans", "Helvetica Neue", sans-serif;');
+      expect(css).toContain("--color-primary: #b45309;");
       expect(css).toContain("--color-accent: #059669;");
     } finally {
       await rm(outDir, { recursive: true, force: true });

@@ -59,6 +59,8 @@ describe("78th Street Studios example", () => {
       );
       expect(homeHtml).toContain('data-theme="studio-industrial"');
       expect(css).toContain('--font-family-heading: "Optima", "Avenir Next", sans-serif;');
+      expect(css).toContain("--color-scheme: dark;");
+      expect(css).toContain("--color-primary: #9d7cd8;");
       expect(css).toContain("--color-accent: #ff9e64;");
       expect(css).toContain("--site-page-background-image:");
       expect(css).toContain(

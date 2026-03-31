@@ -253,13 +253,14 @@ describe("theme validation", () => {
   it("applies structure and secondary color overrides to the resolved theme", () => {
     const resolvedTheme = resolveThemeDefinition(themes.corporate, {
       structure: "fill",
-      secondaryColorScheme: "graphite-pro",
+      secondaryColorScheme: "midnight-canvas",
     });
 
-    expect(resolvedTheme.tokens["--color-primary"]).toBe("#a855f7");
-    expect(resolvedTheme.tokens["--color-primary-contrast"]).toBe("#111111");
-    expect(resolvedTheme.tokens["--color-accent"]).toBe("#14b8a6");
-    expect(resolvedTheme.tokens["--color-link-hover"]).toBe("#ec4899");
+    expect(resolvedTheme.tokens["--color-scheme"]).toBe("dark");
+    expect(resolvedTheme.tokens["--color-bg"]).toBe("#0a0e27");
+    expect(resolvedTheme.tokens["--color-primary"]).toBe("#6c8eff");
+    expect(resolvedTheme.tokens["--color-link"]).toBe("#a78bfa");
+    expect(resolvedTheme.tokens["--color-accent"]).toBe("#f472b6");
     expect(resolvedTheme.css).toContain("background: var(--color-surface-alt);");
   });
 

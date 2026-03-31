@@ -50,7 +50,7 @@ const createSiteWithOverrides = (theme: ThemeName) =>
       theme,
       themeOverrides: {
         structure: "divider",
-        secondaryColorScheme: "graphite-pro",
+        secondaryColorScheme: "midnight-canvas",
       },
     },
     pages: [
@@ -106,8 +106,11 @@ describe("buildSite theme CSS", () => {
 
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
 
-      expect(css).toContain("--color-primary: #a855f7;");
-      expect(css).toContain("--color-accent: #14b8a6;");
+      expect(css).toContain("--color-scheme: dark;");
+      expect(css).toContain("--color-bg: #0a0e27;");
+      expect(css).toContain("--color-primary: #6c8eff;");
+      expect(css).toContain("--color-link: #a78bfa;");
+      expect(css).toContain("--color-accent: #f472b6;");
       expect(css).toContain("border-width: 0 0 var(--border-width-1) 0;");
     } finally {
       await rm(outDir, { recursive: true, force: true });

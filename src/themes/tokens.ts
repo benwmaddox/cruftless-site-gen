@@ -95,12 +95,24 @@ export const themeTokenNames = Object.keys(canonicalThemeTokens) as ThemeTokenNa
 export const themeTokenSet = new Set<ThemeTokenName>(themeTokenNames);
 
 export const allowedThemeOverrideTokens = [
+  "--color-scheme",
+  "--color-bg",
+  "--color-surface",
+  "--color-surface-alt",
+  "--color-text",
+  "--color-text-muted",
+  "--color-border",
   "--color-primary",
   "--color-primary-contrast",
   "--color-accent",
   "--color-link",
   "--color-link-hover",
   "--color-focus-ring",
+  "--page-background",
+  "--surface-background",
+  "--hero-background",
+  "--cta-background",
+  "--button-secondary-text",
 ] as const satisfies readonly ThemeTokenName[];
 
 export const defaultThemeTokens: ThemeTokens = { ...canonicalThemeTokens };
