@@ -11,6 +11,28 @@
     "layout": {
       "components": [
         {
+          "type": "navigation-bar",
+          "brandText": "78th Street Studios",
+          "links": [
+            {
+              "label": "Home",
+              "href": "/"
+            },
+            {
+              "label": "About",
+              "href": "/about"
+            },
+            {
+              "label": "Plan a Visit",
+              "href": "https://78thstreetstudios.com/maps"
+            },
+            {
+              "label": "Rent Space",
+              "href": "https://venuesat78thstreetstudios.com"
+            }
+          ]
+        },
+        {
           "type": "prose",
           "title": "Explore the building",
           "lead": "The live site keeps the same core visit paths in view on every page.",

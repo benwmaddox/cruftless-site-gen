@@ -6,6 +6,7 @@ import type { ZodIssue } from "zod";
 
 import {
   componentDefinitions,
+  type ComponentType,
   renderComponent,
 } from "../components/index.js";
 import { resolvePageComponents } from "../layout/page-layout.js";
@@ -243,6 +244,11 @@ const pageSlugToStylesheetHref = (slug: string): string => {
   return path.posix.relative(path.posix.dirname(pagePath), "/assets/site.css");
 };
 
+const pageSlugToScriptHref = (slug: string): string => {
+  const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
+  return path.posix.relative(path.posix.dirname(pagePath), "/assets/site.js");
+};
+
 const escapeCssString = (value: string): string =>
   value
     .replaceAll("\\", "\\\\")
@@ -280,6 +286,45 @@ const renderSiteCss = async (site: SiteData): Promise<string> => {
     .join("\n\n");
 };
 
+const collectUsedComponentTypes = (siteContent: SiteContentData): Set<ComponentType> => {
+  const componentTypes = new Set<ComponentType>();
+
+  siteContent.site.layout?.components.forEach((component) => {
+    if (component.type !== "page-content") {
+      componentTypes.add(component.type);
+    }
+  });
+
+  siteContent.pages.forEach((page) => {
+    page.components.forEach((component) => {
+      componentTypes.add(component.type);
+    });
+  });
+
+  return componentTypes;
+};
+
+const renderSiteJs = (siteContent: SiteContentData): string => {
+  const usedComponentTypes = collectUsedComponentTypes(siteContent);
+
+  return componentDefinitions
+    .filter(
+      (componentDefinition) =>
+        usedComponentTypes.has(componentDefinition.type) && componentDefinition.scriptContent,
+    )
+    .map((componentDefinition) => {
+      const scriptContent = componentDefinition.scriptContent;
+
+      if (!scriptContent) {
+        return "";
+      }
+
+      return `/* ${componentDefinition.type} */\n${scriptContent}`;
+    })
+    .filter(Boolean)
+    .join("\n\n");
+};
+
 export const buildSite = async (
   siteContent: SiteContentData,
   outDir: string = defaultOutDir,
@@ -288,7 +333,12 @@ export const buildSite = async (
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
   const css = await renderSiteCss(siteContent.site);
+  const js = renderSiteJs(siteContent);
   await writeFile(path.join(outDir, "assets", "site.css"), css, "utf8");
+
+  if (js) {
+    await writeFile(path.join(outDir, "assets", "site.js"), js, "utf8");
+  }
 
   for (const [pageIndex, page] of siteContent.pages.entries()) {
     const bodyHtml = resolvePageComponents(siteContent.site, page, pageIndex)
@@ -299,6 +349,7 @@ export const buildSite = async (
       page,
       bodyHtml,
       stylesheetHref: pageSlugToStylesheetHref(page.slug),
+      scriptHref: js ? pageSlugToScriptHref(page.slug) : undefined,
     });
     const outputPath = pageSlugToOutputPath(page.slug, outDir);
     await mkdir(path.dirname(outputPath), { recursive: true });

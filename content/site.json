@@ -10,6 +10,24 @@
     "layout": {
       "components": [
         {
+          "type": "navigation-bar",
+          "brandText": "LaunchKit",
+          "brandImage": {
+            "src": "https://images.example.com/launchkit-mark.svg",
+            "alt": "LaunchKit mark"
+          },
+          "links": [
+            {
+              "label": "Home",
+              "href": "/"
+            },
+            {
+              "label": "Pricing",
+              "href": "/pricing"
+            }
+          ]
+        },
+        {
           "type": "prose",
           "title": "Shared site header",
           "lead": "One layout can wrap every page.",

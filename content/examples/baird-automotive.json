@@ -10,6 +10,32 @@
     "layout": {
       "components": [
         {
+          "type": "navigation-bar",
+          "brandText": "Baird Automotive",
+          "links": [
+            {
+              "label": "Home",
+              "href": "/"
+            },
+            {
+              "label": "Our Story",
+              "href": "/our-story"
+            },
+            {
+              "label": "Services",
+              "href": "/services"
+            },
+            {
+              "label": "Community",
+              "href": "/in-the-community"
+            },
+            {
+              "label": "Contact",
+              "href": "/contact"
+            }
+          ]
+        },
+        {
           "type": "page-content"
         },
         {

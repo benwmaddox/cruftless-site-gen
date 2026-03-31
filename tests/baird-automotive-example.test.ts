@@ -41,8 +41,11 @@ describe("Baird Automotive example", () => {
       );
       const contactHtml = await readFile(path.join(outDir, "contact", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+      const js = await readFile(path.join(outDir, "assets", "site.js"), "utf8");
 
       expect(homeHtml).toContain("Established Arlington auto repair with long local roots");
+      expect(homeHtml).toContain('data-js="navigation-bar"');
+      expect(homeHtml).toContain("Our Story");
       expect(homeHtml).toContain("sunroof owners to clear drain tubes every fall");
       expect(homeHtml).toContain("https://www.bairdautomotive.com/images/content/baird_auto.jpg");
       expect(homeHtml).toContain("Book service or plan your visit");
@@ -77,9 +80,11 @@ describe("Baird Automotive example", () => {
       );
 
       expect(homeHtml).toContain('data-theme="corporate"');
+      expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
       expect(css).toContain('--font-family-heading: "IBM Plex Sans", "Helvetica Neue", sans-serif;');
       expect(css).toContain("--color-primary: #b45309;");
       expect(css).toContain("--color-accent: #059669;");
+      expect(js).toContain("resolveNavigationBarMode");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }

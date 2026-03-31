@@ -17,6 +17,7 @@ describe("component width tokens", () => {
       "feature-grid",
       "feature-list",
       "hero",
+      "navigation-bar",
       "prose",
     ];
 

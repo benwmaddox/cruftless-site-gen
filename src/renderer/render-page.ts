@@ -6,11 +6,13 @@ export const renderPageDocument = ({
   page,
   bodyHtml,
   stylesheetHref,
+  scriptHref,
 }: {
   site: SiteData;
   page: PageData;
   bodyHtml: string;
   stylesheetHref: string;
+  scriptHref?: string;
 }): string => {
   const title =
     page.slug === "/" ? escapeHtml(site.name) : `${escapeHtml(page.title)} | ${escapeHtml(site.name)}`;
@@ -29,6 +31,7 @@ export const renderPageDocument = ({
     description,
     `    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`,
     `    <link rel="stylesheet" href="${escapeHtml(stylesheetHref)}" />`,
+    scriptHref ? `    <script src="${escapeHtml(scriptHref)}" defer></script>` : "",
     "  </head>",
     `  <body data-theme="${escapeHtml(site.theme)}">`,
     '    <main class="l-page">',
@@ -43,4 +46,3 @@ export const renderPageDocument = ({
     .filter(Boolean)
     .join("\n");
 };
-
