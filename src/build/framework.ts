@@ -238,6 +238,11 @@ const pageSlugToOutputPath = (slug: string, outDir: string): string => {
   return path.join(outDir, slug.replace(/^\//, ""), "index.html");
 };
 
+const pageSlugToStylesheetHref = (slug: string): string => {
+  const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
+  return path.posix.relative(path.posix.dirname(pagePath), "/assets/site.css");
+};
+
 const escapeCssString = (value: string): string =>
   value
     .replaceAll("\\", "\\\\")
@@ -293,7 +298,7 @@ export const buildSite = async (
       site: siteContent.site,
       page,
       bodyHtml,
-      stylesheetHref: path.posix.join("/assets", "site.css"),
+      stylesheetHref: pageSlugToStylesheetHref(page.slug),
     });
     const outputPath = pageSlugToOutputPath(page.slug, outDir);
     await mkdir(path.dirname(outputPath), { recursive: true });

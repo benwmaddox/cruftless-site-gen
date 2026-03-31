@@ -18,10 +18,16 @@ describe("theme examples", () => {
         const siteContent = SiteContentSchema.parse(JSON.parse(rawJson) as unknown);
         const page = siteContent.pages[0];
         const componentTypes = page.components.map((component) => component.type);
+        const layoutComponents = siteContent.site.layout?.components ?? [];
+        const sharedComponentTypes = layoutComponents
+          .filter((component) => component.type !== "page-content")
+          .map((component) => component.type);
 
         expect(siteContent.site.theme).toBe(themeName);
         expect(siteContent.pages).toHaveLength(1);
         expect(componentTypes).toEqual(componentTypeNames);
+        expect(layoutComponents.map((component) => component.type)).toContain("page-content");
+        expect(sharedComponentTypes.length).toBeGreaterThan(0);
 
         return path.basename(contentPath);
       }),

@@ -2,7 +2,29 @@
   "site": {
     "name": "Studio Industrial Theme Example",
     "baseUrl": "https://example.com/examples/studio-industrial/",
-    "theme": "studio-industrial"
+    "theme": "studio-industrial",
+    "layout": {
+      "components": [
+        {
+          "type": "prose",
+          "title": "Shared theme wrapper",
+          "lead": "This site-level block renders before the page-local examples.",
+          "paragraphs": [
+            "Use the shared layout wrapper to verify how global sections look in the studio-industrial theme."
+          ]
+        },
+        {
+          "type": "page-content"
+        },
+        {
+          "type": "prose",
+          "title": "Shared theme footer",
+          "paragraphs": [
+            "This repeated site-level footer confirms the theme can frame page content without duplicating JSON on every page."
+          ]
+        }
+      ]
+    }
   },
   "pages": [
     {
