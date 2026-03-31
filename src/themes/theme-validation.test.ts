@@ -113,6 +113,19 @@ describe("theme validation", () => {
     }
   });
 
+  it("keeps content width at 80rem while preserving separate container width control", () => {
+    expect(defaultThemeTokens["--content-max"]).toBe("80rem");
+
+    for (const [themeName, theme] of Object.entries(themes)) {
+      expect(theme.tokens["--content-max"], `${themeName} should inherit the shared content width`).toBe(
+        "80rem",
+      );
+    }
+
+    expect(defaultThemeTokens["--container-max"]).toBe("72rem");
+    expect(themes.corporate.tokens["--container-max"]).toBe("74rem");
+  });
+
   it("keeps every built-in theme distinct beyond color alone", () => {
     for (const [themeName, theme] of Object.entries(themes)) {
       const changedNonColorTokens = themeTokenNames.filter(

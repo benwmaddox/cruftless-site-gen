@@ -53,7 +53,7 @@ const canonicalThemeTokens = {
   "--space-7": "3rem",
   "--space-8": "4rem",
   "--container-max": "72rem",
-  "--content-max": "48rem",
+  "--content-max": "80rem",
   "--nav-height": "4rem",
   "--button-height": "2.75rem",
   "--input-height": "2.75rem",
