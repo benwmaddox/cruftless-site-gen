@@ -7,6 +7,11 @@ export const featureGridClassNames = [
   "c-feature-grid__title",
   "c-feature-grid__items",
   "c-feature-grid__item",
+  "c-feature-grid__item--has-image",
+  "c-feature-grid__item-media",
+  "c-feature-grid__item-image",
+  "c-feature-grid__item-caption",
+  "c-feature-grid__item-copy",
   "c-feature-grid__item-title",
   "c-feature-grid__item-body",
 ] as const;
@@ -14,12 +19,36 @@ export const featureGridClassNames = [
 export const renderFeatureGrid = (data: FeatureGridData): string => {
   const itemsHtml = data.items
     .map(
-      (item) => [
-        '      <li class="c-feature-grid__item">',
-        `        <h3 class="c-feature-grid__item-title">${escapeHtml(item.title)}</h3>`,
-        `        <p class="c-feature-grid__item-body">${escapeHtml(item.body)}</p>`,
-        "      </li>",
-      ].join("\n"),
+      (item) => {
+        const itemClasses = ["c-feature-grid__item"];
+
+        if (item.image) {
+          itemClasses.push("c-feature-grid__item--has-image");
+        }
+
+        return [
+          `      <li class="${itemClasses.join(" ")}">`,
+          item.image
+            ? [
+                '        <figure class="c-feature-grid__item-media">',
+                `          <img class="c-feature-grid__item-image" src="${escapeHtml(item.image.src)}" alt="${escapeHtml(item.image.alt)}" />`,
+                item.image.caption
+                  ? `          <figcaption class="c-feature-grid__item-caption">${escapeHtml(item.image.caption)}</figcaption>`
+                  : "",
+                "        </figure>",
+              ]
+                .filter(Boolean)
+                .join("\n")
+            : "",
+          '        <div class="c-feature-grid__item-copy">',
+          `          <h3 class="c-feature-grid__item-title">${escapeHtml(item.title)}</h3>`,
+          `          <p class="c-feature-grid__item-body">${escapeHtml(item.body)}</p>`,
+          "        </div>",
+          "      </li>",
+        ]
+          .filter(Boolean)
+          .join("\n");
+      },
     )
     .join("\n");
 
@@ -34,4 +63,3 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
     "</section>",
   ].join("\n");
 };
-
