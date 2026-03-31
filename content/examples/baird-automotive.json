@@ -3,6 +3,10 @@
     "name": "Baird Automotive",
     "baseUrl": "https://www.bairdautomotive.com",
     "theme": "corporate",
+    "themeOverrides": {
+      "structure": "panel",
+      "secondaryColorScheme": "copper"
+    },
     "layout": {
       "components": [
         {

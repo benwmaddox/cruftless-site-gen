@@ -17,6 +17,7 @@ import {
 import { renderPageDocument } from "../renderer/render-page.js";
 import { emitThemeCss } from "../themes/emit-theme-css.js";
 import { themes } from "../themes/index.js";
+import { resolveThemeDefinition } from "../themes/theme-options.js";
 import { validateComponentRegistry } from "../validation/component-registry-validation.js";
 import {
   collectSiteValidationIssues,
@@ -209,8 +210,21 @@ export const loadValidatedSite = async (
   }
 
   const contentIssues = collectSiteValidationIssues(parsed.data);
-  if (frameworkIssues.length > 0 || contentIssues.length > 0) {
-    throw new ValidationFailure(contentPath, [...frameworkIssues, ...contentIssues]);
+  const resolvedThemeIssues = validateThemeDefinition(
+    `site:${parsed.data.site.theme}`,
+    resolveThemeDefinition(themes[parsed.data.site.theme], parsed.data.site.themeOverrides),
+  );
+
+  if (
+    frameworkIssues.length > 0 ||
+    contentIssues.length > 0 ||
+    resolvedThemeIssues.length > 0
+  ) {
+    throw new ValidationFailure(contentPath, [
+      ...frameworkIssues,
+      ...contentIssues,
+      ...resolvedThemeIssues,
+    ]);
   }
 
   return parsed.data;
@@ -238,6 +252,7 @@ const emitSiteCss = (site: SiteData): string => {
 };
 
 const renderSiteCss = async (site: SiteData): Promise<string> => {
+  const resolvedTheme = resolveThemeDefinition(themes[site.theme], site.themeOverrides);
   const componentCssChunks = await Promise.all(
     componentDefinitions.map(async (componentDefinition) => {
       const css = await readFile(componentDefinition.cssPath, "utf8");
@@ -251,7 +266,7 @@ const renderSiteCss = async (site: SiteData): Promise<string> => {
     "/* site */",
     emitSiteCss(site).trim(),
     "/* theme */",
-    emitThemeCss(themes[site.theme]),
+    emitThemeCss(resolvedTheme),
     "/* base */",
     baseCss,
     ...componentCssChunks,

@@ -16,6 +16,10 @@ describe("78th Street Studios example", () => {
     const siteContent = await loadValidatedSite(exampleContentPath);
 
     expect(siteContent.site.name).toBe("78th Street Studios");
+    expect(siteContent.site.themeOverrides).toEqual({
+      structure: "plain",
+      secondaryColorScheme: "plum",
+    });
     expect(siteContent.site.layout?.components).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual(["/", "/about"]);
 
@@ -54,7 +58,8 @@ describe("78th Street Studios example", () => {
         aboutHtml.indexOf("Contact 78th Street Studios"),
       );
       expect(homeHtml).toContain('data-theme="studio-industrial"');
-      expect(css).toContain('--font-family-heading: "Bookman Old Style", "Palatino Linotype", serif;');
+      expect(css).toContain('--font-family-heading: "Optima", "Avenir Next", sans-serif;');
+      expect(css).toContain("--color-accent: #78566b;");
       expect(css).toContain("--site-page-background-image:");
       expect(css).toContain(
         'url("https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX")',

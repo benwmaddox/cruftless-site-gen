@@ -14,6 +14,10 @@ describe("Baird Automotive example", () => {
 
     expect(siteContent.site.name).toBe("Baird Automotive");
     expect(siteContent.site.theme).toBe("corporate");
+    expect(siteContent.site.themeOverrides).toEqual({
+      structure: "panel",
+      secondaryColorScheme: "copper",
+    });
     expect(siteContent.site.layout?.components).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual([
       "/",
@@ -73,8 +77,8 @@ describe("Baird Automotive example", () => {
       );
 
       expect(homeHtml).toContain('data-theme="corporate"');
-      expect(css).toContain('--font-family-heading: Georgia, "Times New Roman", serif;');
-      expect(css).toContain("--color-primary: #004e8f;");
+      expect(css).toContain('--font-family-heading: "IBM Plex Sans", "Helvetica Neue", sans-serif;');
+      expect(css).toContain("--color-accent: #a55f39;");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }

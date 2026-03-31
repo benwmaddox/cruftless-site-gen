@@ -3,6 +3,10 @@
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
     "theme": "app-announcement",
+    "themeOverrides": {
+      "structure": "panel",
+      "secondaryColorScheme": "moss"
+    },
     "layout": {
       "components": [
         {

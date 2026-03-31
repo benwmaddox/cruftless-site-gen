@@ -26,6 +26,27 @@
                 "studio-industrial"
               ]
             },
+            "themeOverrides": {
+              "type": "object",
+              "properties": {
+                "structure": {
+                  "type": "string",
+                  "enum": [
+                    "plain",
+                    "panel"
+                  ]
+                },
+                "secondaryColorScheme": {
+                  "type": "string",
+                  "enum": [
+                    "moss",
+                    "copper",
+                    "plum"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
             "pageBackgroundImageUrl": {
               "type": "string",
               "format": "uri"
