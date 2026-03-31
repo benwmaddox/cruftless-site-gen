@@ -174,6 +174,7 @@ describe("site layout", () => {
       );
       expect(js).toContain("resolveNavigationBarMode");
       expect(js).toContain("ResizeObserver");
+      expect(js).not.toContain("__name");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }
