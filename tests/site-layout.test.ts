@@ -76,12 +76,14 @@ describe("site layout", () => {
       expect(homeHtml).toContain("Shared header");
       expect(homeHtml).toContain("Launch faster");
       expect(homeHtml).toContain("Shared footer");
+      expect(homeHtml).toContain('<link rel="stylesheet" href="assets/site.css" />');
       expect(homeHtml.indexOf("Shared header")).toBeLessThan(homeHtml.indexOf("Launch faster"));
       expect(homeHtml.indexOf("Launch faster")).toBeLessThan(homeHtml.indexOf("Shared footer"));
 
       expect(pricingHtml).toContain("Shared header");
       expect(pricingHtml).toContain("Pricing FAQ");
       expect(pricingHtml).toContain("Shared footer");
+      expect(pricingHtml).toContain('<link rel="stylesheet" href="../assets/site.css" />');
       expect(pricingHtml.indexOf("Shared header")).toBeLessThan(pricingHtml.indexOf("Pricing FAQ"));
       expect(pricingHtml.indexOf("Pricing FAQ")).toBeLessThan(pricingHtml.indexOf("Shared footer"));
     } finally {
