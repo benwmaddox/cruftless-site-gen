@@ -73,6 +73,18 @@ const readShadowBlurPx = (value: string): number | null => {
 };
 
 describe("theme validation", () => {
+  it("exposes the full supported override vocabulary", () => {
+    expect(themeStructureNames).toEqual(["plain", "panel", "outline", "rule"]);
+    expect(secondaryColorSchemeNames).toEqual([
+      "moss",
+      "copper",
+      "plum",
+      "stone",
+      "ochre",
+      "berry",
+    ]);
+  });
+
   it("accepts the registered themes", () => {
     for (const [themeName, theme] of Object.entries(themes)) {
       expect(validateThemeDefinition(themeName, theme)).toEqual([]);
@@ -219,13 +231,13 @@ describe("theme validation", () => {
 
   it("applies structure and secondary color overrides to the resolved theme", () => {
     const resolvedTheme = resolveThemeDefinition(themes.corporate, {
-      structure: "panel",
-      secondaryColorScheme: "plum",
+      structure: "rule",
+      secondaryColorScheme: "berry",
     });
 
-    expect(resolvedTheme.tokens["--color-accent"]).toBe("#78566b");
-    expect(resolvedTheme.tokens["--color-focus-ring"]).toBe("#8c6a80");
-    expect(resolvedTheme.css).toContain(".c-prose__inner");
+    expect(resolvedTheme.tokens["--color-accent"]).toBe("#855767");
+    expect(resolvedTheme.tokens["--color-focus-ring"]).toBe("#9a6c7b");
+    expect(resolvedTheme.css).toContain("border-inline-start: var(--border-width-3) solid var(--color-accent)");
   });
 
   it("rejects cruftless-disallowed CSS properties and vendor prefixes", () => {

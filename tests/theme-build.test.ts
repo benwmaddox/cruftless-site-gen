@@ -42,6 +42,36 @@ const createSite = (theme: ThemeName) =>
     ],
   });
 
+const createSiteWithOverrides = (theme: ThemeName) =>
+  SiteContentSchema.parse({
+    site: {
+      name: "LaunchKit",
+      baseUrl: "https://launchkit.example",
+      theme,
+      themeOverrides: {
+        structure: "rule",
+        secondaryColorScheme: "berry",
+      },
+    },
+    pages: [
+      {
+        slug: "/",
+        title: "Home",
+        components: [
+          {
+            type: "hero",
+            headline: "Launch faster",
+            subheadline: "Theme-driven static pages without custom templates.",
+            primaryCta: {
+              label: "Get started",
+              href: "/start",
+            },
+          },
+        ],
+      },
+    ],
+  });
+
 describe("buildSite theme CSS", () => {
   it.each(themeNames)("emits theme-specific token CSS for %s", async (theme) => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-"));
@@ -63,6 +93,21 @@ describe("buildSite theme CSS", () => {
 
         expect(css).not.toContain(themeMarkers[otherTheme]);
       }
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
+
+  it("emits override CSS and tokens for a supported override combination", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-overrides-"));
+
+    try {
+      await buildSite(createSiteWithOverrides("corporate"), outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+
+      expect(css).toContain("--color-accent: #855767;");
+      expect(css).toContain("border-inline-start: var(--border-width-3) solid var(--color-accent);");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }
