@@ -47,6 +47,13 @@ describe("component width tokens", () => {
     expect(css).toContain("color: var(--button-secondary-text);");
   });
 
+  it("keeps primary button text readable on hover", async () => {
+    const css = await readBaseCss();
+
+    expect(css).toContain(".c-button--primary:hover {");
+    expect(css).toContain("color: var(--color-primary-contrast);");
+  });
+
   it("keeps google maps width modes split between content and container tokens", async () => {
     const css = await readComponentCss("google-maps");
 

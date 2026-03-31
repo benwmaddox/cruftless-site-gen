@@ -85,6 +85,7 @@ button:focus-visible {
 .c-button--primary:hover {
   border-color: var(--color-link-hover);
   background: var(--color-link-hover);
+  color: var(--color-primary-contrast);
 }
 
 .c-button--secondary:hover {
