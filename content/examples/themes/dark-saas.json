@@ -1,0 +1,126 @@
+{
+  "site": {
+    "name": "Dark SaaS Theme Example",
+    "baseUrl": "https://example.com/examples/dark-saas/",
+    "theme": "dark-saas"
+  },
+  "pages": [
+    {
+      "slug": "/",
+      "title": "Dark SaaS Preview",
+      "metadata": {
+        "description": "Single-page preview of every component rendered with the dark-saas theme."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "Dark SaaS theme preview",
+          "subheadline": "One page, every component, and no real-site content required.",
+          "primaryCta": {
+            "label": "Jump to examples",
+            "href": "#examples"
+          },
+          "secondaryCta": {
+            "label": "See theme list",
+            "href": "/themes"
+          },
+          "align": "start"
+        },
+        {
+          "type": "feature-list",
+          "title": "What this preview is for",
+          "items": [
+            {
+              "title": "Fast visual QA",
+              "body": "Use this page to inspect how spacing, type, and CTA treatments land in the dark-saas theme."
+            },
+            {
+              "title": "Component coverage",
+              "body": "Each supported component appears once so theme regressions are easier to spot."
+            },
+            {
+              "title": "Fake content only",
+              "body": "Nothing here depends on real site data, assets, or customer copy."
+            }
+          ]
+        },
+        {
+          "type": "feature-grid",
+          "title": "What to compare between themes",
+          "items": [
+            {
+              "title": "Heading tone",
+              "body": "Compare how the same headline weight and spacing feel across themes."
+            },
+            {
+              "title": "Surface treatment",
+              "body": "Cards, dividers, and section framing should all reflect the active theme tokens."
+            },
+            {
+              "title": "CTA contrast",
+              "body": "Primary and secondary buttons should stay readable without custom per-page CSS."
+            },
+            {
+              "title": "Long-form rhythm",
+              "body": "Prose, FAQs, and media captions should remain balanced on the same page."
+            }
+          ]
+        },
+        {
+          "type": "faq",
+          "title": "Theme example FAQ",
+          "items": [
+            {
+              "question": "Why does each theme only get one page?",
+              "answer": "The goal is quick comparison, so one page with full component coverage is enough."
+            },
+            {
+              "question": "Can these examples use placeholder content?",
+              "answer": "Yes. They are intended for layout and theme review, not for publishing."
+            },
+            {
+              "question": "Should the examples be built together?",
+              "answer": "Yes. The bulk examples build generates every theme preview in one deterministic run."
+            }
+          ]
+        },
+        {
+          "type": "cta-band",
+          "headline": "Build every theme example at once",
+          "body": "Run the bulk examples build to regenerate the full preview set into dist/examples.",
+          "primaryCta": {
+            "label": "Run build:examples",
+            "href": "/commands/build-examples"
+          },
+          "secondaryCta": {
+            "label": "Run validate:examples",
+            "href": "/commands/validate-examples"
+          }
+        },
+        {
+          "type": "google-maps",
+          "embedUrl": "https://www.google.com/maps?q=New+York+NY&output=embed&z=13",
+          "title": "Shared sample map",
+          "caption": "The map component stays in the preview so iframe framing and spacing are visible in every theme.",
+          "size": "wide"
+        },
+        {
+          "type": "media",
+          "src": "https://images.example.com/previews/dark-saas-workspace.jpg",
+          "alt": "Sample workspace image used for the dark-saas theme preview",
+          "caption": "Media is included with a caption so image framing and supporting text can be checked together.",
+          "size": "wide"
+        },
+        {
+          "type": "prose",
+          "title": "How to use this page",
+          "lead": "Scroll once and check every section against the same baseline content.",
+          "paragraphs": [
+            "The preview fixtures are intentionally synthetic. They exist to make theme and component comparisons obvious without depending on customer content.",
+            "Because each theme file follows the same structure, visual changes are easier to attribute to theme tokens rather than content differences."
+          ]
+        }
+      ]
+    }
+  ]
+}
