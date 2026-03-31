@@ -31,8 +31,11 @@ describe("78th Street Studios example", () => {
       const homeHtml = await readFile(path.join(outDir, "index.html"), "utf8");
       const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+      const js = await readFile(path.join(outDir, "assets", "site.js"), "utf8");
 
       expect(homeHtml).toContain("Explore the building");
+      expect(homeHtml).toContain('data-js="navigation-bar"');
+      expect(homeHtml).toContain("Plan a Visit");
       expect(homeHtml).toContain("Northeast Ohio&#39;s Eclectic Arts Maze");
       expect(homeHtml).toContain("Host an event inside Cleveland&#39;s best-known arts maze");
       expect(homeHtml).toContain("Featured gallery image from inside 78th Street Studios");
@@ -58,10 +61,12 @@ describe("78th Street Studios example", () => {
         aboutHtml.indexOf("Contact 78th Street Studios"),
       );
       expect(homeHtml).toContain('data-theme="studio-industrial"');
+      expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
       expect(css).toContain('--font-family-heading: "Optima", "Avenir Next", sans-serif;');
       expect(css).toContain("--color-scheme: dark;");
       expect(css).toContain("--color-primary: #9d7cd8;");
       expect(css).toContain("--color-accent: #ff9e64;");
+      expect(js).toContain("resolveNavigationBarMode");
       expect(css).toContain("--site-page-background-image:");
       expect(css).toContain(
         'url("https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX")',

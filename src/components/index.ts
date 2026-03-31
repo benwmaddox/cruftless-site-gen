@@ -26,6 +26,19 @@ import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
 import { MediaSchema } from "./media/media.schema.js";
 import { mediaClassNames, renderMedia } from "./media/media.render.js";
+import {
+  NavigationBarSchemaBase,
+} from "./navigation-bar/navigation-bar.schema.js";
+import {
+  navigationBarRuntimeScript,
+} from "./navigation-bar/navigation-bar.runtime.js";
+import {
+  navigationBarClassNames,
+  renderNavigationBar,
+} from "./navigation-bar/navigation-bar.render.js";
+import {
+  NavigationBarSchema,
+} from "./navigation-bar/navigation-bar.schema.js";
 import { ProseSchema } from "./prose/prose.schema.js";
 import { proseClassNames, renderProse } from "./prose/prose.render.js";
 
@@ -37,6 +50,7 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
   CtaBandSchema,
   GoogleMapsSchema,
   MediaSchema,
+  NavigationBarSchemaBase,
   ProseSchema,
 ]);
 
@@ -63,6 +77,7 @@ export interface ComponentDefinition {
   render: (data: ComponentData) => string;
   cssPath: string;
   classNames: readonly string[];
+  scriptContent?: string;
 }
 
 export const sharedClassNames = [
@@ -115,6 +130,13 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: mediaClassNames,
   },
   {
+    type: "navigation-bar",
+    render: (data) => renderNavigationBar(NavigationBarSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./navigation-bar/navigation-bar.css", import.meta.url)),
+    classNames: navigationBarClassNames,
+    scriptContent: navigationBarRuntimeScript,
+  },
+  {
     type: "prose",
     render: (data) => renderProse(ProseSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./prose/prose.css", import.meta.url)),
@@ -142,6 +164,8 @@ export const renderComponent = (data: ComponentData): string => {
       return renderGoogleMaps(data);
     case "media":
       return renderMedia(data);
+    case "navigation-bar":
+      return renderNavigationBar(data);
     case "prose":
       return renderProse(data);
     default: {

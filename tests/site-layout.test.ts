@@ -90,4 +90,93 @@ describe("site layout", () => {
       await rm(outDir, { recursive: true, force: true });
     }
   });
+
+  it("renders a shared navigation bar and emits its measured-collapse runtime", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-navbar-layout-"));
+    const site = SiteContentSchema.parse({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "app-announcement",
+        layout: {
+          components: [
+            {
+              type: "navigation-bar",
+              brandText: "LaunchKit",
+              links: [
+                {
+                  label: "Home",
+                  href: "/",
+                },
+                {
+                  label: "Pricing",
+                  href: "/pricing",
+                },
+                {
+                  label: "Contact",
+                  href: "/contact",
+                },
+              ],
+            },
+            {
+              type: "page-content",
+            },
+          ],
+        },
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Launch faster",
+              primaryCta: {
+                label: "Get started",
+                href: "/start",
+              },
+            },
+          ],
+        },
+        {
+          slug: "/pricing",
+          title: "Pricing",
+          components: [
+            {
+              type: "faq",
+              title: "Pricing FAQ",
+              items: [
+                {
+                  question: "Is there a free plan?",
+                  answer: "Yes, teams can start without a contract.",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    try {
+      await buildSite(site, outDir);
+
+      const homeHtml = await readFile(path.join(outDir, "index.html"), "utf8");
+      const pricingHtml = await readFile(path.join(outDir, "pricing", "index.html"), "utf8");
+      const js = await readFile(path.join(outDir, "assets", "site.js"), "utf8");
+
+      expect(homeHtml).toContain('data-js="navigation-bar"');
+      expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
+      expect(pricingHtml).toContain('<script src="../assets/site.js" defer></script>');
+      expect(homeHtml.indexOf('class="c-navbar"')).toBeLessThan(homeHtml.indexOf("Launch faster"));
+      expect(pricingHtml.indexOf('class="c-navbar"')).toBeLessThan(
+        pricingHtml.indexOf("Pricing FAQ"),
+      );
+      expect(js).toContain("resolveNavigationBarMode");
+      expect(js).toContain("ResizeObserver");
+      expect(js).not.toContain("__name");
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
 });

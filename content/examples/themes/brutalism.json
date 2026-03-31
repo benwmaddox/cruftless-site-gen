@@ -6,6 +6,24 @@
     "layout": {
       "components": [
         {
+          "type": "navigation-bar",
+          "brandText": "Brutalism",
+          "links": [
+            {
+              "label": "Preview",
+              "href": "/"
+            },
+            {
+              "label": "Theme List",
+              "href": "/themes"
+            },
+            {
+              "label": "Validate",
+              "href": "/commands/validate-examples"
+            }
+          ]
+        },
+        {
           "type": "prose",
           "title": "Shared theme wrapper",
           "lead": "This site-level block renders before the page-local examples.",

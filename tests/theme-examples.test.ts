@@ -22,11 +22,15 @@ describe("theme examples", () => {
         const sharedComponentTypes = layoutComponents
           .filter((component) => component.type !== "page-content")
           .map((component) => component.type);
+        const allComponentTypes = Array.from(
+          new Set([...componentTypes, ...sharedComponentTypes]),
+        ).sort();
 
         expect(siteContent.site.theme).toBe(themeName);
         expect(siteContent.pages).toHaveLength(1);
-        expect(componentTypes).toEqual(componentTypeNames);
+        expect(allComponentTypes).toEqual([...componentTypeNames].sort());
         expect(layoutComponents.map((component) => component.type)).toContain("page-content");
+        expect(sharedComponentTypes).toContain("navigation-bar");
         expect(sharedComponentTypes.length).toBeGreaterThan(0);
 
         return path.basename(contentPath);
