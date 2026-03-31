@@ -1,13 +1,10 @@
 import { z } from "zod";
 
-export const MediaSchema = z
-  .object({
-    type: z.literal("media"),
-    src: z.string().min(1).max(2048),
-    alt: z.string().min(1).max(200),
-    caption: z.string().min(1).max(280).optional(),
-    size: z.enum(["content", "wide"]).default("wide"),
-  })
-  .strict();
+import { ImageReferenceSchema } from "../../schemas/shared.js";
+
+export const MediaSchema = ImageReferenceSchema.extend({
+  type: z.literal("media"),
+  size: z.enum(["content", "wide"]).default("wide"),
+});
 
 export type MediaData = z.infer<typeof MediaSchema>;

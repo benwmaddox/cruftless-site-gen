@@ -12,6 +12,11 @@ describe("FeatureGridSchema", () => {
         {
           title: "Strict validation",
           body: "Unknown keys fail.",
+          image: {
+            src: "https://example.com/validation.jpg",
+            alt: "Validation checklist on a desk",
+            caption: "Optional image support keeps content flexible.",
+          },
         },
       ],
     });
@@ -20,6 +25,9 @@ describe("FeatureGridSchema", () => {
 
     expect(html).toContain('<section class="c-feature-grid">');
     expect(html).toContain('<ul class="c-feature-grid__items">');
+    expect(html).toContain('c-feature-grid__item--has-image');
+    expect(html).toContain('<figure class="c-feature-grid__item-media">');
+    expect(html).toContain('src="https://example.com/validation.jpg"');
     expect(html).toContain("Strict validation");
   });
 
@@ -49,5 +57,35 @@ describe("FeatureGridSchema", () => {
       ),
     ).toBe(true);
   });
-});
 
+  it("rejects unknown fields inside an image reference", () => {
+    const result = FeatureGridSchema.safeParse({
+      type: "feature-grid",
+      title: "Why it works",
+      items: [
+        {
+          title: "Strict validation",
+          body: "Unknown keys fail.",
+          image: {
+            src: "https://example.com/validation.jpg",
+            alt: "Validation checklist on a desk",
+            layout: "right",
+          },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) {
+      return;
+    }
+
+    expect(
+      result.error.issues.some(
+        (issue) =>
+          issue.code === "unrecognized_keys" &&
+          String(issue.path.join(".")) === "items.0.image",
+      ),
+    ).toBe(true);
+  });
+});

@@ -9,3 +9,12 @@ export const LinkSchema = z
 
 export type LinkData = z.infer<typeof LinkSchema>;
 
+export const ImageReferenceSchema = z
+  .object({
+    src: z.string().min(1).max(2048),
+    alt: z.string().min(1).max(200),
+    caption: z.string().min(1).max(280).optional(),
+  })
+  .strict();
+
+export type ImageReferenceData = z.infer<typeof ImageReferenceSchema>;
