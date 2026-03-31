@@ -15,6 +15,8 @@ describe("FeatureGridSchema", () => {
           image: {
             src: "https://example.com/validation.jpg",
             alt: "Validation checklist on a desk",
+            width: 1200,
+            height: 800,
             caption: "Optional image support keeps content flexible.",
           },
         },
@@ -28,6 +30,7 @@ describe("FeatureGridSchema", () => {
     expect(html).toContain('c-feature-grid__item--has-image');
     expect(html).toContain('<figure class="c-feature-grid__item-media">');
     expect(html).toContain('src="https://example.com/validation.jpg"');
+    expect(html).toContain('width="1200" height="800"');
     expect(html).toContain("Strict validation");
   });
 

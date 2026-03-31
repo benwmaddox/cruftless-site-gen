@@ -14,6 +14,8 @@ export const ImageReferenceSchema = z
     src: z.string().min(1).max(2048),
     alt: z.string().min(1).max(200),
     caption: z.string().min(1).max(280).optional(),
+    width: z.number().int().positive().max(10000).optional(),
+    height: z.number().int().positive().max(10000).optional(),
   })
   .strict();
 

@@ -10,9 +10,14 @@ export const mediaClassNames = [
 ] as const;
 
 export const renderMedia = (data: MediaData): string => {
+  const dimensions =
+    data.width !== undefined && data.height !== undefined
+      ? ` width="${data.width}" height="${data.height}"`
+      : "";
+
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(data.src)}" alt="${escapeHtml(data.alt)}" />`,
+    `  <img class="c-media__image" src="${escapeHtml(data.src)}" alt="${escapeHtml(data.alt)}"${dimensions} />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]

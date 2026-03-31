@@ -233,6 +233,16 @@
                                           "type": "string",
                                           "minLength": 1,
                                           "maxLength": 280
+                                        },
+                                        "width": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 10000
+                                        },
+                                        "height": {
+                                          "type": "integer",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 10000
                                         }
                                       },
                                       "required": [
@@ -384,6 +394,12 @@
                               },
                               "caption": {
                                 "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/caption"
+                              },
+                              "width": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/width"
+                              },
+                              "height": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/height"
                               },
                               "type": {
                                 "type": "string",
