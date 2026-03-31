@@ -9,6 +9,8 @@ describe("MediaSchema", () => {
       type: "media",
       src: "https://example.com/studio.jpg",
       alt: "Founder standing in the studio",
+      width: 1600,
+      height: 900,
       caption: "A real image gives landing pages more character than a card grid alone.",
       size: "content",
     });
@@ -18,6 +20,7 @@ describe("MediaSchema", () => {
     expect(html).toContain('<figure class="c-media c-media--size-content">');
     expect(html).toContain('<img class="c-media__image"');
     expect(html).toContain('alt="Founder standing in the studio"');
+    expect(html).toContain('width="1600" height="900"');
     expect(html).toContain("<figcaption");
   });
 

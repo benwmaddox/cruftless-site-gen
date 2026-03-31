@@ -26,6 +26,11 @@ const renderLinkList = (links: NavigationBarData["links"]): string =>
     )
     .join("");
 
+const renderMeasureLinkList = (links: NavigationBarData["links"]): string =>
+  links
+    .map((link) => `<li><span class="c-navbar__link">${escapeHtml(link.label)}</span></li>`)
+    .join("");
+
 const createPanelId = (data: NavigationBarData): string => {
   const seed = JSON.stringify({
     brandText: data.brandText,
@@ -53,6 +58,7 @@ export const renderNavigationBar = (data: NavigationBarData): string => {
     .join("");
   const brandHtml = brandParts ? `<a class="c-navbar__brand" href="/">${brandParts}</a>` : "";
   const linksHtml = renderLinkList(data.links);
+  const measureLinksHtml = renderMeasureLinkList(data.links);
 
   return [
     '<header class="c-navbar" data-js="navigation-bar" data-navigation-bar-mode="inline" data-navigation-bar-open="false">',
@@ -64,7 +70,7 @@ export const renderNavigationBar = (data: NavigationBarData): string => {
     '        <span class="c-navbar__menu-label">Menu</span>',
     '        <span class="c-navbar__menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>',
     "      </button>",
-    `      <nav class="c-navbar__measure" aria-hidden="true"><ul class="c-navbar__list">${linksHtml}</ul></nav>`,
+    `      <nav class="c-navbar__measure" aria-hidden="true"><ul class="c-navbar__list">${measureLinksHtml}</ul></nav>`,
     "    </div>",
     "  </div>",
     `  <nav class="c-navbar__panel" id="${escapeHtml(panelId)}" aria-label="Menu" hidden><ul class="c-navbar__list">${linksHtml}</ul></nav>`,

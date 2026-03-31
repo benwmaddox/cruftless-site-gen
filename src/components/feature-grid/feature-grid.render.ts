@@ -26,12 +26,17 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
           itemClasses.push("c-feature-grid__item--has-image");
         }
 
+        const imageDimensions =
+          item.image?.width !== undefined && item.image.height !== undefined
+            ? ` width="${item.image.width}" height="${item.image.height}"`
+            : "";
+
         return [
           `      <li class="${itemClasses.join(" ")}">`,
           item.image
             ? [
                 '        <figure class="c-feature-grid__item-media">',
-                `          <img class="c-feature-grid__item-image" src="${escapeHtml(item.image.src)}" alt="${escapeHtml(item.image.alt)}" />`,
+                `          <img class="c-feature-grid__item-image" src="${escapeHtml(item.image.src)}" alt="${escapeHtml(item.image.alt)}"${imageDimensions} />`,
                 item.image.caption
                   ? `          <figcaption class="c-feature-grid__item-caption">${escapeHtml(item.image.caption)}</figcaption>`
                   : "",

@@ -33,6 +33,10 @@ describe("NavigationBarSchema", () => {
     expect(html.indexOf("c-navbar__brand-image")).toBeLessThan(
       html.indexOf("c-navbar__brand-text"),
     );
+    const measureMarkup =
+      html.match(/<nav class="c-navbar__measure" aria-hidden="true">([\s\S]*?)<\/nav>/)?.[1] ?? "";
+    expect(measureMarkup).toContain('<span class="c-navbar__link">Pricing &amp; Plans</span>');
+    expect(measureMarkup).not.toContain("<a ");
     expect(html).not.toContain("<Kit>");
   });
 
