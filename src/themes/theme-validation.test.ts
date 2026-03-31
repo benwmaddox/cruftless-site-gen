@@ -74,14 +74,35 @@ const readShadowBlurPx = (value: string): number | null => {
 
 describe("theme validation", () => {
   it("exposes the full supported override vocabulary", () => {
-    expect(themeStructureNames).toEqual(["plain", "panel", "outline", "rule"]);
+    expect(themeStructureNames).toEqual([
+      "plain",
+      "panel",
+      "outline",
+      "rule",
+      "divider",
+      "fill",
+    ]);
     expect(secondaryColorSchemeNames).toEqual([
-      "moss",
-      "copper",
-      "plum",
-      "stone",
-      "ochre",
-      "berry",
+      "midnight-canvas",
+      "obsidian-depth",
+      "slate-noir",
+      "carbon-elegance",
+      "deep-ocean",
+      "charcoal-studio",
+      "graphite-pro",
+      "void-space",
+      "twilight-mist",
+      "onyx-matrix",
+      "cloud-canvas",
+      "pearl-minimal",
+      "ivory-studio",
+      "linen-soft",
+      "porcelain-clean",
+      "cream-elegance",
+      "arctic-breeze",
+      "alabaster-pure",
+      "sand-warm",
+      "frost-bright",
     ]);
   });
 
@@ -231,13 +252,15 @@ describe("theme validation", () => {
 
   it("applies structure and secondary color overrides to the resolved theme", () => {
     const resolvedTheme = resolveThemeDefinition(themes.corporate, {
-      structure: "rule",
-      secondaryColorScheme: "berry",
+      structure: "fill",
+      secondaryColorScheme: "graphite-pro",
     });
 
-    expect(resolvedTheme.tokens["--color-accent"]).toBe("#855767");
-    expect(resolvedTheme.tokens["--color-focus-ring"]).toBe("#9a6c7b");
-    expect(resolvedTheme.css).toContain("border-inline-start: var(--border-width-3) solid var(--color-accent)");
+    expect(resolvedTheme.tokens["--color-primary"]).toBe("#a855f7");
+    expect(resolvedTheme.tokens["--color-primary-contrast"]).toBe("#111111");
+    expect(resolvedTheme.tokens["--color-accent"]).toBe("#14b8a6");
+    expect(resolvedTheme.tokens["--color-link-hover"]).toBe("#ec4899");
+    expect(resolvedTheme.css).toContain("background: var(--color-surface-alt);");
   });
 
   it("rejects cruftless-disallowed CSS properties and vendor prefixes", () => {

@@ -5,7 +5,7 @@
     "theme": "app-announcement",
     "themeOverrides": {
       "structure": "panel",
-      "secondaryColorScheme": "moss"
+      "secondaryColorScheme": "porcelain-clean"
     },
     "layout": {
       "components": [

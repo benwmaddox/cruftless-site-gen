@@ -35,18 +35,34 @@
                     "plain",
                     "panel",
                     "outline",
-                    "rule"
+                    "rule",
+                    "divider",
+                    "fill"
                   ]
                 },
                 "secondaryColorScheme": {
                   "type": "string",
                   "enum": [
-                    "moss",
-                    "copper",
-                    "plum",
-                    "stone",
-                    "ochre",
-                    "berry"
+                    "midnight-canvas",
+                    "obsidian-depth",
+                    "slate-noir",
+                    "carbon-elegance",
+                    "deep-ocean",
+                    "charcoal-studio",
+                    "graphite-pro",
+                    "void-space",
+                    "twilight-mist",
+                    "onyx-matrix",
+                    "cloud-canvas",
+                    "pearl-minimal",
+                    "ivory-studio",
+                    "linen-soft",
+                    "porcelain-clean",
+                    "cream-elegance",
+                    "arctic-breeze",
+                    "alabaster-pure",
+                    "sand-warm",
+                    "frost-bright"
                   ]
                 }
               },

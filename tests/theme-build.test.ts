@@ -49,8 +49,8 @@ const createSiteWithOverrides = (theme: ThemeName) =>
       baseUrl: "https://launchkit.example",
       theme,
       themeOverrides: {
-        structure: "rule",
-        secondaryColorScheme: "berry",
+        structure: "divider",
+        secondaryColorScheme: "graphite-pro",
       },
     },
     pages: [
@@ -106,8 +106,9 @@ describe("buildSite theme CSS", () => {
 
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
 
-      expect(css).toContain("--color-accent: #855767;");
-      expect(css).toContain("border-inline-start: var(--border-width-3) solid var(--color-accent);");
+      expect(css).toContain("--color-primary: #a855f7;");
+      expect(css).toContain("--color-accent: #14b8a6;");
+      expect(css).toContain("border-width: 0 0 var(--border-width-1) 0;");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }
