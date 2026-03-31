@@ -91,6 +91,76 @@ describe("site layout", () => {
     }
   });
 
+  it("only emits CSS for component types used by the built site", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-layout-css-"));
+    const site = SiteContentSchema.parse({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "app-announcement",
+        layout: {
+          components: [
+            {
+              type: "prose",
+              title: "Shared header",
+              paragraphs: ["This introduction appears on every page."],
+            },
+            {
+              type: "page-content",
+            },
+          ],
+        },
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Launch faster",
+              primaryCta: {
+                label: "Get started",
+                href: "/start",
+              },
+            },
+          ],
+        },
+        {
+          slug: "/pricing",
+          title: "Pricing",
+          components: [
+            {
+              type: "faq",
+              title: "Pricing FAQ",
+              items: [
+                {
+                  question: "Is there a free plan?",
+                  answer: "Yes, teams can start without a contract.",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    try {
+      await buildSite(site, outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+
+      expect(css).toContain(".c-prose");
+      expect(css).toContain(".c-hero");
+      expect(css).toContain(".c-faq");
+      expect(css).not.toContain(".c-feature-grid");
+      expect(css).not.toContain(".c-google-maps");
+      expect(css).not.toContain(".c-navbar");
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
+
   it("renders a shared navigation bar and emits its measured-collapse runtime", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-navbar-layout-"));
     const site = SiteContentSchema.parse({
