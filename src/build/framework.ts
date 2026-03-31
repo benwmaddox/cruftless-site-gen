@@ -262,13 +262,17 @@ const emitSiteCss = (site: SiteData): string => {
   return `:root {\n  --site-page-background-image: url("${escapeCssString(site.pageBackgroundImageUrl)}");\n}\n`;
 };
 
-const renderSiteCss = async (site: SiteData): Promise<string> => {
+const renderSiteCss = async (siteContent: SiteContentData): Promise<string> => {
+  const { site } = siteContent;
   const resolvedTheme = resolveThemeDefinition(themes[site.theme], site.themeOverrides);
+  const usedComponentTypes = collectUsedComponentTypes(siteContent);
   const componentCssChunks = await Promise.all(
-    componentDefinitions.map(async (componentDefinition) => {
-      const css = await readFile(componentDefinition.cssPath, "utf8");
-      return `/* ${componentDefinition.type} */\n${css}`;
-    }),
+    componentDefinitions
+      .filter((componentDefinition) => usedComponentTypes.has(componentDefinition.type))
+      .map(async (componentDefinition) => {
+        const css = await readFile(componentDefinition.cssPath, "utf8");
+        return `/* ${componentDefinition.type} */\n${css}`;
+      }),
   );
 
   const baseCss = await readFile(baseCssPath, "utf8");
@@ -332,7 +336,7 @@ export const buildSite = async (
   await rm(outDir, { recursive: true, force: true });
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
-  const css = await renderSiteCss(siteContent.site);
+  const css = await renderSiteCss(siteContent);
   const js = renderSiteJs(siteContent);
   await writeFile(path.join(outDir, "assets", "site.css"), css, "utf8");
 
