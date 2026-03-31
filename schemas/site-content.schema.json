@@ -26,6 +26,48 @@
                 "studio-industrial"
               ]
             },
+            "themeOverrides": {
+              "type": "object",
+              "properties": {
+                "structure": {
+                  "type": "string",
+                  "enum": [
+                    "plain",
+                    "panel",
+                    "outline",
+                    "rule",
+                    "divider",
+                    "fill"
+                  ]
+                },
+                "secondaryColorScheme": {
+                  "type": "string",
+                  "enum": [
+                    "midnight-canvas",
+                    "obsidian-depth",
+                    "slate-noir",
+                    "carbon-elegance",
+                    "deep-ocean",
+                    "charcoal-studio",
+                    "graphite-pro",
+                    "void-space",
+                    "twilight-mist",
+                    "onyx-matrix",
+                    "cloud-canvas",
+                    "pearl-minimal",
+                    "ivory-studio",
+                    "linen-soft",
+                    "porcelain-clean",
+                    "cream-elegance",
+                    "arctic-breeze",
+                    "alabaster-pure",
+                    "sand-warm",
+                    "frost-bright"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
             "pageBackgroundImageUrl": {
               "type": "string",
               "format": "uri"

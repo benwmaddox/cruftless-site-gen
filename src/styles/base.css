@@ -54,9 +54,9 @@ button:focus-visible {
   justify-content: center;
   min-height: var(--button-height);
   padding-inline: var(--space-4);
-  border: var(--border-width-1) solid transparent;
+  border: var(--border-width-1) solid var(--color-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  background: var(--surface-background);
   font-family: var(--font-family-heading);
   letter-spacing: var(--button-letter-spacing);
   font-weight: var(--font-weight-semibold);
@@ -64,23 +64,30 @@ button:focus-visible {
   transition:
     background var(--duration-normal) var(--ease-standard),
     border-color var(--duration-normal) var(--ease-standard),
-    box-shadow var(--duration-normal) var(--ease-standard),
-    color var(--duration-normal) var(--ease-standard),
-    transform var(--duration-fast) var(--ease-standard);
+    color var(--duration-normal) var(--ease-standard);
 }
 
 .c-button:hover {
   transform: var(--button-hover-transform);
-  box-shadow: var(--shadow-md);
 }
 
 .c-button--primary {
-  background: var(--cta-background);
+  border-color: var(--color-primary);
+  background: var(--color-primary);
   color: var(--color-primary-contrast);
 }
 
 .c-button--secondary {
-  border-color: var(--color-border);
   background: var(--surface-background);
   color: var(--button-secondary-text);
+}
+
+.c-button--primary:hover {
+  border-color: var(--color-link-hover);
+  background: var(--color-link-hover);
+}
+
+.c-button--secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }

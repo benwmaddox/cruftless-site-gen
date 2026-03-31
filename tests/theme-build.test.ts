@@ -9,13 +9,11 @@ import { SiteContentSchema } from "../src/schemas/site.schema.js";
 import { themeNames, type ThemeName } from "../src/themes/index.js";
 
 const themeMarkers: Record<ThemeName, string> = {
-  brutalism: "--button-hover-transform: translate(-3px, -3px);",
-  "dark-saas": "--color-primary: #4da3ff;",
-  corporate: '--font-family-heading: Georgia, "Times New Roman", serif;',
-  "app-announcement":
-    '--font-family-heading: "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;',
-  "studio-industrial":
-    '--font-family-heading: "Bookman Old Style", "Palatino Linotype", serif;',
+  brutalism: "--shadow-sm: 2px 2px 0 rgb(0 0 0 / 1);",
+  "dark-saas": "--color-primary: #aa6a45;",
+  corporate: '--font-family-heading: "IBM Plex Sans", "Helvetica Neue", sans-serif;',
+  "app-announcement": '--font-family-heading: "Gill Sans", "Avenir Next", sans-serif;',
+  "studio-industrial": '--font-family-heading: "Optima", "Avenir Next", sans-serif;',
 };
 
 const createSite = (theme: ThemeName) =>
@@ -24,6 +22,36 @@ const createSite = (theme: ThemeName) =>
       name: "LaunchKit",
       baseUrl: "https://launchkit.example",
       theme,
+    },
+    pages: [
+      {
+        slug: "/",
+        title: "Home",
+        components: [
+          {
+            type: "hero",
+            headline: "Launch faster",
+            subheadline: "Theme-driven static pages without custom templates.",
+            primaryCta: {
+              label: "Get started",
+              href: "/start",
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+const createSiteWithOverrides = (theme: ThemeName) =>
+  SiteContentSchema.parse({
+    site: {
+      name: "LaunchKit",
+      baseUrl: "https://launchkit.example",
+      theme,
+      themeOverrides: {
+        structure: "divider",
+        secondaryColorScheme: "midnight-canvas",
+      },
     },
     pages: [
       {
@@ -65,6 +93,25 @@ describe("buildSite theme CSS", () => {
 
         expect(css).not.toContain(themeMarkers[otherTheme]);
       }
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
+
+  it("emits override CSS and tokens for a supported override combination", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-overrides-"));
+
+    try {
+      await buildSite(createSiteWithOverrides("corporate"), outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+
+      expect(css).toContain("--color-scheme: dark;");
+      expect(css).toContain("--color-bg: #0a0e27;");
+      expect(css).toContain("--color-primary: #6c8eff;");
+      expect(css).toContain("--color-link: #a78bfa;");
+      expect(css).toContain("--color-accent: #f472b6;");
+      expect(css).toContain("border-width: 0 0 var(--border-width-1) 0;");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }
