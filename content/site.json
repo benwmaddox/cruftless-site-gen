@@ -2,7 +2,7 @@
   "site": {
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
-    "theme": "app-announcement",
+    "theme": "friendly-modern",
     "themeOverrides": {
       "structure": "panel",
       "secondaryColorScheme": "porcelain-clean"

@@ -60,9 +60,9 @@ describe("78th Street Studios example", () => {
       expect(aboutHtml.indexOf("Built in 1905, still full of working creatives")).toBeLessThan(
         aboutHtml.indexOf("Contact 78th Street Studios"),
       );
-      expect(homeHtml).toContain('data-theme="studio-industrial"');
+      expect(homeHtml).toContain('data-theme="workshop"');
       expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
-      expect(css).toContain('--font-family-heading: "Optima", "Avenir Next", sans-serif;');
+      expect(css).toContain('--font-family-heading: "Source Serif 4", Georgia, serif;');
       expect(css).toContain("--color-scheme: dark;");
       expect(css).toContain("--color-primary: #9d7cd8;");
       expect(css).toContain("--color-accent: #ff9e64;");

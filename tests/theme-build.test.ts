@@ -9,11 +9,14 @@ import { SiteContentSchema } from "../src/schemas/site.schema.js";
 import { themeNames, type ThemeName } from "../src/themes/index.js";
 
 const themeMarkers: Record<ThemeName, string> = {
-  brutalism: "--shadow-sm: 2px 2px 0 rgb(0 0 0 / 1);",
-  "dark-saas": "--color-primary: #aa6a45;",
-  corporate: '--font-family-heading: "IBM Plex Sans", "Helvetica Neue", sans-serif;',
-  "app-announcement": '--font-family-heading: "Gill Sans", "Avenir Next", sans-serif;',
-  "studio-industrial": '--font-family-heading: "Optima", "Avenir Next", sans-serif;',
+  corporate: "--color-primary: #0b5fff;",
+  brutalism: '--font-family-heading: "IBM Plex Mono", "Space Grotesk", monospace;',
+  workshop: '--font-family-heading: "Source Serif 4", Georgia, serif;',
+  "refined-professional": "--color-primary: #c9a227;",
+  "friendly-modern": "--color-accent: #e11d48;",
+  "heritage-local": "--color-accent: #7a1f2b;",
+  "wellness-calm": "--color-primary: #2f7c64;",
+  "high-vis-service": "--color-primary: #ffd400;",
 };
 
 const createSite = (theme: ThemeName) =>

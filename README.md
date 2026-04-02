@@ -62,11 +62,14 @@ The current component set is:
 
 The current built-in themes are:
 
-- `brutalism`
-- `dark-saas`
 - `corporate`
-- `app-announcement`
-- `studio-industrial`
+- `brutalism`
+- `workshop`
+- `refined-professional`
+- `friendly-modern`
+- `heritage-local`
+- `wellness-calm`
+- `high-vis-service`
 
 ## Example content shape
 
@@ -77,7 +80,7 @@ This is the rough shape of a site file:
   "site": {
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
-    "theme": "app-announcement",
+    "theme": "friendly-modern",
     "layout": {
       "components": [
         { "type": "navigation-bar", "brandText": "LaunchKit", "links": [] },

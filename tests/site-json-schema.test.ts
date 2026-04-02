@@ -79,7 +79,7 @@ describe("site JSON schema", async () => {
       site: {
         name: "LaunchKit",
         baseUrl: "https://launchkit.example",
-        theme: "app-announcement",
+        theme: "friendly-modern",
       },
       pages: [
         {

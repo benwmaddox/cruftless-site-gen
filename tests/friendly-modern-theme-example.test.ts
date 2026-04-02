@@ -8,22 +8,22 @@ import { buildSiteFromFile, loadValidatedSite } from "../src/build/framework.js"
 
 const exampleContentPath = path.resolve(
   process.cwd(),
-  "content/examples/themes/app-announcement.json",
+  "content/examples/themes/friendly-modern.json",
 );
 
-describe("app-announcement theme example", () => {
+describe("friendly-modern theme example", () => {
   it("renders deterministic media markup and keeps the measuring nav non-interactive", async () => {
     const siteContent = await loadValidatedSite(exampleContentPath);
     const media = siteContent.pages[0]?.components.find((component) => component.type === "media");
 
-    expect(siteContent.site.theme).toBe("app-announcement");
+    expect(siteContent.site.theme).toBe("friendly-modern");
     expect(media).toMatchObject({
       type: "media",
       width: 1600,
       height: 900,
     });
 
-    const outDir = await mkdtemp(path.join(os.tmpdir(), "app-announcement-theme-"));
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "friendly-modern-theme-"));
 
     try {
       await buildSiteFromFile(exampleContentPath, outDir);

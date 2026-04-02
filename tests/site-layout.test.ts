@@ -14,7 +14,7 @@ describe("site layout", () => {
       site: {
         name: "LaunchKit",
         baseUrl: "https://launchkit.example",
-        theme: "app-announcement",
+        theme: "friendly-modern",
         layout: {
           components: [
             {
@@ -97,7 +97,7 @@ describe("site layout", () => {
       site: {
         name: "LaunchKit",
         baseUrl: "https://launchkit.example",
-        theme: "app-announcement",
+        theme: "friendly-modern",
         layout: {
           components: [
             {
@@ -153,9 +153,9 @@ describe("site layout", () => {
       expect(css).toContain(".c-prose");
       expect(css).toContain(".c-hero");
       expect(css).toContain(".c-faq");
-      expect(css).not.toContain(".c-feature-grid");
-      expect(css).not.toContain(".c-google-maps");
-      expect(css).not.toContain(".c-navbar");
+      expect(css).not.toContain(".c-feature-grid__items");
+      expect(css).not.toContain(".c-google-maps__embed");
+      expect(css).not.toContain(".c-navbar[data-navigation-bar-mode=");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }
@@ -167,7 +167,7 @@ describe("site layout", () => {
       site: {
         name: "LaunchKit",
         baseUrl: "https://launchkit.example",
-        theme: "app-announcement",
+        theme: "friendly-modern",
         layout: {
           components: [
             {

@@ -123,7 +123,8 @@ describe("theme validation", () => {
     }
 
     expect(defaultThemeTokens["--container-max"]).toBe("72rem");
-    expect(themes.corporate.tokens["--container-max"]).toBe("74rem");
+    expect(themes["refined-professional"].tokens["--container-max"]).toBe("66rem");
+    expect(themes.workshop.tokens["--container-max"]).toBe("70rem");
   });
 
   it("keeps every built-in theme distinct beyond color alone", () => {
@@ -198,7 +199,7 @@ describe("theme validation", () => {
   it("rejects extra theme tokens and unknown CSS variable usage", () => {
     expect(() =>
       assertExactThemeTokens({
-        ...themes["dark-saas"].tokens,
+        ...themes["high-vis-service"].tokens,
         "--hero-glow-color": "#fff",
       }),
     ).toThrow(/Extra theme tokens/);

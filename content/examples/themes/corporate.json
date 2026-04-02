@@ -9,37 +9,22 @@
           "type": "navigation-bar",
           "brandText": "Corporate",
           "links": [
-            {
-              "label": "Preview",
-              "href": "/"
-            },
-            {
-              "label": "Theme List",
-              "href": "/themes"
-            },
-            {
-              "label": "Validate",
-              "href": "/commands/validate-examples"
-            }
+            { "label": "Preview", "href": "/" },
+            { "label": "Theme List", "href": "/themes" },
+            { "label": "Validate", "href": "/commands/validate-examples" }
           ]
         },
         {
           "type": "prose",
           "title": "Shared theme wrapper",
           "lead": "This site-level block renders before the page-local examples.",
-          "paragraphs": [
-            "Use the shared layout wrapper to verify how global sections look in the corporate theme."
-          ]
+          "paragraphs": ["Use the shared layout wrapper to verify how global sections look in the corporate theme."]
         },
-        {
-          "type": "page-content"
-        },
+        { "type": "page-content" },
         {
           "type": "prose",
           "title": "Shared theme footer",
-          "paragraphs": [
-            "This repeated site-level footer confirms the theme can frame page content without duplicating JSON on every page."
-          ]
+          "paragraphs": ["This repeated site-level footer confirms the theme can frame page content without duplicating JSON on every page."]
         }
       ]
     }
@@ -55,107 +40,55 @@
         {
           "type": "hero",
           "headline": "Corporate theme preview",
-          "subheadline": "One page, every component, and no real-site content required.",
-          "primaryCta": {
-            "label": "Jump to examples",
-            "href": "#examples"
-          },
-          "secondaryCta": {
-            "label": "See theme list",
-            "href": "/themes"
-          },
+          "subheadline": "Trust-first hierarchy, restrained surfaces, and clear calls to action on one review page.",
+          "primaryCta": { "label": "Jump to examples", "href": "#examples" },
+          "secondaryCta": { "label": "See theme list", "href": "/themes" },
           "align": "start"
         },
         {
           "type": "link-list",
           "title": "Theme navigation sample",
-          "lead": "This compact control confirms link-based route pickers render cleanly in the active theme.",
+          "lead": "This compact control confirms route pickers stay readable in the active theme.",
           "links": [
-            {
-              "label": "Corporate",
-              "href": "/themes/corporate",
-              "current": true
-            },
-            {
-              "label": "Brutalism",
-              "href": "/themes/brutalism"
-            },
-            {
-              "label": "Dark SaaS",
-              "href": "/themes/dark-saas"
-            }
+            { "label": "Corporate", "href": "/themes/corporate", "current": true },
+            { "label": "Workshop", "href": "/themes/workshop" },
+            { "label": "Friendly Modern", "href": "/themes/friendly-modern" }
           ]
         },
         {
           "type": "feature-list",
           "title": "What this preview is for",
           "items": [
-            {
-              "title": "Fast visual QA",
-              "body": "Use this page to inspect how spacing, type, and CTA treatments land in the corporate theme."
-            },
-            {
-              "title": "Component coverage",
-              "body": "Each supported component appears once so theme regressions are easier to spot."
-            },
-            {
-              "title": "Fake content only",
-              "body": "Nothing here depends on real site data, assets, or customer copy."
-            }
+            { "title": "Fast visual QA", "body": "Use this page to inspect how spacing, type, and CTA treatments land in the corporate theme." },
+            { "title": "Component coverage", "body": "Each supported component appears once so theme regressions are easier to spot." },
+            { "title": "Stable content", "body": "The copy stays intentionally synthetic so visual differences are easier to attribute." }
           ]
         },
         {
           "type": "feature-grid",
           "title": "What to compare between themes",
           "items": [
-            {
-              "title": "Heading tone",
-              "body": "Compare how the same headline weight and spacing feel across themes."
-            },
-            {
-              "title": "Surface treatment",
-              "body": "Cards, dividers, and section framing should all reflect the active theme tokens."
-            },
-            {
-              "title": "CTA contrast",
-              "body": "Primary and secondary buttons should stay readable without custom per-page CSS."
-            },
-            {
-              "title": "Long-form rhythm",
-              "body": "Prose, FAQs, and media captions should remain balanced on the same page."
-            }
+            { "title": "Heading tone", "body": "Compare how the same hierarchy feels when typography shifts." },
+            { "title": "Surface treatment", "body": "Cards, dividers, and section framing should reflect the active theme tokens." },
+            { "title": "CTA contrast", "body": "Primary and secondary buttons should stay readable without per-page CSS." },
+            { "title": "Long-form rhythm", "body": "Prose, FAQs, and captions should stay balanced on the same page." }
           ]
         },
         {
           "type": "faq",
           "title": "Theme example FAQ",
           "items": [
-            {
-              "question": "Why does each theme only get one page?",
-              "answer": "The goal is quick comparison, so one page with full component coverage is enough."
-            },
-            {
-              "question": "Can these examples use placeholder content?",
-              "answer": "Yes. They are intended for layout and theme review, not for publishing."
-            },
-            {
-              "question": "Should the examples be built together?",
-              "answer": "Yes. The bulk examples build generates every theme preview in one deterministic run."
-            }
+            { "question": "Why does each theme only get one page?", "answer": "The goal is quick comparison, so one page with full component coverage is enough." },
+            { "question": "Can these examples use placeholder content?", "answer": "Yes. They are intended for layout and theme review, not for publishing." },
+            { "question": "Should the examples be built together?", "answer": "Yes. The bulk examples build generates every theme preview in one deterministic run." }
           ]
         },
         {
           "type": "cta-band",
           "headline": "Build every theme example at once",
           "body": "Run the bulk examples build to regenerate the full preview set into dist/examples.",
-          "primaryCta": {
-            "label": "Run build:examples",
-            "href": "/commands/build-examples"
-          },
-          "secondaryCta": {
-            "label": "Run validate:examples",
-            "href": "/commands/validate-examples"
-          }
+          "primaryCta": { "label": "Run build:examples", "href": "/commands/build-examples" },
+          "secondaryCta": { "label": "Run validate:examples", "href": "/commands/validate-examples" }
         },
         {
           "type": "google-maps",
@@ -166,8 +99,10 @@
         },
         {
           "type": "media",
-          "src": "https://images.example.com/previews/corporate-workspace.jpg",
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23f6f8fb'/%3E%3Crect x='120' y='120' width='1360' height='660' rx='28' fill='%23ffffff' stroke='%231f2937' stroke-width='24'/%3E%3Crect x='200' y='220' width='420' height='360' rx='24' fill='%23dbeafe'/%3E%3Crect x='680' y='220' width='620' height='48' rx='24' fill='%231f2937'/%3E%3Crect x='680' y='308' width='520' height='32' rx='16' fill='%236b7280'/%3E%3Crect x='680' y='390' width='560' height='32' rx='16' fill='%239ca3af'/%3E%3Crect x='680' y='490' width='220' height='96' rx='24' fill='%230b5fff'/%3E%3C/svg%3E",
           "alt": "Sample workspace image used for the corporate theme preview",
+          "width": 1600,
+          "height": 900,
           "caption": "Media is included with a caption so image framing and supporting text can be checked together.",
           "size": "wide"
         },
