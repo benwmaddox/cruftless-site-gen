@@ -12,6 +12,7 @@ const readBaseCss = async () => readFile(path.join(repoRoot, "src", "styles", "b
 describe("component width tokens", () => {
   it("uses content-max for standard component wrappers", async () => {
     const standardComponents = [
+      "contact-form",
       "cta-band",
       "faq",
       "feature-grid",

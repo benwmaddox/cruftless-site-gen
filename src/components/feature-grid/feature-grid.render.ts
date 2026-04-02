@@ -8,12 +8,15 @@ export const featureGridClassNames = [
   "c-feature-grid__items",
   "c-feature-grid__item",
   "c-feature-grid__item--has-image",
+  "c-feature-grid__item--selected",
   "c-feature-grid__item-media",
   "c-feature-grid__item-image",
   "c-feature-grid__item-caption",
   "c-feature-grid__item-copy",
   "c-feature-grid__item-title",
   "c-feature-grid__item-body",
+  "c-feature-grid__item-status",
+  "c-feature-grid__item-cta",
 ] as const;
 
 export const renderFeatureGrid = (data: FeatureGridData): string => {
@@ -24,6 +27,10 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
 
         if (item.image) {
           itemClasses.push("c-feature-grid__item--has-image");
+        }
+
+        if (item.selected) {
+          itemClasses.push("c-feature-grid__item--selected");
         }
 
         const imageDimensions =
@@ -48,6 +55,12 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
           '        <div class="c-feature-grid__item-copy">',
           `          <h3 class="c-feature-grid__item-title">${escapeHtml(item.title)}</h3>`,
           `          <p class="c-feature-grid__item-body">${escapeHtml(item.body)}</p>`,
+          item.selected
+            ? '          <p class="c-feature-grid__item-status" aria-current="page">Current selection</p>'
+            : "",
+          item.cta
+            ? `          <a class="c-feature-grid__item-cta c-button c-button--secondary" href="${escapeHtml(item.cta.href)}">${escapeHtml(item.cta.label)}</a>`
+            : "",
           "        </div>",
           "      </li>",
         ]

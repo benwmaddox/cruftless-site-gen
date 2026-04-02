@@ -1,0 +1,109 @@
+.c-contact-form {
+  padding-block: var(--space-7);
+}
+
+.c-contact-form__inner {
+  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  margin-inline: auto;
+  padding: var(--space-6);
+  display: grid;
+  gap: var(--space-4);
+  border: var(--border-width-2) solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--surface-background);
+  box-shadow: var(--shadow-sm);
+}
+
+.c-contact-form__title,
+.c-contact-form__intro,
+.c-contact-form__note {
+  margin: 0;
+}
+
+.c-contact-form__title {
+  font-size: var(--font-size-4);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--heading-letter-spacing);
+  line-height: var(--line-height-heading);
+}
+
+.c-contact-form__intro,
+.c-contact-form__note {
+  color: var(--color-text-muted);
+}
+
+.c-contact-form__form,
+.c-contact-form__grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.c-contact-form__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.c-contact-form__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.c-contact-form__field--full {
+  grid-column: 1 / -1;
+}
+
+.c-contact-form__label {
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01rem;
+}
+
+.c-contact-form__input,
+.c-contact-form__textarea {
+  width: 100%;
+  padding: var(--space-3);
+  border: var(--border-width-2) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-body);
+}
+
+.c-contact-form__textarea {
+  min-height: 10rem;
+}
+
+.c-contact-form__input:focus,
+.c-contact-form__textarea:focus {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-color: var(--color-primary);
+}
+
+.c-contact-form__actions {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.c-contact-form__submit {
+  place-self: start;
+}
+
+.c-contact-form__honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (width <= 48rem) {
+  .c-contact-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .c-contact-form__field--full {
+    grid-column: auto;
+  }
+}

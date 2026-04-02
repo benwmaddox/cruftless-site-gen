@@ -36,6 +36,10 @@
   box-shadow: var(--shadow-sm);
 }
 
+.c-feature-grid__item--selected {
+  border-color: var(--color-primary);
+}
+
 .c-feature-grid__item--has-image {
   grid-template-columns: minmax(4.5rem, 5.5rem) minmax(0, 1fr);
   align-items: start;
@@ -75,4 +79,18 @@
 .c-feature-grid__item-body {
   margin: 0;
   color: var(--color-text-muted);
+}
+
+.c-feature-grid__item-status {
+  margin: 0;
+  color: var(--color-primary);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--button-letter-spacing);
+}
+
+.c-feature-grid__item-cta {
+  width: fit-content;
+  place-self: start;
 }

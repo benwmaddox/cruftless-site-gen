@@ -1,6 +1,13 @@
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
+import {
+  ContactFormSchema,
+} from "./contact-form/contact-form.schema.js";
+import {
+  contactFormClassNames,
+  renderContactForm,
+} from "./contact-form/contact-form.render.js";
 import { CtaBandSchema } from "./cta-band/cta-band.schema.js";
 import { ctaBandClassNames, renderCtaBand } from "./cta-band/cta-band.render.js";
 import { FaqSchema } from "./faq/faq.schema.js";
@@ -24,6 +31,8 @@ import {
 } from "./google-maps/google-maps.render.js";
 import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
+import { LinkListSchema } from "./link-list/link-list.schema.js";
+import { linkListClassNames, renderLinkList } from "./link-list/link-list.render.js";
 import { MediaSchema } from "./media/media.schema.js";
 import { mediaClassNames, renderMedia } from "./media/media.render.js";
 import {
@@ -48,7 +57,9 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
   FeatureGridSchema,
   FaqSchema,
   CtaBandSchema,
+  ContactFormSchema,
   GoogleMapsSchema,
+  LinkListSchema,
   MediaSchema,
   NavigationBarSchemaBase,
   ProseSchema,
@@ -118,10 +129,22 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: ctaBandClassNames,
   },
   {
+    type: "contact-form",
+    render: (data) => renderContactForm(ContactFormSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./contact-form/contact-form.css", import.meta.url)),
+    classNames: contactFormClassNames,
+  },
+  {
     type: "google-maps",
     render: (data) => renderGoogleMaps(GoogleMapsSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./google-maps/google-maps.css", import.meta.url)),
     classNames: googleMapsClassNames,
+  },
+  {
+    type: "link-list",
+    render: (data) => renderLinkList(LinkListSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./link-list/link-list.css", import.meta.url)),
+    classNames: linkListClassNames,
   },
   {
     type: "media",
@@ -160,8 +183,12 @@ export const renderComponent = (data: ComponentData): string => {
       return renderFaq(data);
     case "cta-band":
       return renderCtaBand(data);
+    case "contact-form":
+      return renderContactForm(data);
     case "google-maps":
       return renderGoogleMaps(data);
+    case "link-list":
+      return renderLinkList(data);
     case "media":
       return renderMedia(data);
     case "navigation-bar":

@@ -19,6 +19,11 @@ describe("FeatureGridSchema", () => {
             height: 800,
             caption: "Optional image support keeps content flexible.",
           },
+          selected: true,
+          cta: {
+            label: "See examples",
+            href: "/examples",
+          },
         },
       ],
     });
@@ -31,7 +36,11 @@ describe("FeatureGridSchema", () => {
     expect(html).toContain('<figure class="c-feature-grid__item-media">');
     expect(html).toContain('src="https://example.com/validation.jpg"');
     expect(html).toContain('width="1200" height="800"');
+    expect(html).toContain("Current selection");
     expect(html).toContain("Strict validation");
+    expect(html).toContain('class="c-feature-grid__item-cta c-button c-button--secondary"');
+    expect(html).toContain('href="/examples"');
+    expect(html).toContain("See examples");
   });
 
   it("rejects nested unknown fields", () => {
@@ -88,6 +97,37 @@ describe("FeatureGridSchema", () => {
         (issue) =>
           issue.code === "unrecognized_keys" &&
           String(issue.path.join(".")) === "items.0.image",
+      ),
+    ).toBe(true);
+  });
+
+  it("rejects unknown fields inside an item CTA", () => {
+    const result = FeatureGridSchema.safeParse({
+      type: "feature-grid",
+      title: "Why it works",
+      items: [
+        {
+          title: "Strict validation",
+          body: "Unknown keys fail.",
+          cta: {
+            label: "See examples",
+            href: "/examples",
+            tone: "quiet",
+          },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) {
+      return;
+    }
+
+    expect(
+      result.error.issues.some(
+        (issue) =>
+          issue.code === "unrecognized_keys" &&
+          String(issue.path.join(".")) === "items.0.cta",
       ),
     ).toBe(true);
   });
