@@ -6,11 +6,15 @@ import { ValidationFailure, buildSiteFromFile } from "./framework.js";
 
 const examplesContentDir = path.resolve(process.cwd(), "content/examples/themes");
 const examplesOutDir = path.resolve(process.cwd(), "dist/examples");
+const examplesIndexContentPath = path.join(examplesContentDir, "index.json");
 
 try {
   await rm(examplesOutDir, { recursive: true, force: true });
 
   let builtPages = 0;
+  const examplesIndex = await buildSiteFromFile(examplesIndexContentPath, examplesOutDir);
+  builtPages += examplesIndex.pages.length;
+
   for (const themeName of themeNames) {
     const contentPath = path.join(examplesContentDir, `${themeName}.json`);
     const outDir = path.join(examplesOutDir, themeName);
@@ -19,7 +23,7 @@ try {
   }
 
   console.log(
-    `Built ${themeNames.length} theme example site(s) with ${builtPages} page(s) into ${path.relative(process.cwd(), examplesOutDir)}`,
+    `Built the theme preview index plus ${themeNames.length} theme example site(s) with ${builtPages} page(s) into ${path.relative(process.cwd(), examplesOutDir)}`,
   );
 } catch (error) {
   if (error instanceof ValidationFailure) {

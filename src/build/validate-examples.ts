@@ -4,9 +4,13 @@ import { themeNames } from "../themes/index.js";
 import { ValidationFailure, loadValidatedSite } from "./framework.js";
 
 const examplesContentDir = path.resolve(process.cwd(), "content/examples/themes");
+const examplesIndexContentPath = path.join(examplesContentDir, "index.json");
 
 try {
   let totalPages = 0;
+  const examplesIndex = await loadValidatedSite(examplesIndexContentPath);
+  totalPages += examplesIndex.pages.length;
+
   for (const themeName of themeNames) {
     const contentPath = path.join(examplesContentDir, `${themeName}.json`);
     const siteContent = await loadValidatedSite(contentPath);
@@ -14,7 +18,7 @@ try {
   }
 
   console.log(
-    `Validated ${themeNames.length} theme example site(s) with ${totalPages} page(s) from ${path.relative(process.cwd(), examplesContentDir)}`,
+    `Validated the theme preview index plus ${themeNames.length} theme example site(s) with ${totalPages} page(s) from ${path.relative(process.cwd(), examplesContentDir)}`,
   );
 } catch (error) {
   if (error instanceof ValidationFailure) {

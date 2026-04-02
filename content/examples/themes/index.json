@@ -1,0 +1,60 @@
+{
+  "site": {
+    "name": "Theme Previews",
+    "baseUrl": "https://example.com/examples/",
+    "theme": "friendly-modern",
+    "layout": {
+      "components": [
+        {
+          "type": "navigation-bar",
+          "brandText": "Theme Previews",
+          "links": [
+            { "label": "Home", "href": "/" },
+            { "label": "Pricing", "href": "/pricing" },
+            { "label": "Preview Index", "href": "/examples/" }
+          ]
+        },
+        { "type": "page-content" }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "slug": "/",
+      "title": "Theme Previews",
+      "metadata": {
+        "description": "Directory for the shared theme preview fixtures."
+      },
+      "components": [
+        {
+          "type": "hero",
+          "headline": "Compare the shared theme previews",
+          "subheadline": "Each preview uses the same component coverage with a different theme, so visual regressions stand out quickly.",
+          "primaryCta": { "label": "Browse corporate", "href": "/examples/corporate/" },
+          "secondaryCta": { "label": "Back to pricing", "href": "/pricing" },
+          "align": "start"
+        },
+        {
+          "type": "feature-grid",
+          "title": "Available previews",
+          "items": [
+            { "title": "Corporate", "body": "Structured defaults with restrained surfaces.", "cta": { "label": "Open preview", "href": "/examples/corporate/" } },
+            { "title": "Brutalism", "body": "Sharper contrast with a more opinionated voice.", "cta": { "label": "Open preview", "href": "/examples/brutalism/" } },
+            { "title": "Workshop", "body": "A tactile direction suited to studios and trades.", "cta": { "label": "Open preview", "href": "/examples/workshop/" } },
+            { "title": "Refined Professional", "body": "A more polished, service-oriented presentation.", "cta": { "label": "Open preview", "href": "/examples/refined-professional/" } }
+          ]
+        },
+        {
+          "type": "feature-grid",
+          "title": "More preview directions",
+          "items": [
+            { "title": "Friendly Modern", "body": "Softer colors and more conversational framing.", "cta": { "label": "Open preview", "href": "/examples/friendly-modern/" } },
+            { "title": "Heritage Local", "body": "A grounded look for legacy and place-based brands.", "cta": { "label": "Open preview", "href": "/examples/heritage-local/" } },
+            { "title": "Wellness Calm", "body": "A gentler palette for health and hospitality use cases.", "cta": { "label": "Open preview", "href": "/examples/wellness-calm/" } },
+            { "title": "High-Vis Service", "body": "A louder, urgency-forward service presentation.", "cta": { "label": "Open preview", "href": "/examples/high-vis-service/" } }
+          ]
+        }
+      ]
+    }
+  ]
+}
