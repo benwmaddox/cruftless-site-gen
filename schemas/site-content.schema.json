@@ -19,11 +19,14 @@
             "theme": {
               "type": "string",
               "enum": [
-                "brutalism",
-                "dark-saas",
                 "corporate",
-                "app-announcement",
-                "studio-industrial"
+                "brutalism",
+                "workshop",
+                "refined-professional",
+                "friendly-modern",
+                "heritage-local",
+                "wellness-calm",
+                "high-vis-service"
               ]
             },
             "themeOverrides": {

@@ -2,7 +2,7 @@
   "site": {
     "name": "78th Street Studios",
     "baseUrl": "https://78thstreetstudios.com",
-    "theme": "studio-industrial",
+    "theme": "workshop",
     "themeOverrides": {
       "structure": "plain",
       "secondaryColorScheme": "twilight-mist"

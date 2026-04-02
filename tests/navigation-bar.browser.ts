@@ -26,7 +26,7 @@ const createNavigationBarFixture = () =>
     site: {
       name: "LaunchKit",
       baseUrl: "https://launchkit.example",
-      theme: "app-announcement",
+      theme: "friendly-modern",
       layout: {
         components: [
           {

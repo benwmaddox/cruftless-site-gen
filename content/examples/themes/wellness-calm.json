@@ -1,13 +1,13 @@
 {
   "site": {
-    "name": "Brutalism Theme Example",
-    "baseUrl": "https://example.com/examples/brutalism/",
-    "theme": "brutalism",
+    "name": "Wellness Calm Theme Example",
+    "baseUrl": "https://example.com/examples/wellness-calm/",
+    "theme": "wellness-calm",
     "layout": {
       "components": [
         {
           "type": "navigation-bar",
-          "brandText": "Brutalism",
+          "brandText": "Wellness Calm",
           "links": [
             { "label": "Preview", "href": "/" },
             { "label": "Theme List", "href": "/themes" },
@@ -18,7 +18,7 @@
           "type": "prose",
           "title": "Shared theme wrapper",
           "lead": "This site-level block renders before the page-local examples.",
-          "paragraphs": ["Use the shared layout wrapper to verify how global sections look in the brutalism theme."]
+          "paragraphs": ["Use the shared layout wrapper to verify how global sections look in the wellness-calm theme."]
         },
         { "type": "page-content" },
         {
@@ -32,15 +32,15 @@
   "pages": [
     {
       "slug": "/",
-      "title": "Brutalism Preview",
+      "title": "Wellness Calm Preview",
       "metadata": {
-        "description": "Single-page preview of every component rendered with the brutalism theme."
+        "description": "Single-page preview of every component rendered with the wellness-calm theme."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "Brutalism theme preview",
-          "subheadline": "Blunt hierarchy, thick borders, and loud contrast on one review page.",
+          "headline": "Wellness Calm theme preview",
+          "subheadline": "Soft gradients, airy spacing, and low-friction components on one review page.",
           "primaryCta": { "label": "Jump to examples", "href": "#examples" },
           "secondaryCta": { "label": "See theme list", "href": "/themes" },
           "align": "start"
@@ -50,8 +50,8 @@
           "title": "Theme navigation sample",
           "lead": "This compact control confirms route pickers stay readable in the active theme.",
           "links": [
-            { "label": "Brutalism", "href": "/themes/brutalism", "current": true },
-            { "label": "High-Vis Service", "href": "/themes/high-vis-service" },
+            { "label": "Wellness Calm", "href": "/themes/wellness-calm", "current": true },
+            { "label": "Friendly Modern", "href": "/themes/friendly-modern" },
             { "label": "Workshop", "href": "/themes/workshop" }
           ]
         },
@@ -59,7 +59,7 @@
           "type": "feature-list",
           "title": "What this preview is for",
           "items": [
-            { "title": "Fast visual QA", "body": "Use this page to inspect how spacing, type, and CTA treatments land in the brutalism theme." },
+            { "title": "Fast visual QA", "body": "Use this page to inspect how spacing, type, and CTA treatments land in the wellness-calm theme." },
             { "title": "Component coverage", "body": "Each supported component appears once so theme regressions are easier to spot." },
             { "title": "Stable content", "body": "The copy stays intentionally synthetic so visual differences are easier to attribute." }
           ]
@@ -99,8 +99,8 @@
         },
         {
           "type": "media",
-          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23f4f4f4'/%3E%3Crect x='120' y='120' width='1360' height='660' fill='%23ffffff' stroke='%23000000' stroke-width='24'/%3E%3Crect x='200' y='220' width='420' height='360' fill='%23b6ff00'/%3E%3Crect x='680' y='220' width='620' height='48' fill='%23000000'/%3E%3Crect x='680' y='308' width='520' height='32' fill='%23333333'/%3E%3Crect x='680' y='390' width='560' height='32' fill='%236b7280'/%3E%3Crect x='680' y='490' width='220' height='96' fill='%23ff2da6'/%3E%3C/svg%3E",
-          "alt": "Sample workspace image used for the brutalism theme preview",
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23f6fbf8'/%3E%3Crect x='120' y='120' width='1360' height='660' rx='28' fill='%23ffffff' stroke='%23b8d0c7' stroke-width='16'/%3E%3Crect x='200' y='220' width='420' height='360' rx='24' fill='%23d4f0e6'/%3E%3Crect x='680' y='220' width='620' height='48' rx='16' fill='%2313201b'/%3E%3Crect x='680' y='308' width='520' height='32' rx='16' fill='%233e5b50'/%3E%3Crect x='680' y='390' width='560' height='32' rx='16' fill='%23d97e5d'/%3E%3Crect x='680' y='490' width='220' height='96' rx='24' fill='%232f7c64'/%3E%3C/svg%3E",
+          "alt": "Sample workspace image used for the wellness-calm theme preview",
           "width": 1600,
           "height": 900,
           "caption": "Media is included with a caption so image framing and supporting text can be checked together.",

@@ -1,13 +1,13 @@
 {
   "site": {
-    "name": "Brutalism Theme Example",
-    "baseUrl": "https://example.com/examples/brutalism/",
-    "theme": "brutalism",
+    "name": "Friendly Modern Theme Example",
+    "baseUrl": "https://example.com/examples/friendly-modern/",
+    "theme": "friendly-modern",
     "layout": {
       "components": [
         {
           "type": "navigation-bar",
-          "brandText": "Brutalism",
+          "brandText": "Friendly Modern",
           "links": [
             { "label": "Preview", "href": "/" },
             { "label": "Theme List", "href": "/themes" },
@@ -18,7 +18,7 @@
           "type": "prose",
           "title": "Shared theme wrapper",
           "lead": "This site-level block renders before the page-local examples.",
-          "paragraphs": ["Use the shared layout wrapper to verify how global sections look in the brutalism theme."]
+          "paragraphs": ["Use the shared layout wrapper to verify how global sections look in the friendly-modern theme."]
         },
         { "type": "page-content" },
         {
@@ -32,15 +32,15 @@
   "pages": [
     {
       "slug": "/",
-      "title": "Brutalism Preview",
+      "title": "Friendly Modern Preview",
       "metadata": {
-        "description": "Single-page preview of every component rendered with the brutalism theme."
+        "description": "Single-page preview of every component rendered with the friendly-modern theme."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "Brutalism theme preview",
-          "subheadline": "Blunt hierarchy, thick borders, and loud contrast on one review page.",
+          "headline": "Friendly Modern theme preview",
+          "subheadline": "Approachable service styling, rounded surfaces, and bright calls to action on one review page.",
           "primaryCta": { "label": "Jump to examples", "href": "#examples" },
           "secondaryCta": { "label": "See theme list", "href": "/themes" },
           "align": "start"
@@ -50,16 +50,16 @@
           "title": "Theme navigation sample",
           "lead": "This compact control confirms route pickers stay readable in the active theme.",
           "links": [
-            { "label": "Brutalism", "href": "/themes/brutalism", "current": true },
-            { "label": "High-Vis Service", "href": "/themes/high-vis-service" },
-            { "label": "Workshop", "href": "/themes/workshop" }
+            { "label": "Friendly Modern", "href": "/themes/friendly-modern", "current": true },
+            { "label": "Corporate", "href": "/themes/corporate" },
+            { "label": "Wellness Calm", "href": "/themes/wellness-calm" }
           ]
         },
         {
           "type": "feature-list",
           "title": "What this preview is for",
           "items": [
-            { "title": "Fast visual QA", "body": "Use this page to inspect how spacing, type, and CTA treatments land in the brutalism theme." },
+            { "title": "Fast visual QA", "body": "Use this page to inspect how spacing, type, and CTA treatments land in the friendly-modern theme." },
             { "title": "Component coverage", "body": "Each supported component appears once so theme regressions are easier to spot." },
             { "title": "Stable content", "body": "The copy stays intentionally synthetic so visual differences are easier to attribute." }
           ]
@@ -99,8 +99,8 @@
         },
         {
           "type": "media",
-          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23f4f4f4'/%3E%3Crect x='120' y='120' width='1360' height='660' fill='%23ffffff' stroke='%23000000' stroke-width='24'/%3E%3Crect x='200' y='220' width='420' height='360' fill='%23b6ff00'/%3E%3Crect x='680' y='220' width='620' height='48' fill='%23000000'/%3E%3Crect x='680' y='308' width='520' height='32' fill='%23333333'/%3E%3Crect x='680' y='390' width='560' height='32' fill='%236b7280'/%3E%3Crect x='680' y='490' width='220' height='96' fill='%23ff2da6'/%3E%3C/svg%3E",
-          "alt": "Sample workspace image used for the brutalism theme preview",
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23f5efe4'/%3E%3Crect x='120' y='120' width='1360' height='660' rx='28' fill='%23ffffff' stroke='%231f2937' stroke-width='24'/%3E%3Crect x='200' y='220' width='420' height='360' rx='24' fill='%23dbeafe'/%3E%3Crect x='680' y='220' width='620' height='48' rx='24' fill='%231f2937'/%3E%3Crect x='680' y='308' width='520' height='32' rx='16' fill='%236b7280'/%3E%3Crect x='680' y='390' width='560' height='32' rx='16' fill='%239ca3af'/%3E%3Crect x='680' y='490' width='220' height='96' rx='24' fill='%23f59e0b'/%3E%3C/svg%3E",
+          "alt": "Sample workspace image used for the friendly-modern theme preview",
           "width": 1600,
           "height": 900,
           "caption": "Media is included with a caption so image framing and supporting text can be checked together.",
