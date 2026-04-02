@@ -67,6 +67,26 @@
           "align": "start"
         },
         {
+          "type": "link-list",
+          "title": "Theme navigation sample",
+          "lead": "This compact control confirms link-based route pickers render cleanly in the active theme.",
+          "links": [
+            {
+              "label": "Brutalism",
+              "href": "/themes/brutalism",
+              "current": true
+            },
+            {
+              "label": "Corporate",
+              "href": "/themes/corporate"
+            },
+            {
+              "label": "Dark SaaS",
+              "href": "/themes/dark-saas"
+            }
+          ]
+        },
+        {
           "type": "feature-list",
           "title": "What this preview is for",
           "items": [
@@ -150,6 +170,14 @@
           "alt": "Sample workspace image used for the brutalism theme preview",
           "caption": "Media is included with a caption so image framing and supporting text can be checked together.",
           "size": "wide"
+        },
+        {
+          "type": "contact-form",
+          "title": "Sample contact form",
+          "intro": "Theme previews also include a form so field spacing and button treatment stay covered.",
+          "action": "/contact",
+          "submitLabel": "Send sample request",
+          "deliveryNote": "This is a preview-only form block used for theme validation."
         },
         {
           "type": "prose",

@@ -250,6 +250,12 @@
                                         "alt"
                                       ],
                                       "additionalProperties": false
+                                    },
+                                    "cta": {
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta"
+                                    },
+                                    "selected": {
+                                      "type": "boolean"
                                     }
                                   },
                                   "required": [
@@ -350,6 +356,52 @@
                             "properties": {
                               "type": {
                                 "type": "string",
+                                "const": "contact-form"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "intro": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "action": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2048
+                              },
+                              "submitLabel": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              },
+                              "subject": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "deliveryNote": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "title",
+                              "action",
+                              "submitLabel"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
                                 "const": "google-maps"
                               },
                               "embedUrl": {
@@ -380,6 +432,55 @@
                               "type",
                               "embedUrl",
                               "title"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "link-list"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "lead": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "links": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "label": {
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta/properties/label"
+                                    },
+                                    "href": {
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta/properties/href"
+                                    },
+                                    "current": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "label",
+                                    "href"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 1,
+                                "maxItems": 8
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "title",
+                              "links"
                             ],
                             "additionalProperties": false
                           },

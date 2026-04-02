@@ -1,12 +1,14 @@
 import { z } from "zod";
 
-import { ImageReferenceSchema } from "../../schemas/shared.js";
+import { ImageReferenceSchema, LinkSchema } from "../../schemas/shared.js";
 
 export const FeatureGridItemSchema = z
   .object({
     title: z.string().min(1),
     body: z.string().min(1),
     image: ImageReferenceSchema.optional(),
+    cta: LinkSchema.optional(),
+    selected: z.boolean().optional(),
   })
   .strict();
 
