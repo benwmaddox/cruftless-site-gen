@@ -62,11 +62,11 @@
           "subheadline": "Strict JSON, fixed components, and theme-driven presentation.",
           "primaryCta": {
             "label": "Start now",
-            "href": "/start"
+            "href": "/pricing"
           },
           "secondaryCta": {
             "label": "See demo",
-            "href": "/demo"
+            "href": "/pricing"
           },
           "align": "start"
         },
@@ -112,7 +112,7 @@
           "body": "Run validation before every build and keep the markup intentionally boring.",
           "primaryCta": {
             "label": "Read docs",
-            "href": "/docs"
+            "href": "/pricing"
           }
         }
       ]
@@ -127,7 +127,7 @@
           "subheadline": "A narrow framework is easier to validate, review, and keep consistent.",
           "primaryCta": {
             "label": "Start free",
-            "href": "/signup"
+            "href": "/"
           },
           "align": "center"
         },
@@ -150,7 +150,7 @@
           "headline": "Need a stricter content pipeline?",
           "primaryCta": {
             "label": "Contact sales",
-            "href": "/contact"
+            "href": "/pricing"
           }
         }
       ]

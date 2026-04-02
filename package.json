@@ -21,7 +21,8 @@
     "lint:ts": "tsc --noEmit",
     "test": "vitest run",
     "test:browser": "tsx tests/navigation-bar.browser.ts",
-    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples",
+    "validate:dist-links": "node scripts/validate-dist-links.mjs",
+    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples && npm run validate:dist-links",
     "check": "npm run validate:strict"
   },
   "dependencies": {

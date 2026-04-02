@@ -16,11 +16,11 @@
           "links": [
             {
               "label": "Home",
-              "href": "/"
+              "href": "/78th-street-studios/"
             },
             {
               "label": "About",
-              "href": "/about"
+              "href": "/78th-street-studios/about"
             },
             {
               "label": "Plan a Visit",
@@ -80,7 +80,7 @@
           "subheadline": "A 170,000-square-foot Cleveland landmark filled with galleries, artist studios, performance spaces, recording rooms, and year-round events.",
           "primaryCta": {
             "label": "Explore the Story",
-            "href": "/about"
+            "href": "/78th-street-studios/about"
           },
           "secondaryCta": {
             "label": "Plan a Visit",
@@ -149,7 +149,7 @@
           },
           "secondaryCta": {
             "label": "Back Home",
-            "href": "/"
+            "href": "/78th-street-studios/"
           },
           "align": "start"
         },

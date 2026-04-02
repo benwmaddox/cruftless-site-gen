@@ -205,6 +205,7 @@ The strict validation entrypoint is meant to catch real regressions, not just sy
 - example-site validation
 - default-site build
 - example-site builds
+- same-site relative reference checks in the built `dist/` output
 
 If you change the schema, component registry, theme tokens, renderer behavior, or example content, run `npm run validate:strict`.
 

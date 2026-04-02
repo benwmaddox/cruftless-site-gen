@@ -9,9 +9,9 @@
           "type": "navigation-bar",
           "brandText": "Friendly Modern",
           "links": [
-            { "label": "Preview", "href": "/" },
-            { "label": "Theme List", "href": "/themes" },
-            { "label": "Validate", "href": "/commands/validate-examples" }
+            { "label": "Preview", "href": "/examples/friendly-modern/" },
+            { "label": "Theme List", "href": "/examples/" },
+            { "label": "Pricing", "href": "/pricing" }
           ]
         },
         {
@@ -42,7 +42,7 @@
           "headline": "Friendly Modern theme preview",
           "subheadline": "Approachable service styling, rounded surfaces, and bright calls to action on one review page.",
           "primaryCta": { "label": "Jump to examples", "href": "#examples" },
-          "secondaryCta": { "label": "See theme list", "href": "/themes" },
+          "secondaryCta": { "label": "See all previews", "href": "/examples/" },
           "align": "start"
         },
         {
@@ -50,9 +50,9 @@
           "title": "Theme navigation sample",
           "lead": "This compact control confirms route pickers stay readable in the active theme.",
           "links": [
-            { "label": "Friendly Modern", "href": "/themes/friendly-modern", "current": true },
-            { "label": "Corporate", "href": "/themes/corporate" },
-            { "label": "Wellness Calm", "href": "/themes/wellness-calm" }
+            { "label": "Friendly Modern", "href": "/examples/friendly-modern/", "current": true },
+            { "label": "Corporate", "href": "/examples/corporate/" },
+            { "label": "Wellness Calm", "href": "/examples/wellness-calm/" }
           ]
         },
         {
@@ -87,8 +87,8 @@
           "type": "cta-band",
           "headline": "Build every theme example at once",
           "body": "Run the bulk examples build to regenerate the full preview set into dist/examples.",
-          "primaryCta": { "label": "Run build:examples", "href": "/commands/build-examples" },
-          "secondaryCta": { "label": "Run validate:examples", "href": "/commands/validate-examples" }
+          "primaryCta": { "label": "Browse all previews", "href": "/examples/" },
+          "secondaryCta": { "label": "See pricing", "href": "/pricing" }
         },
         {
           "type": "google-maps",

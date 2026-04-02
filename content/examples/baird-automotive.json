@@ -15,23 +15,23 @@
           "links": [
             {
               "label": "Home",
-              "href": "/"
+              "href": "/baird-automotive/"
             },
             {
               "label": "Our Story",
-              "href": "/our-story"
+              "href": "/baird-automotive/our-story"
             },
             {
               "label": "Services",
-              "href": "/services"
+              "href": "/baird-automotive/services"
             },
             {
               "label": "Community",
-              "href": "/in-the-community"
+              "href": "/baird-automotive/in-the-community"
             },
             {
               "label": "Contact",
-              "href": "/contact"
+              "href": "/baird-automotive/contact"
             }
           ]
         },
@@ -48,7 +48,7 @@
           },
           "secondaryCta": {
             "label": "Review Services",
-            "href": "/services"
+            "href": "/baird-automotive/services"
           }
         },
         {
@@ -77,11 +77,11 @@
           "subheadline": "Baird Automotive presents itself as a professional, honest repair shop serving Northern Virginia drivers with diagnostics, maintenance, and long-term customer care.",
           "primaryCta": {
             "label": "Review Services",
-            "href": "/services"
+            "href": "/baird-automotive/services"
           },
           "secondaryCta": {
             "label": "Contact the Shop",
-            "href": "/contact"
+            "href": "/baird-automotive/contact"
           },
           "align": "start"
         },
@@ -187,7 +187,7 @@
           },
           "secondaryCta": {
             "label": "Read Our Story",
-            "href": "/our-story"
+            "href": "/baird-automotive/our-story"
           }
         }
       ]
@@ -206,11 +206,11 @@
           "subheadline": "The story page traces Baird Automotive from its 1992 opening through repeat recognition in regional publications and a team with more than 100 years of combined experience.",
           "primaryCta": {
             "label": "See Services",
-            "href": "/services"
+            "href": "/baird-automotive/services"
           },
           "secondaryCta": {
             "label": "Back Home",
-            "href": "/"
+            "href": "/baird-automotive/"
           },
           "align": "start"
         },
@@ -292,11 +292,11 @@
           "body": "The live site keeps steering visitors back toward practical next steps: services, appointments, and direct contact.",
           "primaryCta": {
             "label": "Review Services",
-            "href": "/services"
+            "href": "/baird-automotive/services"
           },
           "secondaryCta": {
             "label": "Contact Baird",
-            "href": "/contact"
+            "href": "/baird-automotive/contact"
           }
         }
       ]
@@ -315,11 +315,11 @@
           "subheadline": "Baird Automotive says its technicians handle scheduled maintenance, repair work, performance problems, check engine lights, and electrical diagnostics for a broad mix of vehicles.",
           "primaryCta": {
             "label": "Contact the Shop",
-            "href": "/contact"
+            "href": "/baird-automotive/contact"
           },
           "secondaryCta": {
             "label": "Back Home",
-            "href": "/"
+            "href": "/baird-automotive/"
           },
           "align": "start"
         },
@@ -435,7 +435,7 @@
           },
           "secondaryCta": {
             "label": "Visit Contact Page",
-            "href": "/contact"
+            "href": "/baird-automotive/contact"
           }
         }
       ]
@@ -454,11 +454,11 @@
           "subheadline": "The community page focuses on local schools, kids' programs, Arlington events, and endurance-sport sponsorships tied to Joey Baird and the shop.",
           "primaryCta": {
             "label": "Contact the Shop",
-            "href": "/contact"
+            "href": "/baird-automotive/contact"
           },
           "secondaryCta": {
             "label": "Back Home",
-            "href": "/"
+            "href": "/baird-automotive/"
           },
           "align": "start"
         },
