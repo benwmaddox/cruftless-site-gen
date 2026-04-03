@@ -38,20 +38,108 @@
           "type": "feature-grid",
           "title": "Available previews",
           "items": [
-            { "title": "Corporate", "body": "Structured defaults with restrained surfaces.", "cta": { "label": "Open preview", "href": "/examples/corporate/" } },
-            { "title": "Brutalism", "body": "Sharper contrast with a more opinionated voice.", "cta": { "label": "Open preview", "href": "/examples/brutalism/" } },
-            { "title": "Workshop", "body": "A tactile direction suited to studios and trades.", "cta": { "label": "Open preview", "href": "/examples/workshop/" } },
-            { "title": "Refined Professional", "body": "A more polished, service-oriented presentation.", "cta": { "label": "Open preview", "href": "/examples/refined-professional/" } }
+            {
+              "title": "Corporate",
+              "body": "Structured defaults with restrained surfaces.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/corporate.png",
+                "alt": "Real mobile screenshot preview of the corporate theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/corporate/" }
+            },
+            {
+              "title": "Brutalism",
+              "body": "Sharper contrast with a more opinionated voice.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/brutalism.png",
+                "alt": "Real mobile screenshot preview of the brutalism theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/brutalism/" }
+            },
+            {
+              "title": "Workshop",
+              "body": "A tactile direction suited to studios and trades.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/workshop.png",
+                "alt": "Real mobile screenshot preview of the workshop theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/workshop/" }
+            },
+            {
+              "title": "Refined Professional",
+              "body": "A more polished, service-oriented presentation.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/refined-professional.png",
+                "alt": "Real mobile screenshot preview of the refined professional theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/refined-professional/" }
+            }
           ]
         },
         {
           "type": "feature-grid",
           "title": "More preview directions",
           "items": [
-            { "title": "Friendly Modern", "body": "Softer colors and more conversational framing.", "cta": { "label": "Open preview", "href": "/examples/friendly-modern/" } },
-            { "title": "Heritage Local", "body": "A grounded look for legacy and place-based brands.", "cta": { "label": "Open preview", "href": "/examples/heritage-local/" } },
-            { "title": "Wellness Calm", "body": "A gentler palette for health and hospitality use cases.", "cta": { "label": "Open preview", "href": "/examples/wellness-calm/" } },
-            { "title": "High-Vis Service", "body": "A louder, urgency-forward service presentation.", "cta": { "label": "Open preview", "href": "/examples/high-vis-service/" } }
+            {
+              "title": "Friendly Modern",
+              "body": "Softer colors and more conversational framing.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/friendly-modern.png",
+                "alt": "Real mobile screenshot preview of the friendly modern theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/friendly-modern/" }
+            },
+            {
+              "title": "Heritage Local",
+              "body": "A grounded look for legacy and place-based brands.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/heritage-local.png",
+                "alt": "Real mobile screenshot preview of the heritage local theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/heritage-local/" }
+            },
+            {
+              "title": "Wellness Calm",
+              "body": "A gentler palette for health and hospitality use cases.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/wellness-calm.png",
+                "alt": "Real mobile screenshot preview of the wellness calm theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/wellness-calm/" }
+            },
+            {
+              "title": "High-Vis Service",
+              "body": "A louder, urgency-forward service presentation.",
+              "imageLayout": "stacked",
+              "image": {
+                "src": "assets/previews/high-vis-service.png",
+                "alt": "Real mobile screenshot preview of the high-vis service theme example page",
+                "width": 390,
+                "height": 700
+              },
+              "cta": { "label": "Open preview", "href": "/examples/high-vis-service/" }
+            }
           ]
         }
       ]

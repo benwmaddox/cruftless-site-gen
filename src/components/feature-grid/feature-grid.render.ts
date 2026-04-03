@@ -8,6 +8,7 @@ export const featureGridClassNames = [
   "c-feature-grid__items",
   "c-feature-grid__item",
   "c-feature-grid__item--has-image",
+  "c-feature-grid__item--stacked-image",
   "c-feature-grid__item--selected",
   "c-feature-grid__item-media",
   "c-feature-grid__item-image",
@@ -27,6 +28,10 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
 
         if (item.image) {
           itemClasses.push("c-feature-grid__item--has-image");
+        }
+
+        if (item.imageLayout === "stacked") {
+          itemClasses.push("c-feature-grid__item--stacked-image");
         }
 
         if (item.selected) {

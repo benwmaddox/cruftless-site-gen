@@ -19,6 +19,7 @@ describe("FeatureGridSchema", () => {
             height: 800,
             caption: "Optional image support keeps content flexible.",
           },
+          imageLayout: "stacked",
           selected: true,
           cta: {
             label: "See examples",
@@ -33,6 +34,7 @@ describe("FeatureGridSchema", () => {
     expect(html).toContain('<section class="c-feature-grid">');
     expect(html).toContain('<ul class="c-feature-grid__items">');
     expect(html).toContain('c-feature-grid__item--has-image');
+    expect(html).toContain('c-feature-grid__item--stacked-image');
     expect(html).toContain('<figure class="c-feature-grid__item-media">');
     expect(html).toContain('src="https://example.com/validation.jpg"');
     expect(html).toContain('width="1200" height="800"');
