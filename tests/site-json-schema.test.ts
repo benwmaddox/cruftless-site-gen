@@ -5,6 +5,7 @@ import path from "node:path";
 import type { ErrorObject } from "ajv";
 import { describe, expect, it } from "vitest";
 
+import { componentTypeNames } from "../src/components/index.js";
 import {
   buildVsCodeSettings,
   buildSiteContentJsonSchema,
@@ -17,6 +18,19 @@ const contentRoot = path.resolve(process.cwd(), "content");
 const require = createRequire(import.meta.url);
 const Ajv = require("ajv").default as typeof import("ajv").default;
 const addFormats = require("ajv-formats").default as typeof import("ajv-formats").default;
+
+type JsonSchemaValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonSchemaValue[]
+  | { [key: string]: JsonSchemaValue };
+
+type JsonSchemaObject = { [key: string]: JsonSchemaValue };
+
+const isJsonSchemaObject = (value: JsonSchemaValue | undefined): value is JsonSchemaObject =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const collectJsonFiles = async (directoryPath: string): Promise<string[]> => {
   const entries = await readdir(directoryPath, { withFileTypes: true });
@@ -38,6 +52,44 @@ const collectJsonFiles = async (directoryPath: string): Promise<string[]> => {
 const readJsonFile = async (filePath: string): Promise<unknown> =>
   JSON.parse(await readFile(filePath, "utf8")) as unknown;
 
+const collectComponentTypeEnumSchemas = (
+  value: JsonSchemaValue | undefined,
+  matches: JsonSchemaObject[] = [],
+): JsonSchemaObject[] => {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      collectComponentTypeEnumSchemas(item, matches);
+    }
+
+    return matches;
+  }
+
+  if (!isJsonSchemaObject(value)) {
+    return matches;
+  }
+
+  const properties = value.properties;
+
+  if (isJsonSchemaObject(properties)) {
+    const typeProperty = properties.type;
+
+    if (
+      isJsonSchemaObject(typeProperty)
+      && Array.isArray(typeProperty.enum)
+      && typeProperty.enum.every((item) => typeof item === "string")
+      && (Array.isArray(value.oneOf) || Array.isArray(value.anyOf))
+    ) {
+      matches.push(value);
+    }
+  }
+
+  for (const nestedValue of Object.values(value)) {
+    collectComponentTypeEnumSchemas(nestedValue, matches);
+  }
+
+  return matches;
+};
+
 describe("site JSON schema", async () => {
   const contentFiles = await collectJsonFiles(contentRoot);
 
@@ -51,6 +103,20 @@ describe("site JSON schema", async () => {
     const checkedInSettings = await readJsonFile(vscodeSettingsPath);
 
     expect(checkedInSettings).toEqual(buildVsCodeSettings());
+  });
+
+  it("surfaces component type enums for editor autocomplete", () => {
+    const componentUnionSchemas = collectComponentTypeEnumSchemas(
+      buildSiteContentJsonSchema() as JsonSchemaValue,
+    );
+    const pageComponentTypes = [...componentTypeNames].sort();
+    const layoutComponentTypes = [...componentTypeNames, "page-content"].sort();
+    const componentTypeSets = componentUnionSchemas.map((schema) =>
+      [...((schema.properties as JsonSchemaObject).type as JsonSchemaObject).enum as string[]].sort(),
+    );
+
+    expect(componentTypeSets).toContainEqual(pageComponentTypes);
+    expect(componentTypeSets).toContainEqual(layoutComponentTypes);
   });
 
   it("validates all repo content fixtures", async () => {

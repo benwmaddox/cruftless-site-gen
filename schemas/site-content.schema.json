@@ -617,6 +617,29 @@
                             ],
                             "additionalProperties": false
                           }
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "hero",
+                              "feature-list",
+                              "feature-grid",
+                              "faq",
+                              "cta-band",
+                              "contact-form",
+                              "google-maps",
+                              "link-list",
+                              "media",
+                              "navigation-bar",
+                              "prose"
+                            ],
+                            "description": "Component type. This selects which properties are valid for the object."
+                          }
+                        },
+                        "required": [
+                          "type"
                         ]
                       },
                       {
@@ -632,6 +655,30 @@
                         ],
                         "additionalProperties": false
                       }
+                    ],
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "hero",
+                          "feature-list",
+                          "feature-grid",
+                          "faq",
+                          "cta-band",
+                          "contact-form",
+                          "google-maps",
+                          "link-list",
+                          "media",
+                          "navigation-bar",
+                          "prose",
+                          "page-content"
+                        ],
+                        "description": "Component type. This selects which properties are valid for the object."
+                      }
+                    },
+                    "required": [
+                      "type"
                     ]
                   },
                   "minItems": 1
