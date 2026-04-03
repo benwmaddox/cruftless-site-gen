@@ -1,6 +1,26 @@
 import type { PageData, SiteData } from "../schemas/site.schema.js";
 import { escapeHtml } from "./escape-html.js";
 
+const renderGoogleAnalyticsTags = (site: SiteData): string => {
+  const measurementId = site.googleAnalyticsMeasurementId;
+
+  if (!measurementId) {
+    return "";
+  }
+
+  const loaderUrl = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+
+  return [
+    `    <script async src="${escapeHtml(loaderUrl)}"></script>`,
+    "    <script>",
+    "      window.dataLayer = window.dataLayer || [];",
+    "      function gtag(){dataLayer.push(arguments);}",
+    "      gtag('js', new Date());",
+    `      gtag('config', ${JSON.stringify(measurementId)});`,
+    "    </script>",
+  ].join("\n");
+};
+
 export const renderPageDocument = ({
   site,
   page,
@@ -29,6 +49,7 @@ export const renderPageDocument = ({
     '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
     `    <title>${title}</title>`,
     description,
+    renderGoogleAnalyticsTags(site),
     `    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`,
     `    <link rel="stylesheet" href="${escapeHtml(stylesheetHref)}" />`,
     scriptHref ? `    <script src="${escapeHtml(scriptHref)}" defer></script>` : "",

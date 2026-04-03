@@ -75,6 +75,10 @@
               "type": "string",
               "format": "uri"
             },
+            "googleAnalyticsMeasurementId": {
+              "type": "string",
+              "pattern": "^G-[A-Z0-9]+$"
+            },
             "layout": {
               "type": "object",
               "properties": {

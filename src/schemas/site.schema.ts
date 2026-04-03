@@ -7,6 +7,10 @@ import {
   themeStructureNames,
 } from "../themes/theme-options.js";
 
+const GoogleAnalyticsMeasurementIdSchema = z
+  .string()
+  .regex(/^G-[A-Z0-9]+$/i, "googleAnalyticsMeasurementId must look like a GA4 measurement ID");
+
 export const PageMetadataSchema = z
   .object({
     description: z.string().min(1).max(200).optional(),
@@ -51,6 +55,7 @@ export const SiteSchema = z
     theme: z.enum(themeNames),
     themeOverrides: SiteThemeOverridesSchema.optional(),
     pageBackgroundImageUrl: z.string().url().optional(),
+    googleAnalyticsMeasurementId: GoogleAnalyticsMeasurementIdSchema.optional(),
     layout: SiteLayoutSchema.optional(),
   })
   .strict();
