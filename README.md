@@ -140,6 +140,19 @@ npm run build
 ```
 
 This reads `content/site.json` and writes the generated site to `dist/`.
+If the generated output is already current, the build leaves those files untouched.
+
+To keep rebuilding while you edit a content file, use watch mode:
+
+```bash
+npm run build:watch
+```
+
+Or watch a specific content file and output directory:
+
+```bash
+npm run build -- content/examples/78th-street-studios.json dist/78th-street-studios --watch
+```
 
 ### 4. Build or validate a specific content file
 
