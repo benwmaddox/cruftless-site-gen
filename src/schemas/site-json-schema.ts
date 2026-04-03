@@ -13,6 +13,11 @@ type JsonSchemaValue =
   | { [key: string]: JsonSchemaValue };
 
 type JsonSchemaObject = { [key: string]: JsonSchemaValue };
+type JsonSchemaSnippet = {
+  label: string;
+  description?: string;
+  body: JsonSchemaValue;
+};
 
 const unionKeywords = ["oneOf", "anyOf"] as const;
 
@@ -27,6 +32,53 @@ const isJsonSchemaObject = (value: JsonSchemaValue | undefined): value is JsonSc
 
 const isStringArray = (value: JsonSchemaValue | undefined): value is string[] =>
   Array.isArray(value) && value.every((item) => typeof item === "string");
+
+const toJsonPointerPathSegment = (segment: string): string =>
+  segment.replace(/~1/g, "/").replace(/~0/g, "~");
+
+const resolveJsonPointer = (
+  rootSchema: JsonSchemaObject,
+  ref: string,
+): JsonSchemaObject | undefined => {
+  if (!ref.startsWith("#/")) {
+    return undefined;
+  }
+
+  const pathSegments = ref
+    .slice(2)
+    .split("/")
+    .map((segment) => toJsonPointerPathSegment(segment));
+  let currentValue: JsonSchemaValue = rootSchema;
+
+  for (const pathSegment of pathSegments) {
+    if (!isJsonSchemaObject(currentValue)) {
+      return undefined;
+    }
+
+    currentValue = currentValue[pathSegment];
+  }
+
+  return isJsonSchemaObject(currentValue) ? currentValue : undefined;
+};
+
+const resolveSchema = (
+  schema: JsonSchemaObject,
+  rootSchema: JsonSchemaObject,
+): JsonSchemaObject | undefined => {
+  let currentSchema: JsonSchemaObject | undefined = schema;
+  const seenRefs = new Set<string>();
+
+  while (currentSchema && typeof currentSchema.$ref === "string") {
+    if (seenRefs.has(currentSchema.$ref)) {
+      return undefined;
+    }
+
+    seenRefs.add(currentSchema.$ref);
+    currentSchema = resolveJsonPointer(rootSchema, currentSchema.$ref);
+  }
+
+  return currentSchema;
+};
 
 const getComponentTypeConst = (schema: JsonSchemaObject): string | undefined => {
   const properties = schema.properties;
@@ -95,10 +147,202 @@ const getDiscriminatedUnionBranches = (schema: JsonSchemaObject): JsonSchemaObje
   return undefined;
 };
 
-const enrichDiscriminatedUnionSchemas = (value: JsonSchemaValue | undefined): void => {
+const appendUniqueStrings = (values: string[], additions: readonly string[]): string[] => {
+  const seenValues = new Set(values);
+
+  for (const addition of additions) {
+    if (seenValues.has(addition)) {
+      continue;
+    }
+
+    values.push(addition);
+    seenValues.add(addition);
+  }
+
+  return values;
+};
+
+const getSnippetRequiredPropertyNames = (
+  schema: JsonSchemaObject,
+  rootSchema: JsonSchemaObject,
+): string[] => {
+  const resolvedSchema = resolveSchema(schema, rootSchema);
+
+  if (!resolvedSchema) {
+    return [];
+  }
+
+  const requiredPropertyNames = isStringArray(resolvedSchema.required)
+    ? [...resolvedSchema.required]
+    : [];
+
+  for (const unionKeyword of unionKeywords) {
+    const unionEntries = resolvedSchema[unionKeyword];
+
+    if (!Array.isArray(unionEntries) || unionEntries.length === 0) {
+      continue;
+    }
+
+    const firstUnionEntry = unionEntries[0];
+
+    if (!isJsonSchemaObject(firstUnionEntry)) {
+      continue;
+    }
+
+    const resolvedUnionEntry = resolveSchema(firstUnionEntry, rootSchema);
+
+    if (!resolvedUnionEntry || !isStringArray(resolvedUnionEntry.required)) {
+      continue;
+    }
+
+    appendUniqueStrings(requiredPropertyNames, resolvedUnionEntry.required);
+    break;
+  }
+
+  return requiredPropertyNames;
+};
+
+const createSnippetPlaceholder = (index: number, defaultValue?: string): string =>
+  defaultValue && defaultValue.length > 0 ? `\${${index}:${defaultValue}}` : `$${index}`;
+
+const createSnippetChoice = (index: number, choices: readonly string[]): string =>
+  `\${${index}|${choices.join(",")}|}`;
+
+const createRawSnippetPlaceholder = (index: number, defaultValue: string): string =>
+  `^${createSnippetPlaceholder(index, defaultValue)}`;
+
+const createRawSnippetChoice = (index: number, choices: readonly string[]): string =>
+  `^${createSnippetChoice(index, choices)}`;
+
+const createComponentSnippetLabel = (componentType: string): string =>
+  componentType
+    .split("-")
+    .map((segment) => `${segment.slice(0, 1).toUpperCase()}${segment.slice(1)}`)
+    .join(" ");
+
+const createComponentShellSnippet = (): JsonSchemaSnippet => ({
+  label: "Component shell",
+  description: "Insert a component object with a type placeholder.",
+  body: {
+    type: "$1",
+  },
+});
+
+const buildSnippetValue = (
+  schema: JsonSchemaObject,
+  rootSchema: JsonSchemaObject,
+  nextTabStop: () => number,
+): JsonSchemaValue => {
+  const resolvedSchema = resolveSchema(schema, rootSchema);
+
+  if (!resolvedSchema) {
+    return createSnippetPlaceholder(nextTabStop());
+  }
+
+  if (
+    Array.isArray(resolvedSchema.enum)
+    && resolvedSchema.enum.length > 0
+    && resolvedSchema.enum.every((item) => typeof item === "string")
+  ) {
+    return createSnippetChoice(nextTabStop(), resolvedSchema.enum as string[]);
+  }
+
+  if (typeof resolvedSchema.const === "string") {
+    return resolvedSchema.const;
+  }
+
+  if (typeof resolvedSchema.const === "number" || typeof resolvedSchema.const === "boolean") {
+    return resolvedSchema.const;
+  }
+
+  if (resolvedSchema.type === "object") {
+    const properties = isJsonSchemaObject(resolvedSchema.properties) ? resolvedSchema.properties : {};
+    const requiredPropertyNames = getSnippetRequiredPropertyNames(resolvedSchema, rootSchema);
+    const snippetObject: JsonSchemaObject = {};
+
+    for (const requiredPropertyName of requiredPropertyNames) {
+      const propertySchema = properties[requiredPropertyName];
+
+      if (!isJsonSchemaObject(propertySchema)) {
+        continue;
+      }
+
+      snippetObject[requiredPropertyName] = buildSnippetValue(
+        propertySchema,
+        rootSchema,
+        nextTabStop,
+      );
+    }
+
+    return snippetObject;
+  }
+
+  if (resolvedSchema.type === "array") {
+    if (!isJsonSchemaObject(resolvedSchema.items)) {
+      return [];
+    }
+
+    const minimumItems = typeof resolvedSchema.minItems === "number" ? resolvedSchema.minItems : 0;
+
+    if (minimumItems < 1) {
+      return [];
+    }
+
+    return [buildSnippetValue(resolvedSchema.items, rootSchema, nextTabStop)];
+  }
+
+  if (resolvedSchema.type === "integer" || resolvedSchema.type === "number") {
+    return createRawSnippetPlaceholder(nextTabStop(), "0");
+  }
+
+  if (resolvedSchema.type === "boolean") {
+    return createRawSnippetChoice(nextTabStop(), ["true", "false"]);
+  }
+
+  return createSnippetPlaceholder(nextTabStop());
+};
+
+const buildComponentDefaultSnippets = (
+  discriminatedUnionBranches: JsonSchemaObject[],
+  rootSchema: JsonSchemaObject,
+): JsonSchemaSnippet[] => {
+  const snippets: JsonSchemaSnippet[] = [createComponentShellSnippet()];
+
+  for (const branch of discriminatedUnionBranches) {
+    const componentType = getComponentTypeConst(branch);
+
+    if (!componentType) {
+      continue;
+    }
+
+    let tabStopIndex = 1;
+    const nextTabStop = (): number => {
+      tabStopIndex += 1;
+      return tabStopIndex;
+    };
+    const snippetBody = buildSnippetValue(branch, rootSchema, nextTabStop);
+
+    if (!isJsonSchemaObject(snippetBody)) {
+      continue;
+    }
+
+    snippets.push({
+      label: createComponentSnippetLabel(componentType),
+      description: `Insert a ${componentType} component with required fields.`,
+      body: snippetBody,
+    });
+  }
+
+  return snippets;
+};
+
+const enrichDiscriminatedUnionSchemas = (
+  value: JsonSchemaValue | undefined,
+  rootSchema: JsonSchemaObject,
+): void => {
   if (Array.isArray(value)) {
     for (const item of value) {
-      enrichDiscriminatedUnionSchemas(item);
+      enrichDiscriminatedUnionSchemas(item, rootSchema);
     }
 
     return;
@@ -133,10 +377,11 @@ const enrichDiscriminatedUnionSchemas = (value: JsonSchemaValue | undefined): vo
     value.required = requiredProperties.includes("type")
       ? requiredProperties
       : ["type", ...requiredProperties];
+    value.defaultSnippets = buildComponentDefaultSnippets(discriminatedUnionBranches, rootSchema);
   }
 
   for (const nestedValue of Object.values(value)) {
-    enrichDiscriminatedUnionSchemas(nestedValue);
+    enrichDiscriminatedUnionSchemas(nestedValue, rootSchema);
   }
 };
 
@@ -180,8 +425,6 @@ export const buildSiteContentJsonSchema = (): JsonSchemaObject => {
   schema.description =
     "Schema for cruftless-site-gen site content files under content/**/*.json.";
 
-  enrichDiscriminatedUnionSchemas(schema);
-
   const heroComponentSchemas = findHeroComponentSchemas(schema);
 
   if (heroComponentSchemas.length === 0) {
@@ -194,6 +437,8 @@ export const buildSiteContentJsonSchema = (): JsonSchemaObject => {
       { required: ["secondaryCta"] },
     ];
   }
+
+  enrichDiscriminatedUnionSchemas(schema, schema);
 
   return schema;
 };

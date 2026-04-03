@@ -90,6 +90,33 @@ const collectComponentTypeEnumSchemas = (
   return matches;
 };
 
+const collectComponentSnippetSchemas = (
+  value: JsonSchemaValue | undefined,
+  matches: JsonSchemaObject[] = [],
+): JsonSchemaObject[] => {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      collectComponentSnippetSchemas(item, matches);
+    }
+
+    return matches;
+  }
+
+  if (!isJsonSchemaObject(value)) {
+    return matches;
+  }
+
+  if (Array.isArray(value.defaultSnippets)) {
+    matches.push(value);
+  }
+
+  for (const nestedValue of Object.values(value)) {
+    collectComponentSnippetSchemas(nestedValue, matches);
+  }
+
+  return matches;
+};
+
 describe("site JSON schema", async () => {
   const contentFiles = await collectJsonFiles(contentRoot);
 
@@ -117,6 +144,35 @@ describe("site JSON schema", async () => {
 
     expect(componentTypeSets).toContainEqual(pageComponentTypes);
     expect(componentTypeSets).toContainEqual(layoutComponentTypes);
+  });
+
+  it("generates default snippets for component unions", () => {
+    const componentSnippetSchemas = collectComponentSnippetSchemas(
+      buildSiteContentJsonSchema() as JsonSchemaValue,
+    );
+    const snippetLabels = componentSnippetSchemas.flatMap((schema) =>
+      (schema.defaultSnippets as JsonSchemaObject[]).map((snippet) => snippet.label),
+    );
+    const heroSnippet = componentSnippetSchemas
+      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+      .find((snippet) => snippet.label === "Hero");
+    const componentShellSnippet = componentSnippetSchemas
+      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+      .find((snippet) => snippet.label === "Component shell");
+
+    expect(snippetLabels).toContain("Component shell");
+    expect(snippetLabels).toContain("Hero");
+    expect(componentShellSnippet?.body).toEqual({
+      type: "$1",
+    });
+    expect(heroSnippet?.body).toEqual({
+      type: "hero",
+      headline: "$2",
+      primaryCta: {
+        label: "$3",
+        href: "$4",
+      },
+    });
   });
 
   it("validates all repo content fixtures", async () => {

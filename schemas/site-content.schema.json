@@ -640,6 +640,140 @@
                         },
                         "required": [
                           "type"
+                        ],
+                        "defaultSnippets": [
+                          {
+                            "label": "Component shell",
+                            "description": "Insert a component object with a type placeholder.",
+                            "body": {
+                              "type": "$1"
+                            }
+                          },
+                          {
+                            "label": "Hero",
+                            "description": "Insert a hero component with required fields.",
+                            "body": {
+                              "type": "hero",
+                              "headline": "$2",
+                              "primaryCta": {
+                                "label": "$3",
+                                "href": "$4"
+                              }
+                            }
+                          },
+                          {
+                            "label": "Feature List",
+                            "description": "Insert a feature-list component with required fields.",
+                            "body": {
+                              "type": "feature-list",
+                              "title": "$2",
+                              "items": [
+                                {
+                                  "title": "$3",
+                                  "body": "$4"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "label": "Feature Grid",
+                            "description": "Insert a feature-grid component with required fields.",
+                            "body": {
+                              "type": "feature-grid",
+                              "title": "$2",
+                              "items": [
+                                {
+                                  "title": "$3",
+                                  "body": "$4"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "label": "Faq",
+                            "description": "Insert a faq component with required fields.",
+                            "body": {
+                              "type": "faq",
+                              "title": "$2",
+                              "items": [
+                                {
+                                  "question": "$3",
+                                  "answer": "$4"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "label": "Cta Band",
+                            "description": "Insert a cta-band component with required fields.",
+                            "body": {
+                              "type": "cta-band",
+                              "headline": "$2",
+                              "primaryCta": "$3"
+                            }
+                          },
+                          {
+                            "label": "Contact Form",
+                            "description": "Insert a contact-form component with required fields.",
+                            "body": {
+                              "type": "contact-form",
+                              "title": "$2",
+                              "action": "$3",
+                              "submitLabel": "$4"
+                            }
+                          },
+                          {
+                            "label": "Google Maps",
+                            "description": "Insert a google-maps component with required fields.",
+                            "body": {
+                              "type": "google-maps",
+                              "embedUrl": "$2",
+                              "title": "$3"
+                            }
+                          },
+                          {
+                            "label": "Link List",
+                            "description": "Insert a link-list component with required fields.",
+                            "body": {
+                              "type": "link-list",
+                              "title": "$2",
+                              "links": [
+                                {
+                                  "label": "$3",
+                                  "href": "$4"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "label": "Media",
+                            "description": "Insert a media component with required fields.",
+                            "body": {
+                              "src": "$2",
+                              "alt": "$3",
+                              "type": "media"
+                            }
+                          },
+                          {
+                            "label": "Navigation Bar",
+                            "description": "Insert a navigation-bar component with required fields.",
+                            "body": {
+                              "type": "navigation-bar",
+                              "links": [
+                                "$2"
+                              ]
+                            }
+                          },
+                          {
+                            "label": "Prose",
+                            "description": "Insert a prose component with required fields.",
+                            "body": {
+                              "type": "prose",
+                              "paragraphs": [
+                                "$2"
+                              ]
+                            }
+                          }
                         ]
                       },
                       {
@@ -679,6 +813,147 @@
                     },
                     "required": [
                       "type"
+                    ],
+                    "defaultSnippets": [
+                      {
+                        "label": "Component shell",
+                        "description": "Insert a component object with a type placeholder.",
+                        "body": {
+                          "type": "$1"
+                        }
+                      },
+                      {
+                        "label": "Hero",
+                        "description": "Insert a hero component with required fields.",
+                        "body": {
+                          "type": "hero",
+                          "headline": "$2",
+                          "primaryCta": {
+                            "label": "$3",
+                            "href": "$4"
+                          }
+                        }
+                      },
+                      {
+                        "label": "Feature List",
+                        "description": "Insert a feature-list component with required fields.",
+                        "body": {
+                          "type": "feature-list",
+                          "title": "$2",
+                          "items": [
+                            {
+                              "title": "$3",
+                              "body": "$4"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Feature Grid",
+                        "description": "Insert a feature-grid component with required fields.",
+                        "body": {
+                          "type": "feature-grid",
+                          "title": "$2",
+                          "items": [
+                            {
+                              "title": "$3",
+                              "body": "$4"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Faq",
+                        "description": "Insert a faq component with required fields.",
+                        "body": {
+                          "type": "faq",
+                          "title": "$2",
+                          "items": [
+                            {
+                              "question": "$3",
+                              "answer": "$4"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Cta Band",
+                        "description": "Insert a cta-band component with required fields.",
+                        "body": {
+                          "type": "cta-band",
+                          "headline": "$2",
+                          "primaryCta": "$3"
+                        }
+                      },
+                      {
+                        "label": "Contact Form",
+                        "description": "Insert a contact-form component with required fields.",
+                        "body": {
+                          "type": "contact-form",
+                          "title": "$2",
+                          "action": "$3",
+                          "submitLabel": "$4"
+                        }
+                      },
+                      {
+                        "label": "Google Maps",
+                        "description": "Insert a google-maps component with required fields.",
+                        "body": {
+                          "type": "google-maps",
+                          "embedUrl": "$2",
+                          "title": "$3"
+                        }
+                      },
+                      {
+                        "label": "Link List",
+                        "description": "Insert a link-list component with required fields.",
+                        "body": {
+                          "type": "link-list",
+                          "title": "$2",
+                          "links": [
+                            {
+                              "label": "$3",
+                              "href": "$4"
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Media",
+                        "description": "Insert a media component with required fields.",
+                        "body": {
+                          "src": "$2",
+                          "alt": "$3",
+                          "type": "media"
+                        }
+                      },
+                      {
+                        "label": "Navigation Bar",
+                        "description": "Insert a navigation-bar component with required fields.",
+                        "body": {
+                          "type": "navigation-bar",
+                          "links": [
+                            "$2"
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Prose",
+                        "description": "Insert a prose component with required fields.",
+                        "body": {
+                          "type": "prose",
+                          "paragraphs": [
+                            "$2"
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Page Content",
+                        "description": "Insert a page-content component with required fields.",
+                        "body": {
+                          "type": "page-content"
+                        }
+                      }
                     ]
                   },
                   "minItems": 1
