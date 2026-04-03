@@ -45,6 +45,7 @@
             "The page-content slot keeps page-specific sections in the middle while shared content stays centralized."
           ]
         }
+        
       ]
     }
   },

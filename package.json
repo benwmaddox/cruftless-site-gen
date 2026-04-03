@@ -9,6 +9,8 @@
   "scripts": {
     "build": "tsx src/build/build.ts",
     "build:watch": "tsx src/build/build.ts --watch",
+    "serve:watch": "browser-sync start --server dist --files \"dist/**/*\" --open",
+    "dev": "concurrently -k \"npm:build:watch\" \"npm:serve:watch\"",
     "build:examples": "tsx src/build/build-examples.ts",
     "build:example:baird": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive",
     "build:example:78th": "tsx src/build/build.ts content/examples/78th-street-studios.json dist/78th-street-studios",
@@ -33,6 +35,8 @@
     "@types/node": "^22.10.2",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
+    "browser-sync": "^3.0.3",
+    "concurrently": "^9.1.2",
     "playwright": "^1.58.2",
     "stylelint": "^17.6.0",
     "stylelint-config-standard": "^40.0.0",
