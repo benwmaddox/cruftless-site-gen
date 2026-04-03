@@ -1,4 +1,3 @@
-import { rm } from "node:fs/promises";
 import path from "node:path";
 
 import { themeNames } from "../themes/index.js";
@@ -9,8 +8,6 @@ const examplesOutDir = path.resolve(process.cwd(), "dist/examples");
 const examplesIndexContentPath = path.join(examplesContentDir, "index.json");
 
 try {
-  await rm(examplesOutDir, { recursive: true, force: true });
-
   let builtPages = 0;
   const examplesIndex = await buildSiteFromFile(examplesIndexContentPath, examplesOutDir);
   builtPages += examplesIndex.pages.length;

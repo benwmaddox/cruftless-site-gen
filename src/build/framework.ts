@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rmdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ZodIssue } from "zod";
@@ -329,19 +329,129 @@ const renderSiteJs = (siteContent: SiteContentData): string => {
     .join("\n\n");
 };
 
+export interface BuildResult {
+  pageCount: number;
+  filesCreated: number;
+  filesUpdated: number;
+  filesUnchanged: number;
+  filesRemoved: number;
+}
+
+const collectFilesRecursively = async (directoryPath: string): Promise<string[]> => {
+  const entries = await readdir(directoryPath, { withFileTypes: true });
+  const nestedPaths = await Promise.all(
+    entries.map(async (entry) => {
+      const entryPath = path.join(directoryPath, entry.name);
+
+      if (entry.isDirectory()) {
+        return collectFilesRecursively(entryPath);
+      }
+
+      return entry.isFile() ? [entryPath] : [];
+    }),
+  );
+
+  return nestedPaths.flat();
+};
+
+const writeFileIfChanged = async (
+  filePath: string,
+  contents: string,
+): Promise<"created" | "updated" | "unchanged"> => {
+  try {
+    const existingContents = await readFile(filePath, "utf8");
+
+    if (existingContents === contents) {
+      return "unchanged";
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      throw error;
+    }
+
+    await writeFile(filePath, contents, "utf8");
+    return "created";
+  }
+
+  await writeFile(filePath, contents, "utf8");
+  return "updated";
+};
+
+const removeEmptyDirectories = async (directoryPath: string, rootDir: string): Promise<void> => {
+  const entries = await readdir(directoryPath, { withFileTypes: true });
+
+  await Promise.all(
+    entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => removeEmptyDirectories(path.join(directoryPath, entry.name), rootDir)),
+  );
+
+  if (directoryPath === rootDir) {
+    return;
+  }
+
+  const remainingEntries = await readdir(directoryPath);
+  if (remainingEntries.length === 0) {
+    await rmdir(directoryPath);
+  }
+};
+
+const removeStaleGeneratedFiles = async (
+  outDir: string,
+  expectedFiles: ReadonlySet<string>,
+): Promise<number> => {
+  try {
+    const existingFiles = await collectFilesRecursively(outDir);
+    const staleFiles = existingFiles.filter((filePath) => !expectedFiles.has(filePath));
+
+    await Promise.all(staleFiles.map((filePath) => unlink(filePath)));
+    await removeEmptyDirectories(outDir, outDir);
+
+    return staleFiles.length;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return 0;
+    }
+
+    throw error;
+  }
+};
+
 export const buildSite = async (
   siteContent: SiteContentData,
   outDir: string = defaultOutDir,
-): Promise<void> => {
-  await rm(outDir, { recursive: true, force: true });
+): Promise<BuildResult> => {
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
   const css = await renderSiteCss(siteContent);
   const js = renderSiteJs(siteContent);
-  await writeFile(path.join(outDir, "assets", "site.css"), css, "utf8");
+  const expectedFiles = new Set<string>();
+  let filesCreated = 0;
+  let filesUpdated = 0;
+  let filesUnchanged = 0;
+
+  const recordWriteResult = (writeResult: "created" | "updated" | "unchanged") => {
+    if (writeResult === "created") {
+      filesCreated += 1;
+      return;
+    }
+
+    if (writeResult === "updated") {
+      filesUpdated += 1;
+      return;
+    }
+
+    filesUnchanged += 1;
+  };
+
+  const cssOutputPath = path.join(outDir, "assets", "site.css");
+  expectedFiles.add(cssOutputPath);
+  recordWriteResult(await writeFileIfChanged(cssOutputPath, css));
 
   if (js) {
-    await writeFile(path.join(outDir, "assets", "site.js"), js, "utf8");
+    const jsOutputPath = path.join(outDir, "assets", "site.js");
+    expectedFiles.add(jsOutputPath);
+    recordWriteResult(await writeFileIfChanged(jsOutputPath, js));
   }
 
   for (const [pageIndex, page] of siteContent.pages.entries()) {
@@ -357,8 +467,19 @@ export const buildSite = async (
     });
     const outputPath = pageSlugToOutputPath(page.slug, outDir);
     await mkdir(path.dirname(outputPath), { recursive: true });
-    await writeFile(outputPath, documentHtml, "utf8");
+    expectedFiles.add(outputPath);
+    recordWriteResult(await writeFileIfChanged(outputPath, documentHtml));
   }
+
+  const filesRemoved = await removeStaleGeneratedFiles(outDir, expectedFiles);
+
+  return {
+    pageCount: siteContent.pages.length,
+    filesCreated,
+    filesUpdated,
+    filesUnchanged,
+    filesRemoved,
+  };
 };
 
 export const buildSiteFromFile = async (

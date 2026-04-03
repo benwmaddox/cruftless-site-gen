@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsx src/build/build.ts",
+    "build:watch": "tsx src/build/build.ts --watch",
     "build:examples": "tsx src/build/build-examples.ts",
     "build:example:baird": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive",
     "build:example:78th": "tsx src/build/build.ts content/examples/78th-street-studios.json dist/78th-street-studios",
