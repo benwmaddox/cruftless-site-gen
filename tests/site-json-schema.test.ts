@@ -109,4 +109,71 @@ describe("site JSON schema", async () => {
       ],
     });
   });
+
+  it("accepts an optional google analytics measurement ID", () => {
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    addFormats(ajv);
+
+    const validate = ajv.compile(buildSiteContentJsonSchema());
+    const isValid = validate({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "friendly-modern",
+        googleAnalyticsMeasurementId: "G-TEST1234",
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Launch faster",
+              primaryCta: {
+                label: "Get started",
+                href: "/start",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(isValid).toBe(true);
+  });
+
+  it("rejects an invalid google analytics measurement ID", () => {
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    addFormats(ajv);
+
+    const validate = ajv.compile(buildSiteContentJsonSchema());
+    const isValid = validate({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "friendly-modern",
+        googleAnalyticsMeasurementId: "UA-123456",
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Launch faster",
+              primaryCta: {
+                label: "Get started",
+                href: "/start",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(isValid).toBe(false);
+    expect(validate.errors?.some((issue: ErrorObject) => issue.keyword === "pattern")).toBe(true);
+  });
 });

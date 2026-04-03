@@ -90,6 +90,32 @@ const createStaticSite = () =>
     ],
   });
 
+const createAnalyticsSite = () =>
+  SiteContentSchema.parse({
+    site: {
+      name: "LaunchKit",
+      baseUrl: "https://launchkit.example",
+      theme: "friendly-modern",
+      googleAnalyticsMeasurementId: "G-TEST1234",
+    },
+    pages: [
+      {
+        slug: "/",
+        title: "Home",
+        components: [
+          {
+            type: "hero",
+            headline: "Launch faster",
+            primaryCta: {
+              label: "Get started",
+              href: "/start",
+            },
+          },
+        ],
+      },
+    ],
+  });
+
 describe("buildSite output writes", () => {
   it("does not rewrite unchanged files on repeated builds", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-output-"));
@@ -137,6 +163,24 @@ describe("buildSite output writes", () => {
       expect(secondBuild.filesRemoved).toBe(2);
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
       await expect(access(path.join(outDir, "about", "index.html"))).rejects.toThrow();
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
+
+  it("includes google analytics tags when a measurement ID is configured", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-analytics-"));
+
+    try {
+      await buildSite(createAnalyticsSite(), outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+
+      expect(html).toContain(
+        '<script async src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"></script>',
+      );
+      expect(html).toContain(`gtag('config', "G-TEST1234");`);
+      await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }

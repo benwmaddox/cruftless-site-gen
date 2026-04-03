@@ -33,7 +33,7 @@ The generator follows a few hard rules:
 
 Every site file has two top-level sections:
 
-- `site`: site-wide settings such as name, base URL, theme, theme overrides, optional background image, and optional shared layout
+- `site`: site-wide settings such as name, base URL, theme, theme overrides, optional background image, optional Google Analytics measurement ID, and optional shared layout
 - `pages`: page definitions with a slug, title, optional metadata, and an ordered list of components
 
 ### Shared layout
@@ -43,6 +43,10 @@ If `site.layout.components` is present, those components wrap every page. One it
 - `{ "type": "page-content" }`
 
 That slot is where each page's own `components` array is inserted. This lets the repo reuse headers, nav, shared prose, or footers across every page without copying them into each page object.
+
+### Google Analytics
+
+If `site.googleAnalyticsMeasurementId` is present, every generated page includes the standard Google Analytics loader and `gtag('config', ...)` call for that GA4 measurement ID.
 
 ### Available components
 
