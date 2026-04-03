@@ -1,26 +1,17 @@
 import path from "node:path";
 
 import { themeNames } from "../themes/index.js";
-import { ValidationFailure, buildSiteFromFile } from "./framework.js";
-
-const examplesContentDir = path.resolve(process.cwd(), "content/examples/themes");
-const examplesOutDir = path.resolve(process.cwd(), "dist/examples");
-const examplesIndexContentPath = path.join(examplesContentDir, "index.json");
+import {
+  ValidationFailure,
+  buildThemeExamples,
+  examplesOutDir,
+} from "./theme-example-previews.js";
 
 try {
-  let builtPages = 0;
-  const examplesIndex = await buildSiteFromFile(examplesIndexContentPath, examplesOutDir);
-  builtPages += examplesIndex.pages.length;
-
-  for (const themeName of themeNames) {
-    const contentPath = path.join(examplesContentDir, `${themeName}.json`);
-    const outDir = path.join(examplesOutDir, themeName);
-    const siteContent = await buildSiteFromFile(contentPath, outDir);
-    builtPages += siteContent.pages.length;
-  }
+  const { builtPages, previewCount } = await buildThemeExamples();
 
   console.log(
-    `Built the theme preview index plus ${themeNames.length} theme example site(s) with ${builtPages} page(s) into ${path.relative(process.cwd(), examplesOutDir)}`,
+    `Built the theme preview index plus ${themeNames.length} theme example site(s) with ${builtPages} page(s) and ${previewCount} real screenshot preview(s) into ${path.relative(process.cwd(), examplesOutDir)}`,
   );
 } catch (error) {
   if (error instanceof ValidationFailure) {

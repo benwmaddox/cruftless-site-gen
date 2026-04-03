@@ -254,6 +254,13 @@
                                       ],
                                       "additionalProperties": false
                                     },
+                                    "imageLayout": {
+                                      "type": "string",
+                                      "enum": [
+                                        "inline",
+                                        "stacked"
+                                      ]
+                                    },
                                     "cta": {
                                       "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/primaryCta"
                                     },

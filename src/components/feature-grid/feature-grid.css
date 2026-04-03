@@ -45,6 +45,10 @@
   align-items: start;
 }
 
+.c-feature-grid__item--stacked-image {
+  grid-template-columns: 1fr;
+}
+
 .c-feature-grid__item-media {
   margin: 0;
   display: grid;

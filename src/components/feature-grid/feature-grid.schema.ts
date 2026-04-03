@@ -7,6 +7,7 @@ export const FeatureGridItemSchema = z
     title: z.string().min(1),
     body: z.string().min(1),
     image: ImageReferenceSchema.optional(),
+    imageLayout: z.enum(["inline", "stacked"]).optional(),
     cta: LinkSchema.optional(),
     selected: z.boolean().optional(),
   })
