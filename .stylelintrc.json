@@ -10,6 +10,8 @@
         "deg",
         "fr",
         "rem",
+        "svh",
+        "dvh",
         "vh",
         "vw"
       ],
