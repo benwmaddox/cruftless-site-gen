@@ -55,6 +55,15 @@ describe("component width tokens", () => {
     expect(css).toContain("color: var(--color-primary-contrast);");
   });
 
+  it("uses mobile-safe viewport units for short-page layouts", async () => {
+    const css = await readBaseCss();
+
+    expect(css).toContain("min-height: 100svh;");
+    expect(css).toContain("min-height: 100dvh;");
+    expect(css).toContain(".l-page {");
+    expect(css).toContain("min-height: inherit;");
+  });
+
   it("keeps google maps width modes split between content and container tokens", async () => {
     const css = await readComponentCss("google-maps");
 
