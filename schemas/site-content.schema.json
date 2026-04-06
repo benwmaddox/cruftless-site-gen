@@ -188,7 +188,7 @@
                                   "additionalProperties": false
                                 },
                                 "minItems": 1,
-                                "maxItems": 6
+                                "maxItems": 90
                               }
                             },
                             "required": [
