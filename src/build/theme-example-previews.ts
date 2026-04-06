@@ -10,7 +10,8 @@ import { createStaticServer } from "./static-server.js";
 export const examplesContentDir = path.resolve(process.cwd(), "content/examples/themes");
 export const examplesOutDir = path.resolve(process.cwd(), "dist/examples");
 export const examplesIndexContentPath = path.join(examplesContentDir, "index.json");
-export const themePreviewImageDir = path.join("assets", "previews");
+const themePreviewImageDirSegments = ["assets", "previews"] as const;
+export const themePreviewImageDir = themePreviewImageDirSegments.join("/");
 export const themePreviewViewport = {
   width: 390,
   height: 700,
@@ -22,10 +23,10 @@ export interface ThemeExampleBuildResult {
 }
 
 export const themePreviewImageHref = (themeName: ThemeName): string =>
-  path.posix.join(themePreviewImageDir, `${themeName}.png`);
+  path.posix.join(...themePreviewImageDirSegments, `${themeName}.png`);
 
 const themePreviewOutputPath = (outDir: string, themeName: ThemeName): string =>
-  path.join(outDir, themePreviewImageDir, `${themeName}.png`);
+  path.join(outDir, ...themePreviewImageDirSegments, `${themeName}.png`);
 
 const waitForPreviewToRender = async (page: Page): Promise<void> => {
   await page.waitForLoadState("load");
@@ -63,7 +64,7 @@ const removeStalePreviewImages = async (
   outDir: string,
   expectedPaths: ReadonlySet<string>,
 ): Promise<void> => {
-  const previewDirPath = path.join(outDir, themePreviewImageDir);
+  const previewDirPath = path.join(outDir, ...themePreviewImageDirSegments);
   const entries = await readdir(previewDirPath, { withFileTypes: true }).catch((error) => {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       return [];
@@ -86,7 +87,7 @@ export const generateThemePreviewScreenshots = async (
   outDir: string,
   themesToRender: readonly ThemeName[] = themeNames,
 ): Promise<number> => {
-  const previewDirPath = path.join(outDir, themePreviewImageDir);
+  const previewDirPath = path.join(outDir, ...themePreviewImageDirSegments);
   const expectedPreviewPaths = new Set(
     themesToRender.map((themeName) => themePreviewOutputPath(outDir, themeName)),
   );
