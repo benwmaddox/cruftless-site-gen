@@ -17,7 +17,7 @@ export const FeatureGridSchema = z
   .object({
     type: z.literal("feature-grid"),
     title: z.string().min(1).max(120),
-    items: z.array(FeatureGridItemSchema).min(1).max(6),
+    items: z.array(FeatureGridItemSchema).min(1).max(99),
   })
   .strict();
 
