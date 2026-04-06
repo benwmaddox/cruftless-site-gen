@@ -11,7 +11,7 @@ export const FeatureListSchema = z
   .object({
     type: z.literal("feature-list"),
     title: z.string().min(1).max(120),
-    items: z.array(FeatureListItemSchema).min(1).max(6),
+    items: z.array(FeatureListItemSchema).min(1).max(90),
   })
   .strict();
 
