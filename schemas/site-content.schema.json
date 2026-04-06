@@ -279,7 +279,7 @@
                                   "additionalProperties": false
                                 },
                                 "minItems": 1,
-                                "maxItems": 6
+                                "maxItems": 99
                               }
                             },
                             "required": [

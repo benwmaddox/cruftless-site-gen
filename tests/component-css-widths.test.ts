@@ -30,6 +30,17 @@ describe("component width tokens", () => {
     }
   });
 
+  it("caps feature grid layouts at three columns before wrapping", async () => {
+    const css = await readComponentCss("feature-grid");
+
+    expect(css).toContain("grid-template-columns: repeat(3, minmax(0, 1fr));");
+    expect(css).toContain("@media (width <= 60rem)");
+    expect(css).toContain("grid-template-columns: repeat(2, minmax(0, 1fr));");
+    expect(css).toContain("@media (width <= 40rem)");
+    expect(css).toContain("grid-template-columns: 1fr;");
+    expect(css).not.toContain("repeat(auto-fit, minmax(14rem, 1fr))");
+  });
+
   it("keeps media width modes split between content and container tokens", async () => {
     const css = await readComponentCss("media");
 
