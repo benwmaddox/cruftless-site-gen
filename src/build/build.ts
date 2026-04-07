@@ -23,6 +23,7 @@ if (positionalArgs.length > 2) {
 const [contentArg, outArg] = positionalArgs;
 const contentPath = contentArg ? path.resolve(process.cwd(), contentArg) : defaultContentPath;
 const outDir = outArg ? path.resolve(process.cwd(), outArg) : defaultOutDir;
+const relativeContentPath = path.relative(process.cwd(), contentPath);
 
 const formatBuildSummary = (pageCount: number, outDirectory: string, changedFiles: number): string => {
   const relativeOutDir = path.relative(process.cwd(), outDirectory) || ".";
@@ -70,7 +71,7 @@ try {
 
   if (!watchMode) {
     process.exitCode = initialBuildSucceeded ? 0 : 1;
-} else {
+  } else {
     let buildInProgress = false;
     let queuedBuild = false;
     let watchedImagePaths = new Set<string>();
@@ -111,15 +112,18 @@ try {
 
       buildInProgress = true;
       void (async () => {
-        console.log(`Change detected in ${path.relative(process.cwd(), changedPath)}. Rebuilding...`);
-        const buildSucceeded = await runBuild();
-        await syncWatchedImagePaths();
-        process.exitCode = buildSucceeded ? 0 : 1;
-        buildInProgress = false;
+        try {
+          console.log(`Change detected in ${path.relative(process.cwd(), changedPath)}. Rebuilding...`);
+          const buildSucceeded = await runBuild();
+          await syncWatchedImagePaths();
+          process.exitCode = buildSucceeded ? 0 : 1;
+        } finally {
+          buildInProgress = false;
 
-        if (queuedBuild) {
-          queuedBuild = false;
-          triggerBuild(changedPath);
+          if (queuedBuild) {
+            queuedBuild = false;
+            triggerBuild(changedPath);
+          }
         }
       })();
     };
@@ -144,7 +148,7 @@ try {
     process.on("SIGTERM", stopWatching);
 
     await syncWatchedImagePaths();
-    console.log(`Watching ${path.relative(process.cwd(), contentPath)} for changes...`);
+    console.log(`Watching ${relativeContentPath} for changes...`);
   }
 } catch (error) {
   if (error instanceof ValidationFailure) {
