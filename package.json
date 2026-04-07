@@ -29,6 +29,7 @@
     "check": "npm run validate:strict"
   },
   "dependencies": {
+    "sharp": "^0.34.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -1,4 +1,8 @@
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
 import type { ImageTextData } from "./image-text.schema.js";
 
 export const imageTextClassNames = [
@@ -54,15 +58,16 @@ const renderCopy = (data: ImageTextData): string => {
     .join("\n");
 };
 
-const renderMedia = (data: ImageTextData): string => {
+const renderMedia = (data: ImageTextData, renderContext: ComponentRenderContext): string => {
+  const resolvedImage = renderContext.resolveImage(data.image, "image-text");
   const dimensions =
-    data.image.width !== undefined && data.image.height !== undefined
-      ? ` width="${data.image.width}" height="${data.image.height}"`
+    resolvedImage.width !== undefined && resolvedImage.height !== undefined
+      ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
       : "";
 
   return [
     '  <figure class="c-image-text__media">',
-    `    <img class="c-image-text__image" src="${escapeHtml(data.image.src)}" alt="${escapeHtml(data.image.alt)}"${dimensions} />`,
+    `    <img class="c-image-text__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(data.image.alt)}"${dimensions} />`,
     data.image.caption
       ? `    <figcaption class="c-image-text__caption">${escapeHtml(data.image.caption)}</figcaption>`
       : "",
@@ -72,11 +77,14 @@ const renderMedia = (data: ImageTextData): string => {
     .join("\n");
 };
 
-export const renderImageText = (data: ImageTextData): string => {
+export const renderImageText = (
+  data: ImageTextData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
   const innerHtml =
     data.imagePosition === "start"
-      ? [renderMedia(data), renderCopy(data)].join("\n")
-      : [renderCopy(data), renderMedia(data)].join("\n");
+      ? [renderMedia(data, renderContext), renderCopy(data)].join("\n")
+      : [renderCopy(data), renderMedia(data, renderContext)].join("\n");
 
   return [
     `<section class="c-image-text c-image-text--image-${escapeHtml(data.imagePosition)}">`,

@@ -40,7 +40,8 @@
       "position": [
         "relative",
         "absolute",
-        "sticky"
+        "sticky",
+        "fixed"
       ],
       "justify-content": [
         "start",
@@ -83,6 +84,7 @@
       "right",
       "bottom",
       "left",
+      "inset",
       "z-index",
       "width",
       "height",
@@ -99,6 +101,7 @@
       "flex-wrap",
       "justify-content",
       "align-items",
+      "justify-self",
       "gap",
       "grid-template-columns",
       "grid-template-rows",
@@ -135,6 +138,7 @@
       "outline-offset",
       "overflow",
       "cursor",
+      "object-fit",
       "transition",
       "transform"
     ],

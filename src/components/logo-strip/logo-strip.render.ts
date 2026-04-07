@@ -1,4 +1,8 @@
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
 import type { LogoStripData } from "./logo-strip.schema.js";
 
 export const logoStripClassNames = [
@@ -12,12 +16,16 @@ export const logoStripClassNames = [
   "c-logo-strip__image",
 ] as const;
 
-const renderLogo = (logo: LogoStripData["logos"][number]): string => {
+const renderLogo = (
+  logo: LogoStripData["logos"][number],
+  renderContext: ComponentRenderContext,
+): string => {
+  const resolvedImage = renderContext.resolveImage(logo, "navbar-brand");
   const dimensions =
-    logo.width !== undefined && logo.height !== undefined
-      ? ` width="${logo.width}" height="${logo.height}"`
+    resolvedImage.width !== undefined && resolvedImage.height !== undefined
+      ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
       : "";
-  const imageHtml = `<img class="c-logo-strip__image" src="${escapeHtml(logo.src)}" alt="${escapeHtml(logo.alt)}"${dimensions} />`;
+  const imageHtml = `<img class="c-logo-strip__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(logo.alt)}"${dimensions} />`;
 
   return [
     '      <li class="c-logo-strip__item">',
@@ -28,8 +36,11 @@ const renderLogo = (logo: LogoStripData["logos"][number]): string => {
   ].join("\n");
 };
 
-export const renderLogoStrip = (data: LogoStripData): string => {
-  const logosHtml = data.logos.map((logo) => renderLogo(logo)).join("\n");
+export const renderLogoStrip = (
+  data: LogoStripData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
+  const logosHtml = data.logos.map((logo) => renderLogo(logo, renderContext)).join("\n");
 
   return [
     '<section class="c-logo-strip">',

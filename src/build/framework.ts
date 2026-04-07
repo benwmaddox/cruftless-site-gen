@@ -9,6 +9,7 @@ import {
   type ComponentType,
   renderComponent,
 } from "../components/index.js";
+import { defaultComponentRenderContext } from "../components/render-context.js";
 import { resolvePageComponents } from "../layout/page-layout.js";
 import {
   SiteContentSchema,
@@ -20,6 +21,10 @@ import { emitThemeCss } from "../themes/emit-theme-css.js";
 import { themes } from "../themes/index.js";
 import { resolveThemeDefinition } from "../themes/theme-options.js";
 import { validateComponentRegistry } from "../validation/component-registry-validation.js";
+import {
+  collectImageValidationIssues,
+  prepareImagePipeline,
+} from "./image-pipeline.js";
 import {
   collectSiteValidationIssues,
   type ValidationIssue,
@@ -211,6 +216,7 @@ export const loadValidatedSite = async (
   }
 
   const contentIssues = collectSiteValidationIssues(parsed.data);
+  const imageIssues = await collectImageValidationIssues(parsed.data, contentPath);
   const resolvedThemeIssues = validateThemeDefinition(
     `site:${parsed.data.site.theme}`,
     resolveThemeDefinition(themes[parsed.data.site.theme], parsed.data.site.themeOverrides),
@@ -219,11 +225,13 @@ export const loadValidatedSite = async (
   if (
     frameworkIssues.length > 0 ||
     contentIssues.length > 0 ||
+    imageIssues.length > 0 ||
     resolvedThemeIssues.length > 0
   ) {
     throw new ValidationFailure(contentPath, [
       ...frameworkIssues,
       ...contentIssues,
+      ...imageIssues,
       ...resolvedThemeIssues,
     ]);
   }
@@ -337,6 +345,10 @@ export interface BuildResult {
   filesRemoved: number;
 }
 
+export interface BuildOptions {
+  contentPath?: string;
+}
+
 const collectFilesRecursively = async (directoryPath: string): Promise<string[]> => {
   const entries = await readdir(directoryPath, { withFileTypes: true });
   const nestedPaths = await Promise.all(
@@ -420,12 +432,16 @@ const removeStaleGeneratedFiles = async (
 export const buildSite = async (
   siteContent: SiteContentData,
   outDir: string = defaultOutDir,
+  options: BuildOptions = {},
 ): Promise<BuildResult> => {
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
   const css = await renderSiteCss(siteContent);
   const js = renderSiteJs(siteContent);
   const expectedFiles = new Set<string>();
+  const imagePipeline = options.contentPath
+    ? await prepareImagePipeline(siteContent, options.contentPath, outDir)
+    : undefined;
   let filesCreated = 0;
   let filesUpdated = 0;
   let filesUnchanged = 0;
@@ -454,9 +470,14 @@ export const buildSite = async (
     recordWriteResult(await writeFileIfChanged(jsOutputPath, js));
   }
 
+  imagePipeline?.expectedFiles.forEach((filePath) => {
+    expectedFiles.add(filePath);
+  });
+
   for (const [pageIndex, page] of siteContent.pages.entries()) {
+    const renderContext = imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
     const bodyHtml = resolvePageComponents(siteContent.site, page, pageIndex)
-      .map((component) => renderComponent(component))
+      .map((component) => renderComponent(component, renderContext))
       .join("\n");
     const documentHtml = renderPageDocument({
       site: siteContent.site,
@@ -487,6 +508,6 @@ export const buildSiteFromFile = async (
   outDir: string = defaultOutDir,
 ): Promise<SiteContentData> => {
   const siteContent = await loadValidatedSite(contentPath);
-  await buildSite(siteContent, outDir);
+  await buildSite(siteContent, outDir, { contentPath });
   return siteContent;
 };
