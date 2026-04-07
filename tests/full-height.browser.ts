@@ -19,6 +19,27 @@ const createShortPageFixture = () =>
       name: "LaunchKit",
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
+      layout: {
+        components: [
+          {
+            type: "navigation-bar",
+            brandText: "LaunchKit",
+            links: [
+              {
+                label: "Home",
+                href: "/",
+              },
+              {
+                label: "Contact",
+                href: "/contact",
+              },
+            ],
+          },
+          {
+            type: "page-content",
+          },
+        ],
+      },
     },
     pages: [
       {
@@ -69,12 +90,18 @@ const runBrowserRegression = async (): Promise<void> => {
 
         return {
           bodyHeight: document.body.getBoundingClientRect().height,
+          bottomSlack:
+            pageRoot.getBoundingClientRect().bottom -
+            Array.from(pageRoot.children).at(-1)!.getBoundingClientRect().bottom,
+          firstChildHeight: Array.from(pageRoot.children).at(0)!.getBoundingClientRect().height,
           pageHeight: pageRoot.getBoundingClientRect().height,
           viewportHeight: window.innerHeight,
         };
       });
 
       assert.ok(metrics.bodyHeight >= metrics.viewportHeight - 1);
+      assert.ok(metrics.bottomSlack > 24);
+      assert.ok(metrics.firstChildHeight < metrics.viewportHeight * 0.25);
       assert.ok(metrics.pageHeight >= metrics.viewportHeight - 1);
       assert.deepEqual(pageErrors, []);
     } finally {

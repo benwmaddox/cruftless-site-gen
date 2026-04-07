@@ -56,6 +56,13 @@
         "stretch",
         "baseline"
       ],
+      "align-content": [
+        "start",
+        "center",
+        "end",
+        "space-between",
+        "space-around"
+      ],
       "place-items": [
         "start",
         "center",
@@ -99,6 +106,7 @@
       "flex-wrap",
       "justify-content",
       "align-items",
+      "align-content",
       "gap",
       "grid-template-columns",
       "grid-template-rows",
