@@ -12,14 +12,19 @@ const readBaseCss = async () => readFile(path.join(repoRoot, "src", "styles", "b
 describe("component width tokens", () => {
   it("uses content-max for standard component wrappers", async () => {
     const standardComponents = [
+      "before-after",
       "contact-form",
       "cta-band",
       "faq",
       "feature-grid",
       "feature-list",
+      "gallery",
       "hero",
+      "image-text",
+      "logo-strip",
       "navigation-bar",
       "prose",
+      "testimonials",
     ];
 
     const cssFiles = await Promise.all(standardComponents.map(readComponentCss));

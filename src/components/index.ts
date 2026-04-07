@@ -1,6 +1,11 @@
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
+import { BeforeAfterSchema } from "./before-after/before-after.schema.js";
+import {
+  beforeAfterClassNames,
+  renderBeforeAfter,
+} from "./before-after/before-after.render.js";
 import {
   ContactFormSchema,
 } from "./contact-form/contact-form.schema.js";
@@ -24,6 +29,8 @@ import {
   featureGridClassNames,
   renderFeatureGrid,
 } from "./feature-grid/feature-grid.render.js";
+import { GallerySchema } from "./gallery/gallery.schema.js";
+import { galleryClassNames, renderGallery } from "./gallery/gallery.render.js";
 import { GoogleMapsSchema } from "./google-maps/google-maps.schema.js";
 import {
   googleMapsClassNames,
@@ -31,8 +38,18 @@ import {
 } from "./google-maps/google-maps.render.js";
 import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
+import { ImageTextSchema } from "./image-text/image-text.schema.js";
+import {
+  imageTextClassNames,
+  renderImageText,
+} from "./image-text/image-text.render.js";
 import { LinkListSchema } from "./link-list/link-list.schema.js";
 import { linkListClassNames, renderLinkList } from "./link-list/link-list.render.js";
+import { LogoStripSchema } from "./logo-strip/logo-strip.schema.js";
+import {
+  logoStripClassNames,
+  renderLogoStrip,
+} from "./logo-strip/logo-strip.render.js";
 import { MediaSchema } from "./media/media.schema.js";
 import { mediaClassNames, renderMedia } from "./media/media.render.js";
 import {
@@ -50,19 +67,29 @@ import {
 } from "./navigation-bar/navigation-bar.schema.js";
 import { ProseSchema } from "./prose/prose.schema.js";
 import { proseClassNames, renderProse } from "./prose/prose.render.js";
+import { TestimonialsSchema } from "./testimonials/testimonials.schema.js";
+import {
+  renderTestimonials,
+  testimonialsClassNames,
+} from "./testimonials/testimonials.render.js";
 
 export const ComponentSchemaBase = z.discriminatedUnion("type", [
+  BeforeAfterSchema,
   HeroSchemaBase,
   FeatureListSchema,
   FeatureGridSchema,
   FaqSchema,
+  GallerySchema,
   CtaBandSchema,
   ContactFormSchema,
   GoogleMapsSchema,
+  ImageTextSchema,
   LinkListSchema,
+  LogoStripSchema,
   MediaSchema,
   NavigationBarSchemaBase,
   ProseSchema,
+  TestimonialsSchema,
 ]);
 
 export const ComponentSchema = ComponentSchemaBase.superRefine((value, ctx) => {
@@ -99,6 +126,12 @@ export const sharedClassNames = [
 
 export const componentDefinitions: readonly ComponentDefinition[] = [
   {
+    type: "before-after",
+    render: (data) => renderBeforeAfter(BeforeAfterSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./before-after/before-after.css", import.meta.url)),
+    classNames: beforeAfterClassNames,
+  },
+  {
     type: "hero",
     render: (data) => renderHero(HeroSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./hero/hero.css", import.meta.url)),
@@ -115,6 +148,12 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     render: (data) => renderFeatureGrid(FeatureGridSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./feature-grid/feature-grid.css", import.meta.url)),
     classNames: featureGridClassNames,
+  },
+  {
+    type: "gallery",
+    render: (data) => renderGallery(GallerySchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./gallery/gallery.css", import.meta.url)),
+    classNames: galleryClassNames,
   },
   {
     type: "faq",
@@ -141,10 +180,22 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: googleMapsClassNames,
   },
   {
+    type: "image-text",
+    render: (data) => renderImageText(ImageTextSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./image-text/image-text.css", import.meta.url)),
+    classNames: imageTextClassNames,
+  },
+  {
     type: "link-list",
     render: (data) => renderLinkList(LinkListSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./link-list/link-list.css", import.meta.url)),
     classNames: linkListClassNames,
+  },
+  {
+    type: "logo-strip",
+    render: (data) => renderLogoStrip(LogoStripSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./logo-strip/logo-strip.css", import.meta.url)),
+    classNames: logoStripClassNames,
   },
   {
     type: "media",
@@ -165,6 +216,12 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     cssPath: fileURLToPath(new URL("./prose/prose.css", import.meta.url)),
     classNames: proseClassNames,
   },
+  {
+    type: "testimonials",
+    render: (data) => renderTestimonials(TestimonialsSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./testimonials/testimonials.css", import.meta.url)),
+    classNames: testimonialsClassNames,
+  },
 ];
 
 export const componentTypeNames = componentDefinitions.map(
@@ -173,12 +230,16 @@ export const componentTypeNames = componentDefinitions.map(
 
 export const renderComponent = (data: ComponentData): string => {
   switch (data.type) {
+    case "before-after":
+      return renderBeforeAfter(data);
     case "hero":
       return renderHero(data);
     case "feature-list":
       return renderFeatureList(data);
     case "feature-grid":
       return renderFeatureGrid(data);
+    case "gallery":
+      return renderGallery(data);
     case "faq":
       return renderFaq(data);
     case "cta-band":
@@ -187,14 +248,20 @@ export const renderComponent = (data: ComponentData): string => {
       return renderContactForm(data);
     case "google-maps":
       return renderGoogleMaps(data);
+    case "image-text":
+      return renderImageText(data);
     case "link-list":
       return renderLinkList(data);
+    case "logo-strip":
+      return renderLogoStrip(data);
     case "media":
       return renderMedia(data);
     case "navigation-bar":
       return renderNavigationBar(data);
     case "prose":
       return renderProse(data);
+    case "testimonials":
+      return renderTestimonials(data);
     default: {
       throw new Error(`No renderer exists for component '${JSON.stringify(data)}'`);
     }

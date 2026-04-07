@@ -52,15 +52,22 @@ If `site.googleAnalyticsMeasurementId` is present, every generated page includes
 
 The current component set is:
 
-- `hero`
-- `feature-list`
-- `feature-grid`
-- `faq`
+- `before-after`
+- `contact-form`
 - `cta-band`
+- `faq`
+- `hero`
+- `feature-grid`
+- `feature-list`
+- `gallery`
 - `google-maps`
+- `image-text`
+- `link-list`
+- `logo-strip`
 - `media`
 - `navigation-bar`
 - `prose`
+- `testimonials`
 
 ### Available themes
 

@@ -236,21 +236,34 @@ const secondaryColorSchemePalettes: Record<
 };
 
 const sectionInnerSelectors = `
+    .c-before-after__inner,
+    .c-gallery__inner,
+    .c-image-text__inner,
+    .c-logo-strip__inner,
     .c-prose__inner,
     .c-feature-grid__inner,
     .c-feature-list__inner,
-    .c-faq__inner
+    .c-faq__inner,
+    .c-testimonials__inner
 `;
 
 const cardSelectors = `
+    .c-before-after__item,
     .c-feature-grid__item,
     .c-feature-list__item,
-    .c-faq__item
+    .c-faq__item,
+    .c-logo-strip__link,
+    .c-testimonials__item
 `;
 
 const framedMediaSelectors = `
+    .c-before-after__image,
+    .c-gallery__image,
+    .c-image-text__image,
+    .c-logo-strip__image,
     .c-media__image,
-    .c-google-maps__frame
+    .c-google-maps__frame,
+    .c-testimonials__avatar
 `;
 
 const hexColorPattern = /^#(?:[\da-f]{3}|[\da-f]{6})$/i;

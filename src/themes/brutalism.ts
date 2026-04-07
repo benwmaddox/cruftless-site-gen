@@ -46,11 +46,14 @@ export const brutalismTheme = createThemeDefinition(
   `
     .c-navbar__link,
     .c-button,
+    .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
+    .c-logo-strip__link,
     .c-contact-form__inner,
     .c-hero__body,
-    .c-cta-band__inner {
+    .c-cta-band__inner,
+    .c-testimonials__item {
       border-width: var(--border-width-2);
       box-shadow: var(--shadow-md);
     }
