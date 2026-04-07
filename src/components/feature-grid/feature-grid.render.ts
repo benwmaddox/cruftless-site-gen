@@ -1,5 +1,9 @@
 import type { FeatureGridData } from "./feature-grid.schema.js";
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
 
 export const featureGridClassNames = [
   "c-feature-grid",
@@ -20,7 +24,10 @@ export const featureGridClassNames = [
   "c-feature-grid__item-cta",
 ] as const;
 
-export const renderFeatureGrid = (data: FeatureGridData): string => {
+export const renderFeatureGrid = (
+  data: FeatureGridData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
   const itemsHtml = data.items
     .map(
       (item) => {
@@ -38,9 +45,15 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
           itemClasses.push("c-feature-grid__item--selected");
         }
 
+        const resolvedImage = item.image
+          ? renderContext.resolveImage(
+              item.image,
+              item.imageLayout === "stacked" ? "feature-grid-stacked" : "feature-grid-inline",
+            )
+          : undefined;
         const imageDimensions =
-          item.image?.width !== undefined && item.image.height !== undefined
-            ? ` width="${item.image.width}" height="${item.image.height}"`
+          resolvedImage?.width !== undefined && resolvedImage.height !== undefined
+            ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
             : "";
 
         return [
@@ -48,7 +61,7 @@ export const renderFeatureGrid = (data: FeatureGridData): string => {
           item.image
             ? [
                 '        <figure class="c-feature-grid__item-media">',
-                `          <img class="c-feature-grid__item-image" src="${escapeHtml(item.image.src)}" alt="${escapeHtml(item.image.alt)}"${imageDimensions} />`,
+                `          <img class="c-feature-grid__item-image" src="${escapeHtml(resolvedImage?.src ?? item.image.src)}" alt="${escapeHtml(item.image.alt)}"${imageDimensions} />`,
                 item.image.caption
                   ? `          <figcaption class="c-feature-grid__item-caption">${escapeHtml(item.image.caption)}</figcaption>`
                   : "",

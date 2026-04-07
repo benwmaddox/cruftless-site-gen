@@ -1,4 +1,8 @@
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
 import type { TestimonialsData } from "./testimonials.schema.js";
 
 export const testimonialsClassNames = [
@@ -26,27 +30,34 @@ const renderMeta = (item: TestimonialsData["items"][number]): string => {
   return `<p class="c-testimonials__meta">${escapeHtml(parts.join(", "))}</p>`;
 };
 
-const renderAvatar = (image: TestimonialsData["items"][number]["image"]): string => {
+const renderAvatar = (
+  image: TestimonialsData["items"][number]["image"],
+  renderContext: ComponentRenderContext,
+): string => {
   if (!image) {
     return "";
   }
 
+  const resolvedImage = renderContext.resolveImage(image, "testimonial-avatar");
   const dimensions =
-    image.width !== undefined && image.height !== undefined
-      ? ` width="${image.width}" height="${image.height}"`
+    resolvedImage.width !== undefined && resolvedImage.height !== undefined
+      ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
       : "";
 
-  return `<img class="c-testimonials__avatar" src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}"${dimensions} />`;
+  return `<img class="c-testimonials__avatar" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(image.alt)}"${dimensions} />`;
 };
 
-export const renderTestimonials = (data: TestimonialsData): string => {
+export const renderTestimonials = (
+  data: TestimonialsData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
   const itemsHtml = data.items
     .map((item) =>
       [
         '      <li class="c-testimonials__item">',
         `        <blockquote class="c-testimonials__quote">&ldquo;${escapeHtml(item.quote)}&rdquo;</blockquote>`,
         '        <div class="c-testimonials__footer">',
-        renderAvatar(item.image),
+        renderAvatar(item.image, renderContext),
         '          <div class="c-testimonials__person">',
         `            <p class="c-testimonials__name">${escapeHtml(item.name)}</p>`,
         renderMeta(item),

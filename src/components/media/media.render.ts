@@ -1,5 +1,9 @@
 import type { MediaData } from "./media.schema.js";
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
 
 export const mediaClassNames = [
   "c-media",
@@ -9,15 +13,22 @@ export const mediaClassNames = [
   "c-media__caption",
 ] as const;
 
-export const renderMedia = (data: MediaData): string => {
+export const renderMedia = (
+  data: MediaData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
+  const resolvedImage = renderContext.resolveImage(
+    data,
+    data.size === "content" ? "media-content" : "media-wide",
+  );
   const dimensions =
-    data.width !== undefined && data.height !== undefined
-      ? ` width="${data.width}" height="${data.height}"`
+    resolvedImage.width !== undefined && resolvedImage.height !== undefined
+      ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
       : "";
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(data.src)}" alt="${escapeHtml(data.alt)}"${dimensions} />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(data.alt)}"${dimensions} />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]
