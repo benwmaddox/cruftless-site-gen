@@ -29,6 +29,7 @@ import {
   featureGridClassNames,
   renderFeatureGrid,
 } from "./feature-grid/feature-grid.render.js";
+import { galleryRuntimeScript } from "./gallery/gallery.runtime.js";
 import { GallerySchema } from "./gallery/gallery.schema.js";
 import { galleryClassNames, renderGallery } from "./gallery/gallery.render.js";
 import { GoogleMapsSchema } from "./google-maps/google-maps.schema.js";
@@ -67,6 +68,10 @@ import {
 } from "./navigation-bar/navigation-bar.schema.js";
 import { ProseSchema } from "./prose/prose.schema.js";
 import { proseClassNames, renderProse } from "./prose/prose.render.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "./render-context.js";
 import { TestimonialsSchema } from "./testimonials/testimonials.schema.js";
 import {
   renderTestimonials,
@@ -112,7 +117,7 @@ export type ComponentType = ComponentData["type"];
 
 export interface ComponentDefinition {
   type: ComponentType;
-  render: (data: ComponentData) => string;
+  render: (data: ComponentData, renderContext?: ComponentRenderContext) => string;
   cssPath: string;
   classNames: readonly string[];
   scriptContent?: string;
@@ -127,7 +132,8 @@ export const sharedClassNames = [
 export const componentDefinitions: readonly ComponentDefinition[] = [
   {
     type: "before-after",
-    render: (data) => renderBeforeAfter(BeforeAfterSchema.parse(data)),
+    render: (data, renderContext) =>
+      renderBeforeAfter(BeforeAfterSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./before-after/before-after.css", import.meta.url)),
     classNames: beforeAfterClassNames,
   },
@@ -145,15 +151,17 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
   },
   {
     type: "feature-grid",
-    render: (data) => renderFeatureGrid(FeatureGridSchema.parse(data)),
+    render: (data, renderContext) =>
+      renderFeatureGrid(FeatureGridSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./feature-grid/feature-grid.css", import.meta.url)),
     classNames: featureGridClassNames,
   },
   {
     type: "gallery",
-    render: (data) => renderGallery(GallerySchema.parse(data)),
+    render: (data, renderContext) => renderGallery(GallerySchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./gallery/gallery.css", import.meta.url)),
     classNames: galleryClassNames,
+    scriptContent: galleryRuntimeScript,
   },
   {
     type: "faq",
@@ -181,7 +189,7 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
   },
   {
     type: "image-text",
-    render: (data) => renderImageText(ImageTextSchema.parse(data)),
+    render: (data, renderContext) => renderImageText(ImageTextSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./image-text/image-text.css", import.meta.url)),
     classNames: imageTextClassNames,
   },
@@ -193,19 +201,20 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
   },
   {
     type: "logo-strip",
-    render: (data) => renderLogoStrip(LogoStripSchema.parse(data)),
+    render: (data, renderContext) => renderLogoStrip(LogoStripSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./logo-strip/logo-strip.css", import.meta.url)),
     classNames: logoStripClassNames,
   },
   {
     type: "media",
-    render: (data) => renderMedia(MediaSchema.parse(data)),
+    render: (data, renderContext) => renderMedia(MediaSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./media/media.css", import.meta.url)),
     classNames: mediaClassNames,
   },
   {
     type: "navigation-bar",
-    render: (data) => renderNavigationBar(NavigationBarSchema.parse(data)),
+    render: (data, renderContext) =>
+      renderNavigationBar(NavigationBarSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./navigation-bar/navigation-bar.css", import.meta.url)),
     classNames: navigationBarClassNames,
     scriptContent: navigationBarRuntimeScript,
@@ -218,7 +227,8 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
   },
   {
     type: "testimonials",
-    render: (data) => renderTestimonials(TestimonialsSchema.parse(data)),
+    render: (data, renderContext) =>
+      renderTestimonials(TestimonialsSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./testimonials/testimonials.css", import.meta.url)),
     classNames: testimonialsClassNames,
   },
@@ -228,18 +238,21 @@ export const componentTypeNames = componentDefinitions.map(
   (componentDefinition) => componentDefinition.type,
 );
 
-export const renderComponent = (data: ComponentData): string => {
+export const renderComponent = (
+  data: ComponentData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
   switch (data.type) {
     case "before-after":
-      return renderBeforeAfter(data);
+      return renderBeforeAfter(data, renderContext);
     case "hero":
       return renderHero(data);
     case "feature-list":
       return renderFeatureList(data);
     case "feature-grid":
-      return renderFeatureGrid(data);
+      return renderFeatureGrid(data, renderContext);
     case "gallery":
-      return renderGallery(data);
+      return renderGallery(data, renderContext);
     case "faq":
       return renderFaq(data);
     case "cta-band":
@@ -249,19 +262,19 @@ export const renderComponent = (data: ComponentData): string => {
     case "google-maps":
       return renderGoogleMaps(data);
     case "image-text":
-      return renderImageText(data);
+      return renderImageText(data, renderContext);
     case "link-list":
       return renderLinkList(data);
     case "logo-strip":
-      return renderLogoStrip(data);
+      return renderLogoStrip(data, renderContext);
     case "media":
-      return renderMedia(data);
+      return renderMedia(data, renderContext);
     case "navigation-bar":
-      return renderNavigationBar(data);
+      return renderNavigationBar(data, renderContext);
     case "prose":
       return renderProse(data);
     case "testimonials":
-      return renderTestimonials(data);
+      return renderTestimonials(data, renderContext);
     default: {
       throw new Error(`No renderer exists for component '${JSON.stringify(data)}'`);
     }

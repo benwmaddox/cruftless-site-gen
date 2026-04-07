@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { renderGallery } from "./gallery.render.js";
 import { GallerySchema } from "./gallery.schema.js";
+import type { ComponentRenderContext } from "../render-context.js";
 
 describe("GallerySchema", () => {
   it("accepts gallery content and renders a configurable photo grid", () => {
@@ -26,9 +27,47 @@ describe("GallerySchema", () => {
 
     const html = renderGallery(parsed);
 
-    expect(html).toContain('<section class="c-gallery">');
+    expect(html).toContain('<section class="c-gallery" data-js="gallery" data-gallery-open="false">');
     expect(html).toContain("c-gallery__items--columns-4");
+    expect(html).toContain('class="c-gallery__trigger"');
+    expect(html).toContain('class="c-gallery__dialog" hidden');
     expect(html).toContain("Entry lobby refresh");
+  });
+
+  it("renders resolved thumbnail and full-size image references when provided", () => {
+    const parsed = GallerySchema.parse({
+      type: "gallery",
+      title: "Project photography",
+      columns: "3",
+      images: [
+        {
+          src: "content/images/project-1.jpg",
+          alt: "Remodeled showroom",
+          caption: "Showroom",
+        },
+        {
+          src: "content/images/project-1.jpg",
+          alt: "Remodeled showroom detail",
+        },
+      ],
+    });
+    const renderContext: ComponentRenderContext = {
+      resolveImage: (image) => image,
+      resolveGalleryImage: () => ({
+        src: "assets/images/project-1-gallery-thumb-3.jpg",
+        width: 560,
+        height: 420,
+        fullSrc: "assets/images/project-1-gallery-full.jpg",
+        fullWidth: 1600,
+        fullHeight: 1200,
+      }),
+    };
+
+    const html = renderGallery(parsed, renderContext);
+
+    expect(html).toContain('src="assets/images/project-1-gallery-thumb-3.jpg"');
+    expect(html).toContain('width="560" height="420"');
+    expect(html).toContain('data-gallery-full-src="assets/images/project-1-gallery-full.jpg"');
   });
 
   it("rejects unsupported column counts", () => {

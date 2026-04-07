@@ -41,6 +41,39 @@ const runBrowserRegression = async (): Promise<void> => {
         waitUntil: "networkidle",
       });
 
+      await desktopPage.locator(".c-gallery__trigger").first().click();
+      await assert.doesNotReject(() =>
+        desktopPage.waitForFunction(() => {
+          const gallery = document.querySelector(".c-gallery");
+          const dialog = document.querySelector(".c-gallery__dialog");
+
+          return (
+            gallery instanceof HTMLElement &&
+            dialog instanceof HTMLElement &&
+            gallery.dataset.galleryOpen === "true" &&
+            !dialog.hidden
+          );
+        }),
+      );
+
+      const dialogCaption = await desktopPage.locator(".c-gallery__dialog-caption").textContent();
+      assert.ok(dialogCaption);
+
+      await desktopPage.keyboard.press("Escape");
+      await assert.doesNotReject(() =>
+        desktopPage.waitForFunction(() => {
+          const gallery = document.querySelector(".c-gallery");
+          const dialog = document.querySelector(".c-gallery__dialog");
+
+          return (
+            gallery instanceof HTMLElement &&
+            dialog instanceof HTMLElement &&
+            gallery.dataset.galleryOpen === "false" &&
+            dialog.hidden
+          );
+        }),
+      );
+
       const desktopMetrics = await desktopPage.evaluate(() => {
         const imageTextInner = document.querySelector(".c-image-text__inner");
         const beforeAfterItems = Array.from(document.querySelectorAll(".c-before-after__item"));
