@@ -9,22 +9,37 @@
           "type": "navigation-bar",
           "brandText": "High-Vis Service",
           "links": [
-            { "label": "Preview", "href": "/examples/high-vis-service/" },
-            { "label": "Theme List", "href": "/examples/" },
-            { "label": "Pricing", "href": "/pricing" }
+            {
+              "label": "Preview",
+              "href": "/examples/high-vis-service/"
+            },
+            {
+              "label": "Theme List",
+              "href": "/examples/"
+            },
+            {
+              "label": "Pricing",
+              "href": "/pricing"
+            }
           ]
         },
         {
           "type": "prose",
           "title": "Shared theme wrapper",
           "lead": "This site-level block renders before the page-local examples.",
-          "paragraphs": ["Use the shared layout wrapper to verify how global sections look in the high-vis-service theme."]
+          "paragraphs": [
+            "Use the shared layout wrapper to verify how global sections look in the high-vis-service theme."
+          ]
         },
-        { "type": "page-content" },
+        {
+          "type": "page-content"
+        },
         {
           "type": "prose",
           "title": "Shared theme footer",
-          "paragraphs": ["This repeated site-level footer confirms the theme can frame page content without duplicating JSON on every page."]
+          "paragraphs": [
+            "This repeated site-level footer confirms the theme can frame page content without duplicating JSON on every page."
+          ]
         }
       ]
     }
@@ -41,8 +56,14 @@
           "type": "hero",
           "headline": "High-Vis Service theme preview",
           "subheadline": "Urgent contrast, dispatch-style hierarchy, and strong CTA surfaces on one review page.",
-          "primaryCta": { "label": "Jump to examples", "href": "#examples" },
-          "secondaryCta": { "label": "See all previews", "href": "/examples/" },
+          "primaryCta": {
+            "label": "Jump to examples",
+            "href": "#examples"
+          },
+          "secondaryCta": {
+            "label": "See all previews",
+            "href": "/examples/"
+          },
           "align": "start"
         },
         {
@@ -50,45 +71,240 @@
           "title": "Theme navigation sample",
           "lead": "This compact control confirms route pickers stay readable in the active theme.",
           "links": [
-            { "label": "High-Vis Service", "href": "/examples/high-vis-service/", "current": true },
-            { "label": "Corporate", "href": "/examples/corporate/" },
-            { "label": "Brutalism", "href": "/examples/brutalism/" }
+            {
+              "label": "High-Vis Service",
+              "href": "/examples/high-vis-service/",
+              "current": true
+            },
+            {
+              "label": "Corporate",
+              "href": "/examples/corporate/"
+            },
+            {
+              "label": "Brutalism",
+              "href": "/examples/brutalism/"
+            }
           ]
         },
         {
           "type": "feature-list",
           "title": "What this preview is for",
           "items": [
-            { "title": "Fast visual QA", "body": "Use this page to inspect how spacing, type, and CTA treatments land in the high-vis-service theme." },
-            { "title": "Component coverage", "body": "Each supported component appears once so theme regressions are easier to spot." },
-            { "title": "Stable content", "body": "The copy stays intentionally synthetic so visual differences are easier to attribute." }
+            {
+              "title": "Fast visual QA",
+              "body": "Use this page to inspect how spacing, type, and CTA treatments land in the high-vis-service theme."
+            },
+            {
+              "title": "Component coverage",
+              "body": "Each supported component appears once so theme regressions are easier to spot."
+            },
+            {
+              "title": "Stable content",
+              "body": "The copy stays intentionally synthetic so visual differences are easier to attribute."
+            }
           ]
         },
         {
           "type": "feature-grid",
           "title": "What to compare between themes",
           "items": [
-            { "title": "Heading tone", "body": "Compare how the same hierarchy feels when typography shifts." },
-            { "title": "Surface treatment", "body": "Cards, dividers, and section framing should reflect the active theme tokens." },
-            { "title": "CTA contrast", "body": "Primary and secondary buttons should stay readable without per-page CSS." },
-            { "title": "Long-form rhythm", "body": "Prose, FAQs, and captions should stay balanced on the same page." }
+            {
+              "title": "Heading tone",
+              "body": "Compare how the same hierarchy feels when typography shifts."
+            },
+            {
+              "title": "Surface treatment",
+              "body": "Cards, dividers, and section framing should reflect the active theme tokens."
+            },
+            {
+              "title": "CTA contrast",
+              "body": "Primary and secondary buttons should stay readable without per-page CSS."
+            },
+            {
+              "title": "Long-form rhythm",
+              "body": "Prose, FAQs, and captions should stay balanced on the same page."
+            }
+          ]
+        },
+        {
+          "type": "image-text",
+          "eyebrow": "High-value section",
+          "title": "Image and copy can share the same frame without feeling generic",
+          "paragraphs": [
+            "Use a split section when a service overview, process note, or about section needs one grounded image and a small amount of focused copy.",
+            "The markup keeps the copy readable while letting the image carry more visual weight than a plain prose block."
+          ],
+          "imagePosition": "end",
+          "primaryCta": {
+            "label": "See example sites",
+            "href": "/examples/"
+          },
+          "secondaryCta": {
+            "label": "Talk through scope",
+            "href": "/pricing"
+          },
+          "image": {
+            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%201120%22%3E%3Crect%20width%3D%221600%22%20height%3D%221120%22%20fill%3D%22%23eef2ff%22%2F%3E%3Crect%20x%3D%22128%22%20y%3D%22112%22%20width%3D%221344%22%20height%3D%22896%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%234338ca%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22256%22%20y%3D%22224%22%20width%3D%22352%22%20height%3D%22515%22%20rx%3D%2222%22%20fill%3D%22%23c7d2fe%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22269%22%20width%3D%22480%22%20height%3D%2290%22%20rx%3D%2218%22%20fill%3D%22%234338ca%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22448%22%20width%3D%22544%22%20height%3D%2256%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22571%22%20width%3D%22384%22%20height%3D%22101%22%20rx%3D%2218%22%20fill%3D%22%23c7d2fe%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22941%22%20fill%3D%22%234338ca%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2290%22%20font-weight%3D%22700%22%3EProcess%3C%2Ftext%3E%3C%2Fsvg%3E",
+            "alt": "Project team reviewing finish samples on site",
+            "caption": "Split sections work well for service overviews, process notes, and about blocks.",
+            "width": 1600,
+            "height": 1120
+          }
+        },
+        {
+          "type": "gallery",
+          "title": "Gallery coverage for portfolio-heavy pages",
+          "lead": "A repeatable photo grid makes project pages feel more custom without opening up arbitrary layout code.",
+          "columns": "3",
+          "images": [
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%20900%22%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22%23eff6ff%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%232563eb%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22192%22%20y%3D%22180%22%20width%3D%22264%22%20height%3D%22414%22%20rx%3D%2222%22%20fill%3D%22%23bfdbfe%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22216%22%20width%3D%22360%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%232563eb%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22360%22%20width%3D%22408%22%20height%3D%2245%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22459%22%20width%3D%22288%22%20height%3D%2281%22%20rx%3D%2218%22%20fill%3D%22%23bfdbfe%22%2F%3E%3Ctext%20x%3D%22192%22%20y%3D%22756%22%20fill%3D%22%232563eb%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2272%22%20font-weight%3D%22700%22%3EStudio%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Bright studio with clean product displays",
+              "caption": "Bright merchandising wall",
+              "width": 1200,
+              "height": 900
+            },
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%20900%22%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22%23fef2f2%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23e11d48%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22192%22%20y%3D%22180%22%20width%3D%22264%22%20height%3D%22414%22%20rx%3D%2222%22%20fill%3D%22%23fecdd3%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22216%22%20width%3D%22360%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%23e11d48%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22360%22%20width%3D%22408%22%20height%3D%2245%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22459%22%20width%3D%22288%22%20height%3D%2281%22%20rx%3D%2218%22%20fill%3D%22%23fecdd3%22%2F%3E%3Ctext%20x%3D%22192%22%20y%3D%22756%22%20fill%3D%22%23e11d48%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2272%22%20font-weight%3D%22700%22%3ELobby%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Reception lounge with layered seating",
+              "caption": "Reception refresh",
+              "width": 1200,
+              "height": 900
+            },
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%20900%22%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22%23ecfeff%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%230f766e%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22192%22%20y%3D%22180%22%20width%3D%22264%22%20height%3D%22414%22%20rx%3D%2222%22%20fill%3D%22%2399f6e4%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22216%22%20width%3D%22360%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%230f766e%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22360%22%20width%3D%22408%22%20height%3D%2245%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22459%22%20width%3D%22288%22%20height%3D%2281%22%20rx%3D%2218%22%20fill%3D%22%2399f6e4%22%2F%3E%3Ctext%20x%3D%22192%22%20y%3D%22756%22%20fill%3D%22%230f766e%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2272%22%20font-weight%3D%22700%22%3EOffice%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Open office with brighter circulation paths",
+              "caption": "Open office daylight pass",
+              "width": 1200,
+              "height": 900
+            },
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%20900%22%3E%3Crect%20width%3D%221200%22%20height%3D%22900%22%20fill%3D%22%23fff7ed%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%2290%22%20width%3D%221008%22%20height%3D%22720%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%23ea580c%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22192%22%20y%3D%22180%22%20width%3D%22264%22%20height%3D%22414%22%20rx%3D%2222%22%20fill%3D%22%23fed7aa%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22216%22%20width%3D%22360%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%23ea580c%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22360%22%20width%3D%22408%22%20height%3D%2245%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22528%22%20y%3D%22459%22%20width%3D%22288%22%20height%3D%2281%22%20rx%3D%2218%22%20fill%3D%22%23fed7aa%22%2F%3E%3Ctext%20x%3D%22192%22%20y%3D%22756%22%20fill%3D%22%23ea580c%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2272%22%20font-weight%3D%22700%22%3ESuite%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Private suite with updated storage wall",
+              "caption": "Private suite upgrade",
+              "width": 1200,
+              "height": 900
+            }
+          ]
+        },
+        {
+          "type": "before-after",
+          "title": "Before and after comparisons stay explicit",
+          "lead": "Use a dedicated compare block when the redesign needs to show a concrete visual improvement.",
+          "before": {
+            "label": "Before",
+            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%201000%22%3E%3Crect%20width%3D%221600%22%20height%3D%221000%22%20fill%3D%22%23f8fafc%22%2F%3E%3Crect%20x%3D%22128%22%20y%3D%22100%22%20width%3D%221344%22%20height%3D%22800%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22256%22%20y%3D%22200%22%20width%3D%22352%22%20height%3D%22460%22%20rx%3D%2222%22%20fill%3D%22%23cbd5e1%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22240%22%20width%3D%22480%22%20height%3D%2280%22%20rx%3D%2218%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22400%22%20width%3D%22544%22%20height%3D%2250%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22510%22%20width%3D%22384%22%20height%3D%2290%22%20rx%3D%2218%22%20fill%3D%22%23cbd5e1%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22840%22%20fill%3D%22%2364748b%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2280%22%20font-weight%3D%22700%22%3EBefore%3C%2Ftext%3E%3C%2Fsvg%3E",
+            "alt": "Older storefront with crowded signage and low contrast windows",
+            "caption": "The older layout made the storefront feel busier and harder to read from the curb.",
+            "width": 1600,
+            "height": 1000
+          },
+          "after": {
+            "label": "After",
+            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%201000%22%3E%3Crect%20width%3D%221600%22%20height%3D%221000%22%20fill%3D%22%23eff6ff%22%2F%3E%3Crect%20x%3D%22128%22%20y%3D%22100%22%20width%3D%221344%22%20height%3D%22800%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%232563eb%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22256%22%20y%3D%22200%22%20width%3D%22352%22%20height%3D%22460%22%20rx%3D%2222%22%20fill%3D%22%23bfdbfe%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22240%22%20width%3D%22480%22%20height%3D%2280%22%20rx%3D%2218%22%20fill%3D%22%232563eb%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22400%22%20width%3D%22544%22%20height%3D%2250%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22510%22%20width%3D%22384%22%20height%3D%2290%22%20rx%3D%2218%22%20fill%3D%22%23bfdbfe%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22840%22%20fill%3D%22%232563eb%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2280%22%20font-weight%3D%22700%22%3EAfter%3C%2Ftext%3E%3C%2Fsvg%3E",
+            "alt": "Updated storefront with clearer signage and brighter entry glazing",
+            "caption": "A clearer sign hierarchy and stronger window framing make the refreshed version easier to scan.",
+            "width": 1600,
+            "height": 1000
+          }
+        },
+        {
+          "type": "testimonials",
+          "title": "Testimonial cards add lightweight proof",
+          "lead": "Structured quotes help refreshes feel more tailored for service businesses that need social proof.",
+          "items": [
+            {
+              "quote": "We finally had a site that showed our work clearly instead of forcing prospects to guess what we actually do.",
+              "name": "Ari Chen",
+              "role": "Owner",
+              "company": "North Harbor Studio",
+              "image": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%22128%22%20fill%3D%22%23dbeafe%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%2296%22%20r%3D%2248%22%20fill%3D%22%23ffffff%22%2F%3E%3Cpath%20d%3D%22M56%20214c16-40%2054-62%2072-62s56%2022%2072%2062%22%20fill%3D%22%23ffffff%22%2F%3E%3Ctext%20x%3D%22128%22%20y%3D%22232%22%20text-anchor%3D%22middle%22%20fill%3D%22%232563eb%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EAC%3C%2Ftext%3E%3C%2Fsvg%3E",
+                "alt": "Portrait illustration for Ari Chen",
+                "width": 256,
+                "height": 256
+              }
+            },
+            {
+              "quote": "The before and after story gave people an instant reason to trust the redesign direction.",
+              "name": "Marisol Vega",
+              "role": "Creative Director",
+              "company": "Vega Design Build",
+              "image": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Crect%20width%3D%22256%22%20height%3D%22256%22%20rx%3D%22128%22%20fill%3D%22%23fee2e2%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%2296%22%20r%3D%2248%22%20fill%3D%22%23ffffff%22%2F%3E%3Cpath%20d%3D%22M56%20214c16-40%2054-62%2072-62s56%2022%2072%2062%22%20fill%3D%22%23ffffff%22%2F%3E%3Ctext%20x%3D%22128%22%20y%3D%22232%22%20text-anchor%3D%22middle%22%20fill%3D%22%23e11d48%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2228%22%20font-weight%3D%22700%22%3EMV%3C%2Ftext%3E%3C%2Fsvg%3E",
+                "alt": "Portrait illustration for Marisol Vega",
+                "width": 256,
+                "height": 256
+              }
+            },
+            {
+              "quote": "Adding a gallery made our portfolio pages feel like real proof instead of a stack of disconnected images.",
+              "name": "Noah Patel",
+              "company": "Fieldhouse Interiors"
+            }
+          ]
+        },
+        {
+          "type": "logo-strip",
+          "title": "Logo strips cover trust badges and partner marks",
+          "lead": "Use this block for compact credibility rows between larger content sections.",
+          "logos": [
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%2072%22%3E%3Crect%20width%3D%22240%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%23eff6ff%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2236%22%20r%3D%2216%22%20fill%3D%22%232563eb%22%2F%3E%3Crect%20x%3D%2274%22%20y%3D%2224%22%20width%3D%22120%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%232563eb%22%20opacity%3D%220.8%22%2F%3E%3Ctext%20x%3D%2274%22%20y%3D%2258%22%20fill%3D%22%232563eb%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%3EAtlas%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Atlas Construction",
+              "width": 240,
+              "height": 72
+            },
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%2072%22%3E%3Crect%20width%3D%22240%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%23fef2f2%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2236%22%20r%3D%2216%22%20fill%3D%22%23e11d48%22%2F%3E%3Crect%20x%3D%2274%22%20y%3D%2224%22%20width%3D%22120%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%23e11d48%22%20opacity%3D%220.8%22%2F%3E%3Ctext%20x%3D%2274%22%20y%3D%2258%22%20fill%3D%22%23e11d48%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%3EHarbor%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Harbor Studio",
+              "width": 240,
+              "height": 72
+            },
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%2072%22%3E%3Crect%20width%3D%22240%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%23ecfeff%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2236%22%20r%3D%2216%22%20fill%3D%22%230f766e%22%2F%3E%3Crect%20x%3D%2274%22%20y%3D%2224%22%20width%3D%22120%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%230f766e%22%20opacity%3D%220.8%22%2F%3E%3Ctext%20x%3D%2274%22%20y%3D%2258%22%20fill%3D%22%230f766e%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%3ENorth%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "North Point Retail",
+              "width": 240,
+              "height": 72
+            },
+            {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%2072%22%3E%3Crect%20width%3D%22240%22%20height%3D%2272%22%20rx%3D%2218%22%20fill%3D%22%23fff7ed%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2236%22%20r%3D%2216%22%20fill%3D%22%23ea580c%22%2F%3E%3Crect%20x%3D%2274%22%20y%3D%2224%22%20width%3D%22120%22%20height%3D%2224%22%20rx%3D%2212%22%20fill%3D%22%23ea580c%22%20opacity%3D%220.8%22%2F%3E%3Ctext%20x%3D%2274%22%20y%3D%2258%22%20fill%3D%22%23ea580c%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%3ECivic%3C%2Ftext%3E%3C%2Fsvg%3E",
+              "alt": "Civic Build Group",
+              "width": 240,
+              "height": 72
+            }
           ]
         },
         {
           "type": "faq",
           "title": "Theme example FAQ",
           "items": [
-            { "question": "Why does each theme only get one page?", "answer": "The goal is quick comparison, so one page with full component coverage is enough." },
-            { "question": "Can these examples use placeholder content?", "answer": "Yes. They are intended for layout and theme review, not for publishing." },
-            { "question": "Should the examples be built together?", "answer": "Yes. The bulk examples build generates every theme preview in one deterministic run." }
+            {
+              "question": "Why does each theme only get one page?",
+              "answer": "The goal is quick comparison, so one page with full component coverage is enough."
+            },
+            {
+              "question": "Can these examples use placeholder content?",
+              "answer": "Yes. They are intended for layout and theme review, not for publishing."
+            },
+            {
+              "question": "Should the examples be built together?",
+              "answer": "Yes. The bulk examples build generates every theme preview in one deterministic run."
+            }
           ]
         },
         {
           "type": "cta-band",
           "headline": "Build every theme example at once",
           "body": "Run the bulk examples build to regenerate the full preview set into dist/examples.",
-          "primaryCta": { "label": "Browse all previews", "href": "/examples/" },
-          "secondaryCta": { "label": "See pricing", "href": "/pricing" }
+          "primaryCta": {
+            "label": "Browse all previews",
+            "href": "/examples/"
+          },
+          "secondaryCta": {
+            "label": "See pricing",
+            "href": "/pricing"
+          }
         },
         {
           "type": "google-maps",

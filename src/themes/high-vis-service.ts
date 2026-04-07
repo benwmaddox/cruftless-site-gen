@@ -75,11 +75,17 @@ export const highVisServiceTheme = createThemeDefinition(
     }
 
     .c-feature-grid__item,
+    .c-before-after__item,
     .c-faq__item,
     .c-contact-form__inner,
     .c-cta-band__inner,
     .c-google-maps__frame,
-    .c-media__image {
+    .c-gallery__image,
+    .c-image-text__image,
+    .c-logo-strip__link,
+    .c-media__image,
+    .c-testimonials__avatar,
+    .c-testimonials__item {
       border-width: var(--border-width-2);
       box-shadow: none;
     }

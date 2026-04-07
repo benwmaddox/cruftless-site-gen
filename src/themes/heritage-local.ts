@@ -40,18 +40,28 @@ export const heritageLocalTheme = createThemeDefinition(
   },
   `
     .c-navbar,
+    .c-before-after,
+    .c-gallery,
+    .c-image-text,
+    .c-logo-strip,
     .c-prose,
     .c-feature-grid,
     .c-faq,
-    .c-cta-band {
+    .c-cta-band,
+    .c-testimonials {
       position: relative;
     }
 
     .c-navbar::before,
+    .c-before-after::before,
+    .c-gallery::before,
+    .c-image-text::before,
+    .c-logo-strip::before,
     .c-prose::before,
     .c-feature-grid::before,
     .c-faq::before,
-    .c-cta-band::before {
+    .c-cta-band::before,
+    .c-testimonials::before {
       content: "";
       display: block;
       width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
@@ -60,11 +70,17 @@ export const heritageLocalTheme = createThemeDefinition(
     }
 
     .c-hero__body,
+    .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
     .c-contact-form__inner,
+    .c-logo-strip__link,
     .c-google-maps__frame,
-    .c-media__image {
+    .c-image-text__image,
+    .c-gallery__image,
+    .c-media__image,
+    .c-testimonials__item,
+    .c-testimonials__avatar {
       box-shadow: none;
       border-width: var(--border-width-2);
     }

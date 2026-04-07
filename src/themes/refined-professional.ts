@@ -49,10 +49,15 @@ export const refinedProfessionalTheme = createThemeDefinition(
   `
     .c-navbar,
     .c-hero,
+    .c-before-after,
     .c-feature-grid,
+    .c-gallery,
+    .c-image-text,
     .c-faq,
+    .c-logo-strip,
     .c-contact-form,
-    .c-cta-band {
+    .c-cta-band,
+    .c-testimonials {
       position: relative;
     }
 
@@ -66,17 +71,24 @@ export const refinedProfessionalTheme = createThemeDefinition(
     }
 
     .c-hero__body,
+    .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
     .c-contact-form__inner,
     .c-cta-band__inner,
     .c-google-maps__frame,
-    .c-media__image {
+    .c-gallery__image,
+    .c-image-text__image,
+    .c-logo-strip__link,
+    .c-media__image,
+    .c-testimonials__avatar,
+    .c-testimonials__item {
       box-shadow: none;
       border-color: rgb(201 162 39 / 0.35);
     }
 
     .c-navbar__brand-text,
+    .c-before-after__label,
     .c-feature-grid__item-title,
     .c-faq__question {
       letter-spacing: 0.02em;
