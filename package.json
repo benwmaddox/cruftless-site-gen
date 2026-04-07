@@ -37,6 +37,7 @@
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",
     "browser-sync": "^3.0.3",
+    "chokidar": "^3.6.0",
     "concurrently": "^9.1.2",
     "playwright": "^1.58.2",
     "stylelint": "^17.6.0",
