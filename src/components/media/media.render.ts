@@ -22,14 +22,23 @@ export const renderMedia = (
     data.size === "content" ? "media-content" : "media-wide",
   );
   const altText = data.alt ?? "";
-  const dimensions =
-    resolvedImage.width !== undefined && resolvedImage.height !== undefined
+  const hasExplicitDimensions = data.width !== undefined || data.height !== undefined;
+  const intrinsicDimensions =
+    !hasExplicitDimensions &&
+    resolvedImage.width !== undefined &&
+    resolvedImage.height !== undefined
       ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
       : "";
+  const inlineSizeStyles = [
+    data.width !== undefined ? `width: ${data.width}px;` : "",
+    data.height !== undefined ? `height: ${data.height}px;` : "",
+  ].filter(Boolean);
+  const styleAttribute =
+    inlineSizeStyles.length > 0 ? ` style="${inlineSizeStyles.join(" ")}"` : "";
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${dimensions} />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${styleAttribute} />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]
