@@ -270,6 +270,12 @@ const buildSnippetValue = (
     return resolvedSchema.const;
   }
 
+  if (getDiscriminatedUnionBranches(resolvedSchema)) {
+    return {
+      type: createSnippetPlaceholder(nextTabStop()),
+    };
+  }
+
   if (resolvedSchema.type === "object") {
     const properties = isJsonSchemaObject(resolvedSchema.properties) ? resolvedSchema.properties : {};
     const requiredPropertyNames = getSnippetRequiredPropertyNames(resolvedSchema, rootSchema);

@@ -29,6 +29,25 @@ export const collectSiteValidationIssues = (
     }
   }
 
+  const collectNestedComponentEntries = (
+    component: SiteContentData["pages"][number]["components"][number],
+    path: Array<string | number>,
+  ): Array<{
+    component: SiteContentData["pages"][number]["components"][number];
+    path: Array<string | number>;
+  }> => {
+    const entries = [{ component, path }];
+
+    if (component.type === "horizontal-split") {
+      entries.push(
+        ...collectNestedComponentEntries(component.first, [...path, "first"]),
+        ...collectNestedComponentEntries(component.second, [...path, "second"]),
+      );
+    }
+
+    return entries;
+  };
+
   siteContent.pages.forEach((page, pageIndex) => {
     const existingPageIndex = slugIndexMap.get(page.slug);
 
@@ -42,12 +61,14 @@ export const collectSiteValidationIssues = (
     }
 
     let heroCount = 0;
-    const resolvedEntries = hasValidLayoutSlotCount
-      ? resolvePageComponentEntries(siteContent.site, page, pageIndex)
-      : page.components.map((component, componentIndex) => ({
-          component,
-          path: ["pages", pageIndex, "components", componentIndex],
-        }));
+    const resolvedEntries = (
+      hasValidLayoutSlotCount
+        ? resolvePageComponentEntries(siteContent.site, page, pageIndex)
+        : page.components.map((component, componentIndex) => ({
+            component,
+            path: ["pages", pageIndex, "components", componentIndex],
+          }))
+    ).flatMap((entry) => collectNestedComponentEntries(entry.component, entry.path));
 
     resolvedEntries.forEach((entry) => {
       const { component } = entry;

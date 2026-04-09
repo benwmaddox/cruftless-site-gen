@@ -13,6 +13,7 @@ describe("component width tokens", () => {
   it("uses content-max for standard component wrappers", async () => {
     const standardComponents = [
       "before-after",
+      "contact",
       "contact-form",
       "cta-band",
       "faq",
@@ -20,6 +21,8 @@ describe("component width tokens", () => {
       "feature-list",
       "gallery",
       "hero",
+      "horizontal-split",
+      "hours",
       "image-text",
       "logo-strip",
       "navigation-bar",

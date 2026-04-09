@@ -180,14 +180,30 @@ describe("site JSON schema", async () => {
     const heroSnippet = componentSnippetSchemas
       .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
       .find((snippet) => snippet.label === "Hero");
+    const contactSnippet = componentSnippetSchemas
+      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+      .find((snippet) => snippet.label === "Contact");
     const componentShellSnippet = componentSnippetSchemas
       .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
       .find((snippet) => snippet.label === "Component shell");
+    const horizontalSplitSnippet = componentSnippetSchemas
+      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+      .find((snippet) => snippet.label === "Horizontal Split");
+    const hoursSnippet = componentSnippetSchemas
+      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+      .find((snippet) => snippet.label === "Hours");
 
     expect(snippetLabels).toContain("Component shell");
+    expect(snippetLabels).toContain("Contact");
     expect(snippetLabels).toContain("Hero");
+    expect(snippetLabels).toContain("Horizontal Split");
+    expect(snippetLabels).toContain("Hours");
     expect(componentShellSnippet?.body).toEqual({
       type: "$1",
+    });
+    expect(contactSnippet?.body).toEqual({
+      type: "contact",
+      address: "$2",
     });
     expect(heroSnippet?.body).toEqual({
       type: "hero",
@@ -196,6 +212,25 @@ describe("site JSON schema", async () => {
         label: "$3",
         href: "$4",
       },
+    });
+    expect(horizontalSplitSnippet?.body).toEqual({
+      type: "horizontal-split",
+      first: {
+        type: "$2",
+      },
+      second: {
+        type: "$3",
+      },
+    });
+    expect(hoursSnippet?.body).toEqual({
+      type: "hours",
+      entries: [
+        {
+          day: "${2|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
+          open: "$3",
+          close: "$4",
+        },
+      ],
     });
     expect(
       componentSnippetSchemas

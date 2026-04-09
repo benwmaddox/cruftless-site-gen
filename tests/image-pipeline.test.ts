@@ -182,4 +182,48 @@ describe("image pipeline", () => {
       await removeDirectory(fixture.rootDir);
     }
   });
+
+  it("collects nested local image dependencies inside horizontal split components", async () => {
+    const fixture = await createLocalImageProject(1800, 1200);
+    const nestedSiteContent = SiteContentSchema.parse({
+      site: {
+        name: "Local Image Studio",
+        baseUrl: "https://local-image-studio.example",
+        theme: "friendly-modern",
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "horizontal-split",
+              first: {
+                type: "media",
+                src: "images/showroom.png",
+                alt: "Refinished showroom seating area",
+                size: "wide",
+              },
+              second: {
+                type: "prose",
+                title: "Visit the showroom",
+                paragraphs: ["Nested content should not hide image dependencies."],
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    try {
+      await writeFile(fixture.contentPath, JSON.stringify(nestedSiteContent, null, 2));
+
+      const siteContent = await loadValidatedSite(fixture.contentPath);
+      const watchablePaths = collectWatchableLocalImagePaths(siteContent, fixture.contentPath);
+
+      expect(watchablePaths).toEqual([fixture.imagePath]);
+    } finally {
+      await removeDirectory(fixture.rootDir);
+    }
+  });
 });
