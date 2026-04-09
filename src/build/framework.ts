@@ -252,7 +252,7 @@ export const loadValidatedSite = async (
   const imageIssues = await collectImageValidationIssues(parsed.data, contentPath);
   const resolvedThemeIssues = validateThemeDefinition(
     `site:${parsed.data.site.theme}`,
-    resolveThemeDefinition(themes[parsed.data.site.theme], parsed.data.site.themeOverrides),
+    resolveSiteThemeDefinition(parsed.data.site),
   );
 
   if (
@@ -305,9 +305,15 @@ const emitSiteCss = (site: SiteData): string => {
   return `:root {\n  --site-page-background-image: url("${escapeCssString(site.pageBackgroundImageUrl)}");\n}\n`;
 };
 
+const resolveSiteThemeDefinition = (site: SiteData) =>
+  resolveThemeDefinition(themes[site.theme], {
+    ...site.themeOverrides,
+    cssVariables: site.cssVariables,
+  });
+
 const renderSiteCss = async (siteContent: SiteContentData): Promise<string> => {
   const site = rewriteLocalContentAssetsForSiteCss(siteContent.site);
-  const resolvedTheme = resolveThemeDefinition(themes[site.theme], site.themeOverrides);
+  const resolvedTheme = resolveSiteThemeDefinition(site);
   const usedComponentTypes = collectUsedComponentTypes(siteContent);
   const componentCssChunks = await Promise.all(
     componentDefinitions

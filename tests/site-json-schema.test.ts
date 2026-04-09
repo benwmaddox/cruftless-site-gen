@@ -383,6 +383,103 @@ describe("site JSON schema", async () => {
     expect(isValid).toBe(true);
   });
 
+  it("exposes named site css variable overrides in the generated schema", () => {
+    const schema = buildSiteContentJsonSchema() as JsonSchemaObject;
+    const definitions = (schema.definitions ?? {}) as JsonSchemaObject;
+    const siteContentDefinition = definitions.SiteContent as JsonSchemaObject;
+    const siteProperties = ((((siteContentDefinition.properties ?? {}) as JsonSchemaObject).site as JsonSchemaObject)
+      .properties ?? {}) as JsonSchemaObject;
+    const cssVariables = siteProperties.cssVariables as JsonSchemaObject;
+    const cssVariableProperties = (cssVariables.properties ?? {}) as JsonSchemaObject;
+
+    expect(cssVariables.type).toBe("object");
+    expect(cssVariableProperties["--space-5"]).toEqual({
+      type: "string",
+      minLength: 1,
+      maxLength: 400,
+    });
+    expect(cssVariableProperties["--color-primary"]).toEqual({
+      type: "string",
+      minLength: 1,
+      maxLength: 400,
+    });
+  });
+
+  it("accepts explicit site css variable overrides", () => {
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    addFormats(ajv);
+
+    const validate = ajv.compile(buildSiteContentJsonSchema());
+    const isValid = validate({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "friendly-modern",
+        cssVariables: {
+          "--space-5": "2.25rem",
+          "--color-primary": "#ff5500",
+        },
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Launch faster",
+              primaryCta: {
+                label: "Get started",
+                href: "/start",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(isValid).toBe(true);
+  });
+
+  it("rejects unknown site css variable keys", () => {
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    addFormats(ajv);
+
+    const validate = ajv.compile(buildSiteContentJsonSchema());
+    const isValid = validate({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "friendly-modern",
+        cssVariables: {
+          "--space-5": "2.25rem",
+          "--not-a-token": "1rem",
+        },
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Launch faster",
+              primaryCta: {
+                label: "Get started",
+                href: "/start",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(isValid).toBe(false);
+    expect(validate.errors?.some((issue: ErrorObject) => issue.keyword === "additionalProperties")).toBe(
+      true,
+    );
+  });
+
   it("rejects an invalid google analytics measurement ID", () => {
     const ajv = new Ajv({ allErrors: true, strict: false });
     addFormats(ajv);

@@ -75,6 +75,36 @@ const createSiteWithOverrides = (theme: ThemeName) =>
     ],
   });
 
+const createSiteWithCssVariables = (theme: ThemeName) =>
+  SiteContentSchema.parse({
+    site: {
+      name: "LaunchKit",
+      baseUrl: "https://launchkit.example",
+      theme,
+      cssVariables: {
+        "--space-5": "2.25rem",
+        "--color-primary": "#ff5500",
+      },
+    },
+    pages: [
+      {
+        slug: "/",
+        title: "Home",
+        components: [
+          {
+            type: "hero",
+            headline: "Launch faster",
+            subheadline: "Theme-driven static pages without custom templates.",
+            primaryCta: {
+              label: "Get started",
+              href: "/start",
+            },
+          },
+        ],
+      },
+    ],
+  });
+
 describe("buildSite theme CSS", () => {
   it.each(themeNames)("emits theme-specific token CSS for %s", async (theme) => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-"));
@@ -115,6 +145,21 @@ describe("buildSite theme CSS", () => {
       expect(css).toContain("--color-link: #a78bfa;");
       expect(css).toContain("--color-accent: #f472b6;");
       expect(css).toContain("border-width: 0 0 var(--border-width-1) 0;");
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
+
+  it("emits site css variable overrides from content", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-css-vars-"));
+
+    try {
+      await buildSite(createSiteWithCssVariables("corporate"), outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+
+      expect(css).toContain("--space-5: 2.25rem;");
+      expect(css).toContain("--color-primary: #ff5500;");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }

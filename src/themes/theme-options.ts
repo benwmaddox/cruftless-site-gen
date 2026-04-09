@@ -37,6 +37,7 @@ export type SecondaryColorSchemeName = (typeof secondaryColorSchemeNames)[number
 export interface ThemeOverrides {
   structure?: ThemeStructureName;
   secondaryColorScheme?: SecondaryColorSchemeName;
+  cssVariables?: Partial<ThemeTokens>;
 }
 
 interface SecondaryColorSchemePalette {
@@ -517,6 +518,7 @@ export const resolveThemeDefinition = (
     tokens: {
       ...theme.tokens,
       ...secondaryColorSchemeOverrides,
+      ...overrides?.cssVariables,
     },
     css: css || undefined,
   };
