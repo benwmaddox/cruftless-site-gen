@@ -90,6 +90,17 @@ const metadataCache = new Map<string, { metadata: ImageSourceMetadata; mtimeMs: 
 
 const isRemoteAssetHref = (href: string): boolean => /^[a-z]+:/iu.test(href) || href.startsWith("//");
 
+const isPassthroughLocalAssetHref = (href: string): boolean => {
+  const normalizedHref = href.trim().replaceAll("\\", "/");
+
+  return (
+    normalizedHref.length > 0 &&
+    !isRemoteAssetHref(normalizedHref) &&
+    !path.isAbsolute(normalizedHref) &&
+    !normalizedHref.startsWith("assets/")
+  );
+};
+
 const normalizeProjectRelativePath = (filePath: string, projectRoot: string): string =>
   path.relative(projectRoot, filePath).replaceAll("\\", "/");
 
@@ -520,6 +531,10 @@ export const prepareImagePipeline = async (
   const preparedVariants = new Map<string, PreparedVariant>();
 
   for (const usageEntry of usages) {
+    if (isPassthroughLocalAssetHref(usageEntry.usage.sourceHref)) {
+      continue;
+    }
+
     const localSource = resolveLocalImageSource(usageEntry.usage.sourceHref, contentPath);
 
     if (!localSource) {

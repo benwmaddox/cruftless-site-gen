@@ -21,6 +21,7 @@ export const renderMedia = (
     data,
     data.size === "content" ? "media-content" : "media-wide",
   );
+  const altText = data.alt ?? "";
   const dimensions =
     resolvedImage.width !== undefined && resolvedImage.height !== undefined
       ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
@@ -28,7 +29,7 @@ export const renderMedia = (
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(data.alt)}"${dimensions} />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${dimensions} />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]

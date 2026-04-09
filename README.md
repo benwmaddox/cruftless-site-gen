@@ -134,7 +134,7 @@ npm install
 npm run validate
 ```
 
-That validates `content/site.json`.
+That validates `content/site.json`. It now also rejects banned migration/meta wording in publish-facing copy, so phrases like `live site`, `source site`, `this demo`, `the redesign`, and `the rebuild` fail before build output is treated as ready.
 
 To validate everything the repo currently treats as important, use the strict entrypoint:
 

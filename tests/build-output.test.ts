@@ -13,6 +13,26 @@ const waitForMtimeTick = async (): Promise<void> =>
     setTimeout(resolve, 30);
   });
 
+const removeDirectory = async (directoryPath: string): Promise<void> => {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      await rm(directoryPath, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      const errorCode = (error as NodeJS.ErrnoException).code;
+
+      if ((errorCode === "EBUSY" || errorCode === "EPERM") && attempt < 19) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+        continue;
+      }
+
+      throw error;
+    }
+  }
+};
+
 const createPngBytes = (width: number, height: number): Promise<Buffer> =>
   sharp({
     create: {
@@ -28,6 +48,23 @@ const createPngBytes = (width: number, height: number): Promise<Buffer> =>
     },
   })
     .png()
+    .toBuffer();
+
+const createWebpBytes = (width: number, height: number): Promise<Buffer> =>
+  sharp({
+    create: {
+      width,
+      height,
+      channels: 4,
+      background: {
+        r: 255,
+        g: 255,
+        b: 255,
+        alpha: 1,
+      },
+    },
+  })
+    .webp()
     .toBuffer();
 
 const createScriptedSite = () =>
@@ -159,7 +196,7 @@ describe("buildSite output writes", () => {
       expect(laterCssStat.mtimeMs).toBe(initialCssStat.mtimeMs);
       expect(laterHtmlStat.mtimeMs).toBe(initialHtmlStat.mtimeMs);
     } finally {
-      await rm(outDir, { recursive: true, force: true });
+      await removeDirectory(outDir);
     }
   });
 
@@ -182,7 +219,7 @@ describe("buildSite output writes", () => {
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
       await expect(access(path.join(outDir, "about", "index.html"))).rejects.toThrow();
     } finally {
-      await rm(outDir, { recursive: true, force: true });
+      await removeDirectory(outDir);
     }
   });
 
@@ -200,14 +237,14 @@ describe("buildSite output writes", () => {
       expect(html).toContain(`gtag('config', "G-TEST1234");`);
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
     } finally {
-      await rm(outDir, { recursive: true, force: true });
+      await removeDirectory(outDir);
     }
   });
 
   it("copies referenced content preview images into dist and removes them when no longer needed", async () => {
     const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-local-assets-"));
     const contentDir = path.join(projectRoot, "content");
-    const previewsDir = path.join(contentDir, "images");
+    const previewsDir = path.join(contentDir, "examples", "previews");
     const contentPath = path.join(contentDir, "site.json");
     const outDir = path.join(projectRoot, "dist");
     const previewImagePath = path.join(previewsDir, "local-preview.png");
@@ -216,86 +253,89 @@ describe("buildSite output writes", () => {
       const previewImageBytes = await createPngBytes(1600, 900);
       await mkdir(previewsDir, { recursive: true });
       await writeFile(previewImagePath, previewImageBytes);
-      const firstSiteContent = {
-        site: {
-          name: "LaunchKit",
-          baseUrl: "https://launchkit.example",
-          theme: "friendly-modern",
-        },
-        pages: [
+      await writeFile(
+        contentPath,
+        `${JSON.stringify(
           {
-            slug: "/",
-            title: "Home",
-            components: [
+            site: {
+              name: "LaunchKit",
+              baseUrl: "https://launchkit.example",
+              theme: "friendly-modern",
+            },
+            pages: [
               {
-                type: "hero",
-                headline: "Launch faster",
-                align: "start",
-                primaryCta: {
-                  label: "Get started",
-                  href: "/start",
-                },
-              },
-              {
-                type: "media",
-                src: "content/images/local-preview.png",
-                alt: "Locally stored preview image",
-                size: "wide",
+                slug: "/",
+                title: "Home",
+                components: [
+                  {
+                    type: "hero",
+                    headline: "Launch faster",
+                    primaryCta: {
+                      label: "Get started",
+                      href: "/start",
+                    },
+                  },
+                  {
+                    type: "media",
+                    src: "content/examples/previews/local-preview.png",
+                    alt: "Locally stored preview image",
+                    size: "wide",
+                  },
+                ],
               },
             ],
           },
-        ],
-      };
-      await writeFile(contentPath, `${JSON.stringify(firstSiteContent, null, 2)}\n`, "utf8");
-
-      const firstBuild = await buildSite(
-        firstSiteContent as Parameters<typeof buildSite>[0],
-        outDir,
-        { contentPath },
+          null,
+          2,
+        )}\n`,
+        "utf8",
       );
-      const copiedPreviewPath = path.join(outDir, "content", "images", "local-preview.png");
+
+      const firstBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
+      const copiedPreviewPath = path.join(outDir, "examples", "previews", "local-preview.png");
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
       expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
-      expect(html).toContain('src="assets/images/local-preview-media-wide-');
+      expect(html).toContain('src="examples/previews/local-preview.png"');
 
-      const secondSiteContent = {
-        site: {
-          name: "LaunchKit",
-          baseUrl: "https://launchkit.example",
-          theme: "friendly-modern",
-        },
-        pages: [
+      await writeFile(
+        contentPath,
+        `${JSON.stringify(
           {
-            slug: "/",
-            title: "Home",
-            components: [
+            site: {
+              name: "LaunchKit",
+              baseUrl: "https://launchkit.example",
+              theme: "friendly-modern",
+            },
+            pages: [
               {
-                type: "hero",
-                headline: "Launch faster",
-                align: "start",
-                primaryCta: {
-                  label: "Get started",
-                  href: "/start",
-                },
+                slug: "/",
+                title: "Home",
+                components: [
+                  {
+                    type: "hero",
+                    headline: "Launch faster",
+                    primaryCta: {
+                      label: "Get started",
+                      href: "/start",
+                    },
+                  },
+                ],
               },
             ],
           },
-        ],
-      };
-      await writeFile(contentPath, `${JSON.stringify(secondSiteContent, null, 2)}\n`, "utf8");
-
-      const secondBuild = await buildSite(
-        secondSiteContent as Parameters<typeof buildSite>[0],
-        outDir,
-        { contentPath },
+          null,
+          2,
+        )}\n`,
+        "utf8",
       );
 
+      const secondBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
       expect(secondBuild.filesRemoved).toBeGreaterThan(0);
       await expect(access(copiedPreviewPath)).rejects.toThrow();
     } finally {
-      await rm(projectRoot, { recursive: true, force: true });
+      await removeDirectory(projectRoot);
     }
   });
 
@@ -333,19 +373,85 @@ describe("buildSite output writes", () => {
           },
         ],
       };
+      await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
+      await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
+
+      const nestedHtml = await readFile(path.join(outDir, "gallery", "index.html"), "utf8");
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+      const copiedPreviewPath = path.join(outDir, "images", "landing-page.png");
+
+      expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
+      expect(nestedHtml).toContain('src="../images/landing-page.png"');
+      expect(css).toContain('url("../images/landing-page.png")');
+    } finally {
+      await removeDirectory(projectRoot);
+    }
+  });
+
+  it("copies and rewrites content-relative navigation brand images", async () => {
+    const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-navbar-brand-image-"));
+    const contentDir = path.join(projectRoot, "content");
+    const imagesDir = path.join(contentDir, "Images");
+    const contentPath = path.join(contentDir, "site.json");
+    const outDir = path.join(projectRoot, "dist");
+    const brandImagePath = path.join(imagesDir, "brand-logo.webp");
+
+    try {
+      const brandImageBytes = await createWebpBytes(640, 200);
+      await mkdir(imagesDir, { recursive: true });
+      await writeFile(brandImagePath, brandImageBytes);
+      const siteContent = {
+        site: {
+          name: "LaunchKit",
+          baseUrl: "https://launchkit.example",
+          theme: "friendly-modern",
+          layout: {
+            components: [
+              {
+                type: "navigation-bar",
+                brandText: "LaunchKit",
+                brandImage: {
+                  src: "Images/brand-logo.webp",
+                  alt: "LaunchKit logo",
+                },
+                links: [
+                  {
+                    label: "Home",
+                    href: "/",
+                  },
+                ],
+              },
+              {
+                type: "page-content",
+              },
+            ],
+          },
+        },
+        pages: [
+          {
+            slug: "/about",
+            title: "About",
+            components: [
+              {
+                type: "prose",
+                title: "About LaunchKit",
+                paragraphs: ["Built for content-relative assets."],
+              },
+            ],
+          },
+        ],
+      };
 
       await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
       await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, { contentPath });
 
-      const nestedHtml = await readFile(path.join(outDir, "gallery", "index.html"), "utf8");
-      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
-      const copiedPreviewPath = path.join(outDir, "content", "images", "landing-page.png");
+      const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
+      const copiedBrandImagePath = path.join(outDir, "Images", "brand-logo.webp");
 
-      expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
-      expect(nestedHtml).toContain('src="../content/images/landing-page.png"');
-      expect(css).toContain('url("../content/images/landing-page.png")');
+      expect((await readFile(copiedBrandImagePath)).equals(brandImageBytes)).toBe(true);
+      expect(aboutHtml).toContain('src="../Images/brand-logo.webp"');
     } finally {
-      await rm(projectRoot, { recursive: true, force: true });
+      await removeDirectory(projectRoot);
     }
   });
 });

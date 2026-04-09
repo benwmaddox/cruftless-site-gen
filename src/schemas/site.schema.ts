@@ -7,6 +7,26 @@ import {
   themeStructureNames,
 } from "../themes/theme-options.js";
 
+const isLocalContentAssetReference = (value: string): boolean => {
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return false;
+  }
+
+  if (/^[a-z][a-z0-9+.-]*:/iu.test(trimmedValue) || trimmedValue.startsWith("//")) {
+    return false;
+  }
+
+  const normalizedValue = trimmedValue.replaceAll("\\", "/");
+
+  if (normalizedValue.startsWith("/")) {
+    return normalizedValue.startsWith("/content/");
+  }
+
+  return true;
+};
+
 const GoogleAnalyticsMeasurementIdSchema = z
   .string()
   .regex(/^G-[A-Z0-9]+$/i, "googleAnalyticsMeasurementId must look like a GA4 measurement ID");
@@ -54,7 +74,15 @@ export const SiteSchema = z
     baseUrl: z.string().url(),
     theme: z.enum(themeNames),
     themeOverrides: SiteThemeOverridesSchema.optional(),
-    pageBackgroundImageUrl: z.string().url().optional(),
+    pageBackgroundImageUrl: z
+      .string()
+      .min(1)
+      .max(2048)
+      .refine(
+        (value) => z.string().url().safeParse(value).success || isLocalContentAssetReference(value),
+        "pageBackgroundImageUrl must be an absolute URL or a content-relative asset path",
+      )
+      .optional(),
     googleAnalyticsMeasurementId: GoogleAnalyticsMeasurementIdSchema.optional(),
     layout: SiteLayoutSchema.optional(),
   })

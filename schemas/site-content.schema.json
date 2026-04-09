@@ -73,7 +73,8 @@
             },
             "pageBackgroundImageUrl": {
               "type": "string",
-              "format": "uri"
+              "minLength": 1,
+              "maxLength": 2048
             },
             "googleAnalyticsMeasurementId": {
               "type": "string",
@@ -184,7 +185,9 @@
                                   },
                                   "href": {
                                     "type": "string",
-                                    "minLength": 1
+                                    "minLength": 1,
+                                    "maxLength": 2048,
+                                    "pattern": "^(?:(?:https?|ftp):\\/\\/[^/?#\\s<>\"`]+(?:[/?#][^\\s<>\"`]*)?|mailto:[^\\s<>\"`?#]+(?:\\?[^\\s<>\"`]*)?|tel:\\+?[0-9A-Za-z().-]+(?:;[A-Za-z0-9-]+=[^;\\s<>\"`]*)*|sms:\\+?[0-9A-Za-z().-]+(?:\\?[^\\s<>\"`]*)?|(?!(?:(?:https?|ftp|mailto|tel|sms|javascript|data|vbscript):))[a-z][a-z0-9+.-]*:[^\\s<>\"`]+|\\/\\/[^/?#\\s<>\"`]+(?:[/?#][^\\s<>\"`]*)?|\\/(?!\\/)[^\\s<>\"`]*|\\.{1,2}\\/[^\\s<>\"`]*|[#?][^\\s<>\"`]*)$"
                                   }
                                 },
                                 "required": [
@@ -658,6 +661,52 @@
                             "properties": {
                               "type": {
                                 "type": "string",
+                                "const": "media"
+                              },
+                              "src": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2048
+                              },
+                              "alt": {
+                                "type": "string",
+                                "maxLength": 200
+                              },
+                              "caption": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "width": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 10000
+                              },
+                              "height": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 10000
+                              },
+                              "size": {
+                                "type": "string",
+                                "enum": [
+                                  "content",
+                                  "wide"
+                                ],
+                                "default": "wide"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "src"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
                                 "const": "logo-strip"
                               },
                               "title": {
@@ -715,44 +764,6 @@
                               "type",
                               "title",
                               "logos"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "src": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/before/properties/src"
-                              },
-                              "alt": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/before/properties/alt"
-                              },
-                              "caption": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/before/properties/caption"
-                              },
-                              "width": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/before/properties/width"
-                              },
-                              "height": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/0/properties/before/properties/height"
-                              },
-                              "type": {
-                                "type": "string",
-                                "const": "media"
-                              },
-                              "size": {
-                                "type": "string",
-                                "enum": [
-                                  "content",
-                                  "wide"
-                                ],
-                                "default": "wide"
-                              }
-                            },
-                            "required": [
-                              "src",
-                              "alt",
-                              "type"
                             ],
                             "additionalProperties": false
                           },
@@ -917,8 +928,8 @@
                               "google-maps",
                               "image-text",
                               "link-list",
-                              "logo-strip",
                               "media",
+                              "logo-strip",
                               "navigation-bar",
                               "prose",
                               "testimonials"
@@ -948,7 +959,11 @@
                                 "alt": "$4",
                                 "label": "$5"
                               },
-                              "after": "$6"
+                              "after": {
+                                "src": "$6",
+                                "alt": "$7",
+                                "label": "$8"
+                              }
                             }
                           },
                           {
@@ -1012,7 +1027,10 @@
                               "type": "gallery",
                               "title": "$2",
                               "images": [
-                                "$3"
+                                {
+                                  "src": "$3",
+                                  "alt": "$4"
+                                }
                               ]
                             }
                           },
@@ -1022,7 +1040,10 @@
                             "body": {
                               "type": "cta-band",
                               "headline": "$2",
-                              "primaryCta": "$3"
+                              "primaryCta": {
+                                "label": "$3",
+                                "href": "$4"
+                              }
                             }
                           },
                           {
@@ -1053,7 +1074,10 @@
                               "paragraphs": [
                                 "$3"
                               ],
-                              "image": "$4"
+                              "image": {
+                                "src": "$4",
+                                "alt": "$5"
+                              }
                             }
                           },
                           {
@@ -1071,6 +1095,14 @@
                             }
                           },
                           {
+                            "label": "Media",
+                            "description": "Insert a media component with required fields.",
+                            "body": {
+                              "type": "media",
+                              "src": "$2"
+                            }
+                          },
+                          {
                             "label": "Logo Strip",
                             "description": "Insert a logo-strip component with required fields.",
                             "body": {
@@ -1085,21 +1117,15 @@
                             }
                           },
                           {
-                            "label": "Media",
-                            "description": "Insert a media component with required fields.",
-                            "body": {
-                              "src": "$2",
-                              "alt": "$3",
-                              "type": "media"
-                            }
-                          },
-                          {
                             "label": "Navigation Bar",
                             "description": "Insert a navigation-bar component with required fields.",
                             "body": {
                               "type": "navigation-bar",
                               "links": [
-                                "$2"
+                                {
+                                  "label": "$2",
+                                  "href": "$3"
+                                }
                               ]
                             }
                           },
@@ -1159,8 +1185,8 @@
                           "google-maps",
                           "image-text",
                           "link-list",
-                          "logo-strip",
                           "media",
+                          "logo-strip",
                           "navigation-bar",
                           "prose",
                           "testimonials",
@@ -1191,7 +1217,11 @@
                             "alt": "$4",
                             "label": "$5"
                           },
-                          "after": "$6"
+                          "after": {
+                            "src": "$6",
+                            "alt": "$7",
+                            "label": "$8"
+                          }
                         }
                       },
                       {
@@ -1255,7 +1285,10 @@
                           "type": "gallery",
                           "title": "$2",
                           "images": [
-                            "$3"
+                            {
+                              "src": "$3",
+                              "alt": "$4"
+                            }
                           ]
                         }
                       },
@@ -1265,7 +1298,10 @@
                         "body": {
                           "type": "cta-band",
                           "headline": "$2",
-                          "primaryCta": "$3"
+                          "primaryCta": {
+                            "label": "$3",
+                            "href": "$4"
+                          }
                         }
                       },
                       {
@@ -1296,7 +1332,10 @@
                           "paragraphs": [
                             "$3"
                           ],
-                          "image": "$4"
+                          "image": {
+                            "src": "$4",
+                            "alt": "$5"
+                          }
                         }
                       },
                       {
@@ -1314,6 +1353,14 @@
                         }
                       },
                       {
+                        "label": "Media",
+                        "description": "Insert a media component with required fields.",
+                        "body": {
+                          "type": "media",
+                          "src": "$2"
+                        }
+                      },
+                      {
                         "label": "Logo Strip",
                         "description": "Insert a logo-strip component with required fields.",
                         "body": {
@@ -1328,21 +1375,15 @@
                         }
                       },
                       {
-                        "label": "Media",
-                        "description": "Insert a media component with required fields.",
-                        "body": {
-                          "src": "$2",
-                          "alt": "$3",
-                          "type": "media"
-                        }
-                      },
-                      {
                         "label": "Navigation Bar",
                         "description": "Insert a navigation-bar component with required fields.",
                         "body": {
                           "type": "navigation-bar",
                           "links": [
-                            "$2"
+                            {
+                              "label": "$2",
+                              "href": "$3"
+                            }
                           ]
                         }
                       },

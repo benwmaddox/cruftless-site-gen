@@ -16,6 +16,7 @@ import {
   type SiteData,
   type SiteContentData,
 } from "../schemas/site.schema.js";
+import { explainHrefValidationFailure } from "../schemas/shared.js";
 import { renderPageDocument } from "../renderer/render-page.js";
 import { emitThemeCss } from "../themes/emit-theme-css.js";
 import { themes } from "../themes/index.js";
@@ -29,6 +30,7 @@ import {
   collectSiteValidationIssues,
   type ValidationIssue,
 } from "../validation/site-validation.js";
+import { collectCopyValidationIssues } from "../validation/copy-validation.js";
 import {
   validateCssTokenUsage,
   validateThemeDefinition,
@@ -113,8 +115,38 @@ const getComponentTypeForIssue = (
   return typeof componentType === "string" ? componentType : undefined;
 };
 
+const formatValuePreview = (value: string, maxLength: number = 120): string => {
+  const compactValue = value.replaceAll(/\s+/g, " ");
+  const preview =
+    compactValue.length > maxLength ? `${compactValue.slice(0, maxLength - 3)}...` : compactValue;
+
+  return JSON.stringify(preview);
+};
+
+const formatHrefIssueMessage = (issue: ZodIssue, rawData: unknown): string | undefined => {
+  if (issue.path.at(-1) !== "href") {
+    return undefined;
+  }
+
+  const currentValue = readValueAtPath(rawData, issue.path);
+
+  if (typeof currentValue !== "string") {
+    return undefined;
+  }
+
+  const hint = explainHrefValidationFailure(currentValue);
+  const details = [`received ${formatValuePreview(currentValue)}`];
+
+  if (hint) {
+    details.push(`hint: ${hint}`);
+  }
+
+  return `${issue.message} (${details.join("; ")})`;
+};
+
 const formatZodIssue = (issue: ZodIssue, rawData: unknown): ValidationIssue => {
   const componentType = getComponentTypeForIssue(rawData, issue.path);
+  const formattedHrefIssueMessage = formatHrefIssueMessage(issue, rawData);
 
   if (issue.code === "unrecognized_keys") {
     const keyLabel = issue.keys.length === 1 ? "key" : "keys";
@@ -144,7 +176,7 @@ const formatZodIssue = (issue: ZodIssue, rawData: unknown): ValidationIssue => {
   return {
     path: issue.path,
     componentType,
-    message: issue.message,
+    message: formattedHrefIssueMessage ?? issue.message,
   };
 };
 
@@ -216,6 +248,7 @@ export const loadValidatedSite = async (
   }
 
   const contentIssues = collectSiteValidationIssues(parsed.data);
+  const copyIssues = collectCopyValidationIssues(parsed.data);
   const imageIssues = await collectImageValidationIssues(parsed.data, contentPath);
   const resolvedThemeIssues = validateThemeDefinition(
     `site:${parsed.data.site.theme}`,
@@ -225,12 +258,14 @@ export const loadValidatedSite = async (
   if (
     frameworkIssues.length > 0 ||
     contentIssues.length > 0 ||
+    copyIssues.length > 0 ||
     imageIssues.length > 0 ||
     resolvedThemeIssues.length > 0
   ) {
     throw new ValidationFailure(contentPath, [
       ...frameworkIssues,
       ...contentIssues,
+      ...copyIssues,
       ...imageIssues,
       ...resolvedThemeIssues,
     ]);
@@ -348,7 +383,6 @@ export interface BuildResult {
 export interface BuildOptions {
   contentPath?: string;
 }
-
 const contentDirectoryName = "content";
 
 const normalizeAssetPath = (assetPath: string): string =>
@@ -361,40 +395,74 @@ const extractUrlSuffix = (assetPath: string): string => {
   return assetPath.slice(strippedPath.length);
 };
 
-const isLocalContentAssetPath = (assetPath: string): boolean =>
-  normalizeAssetPath(stripUrlQueryAndHash(assetPath)).startsWith(`${contentDirectoryName}/`);
+const assetPathHasProtocol = (assetPath: string): boolean =>
+  /^[a-z][a-z0-9+.-]*:/iu.test(assetPath) || assetPath.startsWith("//");
 
-const findProjectRootFromContentPath = (contentPath: string): string => {
+const resolveContentRootRelativeAssetPath = (assetPath: string): string | undefined => {
+  const strippedPath = stripUrlQueryAndHash(assetPath).trim();
+
+  if (!strippedPath || assetPathHasProtocol(strippedPath)) {
+    return undefined;
+  }
+
+  const normalizedAssetPath = normalizeAssetPath(strippedPath);
+
+  if (!normalizedAssetPath) {
+    return undefined;
+  }
+
+  if (normalizedAssetPath.startsWith(`${contentDirectoryName}/`)) {
+    return normalizedAssetPath.slice(contentDirectoryName.length + 1);
+  }
+
+  if (strippedPath.startsWith("/")) {
+    return undefined;
+  }
+
+  return normalizedAssetPath;
+};
+
+const isLocalContentAssetPath = (assetPath: string): boolean =>
+  resolveContentRootRelativeAssetPath(assetPath) !== undefined;
+
+const findContentRootFromContentPath = (contentPath: string): string => {
   const contentPathSegments = path.resolve(contentPath).split(path.sep);
   const contentDirIndex = contentPathSegments.lastIndexOf(contentDirectoryName);
 
-  if (contentDirIndex <= 0) {
-    return process.cwd();
+  if (contentDirIndex < 0) {
+    return path.dirname(path.resolve(contentPath));
   }
 
-  return contentPathSegments.slice(0, contentDirIndex).join(path.sep) || path.parse(contentPath).root;
+  return (
+    contentPathSegments.slice(0, contentDirIndex + 1).join(path.sep) ||
+    path.parse(contentPath).root
+  );
 };
 
 const resolveLocalContentAsset = (
   assetPath: string,
   contentPath: string,
 ): { outputRelativePath: string; sourcePath: string } | undefined => {
-  const normalizedAssetPath = normalizeAssetPath(stripUrlQueryAndHash(assetPath));
+  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
 
-  if (!normalizedAssetPath.startsWith(`${contentDirectoryName}/`)) {
+  if (!normalizedAssetPath) {
     return undefined;
   }
 
-  const projectRoot = findProjectRootFromContentPath(contentPath);
+  const contentRoot = findContentRootFromContentPath(contentPath);
 
   return {
     outputRelativePath: normalizedAssetPath,
-    sourcePath: path.join(projectRoot, ...normalizedAssetPath.split("/")),
+    sourcePath: path.join(contentRoot, ...normalizedAssetPath.split("/")),
   };
 };
 
 const pageSlugToLocalContentAssetHref = (slug: string, assetPath: string): string => {
-  const normalizedAssetPath = normalizeAssetPath(stripUrlQueryAndHash(assetPath));
+  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
+
+  if (!normalizedAssetPath) {
+    return assetPath;
+  }
   const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
   const relativePath = path.posix.relative(path.posix.dirname(pagePath), `/${normalizedAssetPath}`);
 
@@ -402,7 +470,11 @@ const pageSlugToLocalContentAssetHref = (slug: string, assetPath: string): strin
 };
 
 const localContentAssetPathToCssHref = (assetPath: string): string => {
-  const normalizedAssetPath = normalizeAssetPath(stripUrlQueryAndHash(assetPath));
+  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
+
+  if (!normalizedAssetPath) {
+    return assetPath;
+  }
   const relativePath = path.posix.relative("/assets", `/${normalizedAssetPath}`);
 
   return `${relativePath || path.posix.basename(normalizedAssetPath)}${extractUrlSuffix(assetPath)}`;
@@ -451,9 +523,12 @@ const collectObjectImageSources = (value: unknown): string[] => {
 
   const record = value as Record<string, unknown>;
   const imageSources = typeof record.src === "string" ? [record.src] : [];
+  const backgroundImageSources =
+    typeof record.pageBackgroundImageUrl === "string" ? [record.pageBackgroundImageUrl] : [];
 
   return [
     ...imageSources,
+    ...backgroundImageSources,
     ...Object.values(record).flatMap((entry) => collectObjectImageSources(entry)),
   ];
 };

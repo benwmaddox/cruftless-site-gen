@@ -52,6 +52,30 @@ const collectJsonFiles = async (directoryPath: string): Promise<string[]> => {
 const readJsonFile = async (filePath: string): Promise<unknown> =>
   JSON.parse(await readFile(filePath, "utf8")) as unknown;
 
+const buildContentWithHref = (href: string) => ({
+  site: {
+    name: "LaunchKit",
+    baseUrl: "https://launchkit.example",
+    theme: "friendly-modern",
+  },
+  pages: [
+    {
+      slug: "/",
+      title: "Home",
+      components: [
+        {
+          type: "hero",
+          headline: "Launch faster",
+          primaryCta: {
+            label: "Get started",
+            href,
+          },
+        },
+      ],
+    },
+  ],
+});
+
 const collectComponentTypeEnumSchemas = (
   value: JsonSchemaValue | undefined,
   matches: JsonSchemaObject[] = [],
@@ -173,6 +197,18 @@ describe("site JSON schema", async () => {
         href: "$4",
       },
     });
+    expect(
+      componentSnippetSchemas
+        .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+        .find((snippet) => snippet.label === "Cta Band")?.body,
+    ).toEqual({
+      type: "cta-band",
+      headline: "$2",
+      primaryCta: {
+        label: "$3",
+        href: "$4",
+      },
+    });
   });
 
   it("validates all repo content fixtures", async () => {
@@ -189,6 +225,53 @@ describe("site JSON schema", async () => {
         isValid,
         `${path.relative(process.cwd(), contentFile)} failed schema validation: ${ajv.errorsText(validate.errors, { separator: "\n" })}`,
       ).toBe(true);
+    }
+  });
+
+  it("accepts valid href variants in shared link fields", () => {
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    addFormats(ajv);
+
+    const validate = ajv.compile(buildSiteContentJsonSchema());
+    const validHrefs = [
+      "/services",
+      "./contact",
+      "../contact",
+      "#faq",
+      "?ref=summer",
+      "https://example.com/path?x=1#y",
+      "mailto:hello@example.com",
+      "tel:+15555555555",
+    ];
+
+    for (const href of validHrefs) {
+      expect(validate(buildContentWithHref(href)), href).toBe(true);
+    }
+  });
+
+  it("rejects invalid href variants in shared link fields", () => {
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    addFormats(ajv);
+
+    const validate = ajv.compile(buildSiteContentJsonSchema());
+    const invalidHrefs = [
+      "",
+      "f",
+      "services/repair",
+      "/start?x=<tag>",
+      "https://example.com/path with space",
+      "javascript:alert(1)",
+      "data:text/html,hello",
+      "http://",
+      "mailto:",
+      "tel:",
+    ];
+
+    for (const href of invalidHrefs) {
+      expect(validate(buildContentWithHref(href)), href).toBe(false);
+      expect(validate.errors?.some((issue: ErrorObject) => issue.keyword === "pattern"), href).toBe(
+        true,
+      );
     }
   });
 

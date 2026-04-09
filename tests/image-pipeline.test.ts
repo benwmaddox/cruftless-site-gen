@@ -32,6 +32,26 @@ const createLocalImage = async (
     .toFile(filePath);
 };
 
+const removeDirectory = async (directoryPath: string): Promise<void> => {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      await rm(directoryPath, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      const errorCode = (error as NodeJS.ErrnoException).code;
+
+      if ((errorCode === "EBUSY" || errorCode === "EPERM") && attempt < 19) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+        continue;
+      }
+
+      throw error;
+    }
+  }
+};
+
 const createLocalImageProject = async (
   width: number,
   height: number,
@@ -124,11 +144,11 @@ describe("image pipeline", () => {
         /source image width 480px is smaller than required 560px for gallery-thumb-3/,
       );
     } finally {
-      await rm(fixture.rootDir, { recursive: true, force: true });
+      await removeDirectory(fixture.rootDir);
     }
   });
 
-  it("generates stable local image variants and rewrites page HTML to reference them", async () => {
+  it("copies local content images and rewrites page HTML to reference them relatively", async () => {
     const fixture = await createLocalImageProject(1800, 1200);
     const outDir = path.join(fixture.rootDir, "dist");
 
@@ -137,54 +157,16 @@ describe("image pipeline", () => {
 
       const homeHtml = await readFile(path.join(outDir, "index.html"), "utf8");
       const portfolioHtml = await readFile(path.join(outDir, "portfolio", "index.html"), "utf8");
-      const imageFileNames = await readdir(path.join(outDir, "assets", "images"));
+      const copiedImagePath = path.join(outDir, "images", "showroom.png");
 
-      expect(homeHtml).toContain('src="assets/images/showroom-gallery-thumb-3-');
-      expect(homeHtml).toContain('data-gallery-full-src="assets/images/showroom-gallery-full-');
-      expect(homeHtml).toContain('src="assets/images/showroom-media-content-');
-      expect(portfolioHtml).toContain('src="../assets/images/showroom-gallery-thumb-3-');
-      expect(portfolioHtml).toContain(
-        'data-gallery-full-src="../assets/images/showroom-gallery-full-',
-      );
-
-      expect(imageFileNames.filter((fileName) => fileName.includes("gallery-thumb-3"))).toHaveLength(
-        1,
-      );
-      expect(imageFileNames.filter((fileName) => fileName.includes("gallery-full"))).toHaveLength(1);
-      expect(imageFileNames.filter((fileName) => fileName.includes("media-content"))).toHaveLength(
-        1,
-      );
-
-      const galleryThumbMetadata = await sharp(
-        path.join(
-          outDir,
-          "assets",
-          "images",
-          imageFileNames.find((fileName) => fileName.includes("gallery-thumb-3")) ?? "",
-        ),
-      ).metadata();
-      const galleryFullMetadata = await sharp(
-        path.join(
-          outDir,
-          "assets",
-          "images",
-          imageFileNames.find((fileName) => fileName.includes("gallery-full")) ?? "",
-        ),
-      ).metadata();
-      const mediaMetadata = await sharp(
-        path.join(
-          outDir,
-          "assets",
-          "images",
-          imageFileNames.find((fileName) => fileName.includes("media-content")) ?? "",
-        ),
-      ).metadata();
-
-      expect(galleryThumbMetadata.width).toBe(560);
-      expect(galleryFullMetadata.width).toBe(1800);
-      expect(mediaMetadata.width).toBe(1280);
+      expect((await readFile(copiedImagePath)).equals(await readFile(fixture.imagePath))).toBe(true);
+      expect(homeHtml).toContain('src="images/showroom.png"');
+      expect(homeHtml).toContain('data-gallery-full-src="images/showroom.png"');
+      expect(portfolioHtml).toContain('src="../images/showroom.png"');
+      expect(portfolioHtml).toContain('data-gallery-full-src="../images/showroom.png"');
+      await expect(readdir(path.join(outDir, "assets", "images"))).rejects.toThrow();
     } finally {
-      await rm(fixture.rootDir, { recursive: true, force: true });
+      await removeDirectory(fixture.rootDir);
     }
   });
 
@@ -197,7 +179,7 @@ describe("image pipeline", () => {
 
       expect(watchablePaths).toEqual([fixture.imagePath]);
     } finally {
-      await rm(fixture.rootDir, { recursive: true, force: true });
+      await removeDirectory(fixture.rootDir);
     }
   });
 });
