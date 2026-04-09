@@ -1,0 +1,40 @@
+.c-horizontal-split {
+  padding-block: var(--space-7);
+}
+
+.c-horizontal-split__inner {
+  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.c-horizontal-split__title {
+  margin: 0;
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-heading);
+}
+
+.c-horizontal-split__grid {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (width >= 56rem) {
+  .c-horizontal-split__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.c-horizontal-split__panel {
+  min-width: 0;
+}
+
+.c-horizontal-split__panel > :first-child {
+  padding-block-start: 0;
+}
+
+.c-horizontal-split__panel > :last-child {
+  padding-block-end: 0;
+}

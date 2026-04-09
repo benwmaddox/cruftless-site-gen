@@ -164,14 +164,94 @@
                             "properties": {
                               "type": {
                                 "type": "string",
-                                "const": "hero"
+                                "const": "contact"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "address": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "phone": {
+                                "type": "string",
+                                "minLength": 7,
+                                "maxLength": 40
+                              },
+                              "email": {
+                                "type": "string",
+                                "format": "email",
+                                "maxLength": 254
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "address"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "contact-form"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "intro": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "action": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2048
+                              },
+                              "submitLabel": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 40
+                              },
+                              "subject": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "deliveryNote": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "title",
+                              "action",
+                              "submitLabel"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "cta-band"
                               },
                               "headline": {
                                 "type": "string",
                                 "minLength": 1,
                                 "maxLength": 120
                               },
-                              "subheadline": {
+                              "body": {
                                 "type": "string",
                                 "minLength": 1,
                                 "maxLength": 240
@@ -197,41 +277,22 @@
                                 "additionalProperties": false
                               },
                               "secondaryCta": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
-                              },
-                              "align": {
-                                "type": "string",
-                                "enum": [
-                                  "start",
-                                  "center"
-                                ],
-                                "default": "start"
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
                               }
                             },
                             "required": [
                               "type",
-                              "headline"
+                              "headline",
+                              "primaryCta"
                             ],
-                            "additionalProperties": false,
-                            "anyOf": [
-                              {
-                                "required": [
-                                  "primaryCta"
-                                ]
-                              },
-                              {
-                                "required": [
-                                  "secondaryCta"
-                                ]
-                              }
-                            ]
+                            "additionalProperties": false
                           },
                           {
                             "type": "object",
                             "properties": {
                               "type": {
                                 "type": "string",
-                                "const": "feature-list"
+                                "const": "faq"
                               },
                               "title": {
                                 "type": "string",
@@ -243,25 +304,25 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
-                                    "title": {
+                                    "question": {
                                       "type": "string",
                                       "minLength": 1,
-                                      "maxLength": 80
+                                      "maxLength": 140
                                     },
-                                    "body": {
+                                    "answer": {
                                       "type": "string",
                                       "minLength": 1,
-                                      "maxLength": 240
+                                      "maxLength": 320
                                     }
                                   },
                                   "required": [
-                                    "title",
-                                    "body"
+                                    "question",
+                                    "answer"
                                   ],
                                   "additionalProperties": false
                                 },
                                 "minItems": 1,
-                                "maxItems": 90
+                                "maxItems": 8
                               }
                             },
                             "required": [
@@ -329,7 +390,7 @@
                                       ]
                                     },
                                     "cta": {
-                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
                                     },
                                     "selected": {
                                       "type": "boolean"
@@ -357,7 +418,7 @@
                             "properties": {
                               "type": {
                                 "type": "string",
-                                "const": "faq"
+                                "const": "feature-list"
                               },
                               "title": {
                                 "type": "string",
@@ -369,25 +430,25 @@
                                 "items": {
                                   "type": "object",
                                   "properties": {
-                                    "question": {
+                                    "title": {
                                       "type": "string",
                                       "minLength": 1,
-                                      "maxLength": 140
+                                      "maxLength": 80
                                     },
-                                    "answer": {
+                                    "body": {
                                       "type": "string",
                                       "minLength": 1,
-                                      "maxLength": 320
+                                      "maxLength": 240
                                     }
                                   },
                                   "required": [
-                                    "question",
-                                    "answer"
+                                    "title",
+                                    "body"
                                   ],
                                   "additionalProperties": false
                                 },
                                 "minItems": 1,
-                                "maxItems": 8
+                                "maxItems": 90
                               }
                             },
                             "required": [
@@ -426,7 +487,7 @@
                               "images": {
                                 "type": "array",
                                 "items": {
-                                  "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/items/items/properties/image"
+                                  "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/5/properties/items/items/properties/image"
                                 },
                                 "minItems": 2,
                                 "maxItems": 24
@@ -436,83 +497,6 @@
                               "type",
                               "title",
                               "images"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "const": "cta-band"
-                              },
-                              "headline": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "body": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 240
-                              },
-                              "primaryCta": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
-                              },
-                              "secondaryCta": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "headline",
-                              "primaryCta"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "const": "contact-form"
-                              },
-                              "title": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "intro": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 280
-                              },
-                              "action": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 2048
-                              },
-                              "submitLabel": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 40
-                              },
-                              "subject": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "deliveryNote": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 200
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "title",
-                              "action",
-                              "submitLabel"
                             ],
                             "additionalProperties": false
                           },
@@ -559,6 +543,140 @@
                             "properties": {
                               "type": {
                                 "type": "string",
+                                "const": "hero"
+                              },
+                              "headline": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "subheadline": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 240
+                              },
+                              "primaryCta": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
+                              },
+                              "secondaryCta": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
+                              },
+                              "align": {
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "center"
+                                ],
+                                "default": "start"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "headline"
+                            ],
+                            "additionalProperties": false,
+                            "anyOf": [
+                              {
+                                "required": [
+                                  "primaryCta"
+                                ]
+                              },
+                              {
+                                "required": [
+                                  "secondaryCta"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "horizontal-split"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "first": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0"
+                              },
+                              "second": {
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/10/properties/first"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "first",
+                              "second"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "hours"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "entries": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "day": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Monday",
+                                        "Tuesday",
+                                        "Wednesday",
+                                        "Thursday",
+                                        "Friday",
+                                        "Saturday",
+                                        "Sunday",
+                                        "Holiday",
+                                        "Holidays",
+                                        "Emergency Service"
+                                      ]
+                                    },
+                                    "open": {
+                                      "type": "string",
+                                      "pattern": "^(?:0?[1-9]|1[0-2])(?::[0-5]\\d)?\\s?(?:AM|PM)$"
+                                    },
+                                    "close": {
+                                      "type": "string",
+                                      "pattern": "^(?:0?[1-9]|1[0-2])(?::[0-5]\\d)?\\s?(?:AM|PM)$"
+                                    }
+                                  },
+                                  "required": [
+                                    "day",
+                                    "open",
+                                    "close"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 1,
+                                "maxItems": 16
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "entries"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
                                 "const": "image-text"
                               },
                               "eyebrow": {
@@ -582,7 +700,7 @@
                                 "maxItems": 4
                               },
                               "image": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/items/items/properties/image"
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/5/properties/items/items/properties/image"
                               },
                               "imagePosition": {
                                 "type": "string",
@@ -593,10 +711,10 @@
                                 "default": "end"
                               },
                               "primaryCta": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
                               },
                               "secondaryCta": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
+                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
                               }
                             },
                             "required": [
@@ -630,10 +748,10 @@
                                   "type": "object",
                                   "properties": {
                                     "label": {
-                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta/properties/label"
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta/properties/label"
                                     },
                                     "href": {
-                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta/properties/href"
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta/properties/href"
                                     },
                                     "current": {
                                       "type": "boolean"
@@ -802,7 +920,7 @@
                               "links": {
                                 "type": "array",
                                 "items": {
-                                  "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/1/properties/primaryCta"
+                                  "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta"
                                 },
                                 "minItems": 1,
                                 "maxItems": 12
@@ -891,7 +1009,7 @@
                                       "maxLength": 80
                                     },
                                     "image": {
-                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/items/items/properties/image"
+                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/5/properties/items/items/properties/image"
                                     }
                                   },
                                   "required": [
@@ -918,14 +1036,17 @@
                             "type": "string",
                             "enum": [
                               "before-after",
-                              "hero",
-                              "feature-list",
-                              "feature-grid",
-                              "faq",
-                              "gallery",
-                              "cta-band",
+                              "contact",
                               "contact-form",
+                              "cta-band",
+                              "faq",
+                              "feature-grid",
+                              "feature-list",
+                              "gallery",
                               "google-maps",
+                              "hero",
+                              "horizontal-split",
+                              "hours",
                               "image-text",
                               "link-list",
                               "media",
@@ -967,10 +1088,28 @@
                             }
                           },
                           {
-                            "label": "Hero",
-                            "description": "Insert a hero component with required fields.",
+                            "label": "Contact",
+                            "description": "Insert a contact component with required fields.",
                             "body": {
-                              "type": "hero",
+                              "type": "contact",
+                              "address": "$2"
+                            }
+                          },
+                          {
+                            "label": "Contact Form",
+                            "description": "Insert a contact-form component with required fields.",
+                            "body": {
+                              "type": "contact-form",
+                              "title": "$2",
+                              "action": "$3",
+                              "submitLabel": "$4"
+                            }
+                          },
+                          {
+                            "label": "Cta Band",
+                            "description": "Insert a cta-band component with required fields.",
+                            "body": {
+                              "type": "cta-band",
                               "headline": "$2",
                               "primaryCta": {
                                 "label": "$3",
@@ -979,15 +1118,15 @@
                             }
                           },
                           {
-                            "label": "Feature List",
-                            "description": "Insert a feature-list component with required fields.",
+                            "label": "Faq",
+                            "description": "Insert a faq component with required fields.",
                             "body": {
-                              "type": "feature-list",
+                              "type": "faq",
                               "title": "$2",
                               "items": [
                                 {
-                                  "title": "$3",
-                                  "body": "$4"
+                                  "question": "$3",
+                                  "answer": "$4"
                                 }
                               ]
                             }
@@ -1007,15 +1146,15 @@
                             }
                           },
                           {
-                            "label": "Faq",
-                            "description": "Insert a faq component with required fields.",
+                            "label": "Feature List",
+                            "description": "Insert a feature-list component with required fields.",
                             "body": {
-                              "type": "faq",
+                              "type": "feature-list",
                               "title": "$2",
                               "items": [
                                 {
-                                  "question": "$3",
-                                  "answer": "$4"
+                                  "title": "$3",
+                                  "body": "$4"
                                 }
                               ]
                             }
@@ -1035,10 +1174,19 @@
                             }
                           },
                           {
-                            "label": "Cta Band",
-                            "description": "Insert a cta-band component with required fields.",
+                            "label": "Google Maps",
+                            "description": "Insert a google-maps component with required fields.",
                             "body": {
-                              "type": "cta-band",
+                              "type": "google-maps",
+                              "embedUrl": "$2",
+                              "title": "$3"
+                            }
+                          },
+                          {
+                            "label": "Hero",
+                            "description": "Insert a hero component with required fields.",
+                            "body": {
+                              "type": "hero",
                               "headline": "$2",
                               "primaryCta": {
                                 "label": "$3",
@@ -1047,22 +1195,30 @@
                             }
                           },
                           {
-                            "label": "Contact Form",
-                            "description": "Insert a contact-form component with required fields.",
+                            "label": "Horizontal Split",
+                            "description": "Insert a horizontal-split component with required fields.",
                             "body": {
-                              "type": "contact-form",
-                              "title": "$2",
-                              "action": "$3",
-                              "submitLabel": "$4"
+                              "type": "horizontal-split",
+                              "first": {
+                                "type": "$2"
+                              },
+                              "second": {
+                                "type": "$3"
+                              }
                             }
                           },
                           {
-                            "label": "Google Maps",
-                            "description": "Insert a google-maps component with required fields.",
+                            "label": "Hours",
+                            "description": "Insert a hours component with required fields.",
                             "body": {
-                              "type": "google-maps",
-                              "embedUrl": "$2",
-                              "title": "$3"
+                              "type": "hours",
+                              "entries": [
+                                {
+                                  "day": "${2|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
+                                  "open": "$3",
+                                  "close": "$4"
+                                }
+                              ]
                             }
                           },
                           {
@@ -1175,14 +1331,17 @@
                         "type": "string",
                         "enum": [
                           "before-after",
-                          "hero",
-                          "feature-list",
-                          "feature-grid",
-                          "faq",
-                          "gallery",
-                          "cta-band",
+                          "contact",
                           "contact-form",
+                          "cta-band",
+                          "faq",
+                          "feature-grid",
+                          "feature-list",
+                          "gallery",
                           "google-maps",
+                          "hero",
+                          "horizontal-split",
+                          "hours",
                           "image-text",
                           "link-list",
                           "media",
@@ -1225,10 +1384,28 @@
                         }
                       },
                       {
-                        "label": "Hero",
-                        "description": "Insert a hero component with required fields.",
+                        "label": "Contact",
+                        "description": "Insert a contact component with required fields.",
                         "body": {
-                          "type": "hero",
+                          "type": "contact",
+                          "address": "$2"
+                        }
+                      },
+                      {
+                        "label": "Contact Form",
+                        "description": "Insert a contact-form component with required fields.",
+                        "body": {
+                          "type": "contact-form",
+                          "title": "$2",
+                          "action": "$3",
+                          "submitLabel": "$4"
+                        }
+                      },
+                      {
+                        "label": "Cta Band",
+                        "description": "Insert a cta-band component with required fields.",
+                        "body": {
+                          "type": "cta-band",
                           "headline": "$2",
                           "primaryCta": {
                             "label": "$3",
@@ -1237,15 +1414,15 @@
                         }
                       },
                       {
-                        "label": "Feature List",
-                        "description": "Insert a feature-list component with required fields.",
+                        "label": "Faq",
+                        "description": "Insert a faq component with required fields.",
                         "body": {
-                          "type": "feature-list",
+                          "type": "faq",
                           "title": "$2",
                           "items": [
                             {
-                              "title": "$3",
-                              "body": "$4"
+                              "question": "$3",
+                              "answer": "$4"
                             }
                           ]
                         }
@@ -1265,15 +1442,15 @@
                         }
                       },
                       {
-                        "label": "Faq",
-                        "description": "Insert a faq component with required fields.",
+                        "label": "Feature List",
+                        "description": "Insert a feature-list component with required fields.",
                         "body": {
-                          "type": "faq",
+                          "type": "feature-list",
                           "title": "$2",
                           "items": [
                             {
-                              "question": "$3",
-                              "answer": "$4"
+                              "title": "$3",
+                              "body": "$4"
                             }
                           ]
                         }
@@ -1293,10 +1470,19 @@
                         }
                       },
                       {
-                        "label": "Cta Band",
-                        "description": "Insert a cta-band component with required fields.",
+                        "label": "Google Maps",
+                        "description": "Insert a google-maps component with required fields.",
                         "body": {
-                          "type": "cta-band",
+                          "type": "google-maps",
+                          "embedUrl": "$2",
+                          "title": "$3"
+                        }
+                      },
+                      {
+                        "label": "Hero",
+                        "description": "Insert a hero component with required fields.",
+                        "body": {
+                          "type": "hero",
                           "headline": "$2",
                           "primaryCta": {
                             "label": "$3",
@@ -1305,22 +1491,30 @@
                         }
                       },
                       {
-                        "label": "Contact Form",
-                        "description": "Insert a contact-form component with required fields.",
+                        "label": "Horizontal Split",
+                        "description": "Insert a horizontal-split component with required fields.",
                         "body": {
-                          "type": "contact-form",
-                          "title": "$2",
-                          "action": "$3",
-                          "submitLabel": "$4"
+                          "type": "horizontal-split",
+                          "first": {
+                            "type": "$2"
+                          },
+                          "second": {
+                            "type": "$3"
+                          }
                         }
                       },
                       {
-                        "label": "Google Maps",
-                        "description": "Insert a google-maps component with required fields.",
+                        "label": "Hours",
+                        "description": "Insert a hours component with required fields.",
                         "body": {
-                          "type": "google-maps",
-                          "embedUrl": "$2",
-                          "title": "$3"
+                          "type": "hours",
+                          "entries": [
+                            {
+                              "day": "${2|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
+                              "open": "$3",
+                              "close": "$4"
+                            }
+                          ]
                         }
                       },
                       {

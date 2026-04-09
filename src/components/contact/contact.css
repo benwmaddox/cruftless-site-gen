@@ -1,0 +1,68 @@
+.c-contact {
+  padding-block: var(--space-7);
+}
+
+.c-contact__inner {
+  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.c-contact__title {
+  margin: 0;
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-heading);
+}
+
+.c-contact__list {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.c-contact__item {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  align-items: start;
+  padding: var(--space-4);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-background);
+  box-shadow: var(--shadow-sm);
+}
+
+.c-contact__label,
+.c-contact__value {
+  margin: 0;
+}
+
+.c-contact__label {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--button-letter-spacing);
+  text-transform: uppercase;
+}
+
+.c-contact__value {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.c-contact__address {
+  font-style: normal;
+  line-height: var(--line-height-loose);
+}
+
+.c-contact__link {
+  overflow-wrap: anywhere;
+}
+
+@media (width <= 40rem) {
+  .c-contact__item {
+    grid-template-columns: 1fr;
+  }
+}

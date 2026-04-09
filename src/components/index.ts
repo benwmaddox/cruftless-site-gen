@@ -7,6 +7,13 @@ import {
   renderBeforeAfter,
 } from "./before-after/before-after.render.js";
 import {
+  ContactSchema,
+} from "./contact/contact.schema.js";
+import {
+  contactClassNames,
+  renderContact,
+} from "./contact/contact.render.js";
+import {
   ContactFormSchema,
 } from "./contact-form/contact-form.schema.js";
 import {
@@ -39,6 +46,16 @@ import {
 } from "./google-maps/google-maps.render.js";
 import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
+import { HoursSchema } from "./hours/hours.schema.js";
+import { hoursClassNames, renderHours } from "./hours/hours.render.js";
+import {
+  createHorizontalSplitSchema,
+  type HorizontalSplitData,
+} from "./horizontal-split/horizontal-split.schema.js";
+import {
+  horizontalSplitClassNames,
+  renderHorizontalSplit,
+} from "./horizontal-split/horizontal-split.render.js";
 import { ImageTextSchema } from "./image-text/image-text.schema.js";
 import {
   imageTextClassNames,
@@ -78,16 +95,22 @@ import {
   testimonialsClassNames,
 } from "./testimonials/testimonials.render.js";
 
+const NestedComponentSchema: z.ZodTypeAny = z.lazy(() => ComponentSchema);
+const HorizontalSplitSchema = createHorizontalSplitSchema(NestedComponentSchema);
+
 export const ComponentSchemaBase = z.discriminatedUnion("type", [
   BeforeAfterSchema,
-  HeroSchemaBase,
-  FeatureListSchema,
-  FeatureGridSchema,
-  FaqSchema,
-  GallerySchema,
-  CtaBandSchema,
+  ContactSchema,
   ContactFormSchema,
+  CtaBandSchema,
+  FaqSchema,
+  FeatureGridSchema,
+  FeatureListSchema,
+  GallerySchema,
   GoogleMapsSchema,
+  HeroSchemaBase,
+  HorizontalSplitSchema,
+  HoursSchema,
   ImageTextSchema,
   LinkListSchema,
   MediaSchemaBase,
@@ -157,16 +180,28 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: beforeAfterClassNames,
   },
   {
-    type: "hero",
-    render: (data) => renderHero(HeroSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./hero/hero.css", import.meta.url)),
-    classNames: heroClassNames,
+    type: "contact",
+    render: (data) => renderContact(ContactSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./contact/contact.css", import.meta.url)),
+    classNames: contactClassNames,
   },
   {
-    type: "feature-list",
-    render: (data) => renderFeatureList(FeatureListSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./feature-list/feature-list.css", import.meta.url)),
-    classNames: featureListClassNames,
+    type: "contact-form",
+    render: (data) => renderContactForm(ContactFormSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./contact-form/contact-form.css", import.meta.url)),
+    classNames: contactFormClassNames,
+  },
+  {
+    type: "cta-band",
+    render: (data) => renderCtaBand(CtaBandSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./cta-band/cta-band.css", import.meta.url)),
+    classNames: ctaBandClassNames,
+  },
+  {
+    type: "faq",
+    render: (data) => renderFaq(FaqSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./faq/faq.css", import.meta.url)),
+    classNames: faqClassNames,
   },
   {
     type: "feature-grid",
@@ -176,6 +211,12 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: featureGridClassNames,
   },
   {
+    type: "feature-list",
+    render: (data) => renderFeatureList(FeatureListSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./feature-list/feature-list.css", import.meta.url)),
+    classNames: featureListClassNames,
+  },
+  {
     type: "gallery",
     render: (data, renderContext) => renderGallery(GallerySchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./gallery/gallery.css", import.meta.url)),
@@ -183,28 +224,35 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     scriptContent: galleryRuntimeScript,
   },
   {
-    type: "faq",
-    render: (data) => renderFaq(FaqSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./faq/faq.css", import.meta.url)),
-    classNames: faqClassNames,
-  },
-  {
-    type: "cta-band",
-    render: (data) => renderCtaBand(CtaBandSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./cta-band/cta-band.css", import.meta.url)),
-    classNames: ctaBandClassNames,
-  },
-  {
-    type: "contact-form",
-    render: (data) => renderContactForm(ContactFormSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./contact-form/contact-form.css", import.meta.url)),
-    classNames: contactFormClassNames,
-  },
-  {
     type: "google-maps",
     render: (data) => renderGoogleMaps(GoogleMapsSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./google-maps/google-maps.css", import.meta.url)),
     classNames: googleMapsClassNames,
+  },
+  {
+    type: "hero",
+    render: (data) => renderHero(HeroSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./hero/hero.css", import.meta.url)),
+    classNames: heroClassNames,
+  },
+  {
+    type: "horizontal-split",
+    render: (data, renderContext) =>
+      renderHorizontalSplit(
+        HorizontalSplitSchema.parse(data) as HorizontalSplitData<ComponentData>,
+        (component) =>
+        renderComponent(component, renderContext),
+      ),
+    cssPath: fileURLToPath(
+      new URL("./horizontal-split/horizontal-split.css", import.meta.url),
+    ),
+    classNames: horizontalSplitClassNames,
+  },
+  {
+    type: "hours",
+    render: (data) => renderHours(HoursSchema.parse(data)),
+    cssPath: fileURLToPath(new URL("./hours/hours.css", import.meta.url)),
+    classNames: hoursClassNames,
   },
   {
     type: "image-text",
@@ -264,22 +312,31 @@ export const renderComponent = (
   switch (data.type) {
     case "before-after":
       return renderBeforeAfter(data, renderContext);
-    case "hero":
-      return renderHero(data);
-    case "feature-list":
-      return renderFeatureList(data);
-    case "feature-grid":
-      return renderFeatureGrid(data, renderContext);
-    case "gallery":
-      return renderGallery(data, renderContext);
-    case "faq":
-      return renderFaq(data);
-    case "cta-band":
-      return renderCtaBand(data);
+    case "contact":
+      return renderContact(data);
     case "contact-form":
       return renderContactForm(data);
+    case "cta-band":
+      return renderCtaBand(data);
+    case "faq":
+      return renderFaq(data);
+    case "feature-grid":
+      return renderFeatureGrid(data, renderContext);
+    case "feature-list":
+      return renderFeatureList(data);
+    case "gallery":
+      return renderGallery(data, renderContext);
     case "google-maps":
       return renderGoogleMaps(data);
+    case "hero":
+      return renderHero(data);
+    case "horizontal-split":
+      return renderHorizontalSplit(
+        data as HorizontalSplitData<ComponentData>,
+        (component) => renderComponent(component, renderContext),
+      );
+    case "hours":
+      return renderHours(data);
     case "image-text":
       return renderImageText(data, renderContext);
     case "link-list":
