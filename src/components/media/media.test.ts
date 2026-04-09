@@ -20,8 +20,32 @@ describe("MediaSchema", () => {
     expect(html).toContain('<figure class="c-media c-media--size-content">');
     expect(html).toContain('<img class="c-media__image"');
     expect(html).toContain('alt="Founder standing in the studio"');
-    expect(html).toContain('width="1600" height="900"');
+    expect(html).toContain('style="width: 1600px; height: 900px;"');
+    expect(html).not.toContain('width="1600" height="900"');
     expect(html).toContain("<figcaption");
+  });
+
+  it("keeps intrinsic width and height attributes when explicit sizing is not provided", () => {
+    const parsed = MediaSchema.parse({
+      type: "media",
+      src: "https://example.com/studio.jpg",
+      alt: "Founder standing in the studio",
+      size: "content",
+    });
+
+    const html = renderMedia(parsed, {
+      resolveImage: () => ({
+        src: "https://example.com/studio.jpg",
+        width: 1600,
+        height: 900,
+      }),
+      resolveGalleryImage: () => ({
+        src: "https://example.com/studio.jpg",
+      }),
+    });
+
+    expect(html).toContain('width="1600" height="900"');
+    expect(html).not.toContain('style="width:');
   });
 
   it("rejects unknown fields", () => {
