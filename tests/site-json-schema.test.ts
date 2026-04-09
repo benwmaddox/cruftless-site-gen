@@ -237,7 +237,6 @@ describe("site JSON schema", async () => {
       "/services",
       "./contact",
       "../contact",
-      "services/repair",
       "#faq",
       "?ref=summer",
       "https://example.com/path?x=1#y",
@@ -257,6 +256,8 @@ describe("site JSON schema", async () => {
     const validate = ajv.compile(buildSiteContentJsonSchema());
     const invalidHrefs = [
       "",
+      "f",
+      "services/repair",
       "/start?x=<tag>",
       "https://example.com/path with space",
       "javascript:alert(1)",

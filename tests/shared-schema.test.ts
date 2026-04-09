@@ -7,8 +7,6 @@ const validHrefs = [
   "/services?category=repair#top",
   "./contact",
   "../contact",
-  "services",
-  "services/repair",
   "#contact",
   "?ref=summer",
   "https://example.com/path?x=1#y",
@@ -21,6 +19,9 @@ const validHrefs = [
 const invalidHrefs = [
   "",
   " ",
+  "f",
+  "services",
+  "services/repair",
   "/start?x=<tag>",
   "https://example.com/path with space",
   "javascript:alert(1)",

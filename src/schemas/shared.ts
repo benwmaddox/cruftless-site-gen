@@ -15,8 +15,6 @@ const protocolRelativeHrefPatternSource =
 const rootRelativeHrefPatternSource = "\\/(?!\\/)[^\\s<>\"`]*";
 const dotRelativeHrefPatternSource = "\\.{1,2}\\/[^\\s<>\"`]*";
 const fragmentOrQueryHrefPatternSource = "[#?][^\\s<>\"`]*";
-const bareRelativeHrefPatternSource =
-  "(?!(?:[a-z][a-z0-9+.-]*:|\\/\\/))[^/?#\\s<>\"`][^\\s<>\"`]*";
 
 const hrefPatternSource = [
   absoluteWebHrefPatternSource,
@@ -28,7 +26,6 @@ const hrefPatternSource = [
   rootRelativeHrefPatternSource,
   dotRelativeHrefPatternSource,
   fragmentOrQueryHrefPatternSource,
-  bareRelativeHrefPatternSource,
 ].join("|");
 
 const protocolRelativeHrefPattern = new RegExp(`^${protocolRelativeHrefPatternSource}$`, "u");
@@ -82,7 +79,7 @@ export const explainHrefValidationFailure = (value: string): string | undefined 
   }
 
   if (!hrefPattern.test(trimmedValue)) {
-    return "use /path, relative path, #fragment, ?query, https://..., mailto:..., or tel:...";
+    return "use /path, ./path, ../path, #fragment, ?query, https://..., mailto:..., or tel:...";
   }
 
   return undefined;
