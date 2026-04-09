@@ -172,6 +172,22 @@ npm run validate -- content/examples/78th-street-studios.json
 npm run build -- content/examples/78th-street-studios.json dist/78th-street-studios
 ```
 
+### 4b. Discover likely first-party page images
+
+```bash
+npm run discover:images -- https://example.com/
+```
+
+That fetches the page, inspects `og:image` and `twitter:image`, scans inline styles and `<style>` blocks for background images, follows linked stylesheets, and lists deduped image candidates ranked by usefulness.
+
+### 4c. Localize the selected landing image into content
+
+```bash
+npm run localize:landing-image -- https://example.com/
+```
+
+That downloads the top-ranked candidate into `content/images/landing-page.*`, removes stale `landing-page.*` extension variants in that folder, and rewrites any existing `/content/images/landing-page.*` references in `content/site.json`. Use `--candidate-index 2` or another positive integer when the default ranking is not the image you want.
+
 ### 5. Build the bundled example sites
 
 ```bash
