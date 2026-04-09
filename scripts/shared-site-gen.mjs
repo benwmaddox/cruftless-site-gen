@@ -54,6 +54,14 @@ const validateSite = (contentPath = mainSiteContentPath, inheritedOptions) => {
   runGeneratorEntryPoint("validate", [contentPath], inheritedOptions);
 };
 
+const discoverPageImages = (args, inheritedOptions) => {
+  runGeneratorEntryPoint("discover-page-images", args, inheritedOptions);
+};
+
+const localizeLandingImage = (args, inheritedOptions) => {
+  runGeneratorEntryPoint("localize-landing-image", args, inheritedOptions);
+};
+
 const buildSite = (
   contentPath = mainSiteContentPath,
   outDir = composedDistDir,
@@ -194,8 +202,20 @@ if (isDirectExecution) {
       process.exit(0);
     }
 
+    if (command === "discover:images") {
+      console.log(`Discovering page images with shared generator at ${generatorDir}.`);
+      discoverPageImages(commandArgs);
+      process.exit(0);
+    }
+
+    if (command === "localize:landing-image") {
+      console.log(`Localizing landing image with shared generator at ${generatorDir}.`);
+      localizeLandingImage(commandArgs);
+      process.exit(0);
+    }
+
     throw new Error(
-      "Usage: node scripts/shared-site-gen.mjs <validate|build:site|dev:prepare>",
+      "Usage: node scripts/shared-site-gen.mjs <validate|build:site|dev:prepare|discover:images|localize:landing-image>",
     );
   } catch (error) {
     if (error instanceof Error) {
