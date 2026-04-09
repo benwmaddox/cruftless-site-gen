@@ -1,6 +1,8 @@
+import { readFile } from "node:fs/promises";
 import { watchFile, unwatchFile } from "node:fs";
 import path from "node:path";
 
+import { SiteContentSchema } from "../schemas/site.schema.js";
 import {
   buildSite,
   ValidationFailure,
@@ -8,6 +10,7 @@ import {
   defaultOutDir,
   loadValidatedSite,
 } from "./framework.js";
+import { collectWatchableLocalImagePaths } from "./image-pipeline.js";
 
 const args = process.argv.slice(2);
 const watchMode = args.includes("--watch") || args.includes("-w");
@@ -28,10 +31,26 @@ const formatBuildSummary = (pageCount: number, outDirectory: string, changedFile
   return `Built ${pageCount} page(s) into ${relativeOutDir} (${fileLabel})`;
 };
 
+const loadWatchableImagePaths = async (): Promise<string[]> => {
+  try {
+    const rawJson = await readFile(contentPath, "utf8");
+    const rawData = JSON.parse(rawJson) as unknown;
+    const parsed = SiteContentSchema.safeParse(rawData);
+
+    if (!parsed.success) {
+      return [];
+    }
+
+    return collectWatchableLocalImagePaths(parsed.data, contentPath);
+  } catch {
+    return [];
+  }
+};
+
 const runBuild = async (): Promise<boolean> => {
   try {
     const siteContent = await loadValidatedSite(contentPath);
-    const buildResult = await buildSite(siteContent, outDir, contentPath);
+    const buildResult = await buildSite(siteContent, outDir, { contentPath });
     const changedFiles =
       buildResult.filesCreated + buildResult.filesUpdated + buildResult.filesRemoved;
 
@@ -55,8 +74,37 @@ try {
   } else {
     let buildInProgress = false;
     let queuedBuild = false;
+    let watchedImagePaths = new Set<string>();
 
-    const triggerBuild = () => {
+    const watchPath = (filePath: string) => {
+      watchFile(filePath, { interval: 250 }, (current, previous) => {
+        if (current.mtimeMs === previous.mtimeMs && current.size === previous.size) {
+          return;
+        }
+
+        triggerBuild(filePath);
+      });
+    };
+
+    const syncWatchedImagePaths = async () => {
+      const nextPaths = new Set(await loadWatchableImagePaths());
+
+      watchedImagePaths.forEach((filePath) => {
+        if (!nextPaths.has(filePath)) {
+          unwatchFile(filePath);
+        }
+      });
+
+      nextPaths.forEach((filePath) => {
+        if (!watchedImagePaths.has(filePath)) {
+          watchPath(filePath);
+        }
+      });
+
+      watchedImagePaths = nextPaths;
+    };
+
+    const triggerBuild = (changedPath: string = contentPath) => {
       if (buildInProgress) {
         queuedBuild = true;
         return;
@@ -65,14 +113,16 @@ try {
       buildInProgress = true;
       void (async () => {
         try {
-          console.log(`Change detected in ${relativeContentPath}. Rebuilding...`);
-          await runBuild();
+          console.log(`Change detected in ${path.relative(process.cwd(), changedPath)}. Rebuilding...`);
+          const buildSucceeded = await runBuild();
+          await syncWatchedImagePaths();
+          process.exitCode = buildSucceeded ? 0 : 1;
         } finally {
           buildInProgress = false;
 
           if (queuedBuild) {
             queuedBuild = false;
-            triggerBuild();
+            triggerBuild(changedPath);
           }
         }
       })();
@@ -83,17 +133,21 @@ try {
         return;
       }
 
-      triggerBuild();
+      triggerBuild(contentPath);
     });
 
     const stopWatching = () => {
       unwatchFile(contentPath);
+      watchedImagePaths.forEach((filePath) => {
+        unwatchFile(filePath);
+      });
       process.exit();
     };
 
     process.on("SIGINT", stopWatching);
     process.on("SIGTERM", stopWatching);
 
+    await syncWatchedImagePaths();
     console.log(`Watching ${relativeContentPath} for changes...`);
   }
 } catch (error) {

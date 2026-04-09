@@ -49,13 +49,24 @@ export const wellnessCalmTheme = createThemeDefinition(
 
     .c-feature-grid__item,
     .c-faq__item,
-    .c-contact-form__inner {
+    .c-before-after__item,
+    .c-contact-form__inner,
+    .c-testimonials__item {
+      border-color: rgb(47 124 100 / 0.18);
+    }
+
+    .c-logo-strip__link,
+    .c-image-text__image,
+    .c-gallery__image,
+    .c-testimonials__avatar {
       border-color: rgb(47 124 100 / 0.18);
     }
 
     .c-prose__inner,
+    .c-before-after__inner,
     .c-feature-list__inner,
-    .c-faq__inner {
+    .c-faq__inner,
+    .c-testimonials__inner {
       gap: var(--space-5);
     }
   `,

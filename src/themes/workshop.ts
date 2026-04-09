@@ -45,17 +45,21 @@ export const workshopTheme = createThemeDefinition(
   },
   `
     .c-hero__body,
+    .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
-    .c-contact-form__inner {
+    .c-contact-form__inner,
+    .c-testimonials__item {
       position: relative;
       overflow: hidden;
     }
 
     .c-hero__body::before,
+    .c-before-after__item::before,
     .c-feature-grid__item::before,
     .c-faq__item::before,
-    .c-contact-form__inner::before {
+    .c-contact-form__inner::before,
+    .c-testimonials__item::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -73,15 +77,19 @@ export const workshopTheme = createThemeDefinition(
     }
 
     .c-hero__body > *,
+    .c-before-after__item > *,
     .c-feature-grid__item > *,
     .c-faq__item > *,
-    .c-contact-form__inner > * {
+    .c-contact-form__inner > *,
+    .c-testimonials__item > * {
       position: relative;
       z-index: 1;
     }
 
+    .c-before-after__item,
     .c-feature-grid__item,
-    .c-faq__item {
+    .c-faq__item,
+    .c-testimonials__item {
       border-top-width: var(--border-width-3);
       border-top-color: var(--color-primary);
     }

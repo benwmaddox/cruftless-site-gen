@@ -1,4 +1,8 @@
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
 import type { NavigationBarData } from "./navigation-bar.schema.js";
 
 export const navigationBarClassNames = [
@@ -46,11 +50,21 @@ const createPanelId = (data: NavigationBarData): string => {
   return `c-navbar-panel-${hash.toString(36)}`;
 };
 
-export const renderNavigationBar = (data: NavigationBarData): string => {
+export const renderNavigationBar = (
+  data: NavigationBarData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
   const panelId = createPanelId(data);
+  const resolvedBrandImage = data.brandImage
+    ? renderContext.resolveImage(data.brandImage, "navbar-brand")
+    : undefined;
+  const brandImageDimensions =
+    resolvedBrandImage?.width !== undefined && resolvedBrandImage.height !== undefined
+      ? ` width="${resolvedBrandImage.width}" height="${resolvedBrandImage.height}"`
+      : "";
   const brandParts = [
     data.brandImage
-      ? `<img class="c-navbar__brand-image" src="${escapeHtml(data.brandImage.src)}" alt="${escapeHtml(data.brandImage.alt)}" />`
+      ? `<img class="c-navbar__brand-image" src="${escapeHtml(resolvedBrandImage?.src ?? data.brandImage.src)}" alt="${escapeHtml(data.brandImage.alt)}"${brandImageDimensions} />`
       : "",
     data.brandText ? `<span class="c-navbar__brand-text">${escapeHtml(data.brandText)}</span>` : "",
   ]

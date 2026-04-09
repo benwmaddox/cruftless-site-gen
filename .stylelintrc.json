@@ -40,7 +40,8 @@
       "position": [
         "relative",
         "absolute",
-        "sticky"
+        "sticky",
+        "fixed"
       ],
       "justify-content": [
         "start",
@@ -55,6 +56,13 @@
         "end",
         "stretch",
         "baseline"
+      ],
+      "align-content": [
+        "start",
+        "center",
+        "end",
+        "space-between",
+        "space-around"
       ],
       "place-items": [
         "start",
@@ -83,6 +91,7 @@
       "right",
       "bottom",
       "left",
+      "inset",
       "z-index",
       "width",
       "height",
@@ -99,6 +108,8 @@
       "flex-wrap",
       "justify-content",
       "align-items",
+      "align-content",
+      "justify-self",
       "gap",
       "grid-template-columns",
       "grid-template-rows",
@@ -135,6 +146,7 @@
       "outline-offset",
       "overflow",
       "cursor",
+      "object-fit",
       "transition",
       "transform"
     ],
@@ -159,6 +171,7 @@
       "padding-right"
     ],
     "property-no-vendor-prefix": true,
+    "declaration-block-no-redundant-longhand-properties": null,
     "selector-type-no-unknown": true,
     "value-no-vendor-prefix": true
   }

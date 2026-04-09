@@ -55,7 +55,18 @@ const resolveJsonPointer = (
   let currentValue: JsonSchemaValue = rootSchema;
 
   for (const pathSegment of pathSegments) {
-    if (!isJsonSchemaContainer(currentValue)) {
+    if (Array.isArray(currentValue)) {
+      const index = Number.parseInt(pathSegment, 10);
+
+      if (!Number.isInteger(index) || index < 0 || index >= currentValue.length) {
+        return undefined;
+      }
+
+      currentValue = currentValue[index];
+      continue;
+    }
+
+    if (!isJsonSchemaObject(currentValue)) {
       return undefined;
     }
 

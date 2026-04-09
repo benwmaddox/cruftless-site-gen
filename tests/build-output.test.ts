@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
+import sharp from "sharp";
 
 import { buildSite, loadValidatedSite } from "../src/build/framework.js";
 import { SiteContentSchema } from "../src/schemas/site.schema.js";
@@ -11,6 +12,60 @@ const waitForMtimeTick = async (): Promise<void> =>
   new Promise((resolve) => {
     setTimeout(resolve, 30);
   });
+
+const removeDirectory = async (directoryPath: string): Promise<void> => {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      await rm(directoryPath, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      const errorCode = (error as NodeJS.ErrnoException).code;
+
+      if ((errorCode === "EBUSY" || errorCode === "EPERM") && attempt < 19) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 100);
+        });
+        continue;
+      }
+
+      throw error;
+    }
+  }
+};
+
+const createPngBytes = (width: number, height: number): Promise<Buffer> =>
+  sharp({
+    create: {
+      width,
+      height,
+      channels: 4,
+      background: {
+        r: 255,
+        g: 255,
+        b: 255,
+        alpha: 1,
+      },
+    },
+  })
+    .png()
+    .toBuffer();
+
+const createWebpBytes = (width: number, height: number): Promise<Buffer> =>
+  sharp({
+    create: {
+      width,
+      height,
+      channels: 4,
+      background: {
+        r: 255,
+        g: 255,
+        b: 255,
+        alpha: 1,
+      },
+    },
+  })
+    .webp()
+    .toBuffer();
 
 const createScriptedSite = () =>
   SiteContentSchema.parse({
@@ -141,7 +196,7 @@ describe("buildSite output writes", () => {
       expect(laterCssStat.mtimeMs).toBe(initialCssStat.mtimeMs);
       expect(laterHtmlStat.mtimeMs).toBe(initialHtmlStat.mtimeMs);
     } finally {
-      await rm(outDir, { recursive: true, force: true });
+      await removeDirectory(outDir);
     }
   });
 
@@ -164,7 +219,7 @@ describe("buildSite output writes", () => {
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
       await expect(access(path.join(outDir, "about", "index.html"))).rejects.toThrow();
     } finally {
-      await rm(outDir, { recursive: true, force: true });
+      await removeDirectory(outDir);
     }
   });
 
@@ -182,7 +237,7 @@ describe("buildSite output writes", () => {
       expect(html).toContain(`gtag('config', "G-TEST1234");`);
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
     } finally {
-      await rm(outDir, { recursive: true, force: true });
+      await removeDirectory(outDir);
     }
   });
 
@@ -195,8 +250,9 @@ describe("buildSite output writes", () => {
     const previewImagePath = path.join(previewsDir, "local-preview.png");
 
     try {
+      const previewImageBytes = await createPngBytes(1600, 900);
       await mkdir(previewsDir, { recursive: true });
-      await writeFile(previewImagePath, "preview image bytes", "utf8");
+      await writeFile(previewImagePath, previewImageBytes);
       await writeFile(
         contentPath,
         `${JSON.stringify(
@@ -223,6 +279,7 @@ describe("buildSite output writes", () => {
                     type: "media",
                     src: "content/examples/previews/local-preview.png",
                     alt: "Locally stored preview image",
+                    size: "wide",
                   },
                 ],
               },
@@ -234,12 +291,12 @@ describe("buildSite output writes", () => {
         "utf8",
       );
 
-      const firstBuild = await buildSite(await loadValidatedSite(contentPath), outDir, contentPath);
+      const firstBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
       const copiedPreviewPath = path.join(outDir, "examples", "previews", "local-preview.png");
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
-      expect(await readFile(copiedPreviewPath, "utf8")).toBe("preview image bytes");
+      expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
       expect(html).toContain('src="examples/previews/local-preview.png"');
 
       await writeFile(
@@ -274,12 +331,11 @@ describe("buildSite output writes", () => {
         "utf8",
       );
 
-      const secondBuild = await buildSite(await loadValidatedSite(contentPath), outDir, contentPath);
-
+      const secondBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
       expect(secondBuild.filesRemoved).toBeGreaterThan(0);
       await expect(access(copiedPreviewPath)).rejects.toThrow();
     } finally {
-      await rm(projectRoot, { recursive: true, force: true });
+      await removeDirectory(projectRoot);
     }
   });
 
@@ -289,17 +345,18 @@ describe("buildSite output writes", () => {
     const previewsDir = path.join(contentDir, "images");
     const contentPath = path.join(contentDir, "site.json");
     const outDir = path.join(projectRoot, "dist");
-    const previewImagePath = path.join(previewsDir, "landing-page.jpg");
+    const previewImagePath = path.join(previewsDir, "landing-page.png");
 
     try {
+      const previewImageBytes = await createPngBytes(1600, 900);
       await mkdir(previewsDir, { recursive: true });
-      await writeFile(previewImagePath, "preview image bytes", "utf8");
+      await writeFile(previewImagePath, previewImageBytes);
       const siteContent = {
         site: {
           name: "LaunchKit",
           baseUrl: "https://launchkit.example",
           theme: "friendly-modern",
-          pageBackgroundImageUrl: "/content/images/landing-page.jpg",
+          pageBackgroundImageUrl: "/content/images/landing-page.png",
         },
         pages: [
           {
@@ -308,7 +365,7 @@ describe("buildSite output writes", () => {
             components: [
               {
                 type: "media",
-                src: "/content/images/landing-page.jpg",
+                src: "/content/images/landing-page.png",
                 alt: "Locally stored gallery image",
                 size: "wide",
               },
@@ -316,19 +373,18 @@ describe("buildSite output writes", () => {
           },
         ],
       };
-
       await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
-      await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, contentPath);
+      await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
 
       const nestedHtml = await readFile(path.join(outDir, "gallery", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
-      const copiedPreviewPath = path.join(outDir, "images", "landing-page.jpg");
+      const copiedPreviewPath = path.join(outDir, "images", "landing-page.png");
 
-      expect(await readFile(copiedPreviewPath, "utf8")).toBe("preview image bytes");
-      expect(nestedHtml).toContain('src="../images/landing-page.jpg"');
-      expect(css).toContain('url("../images/landing-page.jpg")');
+      expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
+      expect(nestedHtml).toContain('src="../images/landing-page.png"');
+      expect(css).toContain('url("../images/landing-page.png")');
     } finally {
-      await rm(projectRoot, { recursive: true, force: true });
+      await removeDirectory(projectRoot);
     }
   });
 
@@ -341,8 +397,9 @@ describe("buildSite output writes", () => {
     const brandImagePath = path.join(imagesDir, "brand-logo.webp");
 
     try {
+      const brandImageBytes = await createWebpBytes(640, 200);
       await mkdir(imagesDir, { recursive: true });
-      await writeFile(brandImagePath, "brand image bytes", "utf8");
+      await writeFile(brandImagePath, brandImageBytes);
       const siteContent = {
         site: {
           name: "LaunchKit",
@@ -386,15 +443,15 @@ describe("buildSite output writes", () => {
       };
 
       await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
-      await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, contentPath);
+      await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, { contentPath });
 
       const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
       const copiedBrandImagePath = path.join(outDir, "Images", "brand-logo.webp");
 
-      expect(await readFile(copiedBrandImagePath, "utf8")).toBe("brand image bytes");
+      expect((await readFile(copiedBrandImagePath)).equals(brandImageBytes)).toBe(true);
       expect(aboutHtml).toContain('src="../Images/brand-logo.webp"');
     } finally {
-      await rm(projectRoot, { recursive: true, force: true });
+      await removeDirectory(projectRoot);
     }
   });
 });

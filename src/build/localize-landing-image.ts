@@ -51,10 +51,7 @@ try {
     );
   }
 
-  const localizationResult = await writeLocalizedLandingImage(
-    selectedCandidate.url,
-    contentPath,
-  );
+  const localizationResult = await writeLocalizedLandingImage(selectedCandidate.url, contentPath);
 
   console.log(`Localized landing image from ${localizationResult.downloadedFrom}`);
   console.log(`Saved to ${path.relative(process.cwd(), localizationResult.outputPath)}`);

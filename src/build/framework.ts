@@ -9,6 +9,7 @@ import {
   type ComponentType,
   renderComponent,
 } from "../components/index.js";
+import { defaultComponentRenderContext } from "../components/render-context.js";
 import { resolvePageComponents } from "../layout/page-layout.js";
 import {
   SiteContentSchema,
@@ -21,6 +22,10 @@ import { emitThemeCss } from "../themes/emit-theme-css.js";
 import { themes } from "../themes/index.js";
 import { resolveThemeDefinition } from "../themes/theme-options.js";
 import { validateComponentRegistry } from "../validation/component-registry-validation.js";
+import {
+  collectImageValidationIssues,
+  prepareImagePipeline,
+} from "./image-pipeline.js";
 import {
   collectSiteValidationIssues,
   type ValidationIssue,
@@ -244,6 +249,7 @@ export const loadValidatedSite = async (
 
   const contentIssues = collectSiteValidationIssues(parsed.data);
   const copyIssues = collectCopyValidationIssues(parsed.data);
+  const imageIssues = await collectImageValidationIssues(parsed.data, contentPath);
   const resolvedThemeIssues = validateThemeDefinition(
     `site:${parsed.data.site.theme}`,
     resolveThemeDefinition(themes[parsed.data.site.theme], parsed.data.site.themeOverrides),
@@ -253,12 +259,14 @@ export const loadValidatedSite = async (
     frameworkIssues.length > 0 ||
     contentIssues.length > 0 ||
     copyIssues.length > 0 ||
+    imageIssues.length > 0 ||
     resolvedThemeIssues.length > 0
   ) {
     throw new ValidationFailure(contentPath, [
       ...frameworkIssues,
       ...contentIssues,
       ...copyIssues,
+      ...imageIssues,
       ...resolvedThemeIssues,
     ]);
   }
@@ -372,6 +380,9 @@ export interface BuildResult {
   filesRemoved: number;
 }
 
+export interface BuildOptions {
+  contentPath?: string;
+}
 const contentDirectoryName = "content";
 
 const normalizeAssetPath = (assetPath: string): string =>
@@ -452,7 +463,6 @@ const pageSlugToLocalContentAssetHref = (slug: string, assetPath: string): strin
   if (!normalizedAssetPath) {
     return assetPath;
   }
-
   const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
   const relativePath = path.posix.relative(path.posix.dirname(pagePath), `/${normalizedAssetPath}`);
 
@@ -465,7 +475,6 @@ const localContentAssetPathToCssHref = (assetPath: string): string => {
   if (!normalizedAssetPath) {
     return assetPath;
   }
-
   const relativePath = path.posix.relative("/assets", `/${normalizedAssetPath}`);
 
   return `${relativePath || path.posix.basename(normalizedAssetPath)}${extractUrlSuffix(assetPath)}`;
@@ -514,9 +523,12 @@ const collectObjectImageSources = (value: unknown): string[] => {
 
   const record = value as Record<string, unknown>;
   const imageSources = typeof record.src === "string" ? [record.src] : [];
+  const backgroundImageSources =
+    typeof record.pageBackgroundImageUrl === "string" ? [record.pageBackgroundImageUrl] : [];
 
   return [
     ...imageSources,
+    ...backgroundImageSources,
     ...Object.values(record).flatMap((entry) => collectObjectImageSources(entry)),
   ];
 };
@@ -629,13 +641,17 @@ const removeStaleGeneratedFiles = async (
 export const buildSite = async (
   siteContent: SiteContentData,
   outDir: string = defaultOutDir,
-  contentPath: string = defaultContentPath,
+  options: BuildOptions = {},
 ): Promise<BuildResult> => {
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
   const css = await renderSiteCss(siteContent);
   const js = renderSiteJs(siteContent);
   const expectedFiles = new Set<string>();
+  const imagePipeline = options.contentPath
+    ? await prepareImagePipeline(siteContent, options.contentPath, outDir)
+    : undefined;
+  const contentPath = options.contentPath;
   let filesCreated = 0;
   let filesUpdated = 0;
   let filesUnchanged = 0;
@@ -664,12 +680,17 @@ export const buildSite = async (
     recordWriteResult(await writeFileIfChanged(jsOutputPath, js));
   }
 
+  imagePipeline?.expectedFiles.forEach((filePath) => {
+    expectedFiles.add(filePath);
+  });
+
   for (const [pageIndex, page] of siteContent.pages.entries()) {
+    const renderContext = imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
     const bodyHtml = rewriteLocalContentAssetsForPage(
       resolvePageComponents(siteContent.site, page, pageIndex),
       page.slug,
     )
-      .map((component) => renderComponent(component))
+      .map((component) => renderComponent(component, renderContext))
       .join("\n");
     const documentHtml = renderPageDocument({
       site: siteContent.site,
@@ -684,18 +705,20 @@ export const buildSite = async (
     recordWriteResult(await writeFileIfChanged(outputPath, documentHtml));
   }
 
-  const localContentAssets = new Map(
-    collectObjectImageSources(siteContent)
-      .map((assetPath) => resolveLocalContentAsset(assetPath, contentPath))
-      .filter((asset): asset is { outputRelativePath: string; sourcePath: string } => asset !== undefined)
-      .map((asset) => [asset.outputRelativePath, asset.sourcePath]),
-  );
+  if (contentPath) {
+    const localContentAssets = new Map(
+      collectObjectImageSources(siteContent)
+        .map((assetPath) => resolveLocalContentAsset(assetPath, contentPath))
+        .filter((asset): asset is { outputRelativePath: string; sourcePath: string } => asset !== undefined)
+        .map((asset) => [asset.outputRelativePath, asset.sourcePath]),
+    );
 
-  for (const [outputRelativePath, sourcePath] of localContentAssets) {
-    const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
-    await mkdir(path.dirname(outputPath), { recursive: true });
-    expectedFiles.add(outputPath);
-    recordWriteResult(await copyFileIfChanged(sourcePath, outputPath));
+    for (const [outputRelativePath, sourcePath] of localContentAssets) {
+      const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
+      await mkdir(path.dirname(outputPath), { recursive: true });
+      expectedFiles.add(outputPath);
+      recordWriteResult(await copyFileIfChanged(sourcePath, outputPath));
+    }
   }
 
   const filesRemoved = await removeStaleGeneratedFiles(outDir, expectedFiles);
@@ -714,6 +737,6 @@ export const buildSiteFromFile = async (
   outDir: string = defaultOutDir,
 ): Promise<SiteContentData> => {
   const siteContent = await loadValidatedSite(contentPath);
-  await buildSite(siteContent, outDir, contentPath);
+  await buildSite(siteContent, outDir, { contentPath });
   return siteContent;
 };

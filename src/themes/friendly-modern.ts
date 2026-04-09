@@ -45,14 +45,17 @@ export const friendlyModernTheme = createThemeDefinition(
   },
   `
     .c-hero__body,
+    .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
-    .c-contact-form__inner {
+    .c-contact-form__inner,
+    .c-testimonials__item {
       position: relative;
       overflow: hidden;
     }
 
     .c-hero__body::before,
+    .c-before-after__item::before,
     .c-feature-grid__item::before,
     .c-faq__item::before {
       content: "";
@@ -65,6 +68,7 @@ export const friendlyModernTheme = createThemeDefinition(
     }
 
     .c-hero__body > *,
+    .c-before-after__item > *,
     .c-feature-grid__item > *,
     .c-faq__item > * {
       position: relative;

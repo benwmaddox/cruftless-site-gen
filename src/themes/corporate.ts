@@ -70,5 +70,12 @@ export const corporateTheme = createThemeDefinition(
         inset 0 0 0 var(--border-width-1) var(--color-primary),
         var(--shadow-sm);
     }
+
+    .c-image-text__image,
+    .c-gallery__image,
+    .c-before-after__image,
+    .c-testimonials__avatar {
+      border-color: rgb(11 95 255 / 0.16);
+    }
   `,
 );
