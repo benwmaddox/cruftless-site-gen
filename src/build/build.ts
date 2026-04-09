@@ -20,6 +20,7 @@ if (positionalArgs.length > 2) {
 const [contentArg, outArg] = positionalArgs;
 const contentPath = contentArg ? path.resolve(process.cwd(), contentArg) : defaultContentPath;
 const outDir = outArg ? path.resolve(process.cwd(), outArg) : defaultOutDir;
+const relativeContentPath = path.relative(process.cwd(), contentPath);
 
 const formatBuildSummary = (pageCount: number, outDirectory: string, changedFiles: number): string => {
   const relativeOutDir = path.relative(process.cwd(), outDirectory) || ".";
@@ -30,7 +31,7 @@ const formatBuildSummary = (pageCount: number, outDirectory: string, changedFile
 const runBuild = async (): Promise<boolean> => {
   try {
     const siteContent = await loadValidatedSite(contentPath);
-    const buildResult = await buildSite(siteContent, outDir);
+    const buildResult = await buildSite(siteContent, outDir, contentPath);
     const changedFiles =
       buildResult.filesCreated + buildResult.filesUpdated + buildResult.filesRemoved;
 
@@ -63,14 +64,16 @@ try {
 
       buildInProgress = true;
       void (async () => {
-        console.log(`Change detected in ${path.relative(process.cwd(), contentPath)}. Rebuilding...`);
-        const buildSucceeded = await runBuild();
-        process.exitCode = buildSucceeded ? 0 : 1;
-        buildInProgress = false;
+        try {
+          console.log(`Change detected in ${relativeContentPath}. Rebuilding...`);
+          await runBuild();
+        } finally {
+          buildInProgress = false;
 
-        if (queuedBuild) {
-          queuedBuild = false;
-          triggerBuild();
+          if (queuedBuild) {
+            queuedBuild = false;
+            triggerBuild();
+          }
         }
       })();
     };
@@ -91,7 +94,7 @@ try {
     process.on("SIGINT", stopWatching);
     process.on("SIGTERM", stopWatching);
 
-    console.log(`Watching ${path.relative(process.cwd(), contentPath)} for changes...`);
+    console.log(`Watching ${relativeContentPath} for changes...`);
   }
 } catch (error) {
   if (error instanceof ValidationFailure) {

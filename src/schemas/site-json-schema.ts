@@ -30,6 +30,10 @@ export const vscodeSettingsPath = fileURLToPath(new URL("../../.vscode/settings.
 const isJsonSchemaObject = (value: JsonSchemaValue | undefined): value is JsonSchemaObject =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+const isJsonSchemaContainer = (
+  value: JsonSchemaValue | undefined,
+): value is JsonSchemaObject | JsonSchemaValue[] => typeof value === "object" && value !== null;
+
 const isStringArray = (value: JsonSchemaValue | undefined): value is string[] =>
   Array.isArray(value) && value.every((item) => typeof item === "string");
 
@@ -51,7 +55,7 @@ const resolveJsonPointer = (
   let currentValue: JsonSchemaValue = rootSchema;
 
   for (const pathSegment of pathSegments) {
-    if (!isJsonSchemaObject(currentValue)) {
+    if (!isJsonSchemaContainer(currentValue)) {
       return undefined;
     }
 

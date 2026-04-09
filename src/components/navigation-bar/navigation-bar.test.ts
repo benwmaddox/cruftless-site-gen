@@ -15,7 +15,7 @@ describe("NavigationBarSchema", () => {
       links: [
         {
           label: "Pricing & Plans",
-          href: "/pricing?tab=<plans>",
+          href: "/pricing?tab=plans",
         },
         {
           label: "Docs",
@@ -29,7 +29,7 @@ describe("NavigationBarSchema", () => {
     expect(html).toContain('class="c-navbar"');
     expect(html).toContain('/logo.svg?x=&lt;tag&gt;');
     expect(html).toContain("Launch &lt;Kit&gt;");
-    expect(html).toContain('/pricing?tab=&lt;plans&gt;');
+    expect(html).toContain("/pricing?tab=plans");
     expect(html.indexOf("c-navbar__brand-image")).toBeLessThan(
       html.indexOf("c-navbar__brand-text"),
     );

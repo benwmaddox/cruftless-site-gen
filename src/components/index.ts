@@ -33,7 +33,7 @@ import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
 import { LinkListSchema } from "./link-list/link-list.schema.js";
 import { linkListClassNames, renderLinkList } from "./link-list/link-list.render.js";
-import { MediaSchema } from "./media/media.schema.js";
+import { MediaSchema, MediaSchemaBase } from "./media/media.schema.js";
 import { mediaClassNames, renderMedia } from "./media/media.render.js";
 import {
   NavigationBarSchemaBase,
@@ -60,23 +60,42 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
   ContactFormSchema,
   GoogleMapsSchema,
   LinkListSchema,
-  MediaSchema,
+  MediaSchemaBase,
   NavigationBarSchemaBase,
   ProseSchema,
 ]);
 
 export const ComponentSchema = ComponentSchemaBase.superRefine((value, ctx) => {
-  if (value.type !== "hero") {
+  if (value.type === "hero") {
+    if (!value.primaryCta && !value.secondaryCta) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one CTA is required",
+      });
+    }
+
     return;
   }
 
-  const parsedHero = HeroSchema.safeParse(value);
-  if (parsedHero.success) {
+  if (value.type !== "media") {
     return;
   }
 
-  for (const issue of parsedHero.error.issues) {
-    ctx.addIssue(issue);
+  if (value.src.trim().length === 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["src"],
+      message: "src is required",
+    });
+    return;
+  }
+
+  if (!value.alt || value.alt.trim().length === 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["alt"],
+      message: "alt is required when src is provided",
+    });
   }
 });
 

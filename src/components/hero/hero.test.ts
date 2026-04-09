@@ -11,7 +11,7 @@ describe("HeroSchema", () => {
       subheadline: "Strict validation for teams.",
       primaryCta: {
         label: "Get started",
-        href: "/start?x=<tag>",
+        href: "/start?x=%3Ctag%3E",
       },
       align: "center",
     });
@@ -20,7 +20,7 @@ describe("HeroSchema", () => {
 
     expect(html).toContain('<section class="c-hero c-hero--align-center">');
     expect(html).toContain("&lt;faster&gt;");
-    expect(html).toContain('/start?x=&lt;tag&gt;');
+    expect(html).toContain("/start?x=%3Ctag%3E");
     expect(html).not.toContain("<faster>");
   });
 

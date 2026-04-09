@@ -114,7 +114,9 @@
                                   },
                                   "href": {
                                     "type": "string",
-                                    "minLength": 1
+                                    "minLength": 1,
+                                    "maxLength": 2048,
+                                    "pattern": "^(?:(?:https?|ftp):\\/\\/[^/?#\\s<>\"`]+(?:[/?#][^\\s<>\"`]*)?|mailto:[^\\s<>\"`?#]+(?:\\?[^\\s<>\"`]*)?|tel:\\+?[0-9A-Za-z().-]+(?:;[A-Za-z0-9-]+=[^;\\s<>\"`]*)*|sms:\\+?[0-9A-Za-z().-]+(?:\\?[^\\s<>\"`]*)?|(?!(?:(?:https?|ftp|mailto|tel|sms|javascript|data|vbscript):))[a-z][a-z0-9+.-]*:[^\\s<>\"`]+|\\/\\/[^/?#\\s<>\"`]+(?:[/?#][^\\s<>\"`]*)?|\\/(?!\\/)[^\\s<>\"`]*|\\.{1,2}\\/[^\\s<>\"`]*|[#?][^\\s<>\"`]*|(?!(?:[a-z][a-z0-9+.-]*:|\\/\\/))[^/?#\\s<>\"`][^\\s<>\"`]*)$"
                                   }
                                 },
                                 "required": [
@@ -501,24 +503,33 @@
                           {
                             "type": "object",
                             "properties": {
-                              "src": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/src"
-                              },
-                              "alt": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/alt"
-                              },
-                              "caption": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/caption"
-                              },
-                              "width": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/width"
-                              },
-                              "height": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/2/properties/items/items/properties/image/properties/height"
-                              },
                               "type": {
                                 "type": "string",
                                 "const": "media"
+                              },
+                              "src": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2048
+                              },
+                              "alt": {
+                                "type": "string",
+                                "maxLength": 200
+                              },
+                              "caption": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "width": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 10000
+                              },
+                              "height": {
+                                "type": "integer",
+                                "exclusiveMinimum": 0,
+                                "maximum": 10000
                               },
                               "size": {
                                 "type": "string",
@@ -530,9 +541,8 @@
                               }
                             },
                             "required": [
-                              "src",
-                              "alt",
-                              "type"
+                              "type",
+                              "src"
                             ],
                             "additionalProperties": false
                           },
@@ -709,7 +719,10 @@
                             "body": {
                               "type": "cta-band",
                               "headline": "$2",
-                              "primaryCta": "$3"
+                              "primaryCta": {
+                                "label": "$3",
+                                "href": "$4"
+                              }
                             }
                           },
                           {
@@ -749,9 +762,8 @@
                             "label": "Media",
                             "description": "Insert a media component with required fields.",
                             "body": {
-                              "src": "$2",
-                              "alt": "$3",
-                              "type": "media"
+                              "type": "media",
+                              "src": "$2"
                             }
                           },
                           {
@@ -760,7 +772,10 @@
                             "body": {
                               "type": "navigation-bar",
                               "links": [
-                                "$2"
+                                {
+                                  "label": "$2",
+                                  "href": "$3"
+                                }
                               ]
                             }
                           },
@@ -882,7 +897,10 @@
                         "body": {
                           "type": "cta-band",
                           "headline": "$2",
-                          "primaryCta": "$3"
+                          "primaryCta": {
+                            "label": "$3",
+                            "href": "$4"
+                          }
                         }
                       },
                       {
@@ -922,9 +940,8 @@
                         "label": "Media",
                         "description": "Insert a media component with required fields.",
                         "body": {
-                          "src": "$2",
-                          "alt": "$3",
-                          "type": "media"
+                          "type": "media",
+                          "src": "$2"
                         }
                       },
                       {
@@ -933,7 +950,10 @@
                         "body": {
                           "type": "navigation-bar",
                           "links": [
-                            "$2"
+                            {
+                              "label": "$2",
+                              "href": "$3"
+                            }
                           ]
                         }
                       },

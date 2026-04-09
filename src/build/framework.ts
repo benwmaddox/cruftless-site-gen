@@ -15,6 +15,7 @@ import {
   type SiteData,
   type SiteContentData,
 } from "../schemas/site.schema.js";
+import { explainHrefValidationFailure } from "../schemas/shared.js";
 import { renderPageDocument } from "../renderer/render-page.js";
 import { emitThemeCss } from "../themes/emit-theme-css.js";
 import { themes } from "../themes/index.js";
@@ -24,6 +25,7 @@ import {
   collectSiteValidationIssues,
   type ValidationIssue,
 } from "../validation/site-validation.js";
+import { collectCopyValidationIssues } from "../validation/copy-validation.js";
 import {
   validateCssTokenUsage,
   validateThemeDefinition,
@@ -108,8 +110,38 @@ const getComponentTypeForIssue = (
   return typeof componentType === "string" ? componentType : undefined;
 };
 
+const formatValuePreview = (value: string, maxLength: number = 120): string => {
+  const compactValue = value.replaceAll(/\s+/g, " ");
+  const preview =
+    compactValue.length > maxLength ? `${compactValue.slice(0, maxLength - 3)}...` : compactValue;
+
+  return JSON.stringify(preview);
+};
+
+const formatHrefIssueMessage = (issue: ZodIssue, rawData: unknown): string | undefined => {
+  if (issue.path.at(-1) !== "href") {
+    return undefined;
+  }
+
+  const currentValue = readValueAtPath(rawData, issue.path);
+
+  if (typeof currentValue !== "string") {
+    return undefined;
+  }
+
+  const hint = explainHrefValidationFailure(currentValue);
+  const details = [`received ${formatValuePreview(currentValue)}`];
+
+  if (hint) {
+    details.push(`hint: ${hint}`);
+  }
+
+  return `${issue.message} (${details.join("; ")})`;
+};
+
 const formatZodIssue = (issue: ZodIssue, rawData: unknown): ValidationIssue => {
   const componentType = getComponentTypeForIssue(rawData, issue.path);
+  const formattedHrefIssueMessage = formatHrefIssueMessage(issue, rawData);
 
   if (issue.code === "unrecognized_keys") {
     const keyLabel = issue.keys.length === 1 ? "key" : "keys";
@@ -139,7 +171,7 @@ const formatZodIssue = (issue: ZodIssue, rawData: unknown): ValidationIssue => {
   return {
     path: issue.path,
     componentType,
-    message: issue.message,
+    message: formattedHrefIssueMessage ?? issue.message,
   };
 };
 
@@ -211,6 +243,7 @@ export const loadValidatedSite = async (
   }
 
   const contentIssues = collectSiteValidationIssues(parsed.data);
+  const copyIssues = collectCopyValidationIssues(parsed.data);
   const resolvedThemeIssues = validateThemeDefinition(
     `site:${parsed.data.site.theme}`,
     resolveThemeDefinition(themes[parsed.data.site.theme], parsed.data.site.themeOverrides),
@@ -219,11 +252,13 @@ export const loadValidatedSite = async (
   if (
     frameworkIssues.length > 0 ||
     contentIssues.length > 0 ||
+    copyIssues.length > 0 ||
     resolvedThemeIssues.length > 0
   ) {
     throw new ValidationFailure(contentPath, [
       ...frameworkIssues,
       ...contentIssues,
+      ...copyIssues,
       ...resolvedThemeIssues,
     ]);
   }
@@ -263,7 +298,7 @@ const emitSiteCss = (site: SiteData): string => {
 };
 
 const renderSiteCss = async (siteContent: SiteContentData): Promise<string> => {
-  const { site } = siteContent;
+  const site = rewriteLocalContentAssetsForSiteCss(siteContent.site);
   const resolvedTheme = resolveThemeDefinition(themes[site.theme], site.themeOverrides);
   const usedComponentTypes = collectUsedComponentTypes(siteContent);
   const componentCssChunks = await Promise.all(
@@ -337,6 +372,155 @@ export interface BuildResult {
   filesRemoved: number;
 }
 
+const contentDirectoryName = "content";
+
+const normalizeAssetPath = (assetPath: string): string =>
+  assetPath.replaceAll("\\", "/").replace(/^[./]+/, "").replace(/^\/+/, "");
+
+const stripUrlQueryAndHash = (assetPath: string): string => assetPath.split(/[?#]/u, 1)[0] ?? assetPath;
+
+const extractUrlSuffix = (assetPath: string): string => {
+  const strippedPath = stripUrlQueryAndHash(assetPath);
+  return assetPath.slice(strippedPath.length);
+};
+
+const assetPathHasProtocol = (assetPath: string): boolean =>
+  /^[a-z][a-z0-9+.-]*:/iu.test(assetPath) || assetPath.startsWith("//");
+
+const resolveContentRootRelativeAssetPath = (assetPath: string): string | undefined => {
+  const strippedPath = stripUrlQueryAndHash(assetPath).trim();
+
+  if (!strippedPath || assetPathHasProtocol(strippedPath)) {
+    return undefined;
+  }
+
+  const normalizedAssetPath = normalizeAssetPath(strippedPath);
+
+  if (!normalizedAssetPath) {
+    return undefined;
+  }
+
+  if (normalizedAssetPath.startsWith(`${contentDirectoryName}/`)) {
+    return normalizedAssetPath.slice(contentDirectoryName.length + 1);
+  }
+
+  if (strippedPath.startsWith("/")) {
+    return undefined;
+  }
+
+  return normalizedAssetPath;
+};
+
+const isLocalContentAssetPath = (assetPath: string): boolean =>
+  resolveContentRootRelativeAssetPath(assetPath) !== undefined;
+
+const findContentRootFromContentPath = (contentPath: string): string => {
+  const contentPathSegments = path.resolve(contentPath).split(path.sep);
+  const contentDirIndex = contentPathSegments.lastIndexOf(contentDirectoryName);
+
+  if (contentDirIndex < 0) {
+    return path.dirname(path.resolve(contentPath));
+  }
+
+  return (
+    contentPathSegments.slice(0, contentDirIndex + 1).join(path.sep) ||
+    path.parse(contentPath).root
+  );
+};
+
+const resolveLocalContentAsset = (
+  assetPath: string,
+  contentPath: string,
+): { outputRelativePath: string; sourcePath: string } | undefined => {
+  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
+
+  if (!normalizedAssetPath) {
+    return undefined;
+  }
+
+  const contentRoot = findContentRootFromContentPath(contentPath);
+
+  return {
+    outputRelativePath: normalizedAssetPath,
+    sourcePath: path.join(contentRoot, ...normalizedAssetPath.split("/")),
+  };
+};
+
+const pageSlugToLocalContentAssetHref = (slug: string, assetPath: string): string => {
+  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
+
+  if (!normalizedAssetPath) {
+    return assetPath;
+  }
+
+  const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
+  const relativePath = path.posix.relative(path.posix.dirname(pagePath), `/${normalizedAssetPath}`);
+
+  return `${relativePath || path.posix.basename(normalizedAssetPath)}${extractUrlSuffix(assetPath)}`;
+};
+
+const localContentAssetPathToCssHref = (assetPath: string): string => {
+  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
+
+  if (!normalizedAssetPath) {
+    return assetPath;
+  }
+
+  const relativePath = path.posix.relative("/assets", `/${normalizedAssetPath}`);
+
+  return `${relativePath || path.posix.basename(normalizedAssetPath)}${extractUrlSuffix(assetPath)}`;
+};
+
+const rewriteLocalContentAssetsForPage = <T>(value: T, slug: string): T => {
+  if (Array.isArray(value)) {
+    return value.map((entry) => rewriteLocalContentAssetsForPage(entry, slug)) as T;
+  }
+
+  if (typeof value !== "object" || value === null) {
+    return value;
+  }
+
+  const record = value as Record<string, unknown>;
+  const rewrittenEntries = Object.entries(record).map(([key, entry]) => {
+    if (key === "src" && typeof entry === "string" && isLocalContentAssetPath(entry)) {
+      return [key, pageSlugToLocalContentAssetHref(slug, entry)];
+    }
+
+    return [key, rewriteLocalContentAssetsForPage(entry, slug)];
+  });
+
+  return Object.fromEntries(rewrittenEntries) as T;
+};
+
+const rewriteLocalContentAssetsForSiteCss = (site: SiteData): SiteData => {
+  if (!site.pageBackgroundImageUrl || !isLocalContentAssetPath(site.pageBackgroundImageUrl)) {
+    return site;
+  }
+
+  return {
+    ...site,
+    pageBackgroundImageUrl: localContentAssetPathToCssHref(site.pageBackgroundImageUrl),
+  };
+};
+
+const collectObjectImageSources = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.flatMap((entry) => collectObjectImageSources(entry));
+  }
+
+  if (typeof value !== "object" || value === null) {
+    return [];
+  }
+
+  const record = value as Record<string, unknown>;
+  const imageSources = typeof record.src === "string" ? [record.src] : [];
+
+  return [
+    ...imageSources,
+    ...Object.values(record).flatMap((entry) => collectObjectImageSources(entry)),
+  ];
+};
+
 const collectFilesRecursively = async (directoryPath: string): Promise<string[]> => {
   const entries = await readdir(directoryPath, { withFileTypes: true });
   const nestedPaths = await Promise.all(
@@ -374,6 +558,31 @@ const writeFileIfChanged = async (
   }
 
   await writeFile(filePath, contents, "utf8");
+  return "updated";
+};
+
+const copyFileIfChanged = async (
+  sourcePath: string,
+  destinationPath: string,
+): Promise<"created" | "updated" | "unchanged"> => {
+  const sourceContents = await readFile(sourcePath);
+
+  try {
+    const existingContents = await readFile(destinationPath);
+
+    if (existingContents.equals(sourceContents)) {
+      return "unchanged";
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      throw error;
+    }
+
+    await writeFile(destinationPath, sourceContents);
+    return "created";
+  }
+
+  await writeFile(destinationPath, sourceContents);
   return "updated";
 };
 
@@ -420,6 +629,7 @@ const removeStaleGeneratedFiles = async (
 export const buildSite = async (
   siteContent: SiteContentData,
   outDir: string = defaultOutDir,
+  contentPath: string = defaultContentPath,
 ): Promise<BuildResult> => {
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
@@ -455,7 +665,10 @@ export const buildSite = async (
   }
 
   for (const [pageIndex, page] of siteContent.pages.entries()) {
-    const bodyHtml = resolvePageComponents(siteContent.site, page, pageIndex)
+    const bodyHtml = rewriteLocalContentAssetsForPage(
+      resolvePageComponents(siteContent.site, page, pageIndex),
+      page.slug,
+    )
       .map((component) => renderComponent(component))
       .join("\n");
     const documentHtml = renderPageDocument({
@@ -469,6 +682,20 @@ export const buildSite = async (
     await mkdir(path.dirname(outputPath), { recursive: true });
     expectedFiles.add(outputPath);
     recordWriteResult(await writeFileIfChanged(outputPath, documentHtml));
+  }
+
+  const localContentAssets = new Map(
+    collectObjectImageSources(siteContent)
+      .map((assetPath) => resolveLocalContentAsset(assetPath, contentPath))
+      .filter((asset): asset is { outputRelativePath: string; sourcePath: string } => asset !== undefined)
+      .map((asset) => [asset.outputRelativePath, asset.sourcePath]),
+  );
+
+  for (const [outputRelativePath, sourcePath] of localContentAssets) {
+    const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
+    await mkdir(path.dirname(outputPath), { recursive: true });
+    expectedFiles.add(outputPath);
+    recordWriteResult(await copyFileIfChanged(sourcePath, outputPath));
   }
 
   const filesRemoved = await removeStaleGeneratedFiles(outDir, expectedFiles);
@@ -487,6 +714,6 @@ export const buildSiteFromFile = async (
   outDir: string = defaultOutDir,
 ): Promise<SiteContentData> => {
   const siteContent = await loadValidatedSite(contentPath);
-  await buildSite(siteContent, outDir);
+  await buildSite(siteContent, outDir, contentPath);
   return siteContent;
 };

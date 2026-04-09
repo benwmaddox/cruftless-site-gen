@@ -39,4 +39,34 @@ describe("MediaSchema", () => {
 
     expect(result.error.issues.some((issue) => issue.code === "unrecognized_keys")).toBe(true);
   });
+
+  it("rejects media blocks without a src", () => {
+    const result = MediaSchema.safeParse({
+      type: "media",
+      alt: "Founder standing in the studio",
+      size: "wide",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects media blocks with an empty src", () => {
+    const result = MediaSchema.safeParse({
+      type: "media",
+      src: "",
+      alt: "Founder standing in the studio",
+      size: "wide",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("requires alt text when src is provided", () => {
+    const result = MediaSchema.safeParse({
+      type: "media",
+      src: "https://example.com/studio.jpg",
+    });
+
+    expect(result.success).toBe(false);
+  });
 });
