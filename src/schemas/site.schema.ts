@@ -6,6 +6,7 @@ import {
   secondaryColorSchemeNames,
   themeStructureNames,
 } from "../themes/theme-options.js";
+import { themeTokenNames, type ThemeTokenName } from "../themes/tokens.js";
 
 const isLocalContentAssetReference = (value: string): boolean => {
   const trimmedValue = value.trim();
@@ -68,12 +69,19 @@ export const SiteThemeOverridesSchema = z
   })
   .strict();
 
+const siteCssVariableSchemaEntries = Object.fromEntries(
+  themeTokenNames.map((tokenName) => [tokenName, z.string().trim().min(1).max(400).optional()]),
+) as Record<ThemeTokenName, z.ZodOptional<z.ZodString>>;
+
+export const SiteCssVariablesSchema = z.object(siteCssVariableSchemaEntries).strict();
+
 export const SiteSchema = z
   .object({
     name: z.string().min(1).max(80),
     baseUrl: z.string().url(),
     theme: z.enum(themeNames),
     themeOverrides: SiteThemeOverridesSchema.optional(),
+    cssVariables: SiteCssVariablesSchema.optional(),
     pageBackgroundImageUrl: z
       .string()
       .min(1)
@@ -100,5 +108,6 @@ export type PageContentSlotData = z.infer<typeof PageContentSlotSchema>;
 export type SiteLayoutComponentData = z.infer<typeof SiteLayoutComponentSchema>;
 export type SiteLayoutData = z.infer<typeof SiteLayoutSchema>;
 export type SiteThemeOverridesData = z.infer<typeof SiteThemeOverridesSchema>;
+export type SiteCssVariablesData = z.infer<typeof SiteCssVariablesSchema>;
 export type SiteData = z.infer<typeof SiteSchema>;
 export type SiteContentData = z.infer<typeof SiteContentSchema>;

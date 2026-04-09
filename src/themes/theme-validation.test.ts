@@ -278,6 +278,20 @@ describe("theme validation", () => {
     expect(resolvedTheme.css).toContain("background: var(--color-surface-alt);");
   });
 
+  it("applies explicit css variable overrides after secondary scheme resolution", () => {
+    const resolvedTheme = resolveThemeDefinition(themes.corporate, {
+      secondaryColorScheme: "midnight-canvas",
+      cssVariables: {
+        "--color-primary": "#ff5500",
+        "--space-5": "2.25rem",
+      },
+    });
+
+    expect(resolvedTheme.tokens["--color-primary"]).toBe("#ff5500");
+    expect(resolvedTheme.tokens["--space-5"]).toBe("2.25rem");
+    expect(resolvedTheme.tokens["--color-link"]).toBe("#a78bfa");
+  });
+
   it("rejects cruftless-disallowed CSS properties and vendor prefixes", () => {
     expect(
       findCruftlessCssPolicyViolations(`
