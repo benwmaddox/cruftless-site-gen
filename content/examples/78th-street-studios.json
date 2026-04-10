@@ -35,7 +35,7 @@
         {
           "type": "prose",
           "title": "Explore the building",
-          "lead": "The site keeps the same core visit paths in view on every page.",
+          "lead": "Plan your visit with direct access to the building story, tours, maps, event rentals, and press coverage.",
           "paragraphs": [
             "Use About for the building story, Art Tours for guided visits, Maps for directions, Rent Space for private events, and Press for coverage."
           ]
@@ -46,7 +46,7 @@
         {
           "type": "cta-band",
           "headline": "Third Fridays return on Friday, April 17, 2026",
-          "body": "The site repeats the monthly event callout across the home and about pages, with free public hours from 5 to 9 pm and more than 60 venues participating.",
+          "body": "Third Fridays bring more than 60 venues together for a free public evening from 5 to 9 pm, with exhibits, music, food, and vendors throughout the building.",
           "primaryCta": {
             "label": "View Maps",
             "href": "https://78thstreetstudios.com/maps"
@@ -170,10 +170,10 @@
         {
           "type": "prose",
           "title": "Why the building matters",
-          "lead": "The about page frames 78th Street Studios as both the largest art and design complex in Northeast Ohio and a free recurring public event destination.",
+          "lead": "78th Street Studios stands as the largest art and design complex in Northeast Ohio and a recurring public destination for monthly arts events.",
           "paragraphs": [
-            "The about page leads with the core facts visitors need: 170,000 square feet, more than 60 venues, and a mix of galleries, artist studios, performance rooms, music recording spaces, and creative businesses under one roof.",
-            "Third Fridays remain the clearest example of that energy. They are described here as a free monthly viewing night from 5 to 9 pm, with exhibits, ambient music, cuisine, pop-up vendors, and a district-wide spillover into Gordon Square.",
+            "Visitors can explore 170,000 square feet, more than 60 venues, and a mix of galleries, artist studios, performance rooms, music recording spaces, and creative businesses under one roof.",
+            "Third Fridays remain the clearest example of that energy, bringing a free monthly viewing night from 5 to 9 pm with exhibits, ambient music, cuisine, pop-up vendors, and a district-wide spillover into Gordon Square.",
             "The structure itself predates that cultural role. Built in 1905 for the Baker Electric Motor Vehicle Company, it later became home to American Greetings' creative studios before its current life as a center for artists, designers, makers, and events.",
             "That layered history explains why the place feels different from a typical gallery building. The old freight infrastructure, hardwood floors, and warehouse scale are still present, but they now frame a mix of contemporary studios, exhibitions, and public gatherings."
           ]
@@ -188,7 +188,7 @@
             },
             {
               "title": "Art galleries",
-              "body": "ARTneo Museum, Derek Hess Gallery, HEDGE Gallery, Kenneth Paul Lesko Gallery, and White Lotus Gallery are part of the gallery roster highlighted on the about page."
+              "body": "ARTneo Museum, Derek Hess Gallery, HEDGE Gallery, Kenneth Paul Lesko Gallery, and White Lotus Gallery are part of the building's gallery roster."
             },
             {
               "title": "Design and conservation",
@@ -230,7 +230,7 @@
         {
           "type": "cta-band",
           "headline": "Visit the building or follow the next event",
-          "body": "Use the full site for the tenant directory, maps, the mailing list, and current public-event details beyond this sample page.",
+          "body": "Explore the tenant directory, maps, mailing list, and current public-event details before your next visit.",
           "primaryCta": {
             "label": "View the About Page",
             "href": "https://78thstreetstudios.com/about"

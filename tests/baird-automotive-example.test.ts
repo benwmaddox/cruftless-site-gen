@@ -46,7 +46,7 @@ describe("Baird Automotive example", () => {
       expect(homeHtml).toContain("Established Arlington auto repair with long local roots");
       expect(homeHtml).toContain('data-js="navigation-bar"');
       expect(homeHtml).toContain("Our Story");
-      expect(homeHtml).toContain("sunroof owners to clear drain tubes every fall");
+      expect(homeHtml).toContain("Clear sunroof drain tubes every fall");
       expect(homeHtml).toContain("https://www.bairdautomotive.com/images/content/baird_auto.jpg");
       expect(homeHtml).toContain("Book service or plan your visit");
       expect(homeHtml).toContain("Baird Automotive shop details");
