@@ -8,6 +8,8 @@ describe("FeatureGridSchema", () => {
     const parsed = FeatureGridSchema.parse({
       type: "feature-grid",
       title: "Why it works",
+      lead: "Use one flexible brochure section instead of separate list and link variants.",
+      columns: "2",
       items: [
         {
           title: "Strict validation",
@@ -32,7 +34,8 @@ describe("FeatureGridSchema", () => {
     const html = renderFeatureGrid(parsed);
 
     expect(html).toContain('<section class="c-feature-grid">');
-    expect(html).toContain('<ul class="c-feature-grid__items">');
+    expect(html).toContain('<p class="c-feature-grid__lead">');
+    expect(html).toContain('<ul class="c-feature-grid__items c-feature-grid__items--cols-2">');
     expect(html).toContain('c-feature-grid__item--has-image');
     expect(html).toContain('c-feature-grid__item--stacked-image');
     expect(html).toContain('<figure class="c-feature-grid__item-media">');
@@ -43,6 +46,34 @@ describe("FeatureGridSchema", () => {
     expect(html).toContain('class="c-feature-grid__item-cta c-button c-button--secondary"');
     expect(html).toContain('href="/examples"');
     expect(html).toContain("See examples");
+  });
+
+  it("renders compact items without a body", () => {
+    const parsed = FeatureGridSchema.parse({
+      type: "feature-grid",
+      title: "Theme navigation sample",
+      columns: "3",
+      items: [
+        {
+          title: "Corporate",
+          selected: true,
+        },
+        {
+          title: "Workshop",
+          cta: {
+            label: "Open Workshop",
+            href: "/examples/workshop/",
+          },
+        },
+      ],
+    });
+
+    const html = renderFeatureGrid(parsed);
+
+    expect(html).toContain("c-feature-grid__item--compact");
+    expect(html).not.toContain('<p class="c-feature-grid__item-body">');
+    expect(html).toContain("Current selection");
+    expect(html).toContain("Open Workshop");
   });
 
   it("rejects nested unknown fields", () => {

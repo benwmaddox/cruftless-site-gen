@@ -52,7 +52,7 @@ describe("collectCopyValidationIssues", () => {
     expect(collectCopyValidationIssues(invalidSite)).toEqual([
       {
         path: ["pages", 0, "components", 0, "paragraphs", 0],
-        message: "public copy contains meta wording about the live site",
+        message: "copy must be public-facing publish-ready content, not meta wording about the live site",
       },
     ]);
   });
@@ -76,11 +76,11 @@ describe("collectCopyValidationIssues", () => {
     expect(collectCopyValidationIssues(invalidSite)).toEqual([
       {
         path: ["site", "name"],
-        message: "public copy contains meta wording about the demo",
+        message: "copy must be public-facing publish-ready content, not meta wording about the demo",
       },
       {
         path: ["pages", 0, "title"],
-        message: "public copy contains meta wording about the rebuild",
+        message: "copy must be public-facing publish-ready content, not meta wording about the rebuild",
       },
     ]);
   });

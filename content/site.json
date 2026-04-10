@@ -30,9 +30,9 @@
         {
           "type": "prose",
           "title": "Shared site header",
-          "lead": "One layout can wrap every page.",
+          "lead": "A consistent brand message can carry across every page.",
           "paragraphs": [
-            "This shared block is declared once at the site level instead of being copied into every page."
+            "Start each page with the same clear promise, navigation, and brand voice."
           ]
         },
         {
@@ -42,10 +42,9 @@
           "type": "prose",
           "title": "Shared site footer",
           "paragraphs": [
-            "The page-content slot keeps page-specific sections in the middle while shared content stays centralized."
+            "Keep page-specific sections focused while the broader brand message stays consistent from top to bottom."
           ]
         }
-        
       ]
     }
   },
@@ -72,8 +71,9 @@
           "align": "start"
         },
         {
-          "type": "feature-list",
+          "type": "feature-grid",
           "title": "Keep the content contract tight",
+          "columns": "1",
           "items": [
             {
               "title": "Model every block explicitly",

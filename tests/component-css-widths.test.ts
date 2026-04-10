@@ -18,15 +18,14 @@ describe("component width tokens", () => {
       "cta-band",
       "faq",
       "feature-grid",
-      "feature-list",
       "gallery",
       "hero",
-      "horizontal-split",
       "hours",
       "image-text",
       "logo-strip",
       "navigation-bar",
       "prose",
+      "store-location-hours",
       "testimonials",
     ];
 
@@ -38,10 +37,13 @@ describe("component width tokens", () => {
     }
   });
 
-  it("caps feature grid layouts at three columns before wrapping", async () => {
+  it("supports explicit feature grid column counts before wrapping", async () => {
     const css = await readComponentCss("feature-grid");
 
-    expect(css).toContain("grid-template-columns: repeat(3, minmax(0, 1fr));");
+    expect(css).toContain(".c-feature-grid__items--cols-1");
+    expect(css).toContain(".c-feature-grid__items--cols-2");
+    expect(css).toContain(".c-feature-grid__items--cols-3");
+    expect(css).toContain(".c-feature-grid__items--cols-4");
     expect(css).toContain("@media (width <= 60rem)");
     expect(css).toContain("grid-template-columns: repeat(2, minmax(0, 1fr));");
     expect(css).toContain("@media (width <= 40rem)");

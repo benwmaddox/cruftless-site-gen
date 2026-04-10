@@ -67,28 +67,35 @@
           "align": "start"
         },
         {
-          "type": "link-list",
+          "type": "feature-grid",
           "title": "Theme navigation sample",
           "lead": "This compact control confirms route pickers stay readable in the active theme.",
-          "links": [
+          "columns": "3",
+          "items": [
             {
-              "label": "Corporate",
-              "href": "/examples/corporate/",
-              "current": true
+              "title": "Corporate",
+              "selected": true
             },
             {
-              "label": "Workshop",
-              "href": "/examples/workshop/"
+              "title": "Workshop",
+              "cta": {
+                "label": "Open Workshop",
+                "href": "/examples/workshop/"
+              }
             },
             {
-              "label": "Friendly Modern",
-              "href": "/examples/friendly-modern/"
+              "title": "Friendly Modern",
+              "cta": {
+                "label": "Open Friendly Modern",
+                "href": "/examples/friendly-modern/"
+              }
             }
           ]
         },
         {
-          "type": "feature-list",
+          "type": "feature-grid",
           "title": "What this preview is for",
+          "columns": "1",
           "items": [
             {
               "title": "Fast visual QA",
@@ -190,7 +197,7 @@
         {
           "type": "before-after",
           "title": "Before and after comparisons stay explicit",
-          "lead": "Use a dedicated compare block when the redesign needs to show a concrete visual improvement.",
+          "lead": "Use a dedicated compare block when a side-by-side update needs to show a concrete visual improvement.",
           "before": {
             "label": "Before",
             "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201600%201000%22%3E%3Crect%20width%3D%221600%22%20height%3D%221000%22%20fill%3D%22%23f8fafc%22%2F%3E%3Crect%20x%3D%22128%22%20y%3D%22100%22%20width%3D%221344%22%20height%3D%22800%22%20rx%3D%2228%22%20fill%3D%22%23ffffff%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%2218%22%2F%3E%3Crect%20x%3D%22256%22%20y%3D%22200%22%20width%3D%22352%22%20height%3D%22460%22%20rx%3D%2222%22%20fill%3D%22%23cbd5e1%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22240%22%20width%3D%22480%22%20height%3D%2280%22%20rx%3D%2218%22%20fill%3D%22%2364748b%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22400%22%20width%3D%22544%22%20height%3D%2250%22%20rx%3D%2212%22%20fill%3D%22%2394a3b8%22%2F%3E%3Crect%20x%3D%22704%22%20y%3D%22510%22%20width%3D%22384%22%20height%3D%2290%22%20rx%3D%2218%22%20fill%3D%22%23cbd5e1%22%2F%3E%3Ctext%20x%3D%22256%22%20y%3D%22840%22%20fill%3D%22%2364748b%22%20font-family%3D%22Arial%2C%20sans-serif%22%20font-size%3D%2280%22%20font-weight%3D%22700%22%3EBefore%3C%2Ftext%3E%3C%2Fsvg%3E",
@@ -226,7 +233,7 @@
               }
             },
             {
-              "quote": "The before and after story gave people an instant reason to trust the redesign direction.",
+              "quote": "The before and after story gave people an instant reason to trust the updated direction.",
               "name": "Marisol Vega",
               "role": "Creative Director",
               "company": "Vega Design Build",
@@ -307,11 +314,95 @@
           }
         },
         {
+          "type": "contact",
+          "title": "Sample contact details",
+          "address": "123 Hudson Street\nNew York, NY 10013",
+          "phone": "(212) 555-0199",
+          "email": "hello@example.com"
+        },
+        {
+          "type": "hours",
+          "title": "Sample hours block",
+          "entries": [
+            {
+              "day": "Monday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Tuesday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Wednesday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Thursday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Friday",
+              "open": "8:30 AM",
+              "close": "5:00 PM"
+            },
+            {
+              "day": "Saturday",
+              "open": "10:00 AM",
+              "close": "2:00 PM"
+            }
+          ]
+        },
+        {
           "type": "google-maps",
           "embedUrl": "https://www.google.com/maps?q=New+York+NY&output=embed&z=13",
           "title": "Shared sample map",
           "caption": "The map component stays in the preview so iframe framing and spacing are visible in every theme.",
           "size": "wide"
+        },
+        {
+          "type": "store-location-hours",
+          "title": "Sample location and hours block",
+          "embedUrl": "https://www.google.com/maps?q=New+York+NY&output=embed&z=13",
+          "mapTitle": "Sample storefront map",
+          "address": "123 Hudson Street\nNew York, NY 10013",
+          "phone": "(212) 555-0199",
+          "email": "hello@example.com",
+          "hours": [
+            {
+              "day": "Monday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Tuesday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Wednesday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Thursday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Friday",
+              "open": "8:30 AM",
+              "close": "5:00 PM"
+            },
+            {
+              "day": "Saturday",
+              "open": "10:00 AM",
+              "close": "2:00 PM"
+            }
+          ]
         },
         {
           "type": "media",

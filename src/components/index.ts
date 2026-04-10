@@ -24,11 +24,6 @@ import { CtaBandSchema } from "./cta-band/cta-band.schema.js";
 import { ctaBandClassNames, renderCtaBand } from "./cta-band/cta-band.render.js";
 import { FaqSchema } from "./faq/faq.schema.js";
 import { faqClassNames, renderFaq } from "./faq/faq.render.js";
-import { FeatureListSchema } from "./feature-list/feature-list.schema.js";
-import {
-  featureListClassNames,
-  renderFeatureList,
-} from "./feature-list/feature-list.render.js";
 import {
   FeatureGridSchema,
 } from "./feature-grid/feature-grid.schema.js";
@@ -48,21 +43,11 @@ import { HeroSchema, HeroSchemaBase } from "./hero/hero.schema.js";
 import { heroClassNames, renderHero } from "./hero/hero.render.js";
 import { HoursSchema } from "./hours/hours.schema.js";
 import { hoursClassNames, renderHours } from "./hours/hours.render.js";
-import {
-  createHorizontalSplitSchema,
-  type HorizontalSplitData,
-} from "./horizontal-split/horizontal-split.schema.js";
-import {
-  horizontalSplitClassNames,
-  renderHorizontalSplit,
-} from "./horizontal-split/horizontal-split.render.js";
 import { ImageTextSchema } from "./image-text/image-text.schema.js";
 import {
   imageTextClassNames,
   renderImageText,
 } from "./image-text/image-text.render.js";
-import { LinkListSchema } from "./link-list/link-list.schema.js";
-import { linkListClassNames, renderLinkList } from "./link-list/link-list.render.js";
 import { LogoStripSchema } from "./logo-strip/logo-strip.schema.js";
 import {
   logoStripClassNames,
@@ -89,14 +74,16 @@ import {
   defaultComponentRenderContext,
   type ComponentRenderContext,
 } from "./render-context.js";
+import { StoreLocationHoursSchema } from "./store-location-hours/store-location-hours.schema.js";
+import {
+  renderStoreLocationHours,
+  storeLocationHoursClassNames,
+} from "./store-location-hours/store-location-hours.render.js";
 import { TestimonialsSchema } from "./testimonials/testimonials.schema.js";
 import {
   renderTestimonials,
   testimonialsClassNames,
 } from "./testimonials/testimonials.render.js";
-
-const NestedComponentSchema: z.ZodTypeAny = z.lazy(() => ComponentSchema);
-const HorizontalSplitSchema = createHorizontalSplitSchema(NestedComponentSchema);
 
 export const ComponentSchemaBase = z.discriminatedUnion("type", [
   BeforeAfterSchema,
@@ -105,18 +92,16 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
   CtaBandSchema,
   FaqSchema,
   FeatureGridSchema,
-  FeatureListSchema,
   GallerySchema,
   GoogleMapsSchema,
   HeroSchemaBase,
-  HorizontalSplitSchema,
   HoursSchema,
   ImageTextSchema,
-  LinkListSchema,
   MediaSchemaBase,
   LogoStripSchema,
   NavigationBarSchemaBase,
   ProseSchema,
+  StoreLocationHoursSchema,
   TestimonialsSchema,
 ]);
 
@@ -211,12 +196,6 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: featureGridClassNames,
   },
   {
-    type: "feature-list",
-    render: (data) => renderFeatureList(FeatureListSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./feature-list/feature-list.css", import.meta.url)),
-    classNames: featureListClassNames,
-  },
-  {
     type: "gallery",
     render: (data, renderContext) => renderGallery(GallerySchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./gallery/gallery.css", import.meta.url)),
@@ -236,19 +215,6 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     classNames: heroClassNames,
   },
   {
-    type: "horizontal-split",
-    render: (data, renderContext) =>
-      renderHorizontalSplit(
-        HorizontalSplitSchema.parse(data) as HorizontalSplitData<ComponentData>,
-        (component) =>
-        renderComponent(component, renderContext),
-      ),
-    cssPath: fileURLToPath(
-      new URL("./horizontal-split/horizontal-split.css", import.meta.url),
-    ),
-    classNames: horizontalSplitClassNames,
-  },
-  {
     type: "hours",
     render: (data) => renderHours(HoursSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./hours/hours.css", import.meta.url)),
@@ -259,12 +225,6 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     render: (data, renderContext) => renderImageText(ImageTextSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./image-text/image-text.css", import.meta.url)),
     classNames: imageTextClassNames,
-  },
-  {
-    type: "link-list",
-    render: (data) => renderLinkList(LinkListSchema.parse(data)),
-    cssPath: fileURLToPath(new URL("./link-list/link-list.css", import.meta.url)),
-    classNames: linkListClassNames,
   },
   {
     type: "logo-strip",
@@ -291,6 +251,14 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     render: (data) => renderProse(ProseSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./prose/prose.css", import.meta.url)),
     classNames: proseClassNames,
+  },
+  {
+    type: "store-location-hours",
+    render: (data) => renderStoreLocationHours(StoreLocationHoursSchema.parse(data)),
+    cssPath: fileURLToPath(
+      new URL("./store-location-hours/store-location-hours.css", import.meta.url),
+    ),
+    classNames: storeLocationHoursClassNames,
   },
   {
     type: "testimonials",
@@ -322,25 +290,16 @@ export const renderComponent = (
       return renderFaq(data);
     case "feature-grid":
       return renderFeatureGrid(data, renderContext);
-    case "feature-list":
-      return renderFeatureList(data);
     case "gallery":
       return renderGallery(data, renderContext);
     case "google-maps":
       return renderGoogleMaps(data);
     case "hero":
       return renderHero(data);
-    case "horizontal-split":
-      return renderHorizontalSplit(
-        data as HorizontalSplitData<ComponentData>,
-        (component) => renderComponent(component, renderContext),
-      );
     case "hours":
       return renderHours(data);
     case "image-text":
       return renderImageText(data, renderContext);
-    case "link-list":
-      return renderLinkList(data);
     case "logo-strip":
       return renderLogoStrip(data, renderContext);
     case "media":
@@ -349,6 +308,8 @@ export const renderComponent = (
       return renderNavigationBar(data, renderContext);
     case "prose":
       return renderProse(data);
+    case "store-location-hours":
+      return renderStoreLocationHours(data);
     case "testimonials":
       return renderTestimonials(data, renderContext);
     default: {

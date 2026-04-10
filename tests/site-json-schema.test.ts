@@ -186,18 +186,21 @@ describe("site JSON schema", async () => {
     const componentShellSnippet = componentSnippetSchemas
       .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
       .find((snippet) => snippet.label === "Component shell");
-    const horizontalSplitSnippet = componentSnippetSchemas
-      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
-      .find((snippet) => snippet.label === "Horizontal Split");
     const hoursSnippet = componentSnippetSchemas
       .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
       .find((snippet) => snippet.label === "Hours");
+    const storeLocationHoursSnippet = componentSnippetSchemas
+      .flatMap((schema) => schema.defaultSnippets as JsonSchemaObject[])
+      .find((snippet) => snippet.label === "Store Location Hours");
 
     expect(snippetLabels).toContain("Component shell");
     expect(snippetLabels).toContain("Contact");
     expect(snippetLabels).toContain("Hero");
-    expect(snippetLabels).toContain("Horizontal Split");
     expect(snippetLabels).toContain("Hours");
+    expect(snippetLabels).toContain("Store Location Hours");
+    expect(snippetLabels).not.toContain("Horizontal Split");
+    expect(snippetLabels).not.toContain("Feature List");
+    expect(snippetLabels).not.toContain("Link List");
     expect(componentShellSnippet?.body).toEqual({
       type: "$1",
     });
@@ -213,15 +216,6 @@ describe("site JSON schema", async () => {
         href: "$4",
       },
     });
-    expect(horizontalSplitSnippet?.body).toEqual({
-      type: "horizontal-split",
-      first: {
-        type: "$2",
-      },
-      second: {
-        type: "$3",
-      },
-    });
     expect(hoursSnippet?.body).toEqual({
       type: "hours",
       entries: [
@@ -229,6 +223,19 @@ describe("site JSON schema", async () => {
           day: "${2|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
           open: "$3",
           close: "$4",
+        },
+      ],
+    });
+    expect(storeLocationHoursSnippet?.body).toEqual({
+      type: "store-location-hours",
+      embedUrl: "$2",
+      mapTitle: "$3",
+      address: "$4",
+      hours: [
+        {
+          day: "${5|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
+          open: "$6",
+          close: "$7",
         },
       ],
     });

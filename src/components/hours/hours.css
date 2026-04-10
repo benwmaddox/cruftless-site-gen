@@ -31,11 +31,6 @@
   border-block-end: var(--border-width-1) solid var(--color-border);
 }
 
-.c-hours__table tbody tr:last-child .c-hours__day,
-.c-hours__table tbody tr:last-child .c-hours__value {
-  border-block-end: none;
-}
-
 .c-hours__day {
   width: 42%;
   text-align: left;
@@ -48,6 +43,11 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.c-hours__table tbody tr:last-child .c-hours__day,
+.c-hours__table tbody tr:last-child .c-hours__value {
+  border-block-end: none;
 }
 
 .c-hours__range {
