@@ -41,7 +41,7 @@
         {
           "type": "cta-band",
           "headline": "Book service or plan your visit",
-          "body": "The live site keeps practical next steps close on every page: call the shop, review services, or get directions to the Arlington location.",
+          "body": "The site keeps practical next steps close on every page: call the shop, review services, or get directions to the Arlington location.",
           "primaryCta": {
             "label": "Call (703) 527-1770",
             "href": "tel:7035271770"
@@ -147,14 +147,14 @@
             },
             {
               "title": "Car care tip",
-              "body": "The live site advises sunroof owners to clear drain tubes every fall so clogged tracks do not send water into expensive electrical modules."
+              "body": "The site advises sunroof owners to clear drain tubes every fall so clogged tracks do not send water into expensive electrical modules."
             }
           ]
         },
         {
           "type": "cta-band",
           "headline": "Recommended local automotive contacts",
-          "body": "The live site repeatedly promotes a small set of nearby service partners and transportation options.",
+          "body": "The site repeatedly promotes a small set of nearby service partners and transportation options.",
           "primaryCta": {
             "label": "Call Al's Towing",
             "href": "tel:7037901156"
@@ -226,7 +226,7 @@
           "title": "How the shop tells its story",
           "lead": "Baird Automotive says it opened on August 3, 1992 and kept growing because loyal customers stayed with the shop as vehicle technology changed.",
           "paragraphs": [
-            "The live page says the business has adapted as automotive technologies evolved while keeping the same customer dedication it had on day one.",
+            "The page says the business has adapted as automotive technologies evolved while keeping the same customer dedication it had on day one.",
             "The shop highlights repeated recognition from Washington Consumers' CHECKBOOK Magazine in 1997, 2001, 2005, 2008, 2011, 2013, and 2015, with double check marks for price and quality and strong Northern Virginia scores.",
             "The page also notes several Washingtonian Magazine appearances, most recently in May 2012, plus Angie's List Super Service Awards for 2008, 2009, and 2010.",
             "A separate sidebar repeats Joey Baird's philosophy about treating people the way he would want to be treated and educating customers so future repair costs stay lower."
@@ -255,8 +255,9 @@
           ]
         },
         {
-          "type": "feature-list",
-          "title": "Quick profile details preserved from the page",
+          "type": "feature-grid",
+          "title": "Quick profile details",
+          "columns": "1",
           "items": [
             {
               "title": "Shop opening date",
@@ -268,7 +269,7 @@
             },
             {
               "title": "Joey outside the shop",
-              "body": "The live site also describes Joey as an Arlington native, avid triathlete, and off-road adventure racer."
+              "body": "The site also describes Joey as an Arlington native, avid triathlete, and off-road adventure racer."
             }
           ]
         },
@@ -289,7 +290,7 @@
         {
           "type": "cta-band",
           "headline": "Need service after reading the shop history?",
-          "body": "The live site keeps steering visitors back toward practical next steps: services, appointments, and direct contact.",
+          "body": "The site keeps steering visitors back toward practical next steps: services, appointments, and direct contact.",
           "primaryCta": {
             "label": "Review Services",
             "href": "/baird-automotive/services"
@@ -328,7 +329,7 @@
           "title": "What the services page promises",
           "lead": "The page describes Baird Automotive as a full-service shop qualified for scheduled maintenance and repairs on most domestic, Asian, and European vehicles.",
           "paragraphs": [
-            "The live site emphasizes technicians who specialize in performance issues, including check engine lights and electrical diagnostics, while presenting the team as ready to help with whatever a driver needs.",
+            "The site emphasizes technicians who specialize in performance issues, including check engine lights and electrical diagnostics, while presenting the team as ready to help with whatever a driver needs.",
             "The service pitch is split into three ideas: newer diagnostic technology, traditional service with customer education, and pride in getting the job done right the first time."
           ]
         },
@@ -372,8 +373,9 @@
           "size": "content"
         },
         {
-          "type": "feature-list",
+          "type": "feature-grid",
           "title": "Routine maintenance and diagnostic work",
+          "columns": "1",
           "items": [
             {
               "title": "Scheduled maintenance",
@@ -394,8 +396,9 @@
           ]
         },
         {
-          "type": "feature-list",
+          "type": "feature-grid",
           "title": "Drivetrain, tire, and customer amenities",
+          "columns": "1",
           "items": [
             {
               "title": "Drivetrain services",
@@ -422,7 +425,7 @@
           "type": "media",
           "src": "https://www.bairdautomotive.com/images/content/emissions.jpg",
           "alt": "Virginia emissions certified repair facility logo shown on the Services page",
-          "caption": "The live site also shows Virginia emissions certification branding.",
+          "caption": "The page also shows Virginia emissions certification branding.",
           "size": "content"
         },
         {
@@ -467,7 +470,7 @@
           "title": "How the page describes local involvement",
           "lead": "Baird Automotive says it gives back to the community that helped the shop become successful, with a focus on Arlington-area schools, youth programs, and events.",
           "paragraphs": [
-            "The live page specifically highlights support for Arlington's Little League Rookie Team, the Cardinals, and says the shop also backs annual Arlington events that help local businesses while bringing neighbors together.",
+            "The page highlights support for Arlington's Little League Rookie Team, the Cardinals, and says the shop also backs annual Arlington events that help local businesses while bringing neighbors together.",
             "It also presents Baird Automotive as an enthusiastic sponsor of EX2 Adventures, Team Z, and Potomac River Running for customers interested in racing, exercise, and outdoor events."
           ]
         },
@@ -479,8 +482,9 @@
           "size": "content"
         },
         {
-          "type": "feature-list",
+          "type": "feature-grid",
           "title": "Community groups and programs named on the page",
+          "columns": "1",
           "items": [
             {
               "title": "Events and sponsorships",
@@ -503,7 +507,7 @@
         {
           "type": "cta-band",
           "headline": "Events and sponsorship links from the original page",
-          "body": "These outbound links are part of the live site's community roundup.",
+          "body": "These outbound links are part of the community roundup.",
           "primaryCta": {
             "label": "Fight For the Cure",
             "href": "http://triteamz.com/blog/2013/01/18/kate-morse-i-tri-to-beat-ms/"
@@ -516,7 +520,7 @@
         {
           "type": "cta-band",
           "headline": "More endurance and running partners",
-          "body": "The live page also points to these Arlington-area activity groups.",
+          "body": "The page also points to these Arlington-area activity groups.",
           "primaryCta": {
             "label": "Tri Team Z",
             "href": "http://www.triteamz.com/"
@@ -580,7 +584,7 @@
         },
         {
           "type": "cta-band",
-          "headline": "Clarendon area links preserved from the source site",
+          "headline": "Clarendon area links",
           "body": "The original HTML includes one Clarendon commuter link and a separate Mardi Gras Parade link that was malformed in source markup.",
           "primaryCta": {
             "label": "Clarendon Commuterpage",
@@ -639,17 +643,17 @@
         },
         {
           "type": "prose",
-          "title": "Location notes preserved from the contact page",
+          "title": "Location notes",
           "lead": "The original contact page is simple: it gives the address, hours, phone number, email, and a Google Maps embed for the Arlington location.",
           "paragraphs": [
-            "The live site states that Baird Automotive is located in Arlington within walking distance of the Virginia Square and Clarendon Metro Stations.",
+            "The site states that Baird Automotive is located in Arlington within walking distance of the Virginia Square and Clarendon Metro Stations.",
             "A large embedded Google Map appears below the contact details, followed by a separate View Larger Map link that opens the same location in Google Maps."
           ]
         },
         {
           "type": "cta-band",
           "headline": "Call or map your route now",
-          "body": "The source page emphasizes direct contact and map access over any form workflow.",
+          "body": "The contact page emphasizes direct contact and map access over any form workflow.",
           "primaryCta": {
             "label": "Call the Shop",
             "href": "tel:7035271770"

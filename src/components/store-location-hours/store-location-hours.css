@@ -1,0 +1,144 @@
+.c-store-location-hours {
+  padding-block: var(--space-7);
+}
+
+.c-store-location-hours__inner {
+  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  margin-inline: auto;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.c-store-location-hours__title {
+  margin: 0;
+  font-size: var(--font-size-4);
+  line-height: var(--line-height-heading);
+}
+
+.c-store-location-hours__grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (width >= 64rem) {
+  .c-store-location-hours__grid {
+    grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+  }
+}
+
+.c-store-location-hours__panel {
+  min-width: 0;
+  padding: var(--space-4);
+  border: var(--border-width-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-background);
+  box-shadow: var(--shadow-sm);
+}
+
+.c-store-location-hours__panel-title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-heading);
+}
+
+.c-store-location-hours__map-frame {
+  border-radius: var(--radius-lg);
+  border: var(--border-width-1) solid var(--color-border);
+  background: var(--color-surface-alt);
+  overflow: hidden;
+}
+
+.c-store-location-hours__map {
+  display: block;
+  width: 100%;
+  min-height: 20rem;
+  aspect-ratio: 16 / 10;
+  border: 0;
+}
+
+.c-store-location-hours__contact-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.c-store-location-hours__contact-row {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.c-store-location-hours__contact-label {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--button-letter-spacing);
+}
+
+.c-store-location-hours__contact-value {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: var(--line-height-loose);
+}
+
+.c-store-location-hours__address {
+  font-style: normal;
+}
+
+.c-store-location-hours__hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.c-store-location-hours__hours-day,
+.c-store-location-hours__hours-value {
+  padding-block: var(--space-2);
+  border-block-end: var(--border-width-1) solid var(--color-border);
+}
+
+.c-store-location-hours__hours-day {
+  width: 52%;
+  padding-inline-end: var(--space-3);
+  text-align: left;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-0);
+  font-weight: var(--font-weight-semibold);
+}
+
+.c-store-location-hours__hours-value {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.c-store-location-hours__hours-table tbody tr:last-child .c-store-location-hours__hours-day,
+.c-store-location-hours__hours-table tbody tr:last-child .c-store-location-hours__hours-value {
+  border-block-end: none;
+}
+
+.c-store-location-hours__hours-range {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.c-store-location-hours__hours-separator {
+  color: var(--color-text-muted);
+}
+
+@media (width <= 40rem) {
+  .c-store-location-hours__panel {
+    padding: var(--space-3);
+  }
+
+  .c-store-location-hours__hours-day,
+  .c-store-location-hours__hours-value {
+    display: block;
+    width: auto;
+    text-align: left;
+  }
+
+  .c-store-location-hours__hours-value {
+    padding-block-start: 0;
+  }
+}

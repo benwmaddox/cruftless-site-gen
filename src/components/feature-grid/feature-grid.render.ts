@@ -9,10 +9,16 @@ export const featureGridClassNames = [
   "c-feature-grid",
   "c-feature-grid__inner",
   "c-feature-grid__title",
+  "c-feature-grid__lead",
   "c-feature-grid__items",
+  "c-feature-grid__items--cols-1",
+  "c-feature-grid__items--cols-2",
+  "c-feature-grid__items--cols-3",
+  "c-feature-grid__items--cols-4",
   "c-feature-grid__item",
   "c-feature-grid__item--has-image",
   "c-feature-grid__item--stacked-image",
+  "c-feature-grid__item--compact",
   "c-feature-grid__item--selected",
   "c-feature-grid__item-media",
   "c-feature-grid__item-image",
@@ -28,10 +34,15 @@ export const renderFeatureGrid = (
   data: FeatureGridData,
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string => {
+  const itemsClasses = [
+    "c-feature-grid__items",
+    `c-feature-grid__items--cols-${data.columns}`,
+  ];
   const itemsHtml = data.items
     .map(
       (item) => {
         const itemClasses = ["c-feature-grid__item"];
+        const isCompact = !item.image && !item.body;
 
         if (item.image) {
           itemClasses.push("c-feature-grid__item--has-image");
@@ -43,6 +54,10 @@ export const renderFeatureGrid = (
 
         if (item.selected) {
           itemClasses.push("c-feature-grid__item--selected");
+        }
+
+        if (isCompact) {
+          itemClasses.push("c-feature-grid__item--compact");
         }
 
         const resolvedImage = item.image
@@ -72,7 +87,9 @@ export const renderFeatureGrid = (
             : "",
           '        <div class="c-feature-grid__item-copy">',
           `          <h3 class="c-feature-grid__item-title">${escapeHtml(item.title)}</h3>`,
-          `          <p class="c-feature-grid__item-body">${escapeHtml(item.body)}</p>`,
+          item.body
+            ? `          <p class="c-feature-grid__item-body">${escapeHtml(item.body)}</p>`
+            : "",
           item.selected
             ? '          <p class="c-feature-grid__item-status" aria-current="page">Current selection</p>'
             : "",
@@ -92,10 +109,13 @@ export const renderFeatureGrid = (
     '<section class="c-feature-grid">',
     '  <div class="c-feature-grid__inner">',
     `    <h2 class="c-feature-grid__title">${escapeHtml(data.title)}</h2>`,
-    '    <ul class="c-feature-grid__items">',
+    data.lead ? `    <p class="c-feature-grid__lead">${escapeHtml(data.lead)}</p>` : "",
+    `    <ul class="${itemsClasses.join(" ")}">`,
     itemsHtml,
     "    </ul>",
     "  </div>",
     "</section>",
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 };

@@ -64,7 +64,6 @@ export const wellnessCalmTheme = createThemeDefinition(
 
     .c-prose__inner,
     .c-before-after__inner,
-    .c-feature-list__inner,
     .c-faq__inner,
     .c-testimonials__inner {
       gap: var(--space-5);

@@ -53,20 +53,21 @@ If `site.googleAnalyticsMeasurementId` is present, every generated page includes
 The current component set is:
 
 - `before-after`
+- `contact`
 - `contact-form`
 - `cta-band`
 - `faq`
-- `hero`
 - `feature-grid`
-- `feature-list`
 - `gallery`
 - `google-maps`
+- `hero`
+- `hours`
 - `image-text`
-- `link-list`
 - `logo-strip`
 - `media`
 - `navigation-bar`
 - `prose`
+- `store-location-hours`
 - `testimonials`
 
 ### Available themes
@@ -104,7 +105,14 @@ This is the rough shape of a site file:
       "slug": "/",
       "title": "LaunchKit",
       "components": [
-        { "type": "hero", "headline": "Announce your app" }
+        {
+          "type": "hero",
+          "headline": "Announce your app",
+          "primaryCta": {
+            "label": "Get started",
+            "href": "/contact"
+          }
+        }
       ]
     }
   ]

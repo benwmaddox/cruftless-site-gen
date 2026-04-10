@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const isGoogleMapsUrl = (value: string): boolean => {
+export const isGoogleMapsUrl = (value: string): boolean => {
   try {
     const url = new URL(value);
 

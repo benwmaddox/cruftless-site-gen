@@ -45,7 +45,6 @@
             "The page-content slot keeps page-specific sections in the middle while shared content stays centralized."
           ]
         }
-        
       ]
     }
   },
@@ -72,8 +71,9 @@
           "align": "start"
         },
         {
-          "type": "feature-list",
+          "type": "feature-grid",
           "title": "Keep the content contract tight",
+          "columns": "1",
           "items": [
             {
               "title": "Model every block explicitly",

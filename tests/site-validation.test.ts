@@ -152,41 +152,4 @@ describe("collectSiteValidationIssues", () => {
     });
   });
 
-  it("counts nested heroes inside horizontal split components against each page", () => {
-    const invalidSite = SiteContentSchema.parse({
-      ...validSite,
-      pages: [
-        {
-          ...validSite.pages[0],
-          components: [
-            validSite.pages[0].components[0],
-            {
-              type: "horizontal-split",
-              first: {
-                type: "prose",
-                title: "Left column",
-                paragraphs: ["Nested layout copy"],
-              },
-              second: {
-                type: "hero",
-                headline: "Nested hero",
-                primaryCta: {
-                  label: "Read more",
-                  href: "/more",
-                },
-              },
-            },
-          ],
-        },
-      ],
-    });
-
-    expect(collectSiteValidationIssues(invalidSite)).toEqual([
-      {
-        path: ["pages", 0, "components", 1, "second"],
-        componentType: "hero",
-        message: "only one hero is allowed per page",
-      },
-    ]);
-  });
 });

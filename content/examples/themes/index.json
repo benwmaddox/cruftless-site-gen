@@ -9,12 +9,23 @@
           "type": "navigation-bar",
           "brandText": "Theme Previews",
           "links": [
-            { "label": "Home", "href": "/" },
-            { "label": "Pricing", "href": "/pricing" },
-            { "label": "Preview Index", "href": "/examples/" }
+            {
+              "label": "Home",
+              "href": "/"
+            },
+            {
+              "label": "Pricing",
+              "href": "/pricing"
+            },
+            {
+              "label": "Preview Index",
+              "href": "/examples/"
+            }
           ]
         },
-        { "type": "page-content" }
+        {
+          "type": "page-content"
+        }
       ]
     }
   },
@@ -30,8 +41,14 @@
           "type": "hero",
           "headline": "Compare the shared theme previews",
           "subheadline": "Each preview uses the same component coverage with a different theme, so visual regressions stand out quickly.",
-          "primaryCta": { "label": "Browse corporate", "href": "/examples/corporate/" },
-          "secondaryCta": { "label": "Back to pricing", "href": "/pricing" },
+          "primaryCta": {
+            "label": "Browse corporate",
+            "href": "/examples/corporate/"
+          },
+          "secondaryCta": {
+            "label": "Back to pricing",
+            "href": "/pricing"
+          },
           "align": "start"
         },
         {
@@ -48,7 +65,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/corporate/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/corporate/"
+              }
             },
             {
               "title": "Brutalism",
@@ -60,7 +80,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/brutalism/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/brutalism/"
+              }
             },
             {
               "title": "Workshop",
@@ -72,7 +95,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/workshop/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/workshop/"
+              }
             },
             {
               "title": "Refined Professional",
@@ -84,7 +110,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/refined-professional/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/refined-professional/"
+              }
             }
           ]
         },
@@ -102,7 +131,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/friendly-modern/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/friendly-modern/"
+              }
             },
             {
               "title": "Heritage Local",
@@ -114,7 +146,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/heritage-local/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/heritage-local/"
+              }
             },
             {
               "title": "Wellness Calm",
@@ -126,7 +161,10 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/wellness-calm/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/wellness-calm/"
+              }
             },
             {
               "title": "High-Vis Service",
@@ -138,7 +176,51 @@
                 "width": 390,
                 "height": 700
               },
-              "cta": { "label": "Open preview", "href": "/examples/high-vis-service/" }
+              "cta": {
+                "label": "Open preview",
+                "href": "/examples/high-vis-service/"
+              }
+            }
+          ]
+        },
+        {
+          "type": "store-location-hours",
+          "title": "Sample location and hours block",
+          "embedUrl": "https://www.google.com/maps?q=New+York+NY&output=embed&z=13",
+          "mapTitle": "Sample storefront map",
+          "address": "123 Hudson Street\nNew York, NY 10013",
+          "phone": "(212) 555-0199",
+          "email": "hello@example.com",
+          "hours": [
+            {
+              "day": "Monday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Tuesday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Wednesday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Thursday",
+              "open": "8:30 AM",
+              "close": "6:00 PM"
+            },
+            {
+              "day": "Friday",
+              "open": "8:30 AM",
+              "close": "5:00 PM"
+            },
+            {
+              "day": "Saturday",
+              "open": "10:00 AM",
+              "close": "2:00 PM"
             }
           ]
         }

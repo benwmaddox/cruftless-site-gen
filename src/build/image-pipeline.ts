@@ -257,10 +257,6 @@ const collectImageUsages = (
         addUsage([...pathSegments, "before"], component.before.src, "before-after-panel");
         addUsage([...pathSegments, "after"], component.after.src, "before-after-panel");
         return;
-      case "horizontal-split":
-        visitComponent(component.first, [...pathSegments, "first"]);
-        visitComponent(component.second, [...pathSegments, "second"]);
-        return;
       case "feature-grid":
         component.items.forEach((item, itemIndex) => {
           if (!item.image) {

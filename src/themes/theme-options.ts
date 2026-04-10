@@ -243,7 +243,6 @@ const sectionInnerSelectors = `
     .c-logo-strip__inner,
     .c-prose__inner,
     .c-feature-grid__inner,
-    .c-feature-list__inner,
     .c-faq__inner,
     .c-testimonials__inner
 `;
@@ -251,7 +250,6 @@ const sectionInnerSelectors = `
 const cardSelectors = `
     .c-before-after__item,
     .c-feature-grid__item,
-    .c-feature-list__item,
     .c-faq__item,
     .c-logo-strip__link,
     .c-testimonials__item

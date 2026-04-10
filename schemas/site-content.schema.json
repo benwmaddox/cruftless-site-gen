@@ -765,6 +765,21 @@
                                 "minLength": 1,
                                 "maxLength": 120
                               },
+                              "lead": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "columns": {
+                                "type": "string",
+                                "enum": [
+                                  "1",
+                                  "2",
+                                  "3",
+                                  "4"
+                                ],
+                                "default": "3"
+                              },
                               "items": {
                                 "type": "array",
                                 "items": {
@@ -772,11 +787,13 @@
                                   "properties": {
                                     "title": {
                                       "type": "string",
-                                      "minLength": 1
+                                      "minLength": 1,
+                                      "maxLength": 120
                                     },
                                     "body": {
                                       "type": "string",
-                                      "minLength": 1
+                                      "minLength": 1,
+                                      "maxLength": 320
                                     },
                                     "image": {
                                       "type": "object",
@@ -818,58 +835,12 @@
                                     }
                                   },
                                   "required": [
-                                    "title",
-                                    "body"
+                                    "title"
                                   ],
                                   "additionalProperties": false
                                 },
                                 "minItems": 1,
                                 "maxItems": 99
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "title",
-                              "items"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "const": "feature-list"
-                              },
-                              "title": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "items": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "title": {
-                                      "type": "string",
-                                      "minLength": 1,
-                                      "maxLength": 80
-                                    },
-                                    "body": {
-                                      "type": "string",
-                                      "minLength": 1,
-                                      "maxLength": 240
-                                    }
-                                  },
-                                  "required": [
-                                    "title",
-                                    "body"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "minItems": 1,
-                                "maxItems": 90
                               }
                             },
                             "required": [
@@ -1014,32 +985,6 @@
                             "properties": {
                               "type": {
                                 "type": "string",
-                                "const": "horizontal-split"
-                              },
-                              "title": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "first": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0"
-                              },
-                              "second": {
-                                "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/10/properties/first"
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "first",
-                              "second"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
                                 "const": "hours"
                               },
                               "title": {
@@ -1143,55 +1088,6 @@
                               "title",
                               "paragraphs",
                               "image"
-                            ],
-                            "additionalProperties": false
-                          },
-                          {
-                            "type": "object",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "const": "link-list"
-                              },
-                              "title": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 120
-                              },
-                              "lead": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 280
-                              },
-                              "links": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "label": {
-                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta/properties/label"
-                                    },
-                                    "href": {
-                                      "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/3/properties/primaryCta/properties/href"
-                                    },
-                                    "current": {
-                                      "type": "boolean"
-                                    }
-                                  },
-                                  "required": [
-                                    "label",
-                                    "href"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "minItems": 1,
-                                "maxItems": 8
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "title",
-                              "links"
                             ],
                             "additionalProperties": false
                           },
@@ -1392,6 +1288,61 @@
                             "properties": {
                               "type": {
                                 "type": "string",
+                                "const": "store-location-hours"
+                              },
+                              "title": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "embedUrl": {
+                                "type": "string",
+                                "format": "uri",
+                                "maxLength": 2048
+                              },
+                              "mapTitle": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 120
+                              },
+                              "address": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 280
+                              },
+                              "phone": {
+                                "type": "string",
+                                "minLength": 7,
+                                "maxLength": 40
+                              },
+                              "email": {
+                                "type": "string",
+                                "format": "email",
+                                "maxLength": 254
+                              },
+                              "hours": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/components/items/anyOf/0/anyOf/9/properties/entries/items"
+                                },
+                                "minItems": 1,
+                                "maxItems": 16
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "embedUrl",
+                              "mapTitle",
+                              "address",
+                              "hours"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
                                 "const": "testimonials"
                               },
                               "title": {
@@ -1462,18 +1413,16 @@
                               "cta-band",
                               "faq",
                               "feature-grid",
-                              "feature-list",
                               "gallery",
                               "google-maps",
                               "hero",
-                              "horizontal-split",
                               "hours",
                               "image-text",
-                              "link-list",
                               "media",
                               "logo-strip",
                               "navigation-bar",
                               "prose",
+                              "store-location-hours",
                               "testimonials"
                             ],
                             "description": "Component type. This selects which properties are valid for the object."
@@ -1560,22 +1509,7 @@
                               "title": "$2",
                               "items": [
                                 {
-                                  "title": "$3",
-                                  "body": "$4"
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            "label": "Feature List",
-                            "description": "Insert a feature-list component with required fields.",
-                            "body": {
-                              "type": "feature-list",
-                              "title": "$2",
-                              "items": [
-                                {
-                                  "title": "$3",
-                                  "body": "$4"
+                                  "title": "$3"
                                 }
                               ]
                             }
@@ -1616,19 +1550,6 @@
                             }
                           },
                           {
-                            "label": "Horizontal Split",
-                            "description": "Insert a horizontal-split component with required fields.",
-                            "body": {
-                              "type": "horizontal-split",
-                              "first": {
-                                "type": "$2"
-                              },
-                              "second": {
-                                "type": "$3"
-                              }
-                            }
-                          },
-                          {
                             "label": "Hours",
                             "description": "Insert a hours component with required fields.",
                             "body": {
@@ -1655,20 +1576,6 @@
                                 "src": "$4",
                                 "alt": "$5"
                               }
-                            }
-                          },
-                          {
-                            "label": "Link List",
-                            "description": "Insert a link-list component with required fields.",
-                            "body": {
-                              "type": "link-list",
-                              "title": "$2",
-                              "links": [
-                                {
-                                  "label": "$3",
-                                  "href": "$4"
-                                }
-                              ]
                             }
                           },
                           {
@@ -1717,6 +1624,23 @@
                             }
                           },
                           {
+                            "label": "Store Location Hours",
+                            "description": "Insert a store-location-hours component with required fields.",
+                            "body": {
+                              "type": "store-location-hours",
+                              "embedUrl": "$2",
+                              "mapTitle": "$3",
+                              "address": "$4",
+                              "hours": [
+                                {
+                                  "day": "${5|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
+                                  "open": "$6",
+                                  "close": "$7"
+                                }
+                              ]
+                            }
+                          },
+                          {
                             "label": "Testimonials",
                             "description": "Insert a testimonials component with required fields.",
                             "body": {
@@ -1757,18 +1681,16 @@
                           "cta-band",
                           "faq",
                           "feature-grid",
-                          "feature-list",
                           "gallery",
                           "google-maps",
                           "hero",
-                          "horizontal-split",
                           "hours",
                           "image-text",
-                          "link-list",
                           "media",
                           "logo-strip",
                           "navigation-bar",
                           "prose",
+                          "store-location-hours",
                           "testimonials",
                           "page-content"
                         ],
@@ -1856,22 +1778,7 @@
                           "title": "$2",
                           "items": [
                             {
-                              "title": "$3",
-                              "body": "$4"
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "label": "Feature List",
-                        "description": "Insert a feature-list component with required fields.",
-                        "body": {
-                          "type": "feature-list",
-                          "title": "$2",
-                          "items": [
-                            {
-                              "title": "$3",
-                              "body": "$4"
+                              "title": "$3"
                             }
                           ]
                         }
@@ -1912,19 +1819,6 @@
                         }
                       },
                       {
-                        "label": "Horizontal Split",
-                        "description": "Insert a horizontal-split component with required fields.",
-                        "body": {
-                          "type": "horizontal-split",
-                          "first": {
-                            "type": "$2"
-                          },
-                          "second": {
-                            "type": "$3"
-                          }
-                        }
-                      },
-                      {
                         "label": "Hours",
                         "description": "Insert a hours component with required fields.",
                         "body": {
@@ -1951,20 +1845,6 @@
                             "src": "$4",
                             "alt": "$5"
                           }
-                        }
-                      },
-                      {
-                        "label": "Link List",
-                        "description": "Insert a link-list component with required fields.",
-                        "body": {
-                          "type": "link-list",
-                          "title": "$2",
-                          "links": [
-                            {
-                              "label": "$3",
-                              "href": "$4"
-                            }
-                          ]
                         }
                       },
                       {
@@ -2009,6 +1889,23 @@
                           "type": "prose",
                           "paragraphs": [
                             "$2"
+                          ]
+                        }
+                      },
+                      {
+                        "label": "Store Location Hours",
+                        "description": "Insert a store-location-hours component with required fields.",
+                        "body": {
+                          "type": "store-location-hours",
+                          "embedUrl": "$2",
+                          "mapTitle": "$3",
+                          "address": "$4",
+                          "hours": [
+                            {
+                              "day": "${5|Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,Holiday,Holidays,Emergency Service|}",
+                              "open": "$6",
+                              "close": "$7"
+                            }
                           ]
                         }
                       },
