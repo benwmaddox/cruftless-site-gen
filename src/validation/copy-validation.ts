@@ -6,38 +6,41 @@ interface CopyLintRule {
   message: string;
 }
 
+const publicFacingCopyMessage = (detail: string): string =>
+  `copy must be public-facing publish-ready content, not ${detail}`;
+
 const bannedCopyRules: readonly CopyLintRule[] = [
   {
     pattern: /\bwhat the live site\b/i,
-    message: "public copy contains meta wording about the live site",
+    message: publicFacingCopyMessage("meta wording about the live site"),
   },
   {
     pattern: /\bsource site\b/i,
-    message: "public copy contains meta wording about the source site",
+    message: publicFacingCopyMessage("meta wording about the source site"),
   },
   {
     pattern: /\blive site\b/i,
-    message: "public copy contains meta wording about the live site",
+    message: publicFacingCopyMessage("meta wording about the live site"),
   },
   {
     pattern: /\bwhat this demo\b/i,
-    message: "public copy contains meta wording about the demo",
+    message: publicFacingCopyMessage("meta wording about the demo"),
   },
   {
     pattern: /\bthis demo\b/i,
-    message: "public copy contains meta wording about the demo",
+    message: publicFacingCopyMessage("meta wording about the demo"),
   },
   {
     pattern: /\bpreserved from\b/i,
-    message: "public copy contains migration commentary instead of publish-ready wording",
+    message: publicFacingCopyMessage("migration commentary"),
   },
   {
     pattern: /\bthe redesign\b/i,
-    message: "public copy contains meta wording about the redesign",
+    message: publicFacingCopyMessage("meta wording about the redesign"),
   },
   {
     pattern: /\bthe rebuild\b/i,
-    message: "public copy contains meta wording about the rebuild",
+    message: publicFacingCopyMessage("meta wording about the rebuild"),
   },
 ];
 
