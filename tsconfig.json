@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["ES2022"],
+    "allowJs": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -13,6 +14,13 @@
     "verbatimModuleSyntax": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "vitest.config.ts"]
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.d.ts",
+    "scripts/**/*.mjs",
+    "deploy/worker/src/**/*.mjs",
+    "vitest.config.ts"
+  ]
 }
 

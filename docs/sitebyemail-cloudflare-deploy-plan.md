@@ -291,6 +291,39 @@ Optional later version:
 }
 ```
 
+## Local Test Path
+
+What can be tested inside this repo before touching Cloudflare:
+
+- `npm run test:deploy`
+- `npm run deploy:publish -- --config tests/fixtures/deploy-smoke/sites.json --dry-run`
+- `npm run deploy:backup -- --config tests/fixtures/deploy-smoke/sites.json --dry-run`
+- `npm run deploy:sites -- --config tests/fixtures/deploy-smoke/sites.json --dry-run`
+
+What those cover:
+
+- deploy config validation
+- slug and bucket-key generation
+- Worker path resolution
+- dry-run site discovery, publish planning, and backup planning
+
+## Manual Cloudflare Steps
+
+These still require a real Cloudflare account and real site folders:
+
+1. Copy `deploy/sites.example.json` to `deploy/sites.json` and replace the sample paths and slugs.
+2. Copy `deploy/.env.example` to `deploy/.env` and fill in the R2 credentials and bucket names.
+3. Create the `sitebyemail-live` and `sitebyemail-backups` R2 buckets, or edit the names to match your own.
+4. Create an R2 access key pair with permission to read and write those buckets.
+5. Authenticate Wrangler with Cloudflare.
+6. Confirm the `sitebyemail.com` zone is on Cloudflare.
+7. Create the wildcard DNS record for `*.sitebyemail.com`.
+8. Review `deploy/worker/wrangler.jsonc` and change the bucket name, zone, or domain suffix if needed.
+9. Run `npm run deploy:publish -- --config deploy/sites.json`.
+10. Run `npm run deploy:backup -- --config deploy/sites.json`.
+11. Run `npm run deploy:worker`.
+12. Visit a live site such as `https://<slug>.sitebyemail.com/`.
+
 ## Risks And Decisions
 
 ### Decisions still needed

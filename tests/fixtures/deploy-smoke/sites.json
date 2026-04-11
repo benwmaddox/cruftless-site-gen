@@ -1,0 +1,10 @@
+{
+  "sites": [
+    {
+      "slug": "alpha-site",
+      "sitePath": "./site-alpha",
+      "publishDir": "dist",
+      "enabled": true
+    }
+  ]
+}

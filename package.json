@@ -25,12 +25,21 @@
     "lint:css": "stylelint \"src/**/*.css\"",
     "lint:ts": "tsc --noEmit",
     "test": "vitest run",
+    "test:deploy": "vitest run tests/deploy-lib.test.ts tests/deploy-scripts.test.ts tests/worker-routing.test.ts",
     "test:browser": "tsx tests/navigation-bar.browser.ts && tsx tests/example-previews.browser.ts && tsx tests/image-rich-components.browser.ts && tsx tests/full-height.browser.ts",
     "validate:dist-links": "node scripts/validate-dist-links.mjs",
+    "deploy:sites": "node scripts/deploy-all.mjs",
+    "deploy:publish": "node scripts/publish-sites.mjs",
+    "deploy:backup": "node scripts/backup-sites.mjs",
+    "deploy:worker": "wrangler deploy --config deploy/worker/wrangler.jsonc",
+    "deploy:worker:dev": "wrangler dev --config deploy/worker/wrangler.jsonc",
     "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples && npm run validate:dist-links",
     "check": "npm run validate:strict"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1029.0",
+    "archiver": "^7.0.1",
+    "mime-types": "^3.0.2",
     "sharp": "^0.34.4",
     "zod": "^3.23.8"
   },
@@ -47,6 +56,7 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^3.0.5",
+    "wrangler": "^4.81.1",
     "zod-to-json-schema": "^3.25.2"
   }
 }

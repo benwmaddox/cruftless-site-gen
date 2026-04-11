@@ -1,0 +1,23 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "sitebyemail-router",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-04-10",
+  "routes": [
+    {
+      "pattern": "*.sitebyemail.com/*",
+      "zone_name": "sitebyemail.com"
+    }
+  ],
+  "vars": {
+    "DOMAIN_SUFFIX": "sitebyemail.com",
+    "LIVE_PREFIX": "live"
+  },
+  "r2_buckets": [
+    {
+      "binding": "LIVE_BUCKET",
+      "bucket_name": "sitebyemail-live",
+      "preview_bucket_name": "sitebyemail-live"
+    }
+  ]
+}
