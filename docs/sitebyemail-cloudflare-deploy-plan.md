@@ -37,6 +37,7 @@ AWS is still viable, but it adds more moving parts:
 - Cloudflare zone for `sitebyemail.com`
 - wildcard DNS record for `*.sitebyemail.com`
 - one Worker bound to route `*.sitebyemail.com/*`
+- an existing more specific Worker route for `www.sitebyemail.com/*`
 - one private R2 bucket for live published files
 - one private R2 bucket for backups
 - one API token for scripted upload/deploy work
@@ -79,6 +80,9 @@ backups/
 
 The Worker should derive the slug from the request hostname.
 
+This assumes `www.sitebyemail.com/*` stays on its existing Worker route.
+Cloudflare route specificity means the explicit `www.sitebyemail.com/*` route wins over `*.sitebyemail.com/*`, so the brochure-site router only handles the wildcard subdomains that are not `www`.
+
 Examples:
 
 - `alpha-site.sitebyemail.com/` -> `live/alpha-site/index.html`
@@ -92,6 +96,17 @@ Suggested resolution order:
 3. path with `.html`
 4. site-level `404.html` if present
 5. generic `404` response
+
+### Existing `www` site
+
+Because `www.sitebyemail.com` already uses its own Worker setup, keep that route in place.
+
+Recommended route shape:
+
+- `www.sitebyemail.com/*` -> existing main-site Worker
+- `*.sitebyemail.com/*` -> brochure-site router Worker
+
+Do not move `www` onto this router Worker.
 
 ## Site Discovery
 
@@ -317,12 +332,13 @@ These still require a real Cloudflare account and real site folders:
 4. Create an R2 access key pair with permission to read and write those buckets.
 5. Authenticate Wrangler with Cloudflare.
 6. Confirm the `sitebyemail.com` zone is on Cloudflare.
-7. Create the wildcard DNS record for `*.sitebyemail.com`.
-8. Review `deploy/worker/wrangler.jsonc` and change the bucket name, zone, or domain suffix if needed.
-9. Run `npm run deploy:publish -- --config deploy/sites.json`.
-10. Run `npm run deploy:backup -- --config deploy/sites.json`.
-11. Run `npm run deploy:worker`.
-12. Visit a live site such as `https://<slug>.sitebyemail.com/`.
+7. Confirm the existing `www.sitebyemail.com/*` route remains attached to the current main-site Worker.
+8. Create the wildcard DNS record for `*.sitebyemail.com`.
+9. Review `deploy/worker/wrangler.jsonc` and change the bucket name, zone, or domain suffix if needed.
+10. Run `npm run deploy:publish -- --config deploy/sites.json`.
+11. Run `npm run deploy:backup -- --config deploy/sites.json`.
+12. Run `npm run deploy:worker`.
+13. Visit a live site such as `https://<slug>.sitebyemail.com/`.
 
 ## Risks And Decisions
 

@@ -4,6 +4,8 @@
   "main": "src/index.mjs",
   "compatibility_date": "2026-04-10",
   "routes": [
+    // Keep a more specific `www.sitebyemail.com/*` route on the existing main-site Worker.
+    // Cloudflare route specificity means that explicit `www` route will win over this wildcard.
     {
       "pattern": "*.sitebyemail.com/*",
       "zone_name": "sitebyemail.com"
