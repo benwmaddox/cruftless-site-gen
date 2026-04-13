@@ -9,6 +9,7 @@ export const componentImageUsageNames = [
   "gallery-thumb-3",
   "gallery-thumb-4",
   "image-text",
+  "page-background",
   "media-content",
   "media-wide",
   "navbar-brand",

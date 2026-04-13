@@ -24,6 +24,7 @@ import { resolveThemeDefinition } from "../themes/theme-options.js";
 import { validateComponentRegistry } from "../validation/component-registry-validation.js";
 import {
   collectImageValidationIssues,
+  type PreparedImagePipeline,
   prepareImagePipeline,
 } from "./image-pipeline.js";
 import {
@@ -311,9 +312,21 @@ const resolveSiteThemeDefinition = (site: SiteData) =>
     cssVariables: site.cssVariables,
   });
 
-const renderSiteCss = async (siteContent: SiteContentData): Promise<string> => {
-  const site = rewriteLocalContentAssetsForSiteCss(siteContent.site);
-  const resolvedTheme = resolveSiteThemeDefinition(site);
+const renderSiteCss = async (
+  siteContent: SiteContentData,
+  imagePipeline?: PreparedImagePipeline,
+): Promise<string> => {
+  const site = imagePipeline ? siteContent.site : rewriteLocalContentAssetsForSiteCss(siteContent.site);
+  const pageBackgroundImageUrl =
+    (siteContent.site.pageBackgroundImageUrl && imagePipeline
+      ? imagePipeline.resolveStylesheetImageHref(siteContent.site.pageBackgroundImageUrl)
+      : undefined) ??
+    site.pageBackgroundImageUrl;
+  const siteForTheme = {
+    ...site,
+    pageBackgroundImageUrl,
+  };
+  const resolvedTheme = resolveSiteThemeDefinition(siteForTheme);
   const usedComponentTypes = collectUsedComponentTypes(siteContent);
   const componentCssChunks = await Promise.all(
     componentDefinitions
@@ -328,7 +341,7 @@ const renderSiteCss = async (siteContent: SiteContentData): Promise<string> => {
 
   return [
     "/* site */",
-    emitSiteCss(site).trim(),
+    emitSiteCss(siteForTheme).trim(),
     "/* theme */",
     emitThemeCss(resolvedTheme),
     "/* base */",
@@ -431,38 +444,6 @@ const resolveContentRootRelativeAssetPath = (assetPath: string): string | undefi
 const isLocalContentAssetPath = (assetPath: string): boolean =>
   resolveContentRootRelativeAssetPath(assetPath) !== undefined;
 
-const findContentRootFromContentPath = (contentPath: string): string => {
-  const contentPathSegments = path.resolve(contentPath).split(path.sep);
-  const contentDirIndex = contentPathSegments.lastIndexOf(contentDirectoryName);
-
-  if (contentDirIndex < 0) {
-    return path.dirname(path.resolve(contentPath));
-  }
-
-  return (
-    contentPathSegments.slice(0, contentDirIndex + 1).join(path.sep) ||
-    path.parse(contentPath).root
-  );
-};
-
-const resolveLocalContentAsset = (
-  assetPath: string,
-  contentPath: string,
-): { outputRelativePath: string; sourcePath: string } | undefined => {
-  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
-
-  if (!normalizedAssetPath) {
-    return undefined;
-  }
-
-  const contentRoot = findContentRootFromContentPath(contentPath);
-
-  return {
-    outputRelativePath: normalizedAssetPath,
-    sourcePath: path.join(contentRoot, ...normalizedAssetPath.split("/")),
-  };
-};
-
 const localContentAssetPathToCssHref = (assetPath: string): string => {
   const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
 
@@ -525,31 +506,6 @@ const writeFileIfChanged = async (
   return "updated";
 };
 
-const copyFileIfChanged = async (
-  sourcePath: string,
-  destinationPath: string,
-): Promise<"created" | "updated" | "unchanged"> => {
-  const sourceContents = await readFile(sourcePath);
-
-  try {
-    const existingContents = await readFile(destinationPath);
-
-    if (existingContents.equals(sourceContents)) {
-      return "unchanged";
-    }
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-      throw error;
-    }
-
-    await writeFile(destinationPath, sourceContents);
-    return "created";
-  }
-
-  await writeFile(destinationPath, sourceContents);
-  return "updated";
-};
-
 const removeEmptyDirectories = async (directoryPath: string, rootDir: string): Promise<void> => {
   const entries = await readdir(directoryPath, { withFileTypes: true });
 
@@ -597,13 +553,12 @@ export const buildSite = async (
 ): Promise<BuildResult> => {
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
-  const css = await renderSiteCss(siteContent);
-  const js = renderSiteJs(siteContent);
-  const expectedFiles = new Set<string>();
   const imagePipeline = options.contentPath
     ? await prepareImagePipeline(siteContent, options.contentPath, outDir)
     : undefined;
-  const contentPath = options.contentPath;
+  const css = await renderSiteCss(siteContent, imagePipeline);
+  const js = renderSiteJs(siteContent);
+  const expectedFiles = new Set<string>();
   let filesCreated = 0;
   let filesUpdated = 0;
   let filesUnchanged = 0;
@@ -652,17 +607,6 @@ export const buildSite = async (
     await mkdir(path.dirname(outputPath), { recursive: true });
     expectedFiles.add(outputPath);
     recordWriteResult(await writeFileIfChanged(outputPath, documentHtml));
-  }
-
-  if (contentPath) {
-    const pageBackgroundImage = resolveLocalContentAsset(siteContent.site.pageBackgroundImageUrl ?? "", contentPath);
-
-    if (pageBackgroundImage) {
-      const outputPath = path.join(outDir, ...pageBackgroundImage.outputRelativePath.split("/"));
-      await mkdir(path.dirname(outputPath), { recursive: true });
-      expectedFiles.add(outputPath);
-      recordWriteResult(await copyFileIfChanged(pageBackgroundImage.sourcePath, outputPath));
-    }
   }
 
   const filesRemoved = await removeStaleGeneratedFiles(outDir, expectedFiles);

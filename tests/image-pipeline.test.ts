@@ -203,4 +203,51 @@ describe("image pipeline", () => {
     }
   });
 
+  it("collects local page background dependencies for watch mode", async () => {
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-image-pipeline-background-"));
+    const contentDir = path.join(rootDir, "content");
+    const imageDir = path.join(contentDir, "images");
+    const imagePath = path.join(imageDir, "background.png");
+    const contentPath = path.join(contentDir, "site.json");
+
+    try {
+      await mkdir(imageDir, { recursive: true });
+      await createLocalImage(imagePath, 1800, 1200);
+
+      const siteContent = SiteContentSchema.parse({
+        site: {
+          name: "Local Image Studio",
+          baseUrl: "https://local-image-studio.example",
+          theme: "friendly-modern",
+          pageBackgroundImageUrl: "/content/images/background.png",
+        },
+        pages: [
+          {
+            slug: "/",
+            title: "Home",
+            components: [
+              {
+                type: "hero",
+                headline: "Welcome",
+                primaryCta: {
+                  label: "Start",
+                  href: "/start",
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      await writeFile(contentPath, JSON.stringify(siteContent, null, 2));
+
+      const loadedSite = await loadValidatedSite(contentPath);
+      const watchablePaths = collectWatchableLocalImagePaths(loadedSite, contentPath);
+
+      expect(watchablePaths).toEqual([imagePath]);
+    } finally {
+      await removeDirectory(rootDir);
+    }
+  });
+
 });

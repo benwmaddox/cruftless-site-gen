@@ -25,6 +25,7 @@ const usageOutputWidths: Record<ComponentImageUsage, number> = {
   "gallery-thumb-3": 560,
   "gallery-thumb-4": 420,
   "image-text": 1200,
+  "page-background": 2400,
   "media-content": 1280,
   "media-wide": 1600,
   "navbar-brand": 320,
@@ -109,10 +110,13 @@ const resolveLocalImageSource = (
   contentPath: string,
 ): LocalImageSource | undefined => {
   const normalizedHref = assetHref.replaceAll("\\", "/");
+  const normalizedContentHref = normalizedHref.startsWith("/content/")
+    ? normalizedHref.slice(1)
+    : normalizedHref;
 
   if (
     isRemoteAssetHref(assetHref) ||
-    path.isAbsolute(assetHref) ||
+    (path.isAbsolute(assetHref) && !normalizedContentHref.startsWith("content/")) ||
     normalizedHref.startsWith("assets/")
   ) {
     return undefined;
@@ -120,8 +124,8 @@ const resolveLocalImageSource = (
 
   const projectRoot = findProjectRootFromContentPath(contentPath);
   const contentDirectory = path.dirname(contentPath);
-  const candidatePath = normalizedHref.startsWith("content/")
-    ? path.resolve(projectRoot, ...normalizedHref.split("/"))
+  const candidatePath = normalizedContentHref.startsWith("content/")
+    ? path.resolve(projectRoot, ...normalizedContentHref.split("/"))
     : path.resolve(contentDirectory, assetHref);
   const projectRelativePath = normalizeProjectRelativePath(candidatePath, projectRoot);
 
@@ -300,6 +304,10 @@ const collectImageUsages = (
     }
   };
 
+  if (siteContent.site.pageBackgroundImageUrl) {
+    addUsage(["site", "pageBackgroundImageUrl"], siteContent.site.pageBackgroundImageUrl, "page-background");
+  }
+
   siteContent.site.layout?.components.forEach((component, componentIndex) => {
     if (component.type === "page-content") {
       return;
@@ -317,7 +325,11 @@ const collectImageUsages = (
   return usages;
 };
 
-const resolveOutputExtension = (extension: string): string => {
+const resolveOutputExtension = (extension: string, usage: ComponentImageUsage): string => {
+  if (usage === "page-background") {
+    return ".avif";
+  }
+
   if (extension === ".jpeg") {
     return ".jpg";
   }
@@ -339,7 +351,7 @@ const createOutputRelativePath = (
     .update(String(usageOutputWidths[usage]))
     .digest("hex")
     .slice(0, 12);
-  const fileName = `${path.basename(source.sourceProjectRelativePath, path.extname(source.sourceProjectRelativePath))}-${usage}-${fileHash}${resolveOutputExtension(extension)}`;
+  const fileName = `${path.basename(source.sourceProjectRelativePath, path.extname(source.sourceProjectRelativePath))}-${usage}-${fileHash}${resolveOutputExtension(extension, usage)}`;
 
   return path.posix.join("assets", "images", fileName);
 };
@@ -348,6 +360,9 @@ const createOutputHref = (pageSlug: string, outputRelativePath: string): string 
   const pagePath = pageSlug === "/" ? "/index.html" : path.posix.join(pageSlug, "index.html");
   return path.posix.relative(path.posix.dirname(pagePath), `/${outputRelativePath}`);
 };
+
+const createStylesheetHref = (outputRelativePath: string): string =>
+  path.posix.relative("/assets", `/${outputRelativePath}`);
 
 const resolveVariantDimensions = (
   sourceWidth: number | undefined,
@@ -396,13 +411,25 @@ const processLocalImageVariant = async (
     } else if (metadata.isRaster) {
       const targetWidth = usageOutputWidths[usage];
       const transformer = sharp(source.sourcePath).rotate();
-      const resized = await transformer
-        .resize({
-          fit: "inside",
-          width: targetWidth,
-          withoutEnlargement: true,
-        })
-        .toBuffer();
+      const resized = await (usage === "page-background"
+        ? transformer
+            .resize({
+              fit: "inside",
+              width: targetWidth,
+              withoutEnlargement: true,
+            })
+            .avif({
+              effort: 4,
+              quality: 62,
+            })
+            .toBuffer()
+        : transformer
+            .resize({
+              fit: "inside",
+              width: targetWidth,
+              withoutEnlargement: true,
+            })
+            .toBuffer());
       await writeBufferIfChanged(outputPath, resized);
     } else {
       await copyFile(source.sourcePath, outputPath);
@@ -507,6 +534,7 @@ export const collectImageValidationIssues = async (
 
 export interface PreparedImagePipeline {
   expectedFiles: Set<string>;
+  resolveStylesheetImageHref: (sourceHref: string) => string;
   renderContextForPage: (pageSlug: string) => ComponentRenderContext;
 }
 
@@ -559,6 +587,15 @@ export const prepareImagePipeline = async (
 
   return {
     expectedFiles,
+    resolveStylesheetImageHref: (sourceHref) => {
+      const preparedVariant = preparedVariants.get(`${sourceHref}::page-background`);
+
+      if (!preparedVariant) {
+        return sourceHref;
+      }
+
+      return createStylesheetHref(preparedVariant.href);
+    },
     renderContextForPage: (pageSlug) => ({
       resolveImage: (image, usage) => {
         const resolved = resolvePreparedVariant(image, usage);
