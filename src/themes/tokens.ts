@@ -19,6 +19,7 @@ const canonicalThemeTokens = {
   "--surface-background": "var(--color-surface)",
   "--hero-background": "var(--color-surface)",
   "--cta-background": "var(--color-surface)",
+  "--navbar-background": "transparent",
   "--font-family-body": "\"Avenir Next\", \"Helvetica Neue\", sans-serif",
   "--font-family-heading": "\"Avenir Next\", \"Helvetica Neue\", sans-serif",
   "--font-family-mono": "\"SFMono-Regular\", Consolas, monospace",
@@ -112,6 +113,7 @@ export const allowedThemeOverrideTokens = [
   "--surface-background",
   "--hero-background",
   "--cta-background",
+  "--navbar-background",
   "--button-secondary-text",
 ] as const satisfies readonly ThemeTokenName[];
 
