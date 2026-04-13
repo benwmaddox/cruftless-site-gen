@@ -58,6 +58,10 @@ const discoverPageImages = (args, inheritedOptions) => {
   runGeneratorEntryPoint("discover-page-images", args, inheritedOptions);
 };
 
+const lighthouseCi = (inheritedOptions) => {
+  runGeneratorEntryPoint("lighthouse-ci", [], inheritedOptions);
+};
+
 const localizeLandingImage = (args, inheritedOptions) => {
   runGeneratorEntryPoint("localize-landing-image", args, inheritedOptions);
 };
@@ -208,6 +212,12 @@ if (isDirectExecution) {
       process.exit(0);
     }
 
+    if (command === "lighthouse:ci") {
+      console.log(`Running Lighthouse CI with shared generator at ${generatorDir}.`);
+      lighthouseCi();
+      process.exit(0);
+    }
+
     if (command === "localize:landing-image") {
       console.log(`Localizing landing image with shared generator at ${generatorDir}.`);
       localizeLandingImage(commandArgs);
@@ -215,7 +225,7 @@ if (isDirectExecution) {
     }
 
     throw new Error(
-      "Usage: node scripts/shared-site-gen.mjs <validate|build:site|dev:prepare|discover:images|localize:landing-image>",
+      "Usage: node scripts/shared-site-gen.mjs <validate|build:site|dev:prepare|discover:images|lighthouse:ci|localize:landing-image>",
     );
   } catch (error) {
     if (error instanceof Error) {
