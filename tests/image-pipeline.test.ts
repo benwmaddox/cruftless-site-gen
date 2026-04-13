@@ -179,7 +179,7 @@ describe("image pipeline", () => {
       const mediaOutputMetadata = await sharp(mediaOutputPath).metadata();
 
       expect(mediaOutputStats.size).toBeLessThan(sourceStats.size);
-      expect(mediaOutputMetadata.width).toBe(1280);
+      expect(mediaOutputMetadata.width).toBe(1152);
       expect(homeHtml).toContain(`src="assets/images/${mediaOutputName}"`);
       expect(homeHtml).toContain(`data-gallery-full-src="assets/images/${fullOutputName}"`);
       expect(portfolioHtml).toContain(`src="../assets/images/${thumbOutputName}"`);
