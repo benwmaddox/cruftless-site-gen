@@ -9,6 +9,7 @@ import type {
   ComponentImageUsage,
   ComponentRenderContext,
   ResolvedImageData,
+  ResponsiveImageData,
 } from "../components/render-context.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
 
@@ -32,6 +33,11 @@ const usageOutputWidths: Record<ComponentImageUsage, number> = {
   "testimonial-avatar": 256,
 };
 
+const responsiveMediaOutputWidths: Record<"media-content" | "media-wide", number[]> = {
+  "media-content": [480, 640, 960, 1280],
+  "media-wide": [480, 640, 960, 1152],
+};
+
 const usageMinimumSourceWidths: Partial<Record<ComponentImageUsage, number>> = {
   "before-after-panel": 960,
   "feature-grid-inline": 640,
@@ -51,6 +57,12 @@ const galleryColumnUsage: Record<"2" | "3" | "4", ComponentImageUsage> = {
   "3": "gallery-thumb-3",
   "4": "gallery-thumb-4",
 };
+
+const createPreparedVariantKey = (
+  sourceHref: string,
+  usage: ComponentImageUsage,
+  targetWidth: number,
+): string => `${sourceHref}::${usage}::${targetWidth}`;
 
 interface LocalImageSource {
   sourcePath: string;
@@ -341,6 +353,7 @@ const createOutputRelativePath = (
   source: LocalImageSource,
   sourceMtimeMs: number,
   usage: ComponentImageUsage,
+  targetWidth: number,
   extension: string,
 ): string => {
   const fileHash = createHash("sha1")
@@ -348,10 +361,10 @@ const createOutputRelativePath = (
     .update(source.sourceProjectRelativePath)
     .update(String(sourceMtimeMs))
     .update(usage)
-    .update(String(usageOutputWidths[usage]))
+    .update(String(targetWidth))
     .digest("hex")
     .slice(0, 12);
-  const fileName = `${path.basename(source.sourceProjectRelativePath, path.extname(source.sourceProjectRelativePath))}-${usage}-${fileHash}${resolveOutputExtension(extension, usage)}`;
+  const fileName = `${path.basename(source.sourceProjectRelativePath, path.extname(source.sourceProjectRelativePath))}-${usage}-${targetWidth}-${fileHash}${resolveOutputExtension(extension, usage)}`;
 
   return path.posix.join("assets", "images", fileName);
 };
@@ -386,6 +399,7 @@ const processLocalImageVariant = async (
   source: LocalImageSource,
   metadata: ImageSourceMetadata,
   usage: ComponentImageUsage,
+  targetWidth: number,
   outDir: string,
 ): Promise<PreparedVariant> => {
   const sourceStats = await stat(source.sourcePath);
@@ -393,6 +407,7 @@ const processLocalImageVariant = async (
     source,
     sourceStats.mtimeMs,
     usage,
+    targetWidth,
     metadata.extension,
   );
   const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
@@ -409,7 +424,6 @@ const processLocalImageVariant = async (
     if (metadata.isSvg) {
       await copyFile(source.sourcePath, outputPath);
     } else if (metadata.isRaster) {
-      const targetWidth = usageOutputWidths[usage];
       const transformer = sharp(source.sourcePath).rotate();
       const resized = await (usage === "page-background"
         ? transformer
@@ -438,7 +452,7 @@ const processLocalImageVariant = async (
 
   const variantDimensions =
     metadata.isRaster
-      ? resolveVariantDimensions(metadata.width, metadata.height, usageOutputWidths[usage])
+      ? resolveVariantDimensions(metadata.width, metadata.height, targetWidth)
       : {
           height: metadata.height,
           width: metadata.width,
@@ -547,6 +561,14 @@ export const prepareImagePipeline = async (
   const expectedFiles = new Set<string>();
   const preparedVariants = new Map<string, PreparedVariant>();
 
+  const getUsageTargetWidths = (usage: ComponentImageUsage): number[] => {
+    if (usage === "media-content" || usage === "media-wide") {
+      return responsiveMediaOutputWidths[usage];
+    }
+
+    return [usageOutputWidths[usage]];
+  };
+
   for (const usageEntry of usages) {
     const localSource = resolveLocalImageSource(usageEntry.usage.sourceHref, contentPath);
 
@@ -555,20 +577,34 @@ export const prepareImagePipeline = async (
     }
 
     const metadata = await readLocalImageMetadata(localSource);
-    const variantKey = `${usageEntry.usage.sourceHref}::${usageEntry.usage.usage}`;
 
-    if (!preparedVariants.has(variantKey)) {
-      const variant = await processLocalImageVariant(localSource, metadata, usageEntry.usage.usage, outDir);
-      expectedFiles.add(variant.outputPath);
-      preparedVariants.set(variantKey, variant);
+    for (const targetWidth of getUsageTargetWidths(usageEntry.usage.usage)) {
+      const variantKey = createPreparedVariantKey(
+        usageEntry.usage.sourceHref,
+        usageEntry.usage.usage,
+        targetWidth,
+      );
+
+      if (!preparedVariants.has(variantKey)) {
+        const variant = await processLocalImageVariant(
+          localSource,
+          metadata,
+          usageEntry.usage.usage,
+          targetWidth,
+          outDir,
+        );
+        expectedFiles.add(variant.outputPath);
+        preparedVariants.set(variantKey, variant);
+      }
     }
   }
 
   const resolvePreparedVariant = (
     image: { height?: number; src: string; width?: number },
     usage: ComponentImageUsage,
+    targetWidth: number,
   ): ResolvedImageData => {
-    const preparedVariant = preparedVariants.get(`${image.src}::${usage}`);
+    const preparedVariant = preparedVariants.get(createPreparedVariantKey(image.src, usage, targetWidth));
 
     if (!preparedVariant) {
       return {
@@ -588,7 +624,9 @@ export const prepareImagePipeline = async (
   return {
     expectedFiles,
     resolveStylesheetImageHref: (sourceHref) => {
-      const preparedVariant = preparedVariants.get(`${sourceHref}::page-background`);
+      const preparedVariant = preparedVariants.get(
+        createPreparedVariantKey(sourceHref, "page-background", usageOutputWidths["page-background"]),
+      );
 
       if (!preparedVariant) {
         return sourceHref;
@@ -598,31 +636,74 @@ export const prepareImagePipeline = async (
     },
     renderContextForPage: (pageSlug) => ({
       resolveImage: (image, usage) => {
-        const resolved = resolvePreparedVariant(image, usage);
+        const usageTargetWidths = getUsageTargetWidths(usage);
+        const baseTargetWidth = usageTargetWidths[usageTargetWidths.length - 1];
+        const resolved = resolvePreparedVariant(image, usage, baseTargetWidth);
 
         return {
           ...resolved,
-          src: preparedVariants.has(`${image.src}::${usage}`)
+          src: preparedVariants.has(createPreparedVariantKey(image.src, usage, baseTargetWidth))
             ? createOutputHref(pageSlug, resolved.src)
             : resolved.src,
         };
       },
       resolveGalleryImage: (image, columns) => {
         const thumbnailUsage = galleryColumnUsage[columns];
-        const thumbnail = resolvePreparedVariant(image, thumbnailUsage);
-        const full = resolvePreparedVariant(image, "gallery-full");
+        const thumbnailWidth = usageOutputWidths[thumbnailUsage];
+        const fullWidth = usageOutputWidths["gallery-full"];
+        const thumbnail = resolvePreparedVariant(image, thumbnailUsage, thumbnailWidth);
+        const full = resolvePreparedVariant(image, "gallery-full", fullWidth);
 
         return {
-          src: preparedVariants.has(`${image.src}::${thumbnailUsage}`)
+          src: preparedVariants.has(createPreparedVariantKey(image.src, thumbnailUsage, thumbnailWidth))
             ? createOutputHref(pageSlug, thumbnail.src)
             : thumbnail.src,
           width: thumbnail.width,
           height: thumbnail.height,
-          fullSrc: preparedVariants.has(`${image.src}::gallery-full`)
+          fullSrc: preparedVariants.has(createPreparedVariantKey(image.src, "gallery-full", fullWidth))
             ? createOutputHref(pageSlug, full.src)
             : full.src,
           fullWidth: full.width,
           fullHeight: full.height,
+        };
+      },
+      resolveResponsiveImage: (image, usage) => {
+        const targetWidths = responsiveMediaOutputWidths[usage];
+
+        if (!targetWidths) {
+          return undefined;
+        }
+
+        const variants = targetWidths
+          .map((targetWidth) => {
+            const resolved = resolvePreparedVariant(image, usage, targetWidth);
+
+            return {
+              ...resolved,
+              src: preparedVariants.has(createPreparedVariantKey(image.src, usage, targetWidth))
+                ? createOutputHref(pageSlug, resolved.src)
+                : resolved.src,
+            };
+          })
+          .filter((variant) => variant.width !== undefined && variant.height !== undefined);
+
+        if (variants.length === 0) {
+          return undefined;
+        }
+
+        const srcset = variants.map((variant) => `${variant.src} ${variant.width}w`).join(", ");
+        const largest = variants[variants.length - 1];
+        const sizes =
+          usage === "media-content"
+            ? "(min-width: 1312px) 1280px, calc(100vw - 3rem)"
+            : "(min-width: 1184px) 1152px, calc(100vw - 3rem)";
+
+        return {
+          src: largest.src,
+          width: largest.width,
+          height: largest.height,
+          srcset,
+          sizes,
         };
       },
     }),

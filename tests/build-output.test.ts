@@ -325,6 +325,8 @@ describe("buildSite output writes", () => {
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
       expect(html).toContain(`src="assets/images/${optimizedPreviewName}"`);
+      expect(html).toContain("srcset=\"assets/images/local-preview-media-wide-480-");
+      expect(html).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
 
       await writeFile(
         contentPath,
@@ -410,7 +412,7 @@ describe("buildSite output writes", () => {
         name.startsWith("landing-page-media-wide-"),
       );
       const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
-        name.startsWith("landing-page-page-background-"),
+        name.startsWith("landing-page-page-background-2400-"),
       );
       const optimizedPreviewPath = path.join(optimizedPreviewDir, optimizedPreviewName ?? "");
 
@@ -423,6 +425,8 @@ describe("buildSite output writes", () => {
 
       expect((await stat(optimizedPreviewPath)).size).toBeLessThan(previewImageBytes.length);
       expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}"`);
+      expect(nestedHtml).toContain("srcset=\"../assets/images/landing-page-media-wide-480-");
+      expect(nestedHtml).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
       expect(css).toContain(`url("images/${optimizedPreviewName}")`);
       await expect(access(path.join(outDir, "images", "landing-page.png"))).rejects.toThrow();
     } finally {
