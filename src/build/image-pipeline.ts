@@ -27,14 +27,14 @@ const usageOutputWidths: Record<ComponentImageUsage, number> = {
   "gallery-thumb-4": 420,
   "image-text": 1200,
   "page-background": 2400,
-  "media-content": 1280,
+  "media-content": 1152,
   "media-wide": 1600,
   "navbar-brand": 320,
   "testimonial-avatar": 256,
 };
 
 const responsiveMediaOutputWidths: Record<"media-content" | "media-wide", number[]> = {
-  "media-content": [480, 640, 960, 1280],
+  "media-content": [480, 640, 960, 1152],
   "media-wide": [480, 640, 960, 1152],
 };
 
@@ -46,7 +46,7 @@ const usageMinimumSourceWidths: Partial<Record<ComponentImageUsage, number>> = {
   "gallery-thumb-3": 560,
   "gallery-thumb-4": 420,
   "image-text": 1200,
-  "media-content": 1280,
+  "media-content": 1152,
   "media-wide": 1600,
   "navbar-brand": 320,
   "testimonial-avatar": 256,
