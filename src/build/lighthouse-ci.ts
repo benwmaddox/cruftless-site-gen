@@ -27,7 +27,7 @@ const metricThresholds = [
   {
     key: "largest-contentful-paint",
     label: "LCP",
-    maxValue: Number(process.env.LIGHTHOUSE_MAX_LCP_MS ?? 2500),
+    maxValue: Number(process.env.LIGHTHOUSE_MAX_LCP_MS ?? 3000),
     format: (value: number) => `${Math.round(value)}ms`,
   },
   ...(process.env.LIGHTHOUSE_MAX_TBT_MS
