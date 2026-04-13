@@ -9,6 +9,7 @@ export const componentImageUsageNames = [
   "gallery-thumb-3",
   "gallery-thumb-4",
   "image-text",
+  "page-background",
   "media-content",
   "media-wide",
   "navbar-brand",
@@ -26,6 +27,11 @@ export interface ResolvedImageData {
   fullHeight?: number;
 }
 
+export interface ResponsiveImageData extends ResolvedImageData {
+  sizes?: string;
+  srcset?: string;
+}
+
 export interface ComponentRenderContext {
   resolveImage: (
     image: Pick<ImageReferenceData, "src" | "width" | "height">,
@@ -35,6 +41,10 @@ export interface ComponentRenderContext {
     image: Pick<ImageReferenceData, "src" | "width" | "height">,
     columns: "2" | "3" | "4",
   ) => ResolvedImageData;
+  resolveResponsiveImage?: (
+    image: Pick<ImageReferenceData, "src" | "width" | "height">,
+    usage: "media-content" | "media-wide",
+  ) => ResponsiveImageData | undefined;
 }
 
 export const defaultComponentRenderContext: ComponentRenderContext = {

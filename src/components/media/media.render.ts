@@ -21,6 +21,10 @@ export const renderMedia = (
     data,
     data.size === "content" ? "media-content" : "media-wide",
   );
+  const responsiveImage = renderContext.resolveResponsiveImage?.(
+    data,
+    data.size === "content" ? "media-content" : "media-wide",
+  );
   const altText = data.alt ?? "";
   const hasExplicitDimensions = data.width !== undefined || data.height !== undefined;
   const intrinsicDimensions =
@@ -35,10 +39,14 @@ export const renderMedia = (
   ].filter(Boolean);
   const styleAttribute =
     inlineSizeStyles.length > 0 ? ` style="${inlineSizeStyles.join(" ")}"` : "";
+  const srcsetAttribute =
+    responsiveImage?.srcset ? ` srcset="${escapeHtml(responsiveImage.srcset)}"` : "";
+  const sizesAttribute =
+    responsiveImage?.sizes ? ` sizes="${escapeHtml(responsiveImage.sizes)}"` : "";
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${styleAttribute} />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${styleAttribute} />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]

@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -148,7 +148,7 @@ describe("image pipeline", () => {
     }
   });
 
-  it("copies local content images and rewrites page HTML to reference them relatively", async () => {
+  it("optimizes local content images into assets and rewrites page HTML to reference them there", async () => {
     const fixture = await createLocalImageProject(1800, 1200);
     const outDir = path.join(fixture.rootDir, "dist");
 
@@ -157,14 +157,34 @@ describe("image pipeline", () => {
 
       const homeHtml = await readFile(path.join(outDir, "index.html"), "utf8");
       const portfolioHtml = await readFile(path.join(outDir, "portfolio", "index.html"), "utf8");
-      const copiedImagePath = path.join(outDir, "images", "showroom.png");
+      const outputImagesDir = path.join(outDir, "assets", "images");
+      const outputImageNames = await readdir(outputImagesDir);
+      const mediaOutputName = outputImageNames.find((name) =>
+        name.startsWith("showroom-media-content-"),
+      );
+      const fullOutputName = outputImageNames.find((name) =>
+        name.startsWith("showroom-gallery-full-"),
+      );
+      const thumbOutputName = outputImageNames.find((name) =>
+        name.startsWith("showroom-gallery-thumb-3-"),
+      );
 
-      expect((await readFile(copiedImagePath)).equals(await readFile(fixture.imagePath))).toBe(true);
-      expect(homeHtml).toContain('src="images/showroom.png"');
-      expect(homeHtml).toContain('data-gallery-full-src="images/showroom.png"');
-      expect(portfolioHtml).toContain('src="../images/showroom.png"');
-      expect(portfolioHtml).toContain('data-gallery-full-src="../images/showroom.png"');
-      await expect(readdir(path.join(outDir, "assets", "images"))).rejects.toThrow();
+      if (!mediaOutputName || !fullOutputName || !thumbOutputName) {
+        throw new Error(`missing optimized image output: ${outputImageNames.join(", ")}`);
+      }
+
+      const sourceStats = await stat(fixture.imagePath);
+      const mediaOutputPath = path.join(outputImagesDir, mediaOutputName);
+      const mediaOutputStats = await stat(mediaOutputPath);
+      const mediaOutputMetadata = await sharp(mediaOutputPath).metadata();
+
+      expect(mediaOutputStats.size).toBeLessThan(sourceStats.size);
+      expect(mediaOutputMetadata.width).toBe(1280);
+      expect(homeHtml).toContain(`src="assets/images/${mediaOutputName}"`);
+      expect(homeHtml).toContain(`data-gallery-full-src="assets/images/${fullOutputName}"`);
+      expect(portfolioHtml).toContain(`src="../assets/images/${thumbOutputName}"`);
+      expect(portfolioHtml).toContain(`data-gallery-full-src="../assets/images/${fullOutputName}"`);
+      await expect(readdir(path.join(outDir, "images"))).rejects.toThrow();
     } finally {
       await removeDirectory(fixture.rootDir);
     }
@@ -180,6 +200,53 @@ describe("image pipeline", () => {
       expect(watchablePaths).toEqual([fixture.imagePath]);
     } finally {
       await removeDirectory(fixture.rootDir);
+    }
+  });
+
+  it("collects local page background dependencies for watch mode", async () => {
+    const rootDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-image-pipeline-background-"));
+    const contentDir = path.join(rootDir, "content");
+    const imageDir = path.join(contentDir, "images");
+    const imagePath = path.join(imageDir, "background.png");
+    const contentPath = path.join(contentDir, "site.json");
+
+    try {
+      await mkdir(imageDir, { recursive: true });
+      await createLocalImage(imagePath, 1800, 1200);
+
+      const siteContent = SiteContentSchema.parse({
+        site: {
+          name: "Local Image Studio",
+          baseUrl: "https://local-image-studio.example",
+          theme: "friendly-modern",
+          pageBackgroundImageUrl: "/content/images/background.png",
+        },
+        pages: [
+          {
+            slug: "/",
+            title: "Home",
+            components: [
+              {
+                type: "hero",
+                headline: "Welcome",
+                primaryCta: {
+                  label: "Start",
+                  href: "/start",
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      await writeFile(contentPath, JSON.stringify(siteContent, null, 2));
+
+      const loadedSite = await loadValidatedSite(contentPath);
+      const watchablePaths = collectWatchableLocalImagePaths(loadedSite, contentPath);
+
+      expect(watchablePaths).toEqual([imagePath]);
+    } finally {
+      await removeDirectory(rootDir);
     }
   });
 
