@@ -1,4 +1,4 @@
-import { access, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -14,16 +14,16 @@ const waitForMtimeTick = async (): Promise<void> =>
   });
 
 const removeDirectory = async (directoryPath: string): Promise<void> => {
-  for (let attempt = 0; attempt < 20; attempt += 1) {
+  for (let attempt = 0; attempt < 50; attempt += 1) {
     try {
       await rm(directoryPath, { recursive: true, force: true });
       return;
     } catch (error) {
       const errorCode = (error as NodeJS.ErrnoException).code;
 
-      if ((errorCode === "EBUSY" || errorCode === "EPERM") && attempt < 19) {
+      if ((errorCode === "EBUSY" || errorCode === "EPERM") && attempt < 49) {
         await new Promise((resolve) => {
-          setTimeout(resolve, 100);
+          setTimeout(resolve, 200);
         });
         continue;
       }
@@ -241,7 +241,7 @@ describe("buildSite output writes", () => {
     }
   });
 
-  it("copies referenced content preview images into dist and removes them when no longer needed", async () => {
+  it("optimizes referenced content preview images into assets and removes them when no longer needed", async () => {
     const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-local-assets-"));
     const contentDir = path.join(projectRoot, "content");
     const previewsDir = path.join(contentDir, "examples", "previews");
@@ -250,7 +250,7 @@ describe("buildSite output writes", () => {
     const previewImagePath = path.join(previewsDir, "local-preview.png");
 
     try {
-      const previewImageBytes = await createPngBytes(1600, 900);
+      const previewImageBytes = await createPngBytes(2400, 1350);
       await mkdir(previewsDir, { recursive: true });
       await writeFile(previewImagePath, previewImageBytes);
       await writeFile(
@@ -292,12 +292,20 @@ describe("buildSite output writes", () => {
       );
 
       const firstBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
-      const copiedPreviewPath = path.join(outDir, "examples", "previews", "local-preview.png");
+      const optimizedPreviewDir = path.join(outDir, "assets", "images");
+      const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
+        name.startsWith("local-preview-media-wide-"),
+      );
+      if (!optimizedPreviewName) {
+        throw new Error("missing optimized preview image");
+      }
+      const optimizedPreviewPath = path.join(optimizedPreviewDir, optimizedPreviewName);
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const optimizedPreviewStats = await stat(optimizedPreviewPath);
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
-      expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
-      expect(html).toContain('src="examples/previews/local-preview.png"');
+      expect(optimizedPreviewStats.size).toBeLessThan(previewImageBytes.length);
+      expect(html).toContain(`src="assets/images/${optimizedPreviewName}"`);
 
       await writeFile(
         contentPath,
@@ -333,7 +341,7 @@ describe("buildSite output writes", () => {
 
       const secondBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
       expect(secondBuild.filesRemoved).toBeGreaterThan(0);
-      await expect(access(copiedPreviewPath)).rejects.toThrow();
+      await expect(access(optimizedPreviewPath)).rejects.toThrow();
     } finally {
       await removeDirectory(projectRoot);
     }
@@ -348,7 +356,7 @@ describe("buildSite output writes", () => {
     const previewImagePath = path.join(previewsDir, "landing-page.png");
 
     try {
-      const previewImageBytes = await createPngBytes(1600, 900);
+      const previewImageBytes = await createPngBytes(2400, 1350);
       await mkdir(previewsDir, { recursive: true });
       await writeFile(previewImagePath, previewImageBytes);
       const siteContent = {
@@ -365,7 +373,7 @@ describe("buildSite output writes", () => {
             components: [
               {
                 type: "media",
-                src: "/content/images/landing-page.png",
+                src: "content/images/landing-page.png",
                 alt: "Locally stored gallery image",
                 size: "wide",
               },
@@ -379,16 +387,27 @@ describe("buildSite output writes", () => {
       const nestedHtml = await readFile(path.join(outDir, "gallery", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
       const copiedPreviewPath = path.join(outDir, "images", "landing-page.png");
+      const optimizedPreviewDir = path.join(outDir, "assets", "images");
+      const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
+        name.startsWith("landing-page-media-wide-"),
+      );
+
+      if (!optimizedPreviewName) {
+        throw new Error("missing optimized nested preview image");
+      }
 
       expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
-      expect(nestedHtml).toContain('src="../images/landing-page.png"');
+      expect((await stat(path.join(optimizedPreviewDir, optimizedPreviewName))).size).toBeLessThan(
+        previewImageBytes.length,
+      );
+      expect(nestedHtml).toContain(`src="../assets/images/${optimizedPreviewName}"`);
       expect(css).toContain('url("../images/landing-page.png")');
     } finally {
       await removeDirectory(projectRoot);
     }
   });
 
-  it("copies and rewrites content-relative navigation brand images", async () => {
+  it("optimizes and rewrites content-relative navigation brand images", async () => {
     const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-navbar-brand-image-"));
     const contentDir = path.join(projectRoot, "content");
     const imagesDir = path.join(contentDir, "Images");
@@ -396,62 +415,66 @@ describe("buildSite output writes", () => {
     const outDir = path.join(projectRoot, "dist");
     const brandImagePath = path.join(imagesDir, "brand-logo.webp");
 
-    try {
-      const brandImageBytes = await createWebpBytes(640, 200);
-      await mkdir(imagesDir, { recursive: true });
-      await writeFile(brandImagePath, brandImageBytes);
-      const siteContent = {
-        site: {
-          name: "LaunchKit",
-          baseUrl: "https://launchkit.example",
-          theme: "friendly-modern",
-          layout: {
-            components: [
-              {
-                type: "navigation-bar",
-                brandText: "LaunchKit",
-                brandImage: {
-                  src: "Images/brand-logo.webp",
-                  alt: "LaunchKit logo",
+    const brandImageBytes = await createWebpBytes(640, 200);
+    await mkdir(imagesDir, { recursive: true });
+    await writeFile(brandImagePath, brandImageBytes);
+    const siteContent = {
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "friendly-modern",
+        layout: {
+          components: [
+            {
+              type: "navigation-bar",
+              brandText: "LaunchKit",
+              brandImage: {
+                src: "Images/brand-logo.webp",
+                alt: "LaunchKit logo",
+              },
+              links: [
+                {
+                  label: "Home",
+                  href: "/",
                 },
-                links: [
-                  {
-                    label: "Home",
-                    href: "/",
-                  },
-                ],
-              },
-              {
-                type: "page-content",
-              },
-            ],
-          },
+              ],
+            },
+            {
+              type: "page-content",
+            },
+          ],
         },
-        pages: [
-          {
-            slug: "/about",
-            title: "About",
-            components: [
-              {
-                type: "prose",
-                title: "About LaunchKit",
-                paragraphs: ["Built for content-relative assets."],
-              },
-            ],
-          },
-        ],
-      };
+      },
+      pages: [
+        {
+          slug: "/about",
+          title: "About",
+          components: [
+            {
+              type: "prose",
+              title: "About LaunchKit",
+              paragraphs: ["Built for content-relative assets."],
+            },
+          ],
+        },
+      ],
+    };
 
-      await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
-      await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, { contentPath });
+    await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
+    await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, { contentPath });
 
-      const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
-      const copiedBrandImagePath = path.join(outDir, "Images", "brand-logo.webp");
+    const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
+    const optimizedBrandDir = path.join(outDir, "assets", "images");
+    const optimizedBrandName = (await readdir(optimizedBrandDir)).find((name) =>
+      name.startsWith("brand-logo-navbar-brand-"),
+    );
 
-      expect((await readFile(copiedBrandImagePath)).equals(brandImageBytes)).toBe(true);
-      expect(aboutHtml).toContain('src="../Images/brand-logo.webp"');
-    } finally {
-      await removeDirectory(projectRoot);
+    if (!optimizedBrandName) {
+      throw new Error("missing optimized brand image");
     }
-  });
+    const optimizedBrandImagePath = path.join(optimizedBrandDir, optimizedBrandName);
+
+    expect((await stat(optimizedBrandImagePath)).size).toBeLessThan(brandImageBytes.length);
+    expect(aboutHtml).toContain(`src="../assets/images/${optimizedBrandName}"`);
+  }, 15000);
 });
