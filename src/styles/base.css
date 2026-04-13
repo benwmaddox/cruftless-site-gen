@@ -12,7 +12,6 @@ html {
   min-height: 100%;
   font-family: var(--font-family-body);
   line-height: var(--line-height-body);
-  background: var(--page-background);
   color: var(--color-text);
 }
 
@@ -21,7 +20,7 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  background-color: transparent;
+  background: var(--page-background);
   background-image: var(--site-page-background-image, none);
   background-position: left top;
   background-repeat: no-repeat;
