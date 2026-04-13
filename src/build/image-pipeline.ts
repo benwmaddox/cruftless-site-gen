@@ -338,7 +338,7 @@ const collectImageUsages = (
 };
 
 const resolveOutputExtension = (extension: string, usage: ComponentImageUsage): string => {
-  if (usage === "page-background") {
+  if (usage === "page-background" || usage === "media-content" || usage === "media-wide") {
     return ".avif";
   }
 
@@ -437,6 +437,18 @@ const processLocalImageVariant = async (
               quality: 62,
             })
             .toBuffer()
+        : usage === "media-content" || usage === "media-wide"
+          ? transformer
+              .resize({
+                fit: "inside",
+                width: targetWidth,
+                withoutEnlargement: true,
+              })
+              .avif({
+                effort: 4,
+                quality: 54,
+              })
+              .toBuffer()
         : transformer
             .resize({
               fit: "inside",
