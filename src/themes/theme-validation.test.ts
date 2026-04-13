@@ -207,6 +207,11 @@ describe("theme validation", () => {
     expect(findUnknownCssVarTokens(".demo { color: var(--not-a-token); }")).toEqual([
       "--not-a-token",
     ]);
+    expect(
+      findUnknownCssVarTokens(
+        ".demo { background-image: var(--site-page-background-image, none); }",
+      ),
+    ).toEqual([]);
   });
 
   it("rejects theme CSS that references unknown tokens", () => {

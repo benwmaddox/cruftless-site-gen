@@ -1,4 +1,7 @@
 dist
 node_modules
 coverage
+deploy/sites.json
+deploy/.env
+.wrangler
 

@@ -5,6 +5,7 @@ import { assertExactThemeTokens, themeTokenSet } from "../themes/tokens.js";
 import type { ValidationIssue } from "./site-validation.js";
 
 const CSS_VAR_PATTERN = /var\((--[a-z0-9-]+)/gi;
+const ALLOWED_NON_THEME_CSS_VAR_PREFIXES = ["--site-"] as const;
 const DECLARATION_PATTERN = /^\s*([a-z-]+|--[a-z0-9-]+)\s*:\s*(.*)$/i;
 const DISALLOWED_CSS_PROPERTIES = new Set([
   "float",
@@ -128,9 +129,13 @@ export const findUnknownCssVarTokens = (css: string): string[] => {
     foundTokens.add(match[1]);
   }
 
-  return [...foundTokens].filter(
-    (tokenName) => !themeTokenSet.has(tokenName as ThemeTokenName),
-  );
+  return [...foundTokens].filter((tokenName) => {
+    if (themeTokenSet.has(tokenName as ThemeTokenName)) {
+      return false;
+    }
+
+    return !ALLOWED_NON_THEME_CSS_VAR_PREFIXES.some((prefix) => tokenName.startsWith(prefix));
+  });
 };
 
 export const validateThemeDefinition = (
