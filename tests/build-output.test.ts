@@ -50,6 +50,27 @@ const createPngBytes = (width: number, height: number): Promise<Buffer> =>
     .png()
     .toBuffer();
 
+const createNoisyPngBytes = (width: number, height: number): Promise<Buffer> => {
+  const channels = 3;
+  const data = Buffer.alloc(width * height * channels);
+  let seed = 123456789;
+
+  for (let index = 0; index < data.length; index += 1) {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    data[index] = seed & 0xff;
+  }
+
+  return sharp(data, {
+    raw: {
+      channels,
+      width,
+      height,
+    },
+  })
+    .png()
+    .toBuffer();
+};
+
 const createWebpBytes = (width: number, height: number): Promise<Buffer> =>
   sharp({
     create: {
@@ -250,7 +271,7 @@ describe("buildSite output writes", () => {
     const previewImagePath = path.join(previewsDir, "local-preview.png");
 
     try {
-      const previewImageBytes = await createPngBytes(2400, 1350);
+      const previewImageBytes = await createNoisyPngBytes(3600, 2025);
       await mkdir(previewsDir, { recursive: true });
       await writeFile(previewImagePath, previewImageBytes);
       await writeFile(
@@ -301,11 +322,11 @@ describe("buildSite output writes", () => {
       }
       const optimizedPreviewPath = path.join(optimizedPreviewDir, optimizedPreviewName);
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
-      const optimizedPreviewStats = await stat(optimizedPreviewPath);
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
-      expect(optimizedPreviewStats.size).toBeLessThan(previewImageBytes.length);
       expect(html).toContain(`src="assets/images/${optimizedPreviewName}"`);
+      expect(html).toContain("srcset=\"assets/images/local-preview-media-wide-480-");
+      expect(html).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
 
       await writeFile(
         contentPath,
@@ -386,22 +407,28 @@ describe("buildSite output writes", () => {
 
       const nestedHtml = await readFile(path.join(outDir, "gallery", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
-      const copiedPreviewPath = path.join(outDir, "images", "landing-page.png");
       const optimizedPreviewDir = path.join(outDir, "assets", "images");
-      const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
+      const mediaOutputName = (await readdir(optimizedPreviewDir)).find((name) =>
         name.startsWith("landing-page-media-wide-"),
       );
+      const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
+        name.startsWith("landing-page-page-background-2400-"),
+      );
+      const optimizedPreviewPath = path.join(optimizedPreviewDir, optimizedPreviewName ?? "");
 
+      if (!mediaOutputName) {
+        throw new Error("missing optimized nested media image");
+      }
       if (!optimizedPreviewName) {
         throw new Error("missing optimized nested preview image");
       }
 
-      expect((await readFile(copiedPreviewPath)).equals(previewImageBytes)).toBe(true);
-      expect((await stat(path.join(optimizedPreviewDir, optimizedPreviewName))).size).toBeLessThan(
-        previewImageBytes.length,
-      );
-      expect(nestedHtml).toContain(`src="../assets/images/${optimizedPreviewName}"`);
-      expect(css).toContain('url("../images/landing-page.png")');
+      expect((await stat(optimizedPreviewPath)).size).toBeLessThan(previewImageBytes.length);
+      expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}"`);
+      expect(nestedHtml).toContain("srcset=\"../assets/images/landing-page-media-wide-480-");
+      expect(nestedHtml).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
+      expect(css).toContain(`url("images/${optimizedPreviewName}")`);
+      await expect(access(path.join(outDir, "images", "landing-page.png"))).rejects.toThrow();
     } finally {
       await removeDirectory(projectRoot);
     }
