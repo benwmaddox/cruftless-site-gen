@@ -463,18 +463,6 @@ const resolveLocalContentAsset = (
   };
 };
 
-const pageSlugToLocalContentAssetHref = (slug: string, assetPath: string): string => {
-  const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
-
-  if (!normalizedAssetPath) {
-    return assetPath;
-  }
-  const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
-  const relativePath = path.posix.relative(path.posix.dirname(pagePath), `/${normalizedAssetPath}`);
-
-  return `${relativePath || path.posix.basename(normalizedAssetPath)}${extractUrlSuffix(assetPath)}`;
-};
-
 const localContentAssetPathToCssHref = (assetPath: string): string => {
   const normalizedAssetPath = resolveContentRootRelativeAssetPath(assetPath);
 
@@ -486,27 +474,6 @@ const localContentAssetPathToCssHref = (assetPath: string): string => {
   return `${relativePath || path.posix.basename(normalizedAssetPath)}${extractUrlSuffix(assetPath)}`;
 };
 
-const rewriteLocalContentAssetsForPage = <T>(value: T, slug: string): T => {
-  if (Array.isArray(value)) {
-    return value.map((entry) => rewriteLocalContentAssetsForPage(entry, slug)) as T;
-  }
-
-  if (typeof value !== "object" || value === null) {
-    return value;
-  }
-
-  const record = value as Record<string, unknown>;
-  const rewrittenEntries = Object.entries(record).map(([key, entry]) => {
-    if (key === "src" && typeof entry === "string" && isLocalContentAssetPath(entry)) {
-      return [key, pageSlugToLocalContentAssetHref(slug, entry)];
-    }
-
-    return [key, rewriteLocalContentAssetsForPage(entry, slug)];
-  });
-
-  return Object.fromEntries(rewrittenEntries) as T;
-};
-
 const rewriteLocalContentAssetsForSiteCss = (site: SiteData): SiteData => {
   if (!site.pageBackgroundImageUrl || !isLocalContentAssetPath(site.pageBackgroundImageUrl)) {
     return site;
@@ -516,27 +483,6 @@ const rewriteLocalContentAssetsForSiteCss = (site: SiteData): SiteData => {
     ...site,
     pageBackgroundImageUrl: localContentAssetPathToCssHref(site.pageBackgroundImageUrl),
   };
-};
-
-const collectObjectImageSources = (value: unknown): string[] => {
-  if (Array.isArray(value)) {
-    return value.flatMap((entry) => collectObjectImageSources(entry));
-  }
-
-  if (typeof value !== "object" || value === null) {
-    return [];
-  }
-
-  const record = value as Record<string, unknown>;
-  const imageSources = typeof record.src === "string" ? [record.src] : [];
-  const backgroundImageSources =
-    typeof record.pageBackgroundImageUrl === "string" ? [record.pageBackgroundImageUrl] : [];
-
-  return [
-    ...imageSources,
-    ...backgroundImageSources,
-    ...Object.values(record).flatMap((entry) => collectObjectImageSources(entry)),
-  ];
 };
 
 const collectFilesRecursively = async (directoryPath: string): Promise<string[]> => {
@@ -692,10 +638,7 @@ export const buildSite = async (
 
   for (const [pageIndex, page] of siteContent.pages.entries()) {
     const renderContext = imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
-    const bodyHtml = rewriteLocalContentAssetsForPage(
-      resolvePageComponents(siteContent.site, page, pageIndex),
-      page.slug,
-    )
+    const bodyHtml = resolvePageComponents(siteContent.site, page, pageIndex)
       .map((component) => renderComponent(component, renderContext))
       .join("\n");
     const documentHtml = renderPageDocument({
@@ -712,18 +655,13 @@ export const buildSite = async (
   }
 
   if (contentPath) {
-    const localContentAssets = new Map(
-      collectObjectImageSources(siteContent)
-        .map((assetPath) => resolveLocalContentAsset(assetPath, contentPath))
-        .filter((asset): asset is { outputRelativePath: string; sourcePath: string } => asset !== undefined)
-        .map((asset) => [asset.outputRelativePath, asset.sourcePath]),
-    );
+    const pageBackgroundImage = resolveLocalContentAsset(siteContent.site.pageBackgroundImageUrl ?? "", contentPath);
 
-    for (const [outputRelativePath, sourcePath] of localContentAssets) {
-      const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
+    if (pageBackgroundImage) {
+      const outputPath = path.join(outDir, ...pageBackgroundImage.outputRelativePath.split("/"));
       await mkdir(path.dirname(outputPath), { recursive: true });
       expectedFiles.add(outputPath);
-      recordWriteResult(await copyFileIfChanged(sourcePath, outputPath));
+      recordWriteResult(await copyFileIfChanged(pageBackgroundImage.sourcePath, outputPath));
     }
   }
 
