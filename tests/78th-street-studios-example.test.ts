@@ -68,6 +68,7 @@ describe("78th Street Studios example", () => {
       expect(css).toContain("--color-accent: #ff9e64;");
       expect(js).toContain("resolveNavigationBarMode");
       expect(css).toContain("--site-page-background-image:");
+      expect(css).toContain("background: var(--page-background);");
       expect(css).toContain("background-image: var(--site-page-background-image, none);");
       expect(css).toContain("background-position: left top;");
       expect(css).toContain(
