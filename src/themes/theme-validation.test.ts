@@ -40,6 +40,7 @@ const surfaceTokens = new Set([
   "--surface-background",
   "--hero-background",
   "--cta-background",
+  "--navbar-background",
 ]);
 
 const bannedFontPattern = /\b(?:Segoe UI|Trebuchet MS|Arial|Inter|Roboto|system-ui)\b/i;

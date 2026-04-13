@@ -21,12 +21,7 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  background-color: transparent;
-  background-image: var(--site-page-background-image, none);
-  background-position: left top;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
+  background: var(--site-page-background-image, none) left top / cover no-repeat fixed;
   color: var(--color-text);
 }
 

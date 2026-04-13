@@ -19,6 +19,8 @@ export const corporateTheme = createThemeDefinition(
     "--surface-background": "#ffffff",
     "--hero-background": "linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%)",
     "--cta-background": "linear-gradient(180deg, #f8fbff 0%, #e6f0ff 100%)",
+    "--navbar-background":
+      "linear-gradient(180deg, rgb(255 255 255 / 0.94), rgb(245 249 255 / 0.94))",
     "--font-family-body": "\"IBM Plex Sans\", \"Helvetica Neue\", sans-serif",
     "--font-family-heading": "\"IBM Plex Sans\", \"Helvetica Neue\", sans-serif",
     "--heading-letter-spacing": "-0.02em",
@@ -40,8 +42,6 @@ export const corporateTheme = createThemeDefinition(
   `
     .c-navbar {
       border-bottom: var(--border-width-1) solid rgb(11 95 255 / 0.12);
-      background:
-        linear-gradient(180deg, rgb(255 255 255 / 0.94), rgb(245 249 255 / 0.94));
     }
 
     .c-hero__body {

@@ -68,8 +68,9 @@ describe("78th Street Studios example", () => {
       expect(css).toContain("--color-accent: #ff9e64;");
       expect(js).toContain("resolveNavigationBarMode");
       expect(css).toContain("--site-page-background-image:");
-      expect(css).toContain("background-image: var(--site-page-background-image, none);");
-      expect(css).toContain("background-position: left top;");
+      expect(css).toContain(
+        "background: var(--site-page-background-image, none) left top / cover no-repeat fixed;",
+      );
       expect(css).toContain(
         'url("https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX")',
       );

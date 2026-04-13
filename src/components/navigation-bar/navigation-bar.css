@@ -1,6 +1,7 @@
 .c-navbar {
   position: relative;
   padding-block: var(--space-5) var(--space-4);
+  background: var(--navbar-background, transparent);
 }
 
 .c-navbar__inner,
