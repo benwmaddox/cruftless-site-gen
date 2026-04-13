@@ -446,7 +446,7 @@ const processLocalImageVariant = async (
               })
               .avif({
                 effort: 4,
-                quality: 54,
+                quality: 45,
               })
               .toBuffer()
         : transformer
