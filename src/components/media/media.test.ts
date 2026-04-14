@@ -51,6 +51,30 @@ describe("MediaSchema", () => {
     expect(html).toContain('fetchpriority="high"');
   });
 
+  it("supports lazy loading media blocks with lower fetch priority", () => {
+    const parsed = MediaSchema.parse({
+      type: "media",
+      src: "https://example.com/studio.jpg",
+      alt: "Founder standing in the studio",
+      size: "content",
+      loading: "lazy",
+    });
+
+    const html = renderMedia(parsed, {
+      resolveImage: () => ({
+        src: "https://example.com/studio.jpg",
+        width: 1600,
+        height: 900,
+      }),
+      resolveGalleryImage: () => ({
+        src: "https://example.com/studio.jpg",
+      }),
+    });
+
+    expect(html).toContain('loading="lazy"');
+    expect(html).toContain('fetchpriority="low"');
+  });
+
   it("rejects unknown fields", () => {
     const result = MediaSchema.safeParse({
       type: "media",
