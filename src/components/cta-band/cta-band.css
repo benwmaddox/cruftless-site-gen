@@ -1,11 +1,11 @@
 .c-cta-band {
-  padding-block: var(--space-7);
+  padding-block: var(--space-6);
 }
 
 .c-cta-band__inner {
   width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
   margin-inline: auto;
-  padding: var(--space-6);
+  padding: var(--space-5);
   display: grid;
   gap: var(--space-4);
   border: var(--border-width-2) solid var(--color-border);
