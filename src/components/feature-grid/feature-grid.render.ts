@@ -94,7 +94,15 @@ export const renderFeatureGrid = (
             ? '          <p class="c-feature-grid__item-status" aria-current="page">Current selection</p>'
             : "",
           item.cta
-            ? `          <a class="c-feature-grid__item-cta c-button c-button--secondary" href="${escapeHtml(item.cta.href)}">${escapeHtml(item.cta.label)}</a>`
+            ? (() => {
+                const targetAttribute = item.cta.target
+                  ? ` target="${escapeHtml(item.cta.target)}"`
+                  : "";
+                const relAttribute =
+                  item.cta.target === "_blank" ? ' rel="noopener noreferrer"' : "";
+
+                return `          <a class="c-feature-grid__item-cta c-button c-button--secondary" href="${escapeHtml(item.cta.href)}"${targetAttribute}${relAttribute}>${escapeHtml(item.cta.label)}</a>`;
+              })()
             : "",
           "        </div>",
           "      </li>",

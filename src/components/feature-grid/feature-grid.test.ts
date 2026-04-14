@@ -26,6 +26,7 @@ describe("FeatureGridSchema", () => {
           cta: {
             label: "See examples",
             href: "/examples",
+            target: "_blank",
           },
         },
       ],
@@ -45,6 +46,8 @@ describe("FeatureGridSchema", () => {
     expect(html).toContain("Strict validation");
     expect(html).toContain('class="c-feature-grid__item-cta c-button c-button--secondary"');
     expect(html).toContain('href="/examples"');
+    expect(html).toContain('target="_blank"');
+    expect(html).toContain('rel="noopener noreferrer"');
     expect(html).toContain("See examples");
   });
 
@@ -163,5 +166,24 @@ describe("FeatureGridSchema", () => {
           String(issue.path.join(".")) === "items.0.cta",
       ),
     ).toBe(true);
+  });
+
+  it("accepts supported CTA targets", () => {
+    const result = FeatureGridSchema.safeParse({
+      type: "feature-grid",
+      title: "Why it works",
+      items: [
+        {
+          title: "Strict validation",
+          cta: {
+            label: "Open",
+            href: "/examples",
+            target: "_blank",
+          },
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
   });
 });
