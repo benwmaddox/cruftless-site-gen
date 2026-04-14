@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { createStaticServer } from "./static-server.js";
+import { formatFailedCategoryDetails, type LighthouseReport } from "./lighthouse-report.js";
 
 const repoRoot = process.cwd();
 const distDir = path.join(repoRoot, "dist");
@@ -96,10 +97,7 @@ const main = async (): Promise<void> => {
   try {
     await runLighthouse(`${server.origin}/`, reportPath);
 
-    const report = JSON.parse(await readFile(reportPath, "utf8")) as {
-      categories?: Record<string, { score?: number | null }>;
-      audits?: Record<string, { numericValue?: number | null }>;
-    };
+    const report = JSON.parse(await readFile(reportPath, "utf8")) as LighthouseReport;
 
     const categoryScores = categoryThresholds.map(({ key, label }) => {
       const score = report.categories?.[key]?.score;
@@ -141,13 +139,14 @@ const main = async (): Promise<void> => {
 
     if (failedCategories.length > 0 || failedMetrics.length > 0) {
       const messages = [
-        ...failedCategories.map(
-          ({ label, score }) => `${label} score ${formatPercent(score)} is below ${minCategoryScore}`,
-        ),
-        ...failedMetrics.map(
-          ({ label, value, maxValue, format }) =>
-            `${label} ${format(value)} exceeds ${format(maxValue)}`,
-        ),
+        ...failedCategories.flatMap(({ key, label, score }) => [
+          `${label} score ${formatPercent(score)} is below ${minCategoryScore}`,
+          ...formatFailedCategoryDetails(report, key),
+        ]),
+        ...failedMetrics.map(({ label, value, maxValue, format }) => {
+          const formattedValue = format(value);
+          return `${label} ${formattedValue} exceeds ${format(maxValue)}`;
+        }),
       ];
 
       throw new Error(`Lighthouse thresholds failed:\n- ${messages.join("\n- ")}`);
