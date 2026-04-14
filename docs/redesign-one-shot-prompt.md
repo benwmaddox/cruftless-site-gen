@@ -14,7 +14,8 @@ Goal:
 - Do not claim the result is ready for customer review until you complete the full steelman check below and pass your own readiness gate.
 
 Your constraints:
-- Work within the current site generator's schema and existing component set. Reuse the strongest fitting theme or choose the closest theme already available.
+- Before choosing components or themes, read the shared generator `README.md` in this repo and use its current component and theme lists. Do not rely on memory, older examples, or prompt text for component availability.
+- Work within the current site generator's schema and supported component set. Reuse the strongest fitting theme or choose the closest theme already available.
 - Preserve every meaningful public page you can find. If the source has five public pages, your output should also account for those five pages unless one is pure CMS chrome or a duplicate.
 - Preserve all reasonable copy. You may condense repetitive boilerplate, but do not silently drop unique promises, service details, bios, dates, addresses, hours, contact details, pricing signals, event details, linked destinations, or proof points.
 - Preserve important images. Keep source image URLs when needed, carry over alt-worthy meaning, and record where each retained image was mapped.
