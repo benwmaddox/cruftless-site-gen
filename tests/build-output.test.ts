@@ -262,6 +262,29 @@ describe("buildSite output writes", () => {
     }
   });
 
+  it("omits google analytics tags during lighthouse ci builds", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-analytics-ci-"));
+    const previousLighthouseCi = process.env.LIGHTHOUSE_CI;
+
+    try {
+      process.env.LIGHTHOUSE_CI = "1";
+      await buildSite(createAnalyticsSite(), outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+
+      expect(html).not.toContain("googletagmanager.com/gtag/js");
+      expect(html).not.toContain("gtag('config', \"G-TEST1234\");");
+    } finally {
+      if (previousLighthouseCi === undefined) {
+        delete process.env.LIGHTHOUSE_CI;
+      } else {
+        process.env.LIGHTHOUSE_CI = previousLighthouseCi;
+      }
+
+      await removeDirectory(outDir);
+    }
+  });
+
   it("optimizes referenced content preview images into assets and removes them when no longer needed", async () => {
     const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-local-assets-"));
     const contentDir = path.join(projectRoot, "content");

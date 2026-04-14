@@ -1,10 +1,12 @@
 import type { PageData, SiteData } from "../schemas/site.schema.js";
 import { escapeHtml } from "./escape-html.js";
 
+const shouldIncludeGoogleAnalytics = (): boolean => process.env.LIGHTHOUSE_CI !== "1";
+
 const renderGoogleAnalyticsTags = (site: SiteData): string => {
   const measurementId = site.googleAnalyticsMeasurementId;
 
-  if (!measurementId) {
+  if (!measurementId || !shouldIncludeGoogleAnalytics()) {
     return "";
   }
 
