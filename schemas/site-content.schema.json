@@ -1134,6 +1134,13 @@
                                 "exclusiveMinimum": 0,
                                 "maximum": 10000
                               },
+                              "loading": {
+                                "type": "string",
+                                "enum": [
+                                  "eager",
+                                  "lazy"
+                                ]
+                              },
                               "size": {
                                 "type": "string",
                                 "enum": [
