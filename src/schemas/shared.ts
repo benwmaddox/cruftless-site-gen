@@ -97,6 +97,7 @@ export const LinkSchema = z
   .object({
     label: z.string().min(1),
     href: HrefSchema,
+    target: z.enum(["_self", "_blank"]).optional(),
   })
   .strict();
 
