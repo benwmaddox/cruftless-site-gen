@@ -26,19 +26,12 @@ export const renderMedia = (
     data.size === "content" ? "media-content" : "media-wide",
   );
   const altText = data.alt ?? "";
-  const hasExplicitDimensions = data.width !== undefined || data.height !== undefined;
+  const intrinsicWidth = data.width ?? resolvedImage.width;
+  const intrinsicHeight = data.height ?? resolvedImage.height;
   const intrinsicDimensions =
-    !hasExplicitDimensions &&
-    resolvedImage.width !== undefined &&
-    resolvedImage.height !== undefined
-      ? ` width="${resolvedImage.width}" height="${resolvedImage.height}"`
+    intrinsicWidth !== undefined && intrinsicHeight !== undefined
+      ? ` width="${intrinsicWidth}" height="${intrinsicHeight}"`
       : "";
-  const inlineSizeStyles = [
-    data.width !== undefined ? `width: ${data.width}px;` : "",
-    data.height !== undefined ? `height: ${data.height}px;` : "",
-  ].filter(Boolean);
-  const styleAttribute =
-    inlineSizeStyles.length > 0 ? ` style="${inlineSizeStyles.join(" ")}"` : "";
   const srcsetAttribute =
     responsiveImage?.srcset ? ` srcset="${escapeHtml(responsiveImage.srcset)}"` : "";
   const sizesAttribute =
@@ -47,7 +40,7 @@ export const renderMedia = (
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${styleAttribute}${loadingAttribute} decoding="async" />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${loadingAttribute} decoding="async" />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]
