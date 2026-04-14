@@ -169,3 +169,13 @@
 .c-navbar[data-navigation-bar-mode="inline"] .c-navbar__panel {
   display: none;
 }
+
+@media (width <= 40rem) {
+  .c-navbar__inline-nav {
+    display: none;
+  }
+
+  .c-navbar__menu-button {
+    display: inline-flex;
+  }
+}

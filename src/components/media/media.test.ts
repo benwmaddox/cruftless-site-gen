@@ -20,6 +20,8 @@ describe("MediaSchema", () => {
     expect(html).toContain('<figure class="c-media c-media--size-content">');
     expect(html).toContain('<img class="c-media__image"');
     expect(html).toContain('alt="Founder standing in the studio"');
+    expect(html).not.toContain('fetchpriority=');
+    expect(html).toContain('decoding="async"');
     expect(html).toContain('style="width: 1600px; height: 900px;"');
     expect(html).not.toContain('width="1600" height="900"');
     expect(html).not.toContain('loading="');
@@ -70,6 +72,31 @@ describe("MediaSchema", () => {
 
     expect(html).toContain('width="1600" height="900"');
     expect(html).not.toContain('style="width:');
+    expect(html).not.toContain('fetchpriority=');
+  });
+
+  it("supports lazy loading media blocks with lower fetch priority", () => {
+    const parsed = MediaSchema.parse({
+      type: "media",
+      src: "https://example.com/studio.jpg",
+      alt: "Founder standing in the studio",
+      size: "content",
+      loading: "lazy",
+    });
+
+    const html = renderMedia(parsed, {
+      resolveImage: () => ({
+        src: "https://example.com/studio.jpg",
+        width: 1600,
+        height: 900,
+      }),
+      resolveGalleryImage: () => ({
+        src: "https://example.com/studio.jpg",
+      }),
+    });
+
+    expect(html).toContain('loading="lazy"');
+    expect(html).not.toContain('fetchpriority=');
   });
 
   it("rejects unknown fields", () => {

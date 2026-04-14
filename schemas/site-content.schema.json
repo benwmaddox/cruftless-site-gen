@@ -1117,6 +1117,13 @@
                                 "minLength": 1,
                                 "maxLength": 280
                               },
+                              "loading": {
+                                "type": "string",
+                                "enum": [
+                                  "eager",
+                                  "lazy"
+                                ]
+                              },
                               "width": {
                                 "type": "integer",
                                 "exclusiveMinimum": 0,
