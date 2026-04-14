@@ -43,10 +43,11 @@ export const renderMedia = (
     responsiveImage?.srcset ? ` srcset="${escapeHtml(responsiveImage.srcset)}"` : "";
   const sizesAttribute =
     responsiveImage?.sizes ? ` sizes="${escapeHtml(responsiveImage.sizes)}"` : "";
+  const loadingAttribute = data.loading ? ` loading="${escapeHtml(data.loading)}"` : "";
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${styleAttribute} />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${styleAttribute}${loadingAttribute} />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]

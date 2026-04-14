@@ -8,6 +8,7 @@ export const MediaSchemaBase = z
     caption: z.string().min(1).max(280).optional(),
     width: z.number().int().positive().max(10000).optional(),
     height: z.number().int().positive().max(10000).optional(),
+    loading: z.enum(["eager", "lazy"]).optional(),
     size: z.enum(["content", "wide"]).default("wide"),
   })
   .strict();
