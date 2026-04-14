@@ -35,8 +35,8 @@ describe("friendly-modern theme example", () => {
 
       expect(homeHtml).toContain('class="c-media__image"');
       expect(homeHtml).toContain('src="data:image/svg+xml,');
-      expect(homeHtml).toContain('style="width: 1600px; height: 900px;"');
-      expect(homeHtml).not.toContain('width="1600" height="900"');
+      expect(homeHtml).toContain('width="1600" height="900"');
+      expect(homeHtml).not.toContain('style="width:');
       expect(homeHtml).not.toContain("images.example.com");
       expect(measureMarkup).toContain('<span class="c-navbar__link">');
       expect(measureMarkup).not.toContain("<a ");

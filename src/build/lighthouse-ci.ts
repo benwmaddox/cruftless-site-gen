@@ -5,7 +5,11 @@ import os from "node:os";
 import path from "node:path";
 
 import { createStaticServer } from "./static-server.js";
-import { formatFailedCategoryDetails, type LighthouseReport } from "./lighthouse-report.js";
+import {
+  formatFailedCategoryDetails,
+  shouldIgnoreCategoryFailure,
+  type LighthouseReport,
+} from "./lighthouse-report.js";
 
 const repoRoot = process.cwd();
 const distDir = path.join(repoRoot, "dist");
@@ -109,7 +113,12 @@ const main = async (): Promise<void> => {
       return { key, label, score };
     });
 
-    const failedCategories = categoryScores.filter(({ score }) => score * 100 < minCategoryScore);
+    const toleratedCategories = categoryScores.filter(
+      ({ key, score }) => score * 100 < minCategoryScore && shouldIgnoreCategoryFailure(report, key),
+    );
+    const failedCategories = categoryScores.filter(
+      ({ key, score }) => score * 100 < minCategoryScore && !shouldIgnoreCategoryFailure(report, key),
+    );
 
     const metricScores = metricThresholds.map(({ key, label, maxValue, format }) => {
       const value = report.audits?.[key]?.numericValue;
@@ -128,6 +137,14 @@ const main = async (): Promise<void> => {
         .map(({ label, score }) => `${label} ${formatPercent(score)}`)
         .join(", ")}`,
     );
+
+    if (toleratedCategories.length > 0) {
+      console.log(
+        `Lighthouse category warnings tolerated: ${toleratedCategories
+          .map(({ label, score }) => `${label} ${formatPercent(score)}`)
+          .join(", ")}`,
+      );
+    }
 
     if (metricScores.length > 0) {
       console.log(

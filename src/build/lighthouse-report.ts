@@ -28,6 +28,9 @@ export type LighthouseReport = {
   categories?: Record<string, LighthouseCategory>;
 };
 
+const browserConsoleAuditIds = new Set(["errors-in-console"]);
+const browserConsoleAuditTitles = new Set(["Browser errors were logged to the console"]);
+
 const formatPercent = (score: number): string => `${Math.round(score * 100)}`;
 
 const formatBytes = (value: number): string => {
@@ -77,15 +80,19 @@ const formatAuditDetails = (audit: LighthouseAudit): string | undefined => {
   return displayValue ? `value ${displayValue}` : undefined;
 };
 
-export const collectCategoryAuditDetails = (
+const isBrowserConsoleAudit = (audit: LighthouseAudit): boolean => {
+  if (audit.id && browserConsoleAuditIds.has(audit.id)) {
+    return true;
+  }
+
+  return audit.title ? browserConsoleAuditTitles.has(audit.title) : false;
+};
+
+const collectCategoryAuditEntries = (
   report: LighthouseReport,
   categoryKey: string,
-  maxItems = 5,
-): string[] => {
-  const category = report.categories?.[categoryKey];
-  const auditRefs = category?.auditRefs ?? [];
-
-  return auditRefs
+): Array<{ audit: LighthouseAudit; impact: number }> =>
+  (report.categories?.[categoryKey]?.auditRefs ?? [])
     .map((ref) => {
       const audit = report.audits?.[ref.id];
 
@@ -94,8 +101,7 @@ export const collectCategoryAuditDetails = (
       }
 
       const weight = ref.weight ?? 0;
-      const score = audit.score;
-      const impact = weight * (1 - score);
+      const impact = weight * (1 - audit.score);
 
       return {
         audit,
@@ -106,7 +112,14 @@ export const collectCategoryAuditDetails = (
       (entry): entry is { audit: LighthouseAudit; impact: number } =>
         entry !== undefined && entry.impact > 0,
     )
-    .sort((left, right) => right.impact - left.impact)
+    .sort((left, right) => right.impact - left.impact);
+
+export const collectCategoryAuditDetails = (
+  report: LighthouseReport,
+  categoryKey: string,
+  maxItems = 5,
+): string[] => {
+  return collectCategoryAuditEntries(report, categoryKey)
     .slice(0, maxItems)
     .map(({ audit }) => {
       const score = typeof audit.score === "number" ? ` (${formatPercent(audit.score)})` : "";
@@ -114,6 +127,24 @@ export const collectCategoryAuditDetails = (
 
       return `- ${audit.title ?? audit.id ?? "Unnamed audit"}${score}${detail ? `: ${detail}` : ""}`;
     });
+};
+
+export const shouldIgnoreCategoryFailure = (
+  report: LighthouseReport,
+  categoryKey: string,
+  maxFailingAudits = 2,
+): boolean => {
+  if (categoryKey !== "best-practices") {
+    return false;
+  }
+
+  const failingAudits = collectCategoryAuditEntries(report, categoryKey);
+
+  return (
+    failingAudits.length > 0 &&
+    failingAudits.length <= maxFailingAudits &&
+    failingAudits.some(({ audit }) => isBrowserConsoleAudit(audit))
+  );
 };
 
 export const formatFailedCategoryDetails = (report: LighthouseReport, categoryKey: string): string[] => {

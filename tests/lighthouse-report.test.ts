@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { formatFailedCategoryDetails, type LighthouseReport } from "../src/build/lighthouse-report.js";
+import {
+  formatFailedCategoryDetails,
+  shouldIgnoreCategoryFailure,
+  type LighthouseReport,
+} from "../src/build/lighthouse-report.js";
 
 describe("Lighthouse report summaries", () => {
   it("lists the most impactful failing audits first", () => {
@@ -67,5 +71,65 @@ describe("Lighthouse report summaries", () => {
     };
 
     expect(formatFailedCategoryDetails(report, "accessibility")).toEqual([]);
+  });
+
+  it("tolerates browser console noise when it is one of two best-practices issues", () => {
+    const report: LighthouseReport = {
+      categories: {
+        "best-practices": {
+          auditRefs: [
+            { id: "errors-in-console", weight: 1 },
+            { id: "image-aspect-ratio", weight: 1 },
+          ],
+        },
+      },
+      audits: {
+        "errors-in-console": {
+          id: "errors-in-console",
+          title: "Browser errors were logged to the console",
+          score: 0,
+        },
+        "image-aspect-ratio": {
+          id: "image-aspect-ratio",
+          title: "Displays images with incorrect aspect ratio",
+          score: 0,
+        },
+      },
+    };
+
+    expect(shouldIgnoreCategoryFailure(report, "best-practices")).toBe(true);
+  });
+
+  it("does not tolerate browser console noise when there are more than two issues", () => {
+    const report: LighthouseReport = {
+      categories: {
+        "best-practices": {
+          auditRefs: [
+            { id: "errors-in-console", weight: 1 },
+            { id: "image-aspect-ratio", weight: 1 },
+            { id: "unused-css-rules", weight: 1 },
+          ],
+        },
+      },
+      audits: {
+        "errors-in-console": {
+          id: "errors-in-console",
+          title: "Browser errors were logged to the console",
+          score: 0,
+        },
+        "image-aspect-ratio": {
+          id: "image-aspect-ratio",
+          title: "Displays images with incorrect aspect ratio",
+          score: 0,
+        },
+        "unused-css-rules": {
+          id: "unused-css-rules",
+          title: "Reduce unused CSS",
+          score: 0,
+        },
+      },
+    };
+
+    expect(shouldIgnoreCategoryFailure(report, "best-practices")).toBe(false);
   });
 });

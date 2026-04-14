@@ -22,8 +22,8 @@ describe("MediaSchema", () => {
     expect(html).toContain('alt="Founder standing in the studio"');
     expect(html).not.toContain('fetchpriority=');
     expect(html).toContain('decoding="async"');
-    expect(html).toContain('style="width: 1600px; height: 900px;"');
-    expect(html).not.toContain('width="1600" height="900"');
+    expect(html).toContain('width="1600" height="900"');
+    expect(html).not.toContain('style="width:');
     expect(html).not.toContain('loading="');
     expect(html).toContain("<figcaption");
   });
