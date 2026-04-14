@@ -47,7 +47,7 @@ export const renderMedia = (
 
   return [
     `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
-    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${styleAttribute}${loadingAttribute} fetchpriority="high" decoding="async" />`,
+    `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${styleAttribute}${loadingAttribute} decoding="async" />`,
     data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
     "</figure>",
   ]
