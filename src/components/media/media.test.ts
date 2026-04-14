@@ -72,7 +72,7 @@ describe("MediaSchema", () => {
     });
 
     expect(html).toContain('loading="lazy"');
-    expect(html).toContain('fetchpriority="low"');
+    expect(html).toContain('fetchpriority="high"');
   });
 
   it("rejects unknown fields", () => {
