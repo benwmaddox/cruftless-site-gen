@@ -1,5 +1,5 @@
 .c-feature-grid {
-  padding-block: var(--space-7);
+  padding-block: var(--space-6);
 }
 
 .c-feature-grid__inner {
@@ -64,7 +64,7 @@
 }
 
 .c-feature-grid__item {
-  padding: var(--space-5);
+  padding: var(--space-4);
   display: grid;
   gap: var(--space-4);
   border: var(--border-width-1) solid var(--color-border);
