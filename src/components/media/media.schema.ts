@@ -6,6 +6,7 @@ export const MediaSchemaBase = z
     src: z.string().min(1).max(2048),
     alt: z.string().max(200).optional(),
     caption: z.string().min(1).max(280).optional(),
+    loading: z.enum(["eager", "lazy"]).optional(),
     width: z.number().int().positive().max(10000).optional(),
     height: z.number().int().positive().max(10000).optional(),
     size: z.enum(["content", "wide"]).default("wide"),
