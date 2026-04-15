@@ -444,6 +444,26 @@
                   "minLength": 1,
                   "maxLength": 400
                 },
+                "--shadow-subtle": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "--blur-sm": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "--blur-md": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
+                "--blur-lg": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                },
                 "--duration-fast": {
                   "type": "string",
                   "minLength": 1,

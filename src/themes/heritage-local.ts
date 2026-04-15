@@ -3,86 +3,88 @@ import { createThemeDefinition } from "./tokens.js";
 export const heritageLocalTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#f7f2e9",
+    "--color-bg": "#f9f7f2",
     "--color-surface": "#ffffff",
-    "--color-surface-alt": "#e7ddcf",
-    "--color-text": "#1b1b1b",
+    "--color-surface-alt": "#ede8df",
+    "--color-text": "#1a1a1a",
     "--color-text-muted": "#5b4a3d",
-    "--color-border": "#b89f8a",
+    "--color-border": "rgb(184 159 138 / 0.2)",
     "--color-primary": "#12355b",
     "--color-primary-contrast": "#ffffff",
     "--color-accent": "#7a1f2b",
     "--color-link": "#12355b",
     "--color-link-hover": "#7a1f2b",
     "--color-focus-ring": "#7a1f2b",
-    "--page-background": "linear-gradient(180deg, #f7f2e9 0%, #efe5d5 100%)",
+    "--page-background": "#f9f7f2",
     "--surface-background": "#ffffff",
-    "--hero-background": "linear-gradient(180deg, #ffffff 0%, #f7f2e9 100%)",
-    "--cta-background": "#e7ddcf",
-    "--font-family-body": "\"Source Serif 4\", Georgia, serif",
-    "--font-family-heading": "\"Cormorant Garamond\", Georgia, serif",
-    "--font-size-5": "2.15rem",
-    "--font-size-6": "2.8rem",
-    "--line-height-heading": "1.04",
+    "--hero-background": "transparent",
+    "--cta-background": "#ede8df",
+    "--font-family-body": "\"Source Serif 4\", serif",
+    "--font-family-heading": "\"Cormorant Garamond\", serif",
+    "--font-size-5": "2.5rem",
+    "--font-size-6": "3.5rem",
+    "--line-height-heading": "1.1",
     "--line-height-loose": "1.8",
     "--heading-letter-spacing": "-0.01em",
-    "--button-letter-spacing": "0.04em",
-    "--space-7": "3rem",
-    "--space-8": "4rem",
+    "--button-letter-spacing": "0.08em",
+    "--space-7": "3.5rem",
+    "--space-8": "5.5rem",
     "--container-max": "70rem",
-    "--radius-md": "0.375rem",
-    "--radius-lg": "0.5rem",
-    "--radius-xl": "0.625rem",
-    "--shadow-sm": "none",
-    "--shadow-md": "none",
-    "--shadow-lg": "none",
-    "--button-hover-transform": "none",
+    "--radius-md": "0.25rem",
+    "--radius-lg": "0.375rem",
+    "--radius-xl": "0.5rem",
+    "--shadow-sm": "var(--shadow-subtle)",
+    "--shadow-md": "0 10px 30px rgb(184 159 138 / 0.15)",
+    "--shadow-lg": "0 20px 50px rgb(184 159 138 / 0.2)",
+    "--button-hover-transform": "translateY(-1px)",
   },
   `
-    .c-navbar,
-    .c-before-after,
-    .c-gallery,
-    .c-image-text,
-    .c-logo-strip,
-    .c-prose,
-    .c-feature-grid,
-    .c-faq,
-    .c-cta-band,
-    .c-testimonials {
-      position: relative;
+    .c-navbar {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-header);
+      backdrop-filter: blur(var(--blur-md));
+      background: rgb(249 247 242 / 0.85);
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .c-navbar::before,
-    .c-before-after::before,
-    .c-gallery::before,
-    .c-image-text::before,
-    .c-logo-strip::before,
-    .c-prose::before,
-    .c-feature-grid::before,
-    .c-faq::before,
-    .c-cta-band::before,
-    .c-testimonials::before {
+    .c-hero__body {
+      background: transparent;
+      padding-block: var(--space-8);
+      border: none;
+    }
+
+    .c-hero__body::after {
       content: "";
       display: block;
-      width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
-      margin: 0 auto var(--space-4);
-      border-top: var(--border-width-1) solid rgb(18 53 91 / 0.28);
+      width: 4rem;
+      height: 1px;
+      background: var(--color-border);
+      margin: var(--space-6) auto 0;
     }
 
-    .c-hero__body,
     .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
     .c-contact-form__inner,
-    .c-logo-strip__link,
-    .c-google-maps__frame,
-    .c-image-text__image,
-    .c-gallery__image,
-    .c-media__image,
-    .c-testimonials__item,
-    .c-testimonials__avatar {
-      box-shadow: none;
-      border-width: var(--border-width-2);
+    .c-testimonials__item {
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      transition: border-color var(--duration-normal) var(--ease-standard);
+    }
+
+    .c-feature-grid__item:hover {
+      border-color: var(--color-primary);
+    }
+
+    .c-button {
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 0;
+    }
+
+    .c-button--secondary {
+      border: 1px solid var(--color-border);
     }
   `,
 );

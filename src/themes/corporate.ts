@@ -3,60 +3,68 @@ import { createThemeDefinition } from "./tokens.js";
 export const corporateTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#f5f7fa",
+    "--color-bg": "#fcfcfd",
     "--color-surface": "#ffffff",
-    "--color-surface-alt": "#e6f0ff",
-    "--color-text": "#0f172a",
+    "--color-surface-alt": "#f1f5f9",
+    "--color-text": "#020617",
     "--color-text-muted": "#475569",
-    "--color-border": "#c6d4e1",
-    "--color-primary": "#0b5fff",
+    "--color-border": "rgb(15 23 42 / 0.08)",
+    "--color-primary": "#0f172a",
     "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#0f766e",
-    "--color-link": "#0b5fff",
-    "--color-link-hover": "#0a4bd9",
-    "--color-focus-ring": "#0b5fff",
-    "--page-background": "linear-gradient(180deg, #ffffff 0%, #eef4ff 100%)",
+    "--color-accent": "#2563eb",
+    "--color-link": "#2563eb",
+    "--color-link-hover": "#1d4ed8",
+    "--color-focus-ring": "#2563eb",
+    "--page-background": "#fcfcfd",
     "--surface-background": "#ffffff",
-    "--hero-background": "linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%)",
-    "--cta-background": "linear-gradient(180deg, #f8fbff 0%, #e6f0ff 100%)",
-    "--navbar-background":
-      "linear-gradient(180deg, rgb(255 255 255 / 0.94), rgb(245 249 255 / 0.94))",
-    "--font-family-body": "\"IBM Plex Sans\", \"Helvetica Neue\", sans-serif",
-    "--font-family-heading": "\"IBM Plex Sans\", \"Helvetica Neue\", sans-serif",
-    "--heading-letter-spacing": "-0.02em",
-    "--font-size-5": "2.1rem",
-    "--font-size-6": "2.7rem",
-    "--line-height-heading": "1.06",
-    "--font-weight-semibold": "700",
-    "--button-letter-spacing": "0.02em",
-    "--space-7": "3rem",
-    "--space-8": "4rem",
+    "--hero-background": "transparent",
+    "--cta-background": "#f1f5f9",
+    "--navbar-background": "transparent",
+    "--font-family-body": "\"Inter\", \"IBM Plex Sans\", sans-serif",
+    "--font-family-heading": "\"Inter\", \"IBM Plex Sans\", sans-serif",
+    "--heading-letter-spacing": "-0.03em",
+    "--font-size-5": "2.25rem",
+    "--font-size-6": "3.25rem",
+    "--line-height-heading": "1.1",
+    "--font-weight-semibold": "600",
+    "--font-weight-bold": "700",
+    "--button-letter-spacing": "0.01em",
+    "--space-7": "3.5rem",
+    "--space-8": "5.5rem",
     "--container-max": "72rem",
-    "--radius-md": "0.375rem",
-    "--radius-lg": "0.5rem",
-    "--radius-xl": "0.625rem",
-    "--shadow-sm": "0 1px 2px rgb(15 23 42 / 0.05)",
-    "--shadow-md": "0 6px 16px rgb(15 23 42 / 0.08)",
-    "--shadow-lg": "0 12px 24px rgb(15 23 42 / 0.12)",
+    "--radius-md": "0.5rem",
+    "--radius-lg": "0.75rem",
+    "--radius-xl": "1rem",
+    "--shadow-sm": "var(--shadow-subtle)",
+    "--shadow-md": "0 12px 24px -4px rgb(15 23 42 / 0.08), 0 4px 8px -4px rgb(15 23 42 / 0.04)",
+    "--shadow-lg": "0 20px 48px -12px rgb(15 23 42 / 0.12)",
+    "--button-hover-transform": "translateY(-1px)",
   },
   `
     .c-navbar {
-      border-bottom: var(--border-width-1) solid rgb(11 95 255 / 0.12);
+      position: sticky;
+      top: 0;
+      z-index: var(--z-header);
+      backdrop-filter: blur(var(--blur-md));
+      background: rgb(255 255 255 / 0.8);
+      border-bottom: 1px solid var(--color-border);
     }
 
     .c-hero__body {
-      position: relative;
-      overflow: hidden;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      padding-inline: 0;
     }
 
     .c-hero__body::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(90deg, rgb(11 95 255 / 0.08) 0 1px, transparent 1px 1.5rem),
-        linear-gradient(rgb(15 118 110 / 0.06) 0 1px, transparent 1px 1.5rem);
-      opacity: 0.3;
+      background-image: radial-gradient(circle at 2px 2px, var(--color-border) 1px, transparent 0);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
+      opacity: 0.4;
       pointer-events: none;
     }
 
@@ -65,17 +73,35 @@ export const corporateTheme = createThemeDefinition(
       z-index: 1;
     }
 
-    .c-feature-grid__item--selected {
-      box-shadow:
-        inset 0 0 0 var(--border-width-1) var(--color-primary),
-        var(--shadow-sm);
+    .c-before-after__item,
+    .c-feature-grid__item,
+    .c-faq__item,
+    .c-contact-form__inner,
+    .c-testimonials__item {
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--duration-normal) var(--ease-standard);
     }
 
-    .c-image-text__image,
-    .c-gallery__image,
-    .c-before-after__image,
-    .c-testimonials__avatar {
-      border-color: rgb(11 95 255 / 0.16);
+    .c-feature-grid__item:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .c-cta-band__inner {
+      border: none;
+      background: var(--color-primary);
+      color: var(--color-primary-contrast);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .c-cta-band__headline {
+      color: inherit;
+    }
+
+    .c-cta-band__inner .c-button--secondary {
+      background: rgb(255 255 255 / 0.1);
+      border: 1px solid rgb(255 255 255 / 0.2);
+      color: white;
     }
   `,
 );
