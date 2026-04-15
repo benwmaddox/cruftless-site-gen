@@ -244,6 +244,29 @@ describe("buildSite output writes", () => {
     }
   });
 
+  it("preserves configured output subtrees while removing stale generated files", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-preserve-"));
+
+    try {
+      await buildSite(createScriptedSite(), outDir);
+
+      const examplesIndexPath = path.join(outDir, "examples", "index.html");
+      await mkdir(path.dirname(examplesIndexPath), { recursive: true });
+      await writeFile(examplesIndexPath, "<p>Example preview</p>", "utf8");
+
+      const secondBuild = await buildSite(createStaticSite(), outDir, {
+        preservePaths: ["examples"],
+      });
+
+      expect(secondBuild.filesRemoved).toBe(2);
+      await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
+      await expect(access(path.join(outDir, "about", "index.html"))).rejects.toThrow();
+      await expect(readFile(examplesIndexPath, "utf8")).resolves.toContain("Example preview");
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
   it("includes google analytics tags when a measurement ID is configured", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-analytics-"));
 
@@ -386,6 +409,58 @@ describe("buildSite output writes", () => {
       const secondBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
       expect(secondBuild.filesRemoved).toBeGreaterThan(0);
       await expect(access(optimizedPreviewPath)).rejects.toThrow();
+    } finally {
+      await removeDirectory(projectRoot);
+    }
+  });
+
+  it("does not emit responsive srcset candidates for unprepared data URI media", async () => {
+    const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-data-uri-media-"));
+    const contentDir = path.join(projectRoot, "content");
+    const contentPath = path.join(contentDir, "site.json");
+    const outDir = path.join(projectRoot, "dist");
+    const dataUri =
+      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%23ffffff'/%3E%3C/svg%3E";
+
+    try {
+      await mkdir(contentDir, { recursive: true });
+      await writeFile(
+        contentPath,
+        `${JSON.stringify(
+          {
+            site: {
+              name: "LaunchKit",
+              baseUrl: "https://launchkit.example",
+              theme: "friendly-modern",
+            },
+            pages: [
+              {
+                slug: "/",
+                title: "Home",
+                components: [
+                  {
+                    type: "media",
+                    src: dataUri,
+                    alt: "Inline SVG placeholder",
+                    width: 1600,
+                    height: 900,
+                    size: "wide",
+                  },
+                ],
+              },
+            ],
+          },
+          null,
+          2,
+        )}\n`,
+        "utf8",
+      );
+
+      await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      expect(html).toContain('src="data:image/svg+xml,');
+      expect(html).not.toContain("srcset=");
     } finally {
       await removeDirectory(projectRoot);
     }

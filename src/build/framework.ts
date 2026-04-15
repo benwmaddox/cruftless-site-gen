@@ -401,6 +401,7 @@ export interface BuildResult {
 
 export interface BuildOptions {
   contentPath?: string;
+  preservePaths?: readonly string[];
 }
 const contentDirectoryName = "content";
 
@@ -506,13 +507,48 @@ const writeFileIfChanged = async (
   return "updated";
 };
 
-const removeEmptyDirectories = async (directoryPath: string, rootDir: string): Promise<void> => {
+const normalizeComparablePath = (filePath: string): string =>
+  process.platform === "win32" ? path.resolve(filePath).toLowerCase() : path.resolve(filePath);
+
+const isPathInsideOrEqual = (parentPath: string, childPath: string): boolean => {
+  const relativePath = path.relative(
+    normalizeComparablePath(parentPath),
+    normalizeComparablePath(childPath),
+  );
+
+  return relativePath === "" || (!relativePath.startsWith("..") && !path.isAbsolute(relativePath));
+};
+
+const resolvePreservedOutputPaths = (
+  outDir: string,
+  preservePaths: readonly string[] = [],
+): string[] =>
+  preservePaths.map((preservePath) =>
+    path.resolve(path.isAbsolute(preservePath) ? preservePath : path.join(outDir, preservePath)),
+  );
+
+const isPreservedOutputPath = (
+  filePath: string,
+  preservedPaths: readonly string[],
+): boolean => preservedPaths.some((preservedPath) => isPathInsideOrEqual(preservedPath, filePath));
+
+const removeEmptyDirectories = async (
+  directoryPath: string,
+  rootDir: string,
+  preservedPaths: readonly string[] = [],
+): Promise<void> => {
+  if (directoryPath !== rootDir && isPreservedOutputPath(directoryPath, preservedPaths)) {
+    return;
+  }
+
   const entries = await readdir(directoryPath, { withFileTypes: true });
 
   await Promise.all(
     entries
       .filter((entry) => entry.isDirectory())
-      .map((entry) => removeEmptyDirectories(path.join(directoryPath, entry.name), rootDir)),
+      .map((entry) =>
+        removeEmptyDirectories(path.join(directoryPath, entry.name), rootDir, preservedPaths),
+      ),
   );
 
   if (directoryPath === rootDir) {
@@ -528,13 +564,16 @@ const removeEmptyDirectories = async (directoryPath: string, rootDir: string): P
 const removeStaleGeneratedFiles = async (
   outDir: string,
   expectedFiles: ReadonlySet<string>,
+  preservedPaths: readonly string[] = [],
 ): Promise<number> => {
   try {
     const existingFiles = await collectFilesRecursively(outDir);
-    const staleFiles = existingFiles.filter((filePath) => !expectedFiles.has(filePath));
+    const staleFiles = existingFiles.filter(
+      (filePath) => !expectedFiles.has(filePath) && !isPreservedOutputPath(filePath, preservedPaths),
+    );
 
     await Promise.all(staleFiles.map((filePath) => unlink(filePath)));
-    await removeEmptyDirectories(outDir, outDir);
+    await removeEmptyDirectories(outDir, outDir, preservedPaths);
 
     return staleFiles.length;
   } catch (error) {
@@ -551,6 +590,8 @@ export const buildSite = async (
   outDir: string = defaultOutDir,
   options: BuildOptions = {},
 ): Promise<BuildResult> => {
+  const preservedPaths = resolvePreservedOutputPaths(outDir, options.preservePaths);
+
   await mkdir(path.join(outDir, "assets"), { recursive: true });
 
   const imagePipeline = options.contentPath
@@ -609,7 +650,7 @@ export const buildSite = async (
     recordWriteResult(await writeFileIfChanged(outputPath, documentHtml));
   }
 
-  const filesRemoved = await removeStaleGeneratedFiles(outDir, expectedFiles);
+  const filesRemoved = await removeStaleGeneratedFiles(outDir, expectedFiles, preservedPaths);
 
   return {
     pageCount: siteContent.pages.length,

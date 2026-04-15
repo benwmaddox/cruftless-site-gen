@@ -167,6 +167,14 @@ To keep rebuilding while you edit a content file, use watch mode:
 npm run build:watch
 ```
 
+`npm run build:watch` preserves the generated example subtrees in `dist/`, so a normal dev build does not erase the bundled example sites.
+
+To serve the default site and keep the bundled examples rebuilt at the same time, use:
+
+```bash
+npm run dev
+```
+
 Or watch a specific content file and output directory:
 
 ```bash
@@ -202,6 +210,8 @@ That downloads the top-ranked candidate into `content/images/landing-page.*`, re
 npm run validate:examples
 npm run build:examples
 ```
+
+During local development, `npm run dev` runs the default site watcher, the theme example watcher, the larger example-site watchers, and the static server together so the generated examples stay available under `dist/`.
 
 There are also dedicated commands for the larger example migrations:
 
