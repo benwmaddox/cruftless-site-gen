@@ -11,14 +11,14 @@ export const brutalismTheme = createThemeDefinition(
     "--color-border": "#000000",
     "--color-primary": "#000000",
     "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#c7ff00",
+    "--color-accent": "#d4f134",
     "--color-link": "#000000",
     "--color-link-hover": "#000000",
-    "--color-focus-ring": "#c7ff00",
+    "--color-focus-ring": "#d4f134",
     "--page-background": "#ffffff",
     "--surface-background": "#ffffff",
     "--hero-background": "#ffffff",
-    "--cta-background": "#c7ff00",
+    "--cta-background": "#d4f134",
     "--font-family-body": "\"Space Grotesk\", sans-serif",
     "--font-family-heading": "\"Space Grotesk\", sans-serif",
     "--font-size-4": "2rem",
@@ -75,6 +75,22 @@ export const brutalismTheme = createThemeDefinition(
     .c-feature-grid__item:hover {
       transform: var(--button-hover-transform);
       box-shadow: var(--shadow-md);
+    }
+
+    .c-button--primary:hover {
+      background: var(--color-accent);
+      color: var(--color-text);
+    }
+
+    .c-button--secondary:hover {
+      background: var(--color-primary);
+      color: var(--color-primary-contrast);
+    }
+
+    .c-navbar__link:hover {
+      background: var(--color-accent);
+      color: var(--color-text);
+      box-shadow: 2px 2px 0 var(--color-border);
     }
 
     .c-navbar__brand-text,
