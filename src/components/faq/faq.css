@@ -1,15 +1,8 @@
 .c-faq {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
 
-.c-faq__inner {
-  width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
-  display: grid;
-  gap: var(--space-lg);
-}
+/* l-section handles card look */
 
 .c-faq__title {
   margin: 0;
@@ -25,6 +18,8 @@
 .c-faq__item {
   margin: 0;
 }
+
+/* l-item handles cell look */
 
 .c-faq__question {
   margin: 0;

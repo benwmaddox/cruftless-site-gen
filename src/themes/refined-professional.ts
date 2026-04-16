@@ -54,29 +54,19 @@ export const refinedProfessionalTheme = createThemeDefinition(
       pointer-events: none;
     }
 
+    .l-section {
+      background: linear-gradient(145deg, #111418, #0c0f12);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.5);
+    }
+
+    .l-item {
+      background: rgba(255 255 255 / 0.03);
+    }
+
     .c-button {
       text-transform: uppercase;
       font-weight: 500;
-    }
-
-    .c-button--primary {
-      background: var(--primary);
-      box-shadow: 0 0 20px rgb(201 162 39 / 0.2);
-    }
-
-    .c-button--secondary {
-      border: 1px solid var(--primary);
-      background: transparent;
-      color: var(--primary);
-    }
-
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-contact-form__inner,
-    .c-cta-band__inner,
-    .c-testimonials__item {
-      background: linear-gradient(145deg, #111418, #0c0f12);
     }
   `,
 );

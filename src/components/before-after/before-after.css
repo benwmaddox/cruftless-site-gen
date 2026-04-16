@@ -1,12 +1,11 @@
 .c-before-after {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
 
+/* l-section handles card look */
+
 .c-before-after__inner {
   width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
 }
@@ -41,6 +40,8 @@
   display: grid;
   gap: var(--space-sm);
 }
+
+/* l-item handles cell look */
 
 .c-before-after__label {
   margin: 0;

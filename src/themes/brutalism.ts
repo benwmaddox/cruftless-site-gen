@@ -48,14 +48,8 @@ export const brutalismTheme = createThemeDefinition(
       gap: var(--space-xl);
     }
 
+    .l-section,
     .c-button,
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-logo-strip__link,
-    .c-contact-form__inner,
-    .c-cta-band__inner,
-    .c-testimonials__item,
     .c-image-text__image,
     .c-media__image {
       border: 2px solid var(--border);
@@ -63,18 +57,8 @@ export const brutalismTheme = createThemeDefinition(
       transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
 
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-logo-strip__link,
-    .c-contact-form__inner,
-    .c-cta-band__inner,
-    .c-testimonials__item {
-      padding: var(--space-lg);
-    }
-
-    .c-button:hover,
-    .c-feature-grid__item:hover {
+    .l-section:hover,
+    .c-button:hover {
       transform: translate(-2px, -2px);
       box-shadow: 6px 6px 0 var(--border);
     }

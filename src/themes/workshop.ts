@@ -49,17 +49,13 @@ export const workshopTheme = createThemeDefinition(
       padding-block: var(--space-md);
     }
 
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-testimonials__item,
-    .c-contact-form__inner,
-    .c-cta-band__inner {
-      background: var(--surface);
+    .l-section {
       border-top: 4px solid var(--primary);
-      padding: var(--space-lg);
-      border-radius: 0;
       box-shadow: 0 2px 4px rgb(43 29 18 / 0.05);
+    }
+
+    .l-item {
+      background: var(--bg);
     }
 
     .c-button {
@@ -69,6 +65,12 @@ export const workshopTheme = createThemeDefinition(
     .c-button:active {
       transform: translateY(2px);
       box-shadow: none;
+    }
+
+    .c-cta-band__inner {
+      background: var(--accent);
+      color: var(--accent-fg);
+      border: none;
     }
   `,
 );

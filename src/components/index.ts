@@ -20,6 +20,7 @@ import {
   contactFormClassNames,
   renderContactForm,
 } from "./contact-form/contact-form.render.js";
+import { contactFormRuntimeScript } from "./contact-form/contact-form.runtime.js";
 import { CtaBandSchema } from "./cta-band/cta-band.schema.js";
 import { ctaBandClassNames, renderCtaBand } from "./cta-band/cta-band.render.js";
 import { FaqSchema } from "./faq/faq.schema.js";
@@ -175,6 +176,7 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
     render: (data) => renderContactForm(ContactFormSchema.parse(data)),
     cssPath: fileURLToPath(new URL("./contact-form/contact-form.css", import.meta.url)),
     classNames: contactFormClassNames,
+    scriptContent: contactFormRuntimeScript,
   },
   {
     type: "cta-band",

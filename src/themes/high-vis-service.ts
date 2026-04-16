@@ -50,6 +50,15 @@ export const highVisServiceTheme = createThemeDefinition(
       padding-block: var(--space-md);
     }
 
+    .l-section {
+      background: var(--surface);
+      box-shadow: 0 20px 40px rgb(255 212 0 / 0.05);
+    }
+
+    .l-item {
+      background: var(--bg);
+    }
+
     .c-button {
       text-transform: uppercase;
       font-weight: 800;
@@ -65,9 +74,9 @@ export const highVisServiceTheme = createThemeDefinition(
     }
 
     .c-cta-band__inner {
-      background: var(--primary);
-      color: var(--primary-fg);
-      box-shadow: 0 20px 40px rgb(255 212 0 / 0.15);
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      box-shadow: 0 20px 40px rgb(255 212 0 / 0.1);
     }
   `,
 );

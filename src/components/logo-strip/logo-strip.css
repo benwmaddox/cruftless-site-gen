@@ -1,12 +1,11 @@
 .c-logo-strip {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
 
+/* l-section handles card look */
+
 .c-logo-strip__inner {
   width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
 }
@@ -43,13 +42,13 @@
 
 .c-logo-strip__link {
   min-height: 5.5rem;
-  padding: var(--space-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius);
   transition: all var(--duration) var(--ease);
 }
+
+/* l-item handles cell look */
 
 .c-logo-strip__image {
   display: block;

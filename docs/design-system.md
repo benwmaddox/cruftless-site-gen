@@ -2,34 +2,28 @@
 
 This document defines the foundational rules for the Cruftless Site Generator. Any change to the layout, spacing, or component structure must align with these principles.
 
-## 1. The Alignment Standard
+## 1. The Alignment & Section Standard
 
-Every component must align to a single, global content edge. To achieve this, we follow a two-tier layout system:
+Every component must sit within a standardized floating card. This is achieved via the `.l-section` layout class.
 
-### A. The Component Gutter (Root Level)
-Every component's root container must provide a horizontal gutter to ensure content never hits the viewport edge on mobile.
+### A. The Section Card (.l-section)
+Every component's root element must use the `.l-section` class. This class defines the primary visual container for the site.
 
-```css
-.c-component {
-  padding-inline: var(--space-md); /* Standard 1rem gutter */
-}
-```
+- **Constraint**: `width: calc(100% - (var(--space-md) * 2)); max-width: var(--max-width); margin-inline: auto;`
+- **Aesthetic**:
+  - `background: var(--surface)`.
+  - `border: 1px solid var(--border)`.
+  - `border-radius: var(--radius)`.
+  - `box-shadow: var(--shadow)`.
+  - `padding: var(--space-xl)`.
 
-### B. The Content Constraint (Inner Level)
-The inner wrapper (`.__inner`) defines the actual content boundary. It does not have horizontal padding.
+### B. Section Modifiers
+- **.l-section--hero**: For the Hero component, providing increased padding (`var(--space-2xl)`).
 
-```css
-.__inner {
-  width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
-}
-```
+### C. The Layout Cells (.l-item)
+Nested items inside a section card (e.g., feature items, FAQ items) should use the `.l-item` class to create visual depth without clutter.
 
-### Why this rule exists:
-- **Desktop Precision**: On screens wider than the `max-width` plus gutters, every component will be exactly the same width (e.g., 1280px).
-- **Mobile Consistency**: Every section shares the same gutter, ensuring their edges line up perfectly as the screen shrinks.
-- **Background Integrity**: The component root remains 100% wide, allowing backgrounds and textures to fill the viewport while content remains safely indented.
+- **Rule**: Items use `background: var(--bg)` and `border-radius: var(--radius)` but **must not** have their own borders or shadows by default. They should feel like "cut-outs" within the parent section card.
 
 ## 2. Layout Architecture (The "Chrome" Rule)
 
@@ -57,24 +51,28 @@ Themes are defined by a strict set of tokens, but can provide surgical CSS overr
 - **Padding**: Components that require internal backgrounds or borders (e.g., `cta-band`, `feature-grid` cards) must apply their internal padding *inside* the `__inner` alignment boundary.
 - **Borders**: Component-specific borders and shadows should be applied to the `__inner` container or its child elements, never to the section container itself.
 
-## 5. Background & Textures (The "Framed Stage")
+## 5. Background & Textures (The "Card & Cell" Model)
 
-To ensure visual depth without sacrificing readability, we use a two-layer background architecture:
+To provide visual depth without clutter, we use a layered architecture where sections appear as cohesive cards with internal divisions.
 
 ### A. The Decorative Stage (Body)
-The `body` element carries the theme's background pattern. This is visible in the gutters (left/right margins) on desktop.
+The `body` element carries the theme's background pattern. This remains visible between sections and in the gutters on desktop.
 
-- **Token**: `--theme-pattern` (Default: `none`). Stores an SVG data URI or gradient.
-- **Overrides**: Users can override this pattern by providing a background image via `--site-page-background-image`.
+### B. The Section Cards (__inner)
+Every component's `__inner` wrapper acts as the **primary floating card**.
 
-### B. The Content Sheet (Main)
-The `<main class="l-page">` element acts as a solid "sheet" of content.
+- **Aesthetic**:
+  - `background: var(--surface)`.
+  - `border: 1px solid var(--border)`.
+  - `border-radius: var(--radius)`.
+  - `box-shadow: var(--shadow)`.
+  - `padding: var(--space-xl)`.
 
-- **Style**: `background: var(--bg)`.
-- **Constraint**: It is centered and constrained to `var(--max-width)`.
-- **Readability**: This ensures text is always rendered on a solid, clean surface, regardless of how complex the body pattern is.
+### C. The Section Cells (Nested Items)
+To avoid "boxes within boxes" clutter, items inside a section card (e.g., feature items, FAQ items) act as simplified **cells**.
+
+- **Rule**: Nested items should use `background: var(--bg)` and `border-radius: var(--radius)` but **must not** have their own borders or shadows. They should feel like "cut-outs" within the section card.
 
 ### Spacing Rules:
-- **Vertical Rhythm**: Vertical breathing room is controlled via `padding-block`.
-- **Standard Vertical Padding**: Most components should use `padding-block: var(--space-xl)` (default 3rem).
-- **Hero Separation**: The Hero component may use `padding-block: var(--space-2xl)` (default 5rem).
+- **Vertical Rhythm**: The global `.l-page` container provides the spacing between cards using `gap: var(--space-xl)`.
+- **Inner Breathing Room**: Cards provide their own internal vertical padding via `padding-block: var(--space-xl)`.

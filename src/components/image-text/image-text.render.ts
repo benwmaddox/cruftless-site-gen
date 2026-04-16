@@ -87,7 +87,7 @@ export const renderImageText = (
       : [renderCopy(data), renderMedia(data, renderContext)].join("\n");
 
   return [
-    `<section class="c-image-text c-image-text--image-${escapeHtml(data.imagePosition)}">`,
+    `<section class="c-image-text l-section c-image-text--image-${escapeHtml(data.imagePosition)}">`,
     '  <div class="c-image-text__inner">',
     innerHtml,
     "  </div>",

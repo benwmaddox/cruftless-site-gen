@@ -25,7 +25,7 @@ export const renderCtaBand = (data: CtaBandData): string => {
     .join("");
 
   return [
-    '<section class="c-cta-band">',
+    '<section class="c-cta-band l-section">',
     '  <div class="c-cta-band__inner">',
     `    <h2 class="c-cta-band__headline">${escapeHtml(data.headline)}</h2>`,
     data.body

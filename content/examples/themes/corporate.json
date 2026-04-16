@@ -415,6 +415,7 @@
         },
         {
           "type": "contact-form",
+          "mode": "demo",
           "title": "Sample contact form",
           "intro": "Theme previews also include a form so field spacing and button treatment stay covered.",
           "action": "/contact",

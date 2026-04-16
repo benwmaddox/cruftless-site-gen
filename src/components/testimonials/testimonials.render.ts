@@ -54,7 +54,7 @@ export const renderTestimonials = (
   const itemsHtml = data.items
     .map((item) =>
       [
-        '      <li class="c-testimonials__item">',
+        '      <li class="c-testimonials__item l-item">',
         `        <blockquote class="c-testimonials__quote">&ldquo;${escapeHtml(item.quote)}&rdquo;</blockquote>`,
         '        <div class="c-testimonials__footer">',
         renderAvatar(item.image, renderContext),
@@ -71,7 +71,7 @@ export const renderTestimonials = (
     .join("\n");
 
   return [
-    '<section class="c-testimonials">',
+    '<section class="c-testimonials l-section">',
     '  <div class="c-testimonials__inner">',
     `    <h2 class="c-testimonials__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-testimonials__lead">${escapeHtml(data.lead)}</p>` : "",

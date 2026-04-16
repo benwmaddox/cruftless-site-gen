@@ -29,7 +29,7 @@ const renderPanel = (
       : "";
 
   return [
-    `      <figure class="c-before-after__item c-before-after__item--${modifier}">`,
+    `      <figure class="c-before-after__item l-item c-before-after__item--${modifier}">`,
     `        <p class="c-before-after__label">${escapeHtml(panel.label)}</p>`,
     `        <img class="c-before-after__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(panel.alt)}"${dimensions} />`,
     panel.caption
@@ -46,7 +46,7 @@ export const renderBeforeAfter = (
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string =>
   [
-    '<section class="c-before-after">',
+    '<section class="c-before-after l-section">',
     '  <div class="c-before-after__inner">',
     `    <h2 class="c-before-after__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-before-after__lead">${escapeHtml(data.lead)}</p>` : "",

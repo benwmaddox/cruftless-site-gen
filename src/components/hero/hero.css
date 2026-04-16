@@ -1,5 +1,4 @@
 .c-hero {
-  padding-block: var(--space-2xl);
   padding-inline: var(--space-md);
   display: grid;
   place-content: center;
@@ -13,8 +12,6 @@
 
 .c-hero__body {
   width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
 }
