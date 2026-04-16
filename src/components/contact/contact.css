@@ -33,11 +33,11 @@
   display: grid;
   gap: var(--space-xs);
   text-decoration: none;
-  transition: transform var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  transition: transform var(--duration) var(--ease), background var(--duration) var(--ease);
 }
 
 .c-contact__item--link:hover {
-  background-color: var(--surface);
+  background: var(--surface);
   transform: translateY(-2px);
 }
 
