@@ -67,15 +67,14 @@
 .c-contact-form__textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgb(var(--primary-rgb) / 0.1);
+  box-shadow: 0 0 0 2px var(--focus-ring);
 }
 
 .c-contact-form__actions {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--space-md);
-  align-items: start;
-  margin-block-start: var(--space-md);
+  place-items: start;
+  margin-block: var(--space-md) 0;
 }
 
 .c-contact-form__note {

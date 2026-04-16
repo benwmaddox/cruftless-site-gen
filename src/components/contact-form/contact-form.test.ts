@@ -18,7 +18,7 @@ describe("ContactFormSchema", () => {
 
     const html = renderContactForm(parsed);
 
-    expect(html).toContain('<section class="c-contact-form">');
+    expect(html).toContain('<section class="c-contact-form l-section">');
     expect(html).toContain('action="/api/contact"');
     expect(html).toContain('data-contact-form-mode="production"');
     expect(html).toContain('name="message"');
