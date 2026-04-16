@@ -308,7 +308,6 @@ const emitSiteCss = (site: SiteData): string => {
 
 const resolveSiteThemeDefinition = (site: SiteData) =>
   resolveThemeDefinition(themes[site.theme], {
-    ...site.themeOverrides,
     cssVariables: site.cssVariables,
   });
 

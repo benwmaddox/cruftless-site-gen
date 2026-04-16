@@ -1,23 +1,22 @@
 .c-store-location-hours {
-  padding-block: var(--space-7);
+  padding-block: var(--space-xl);
 }
 
 .c-store-location-hours__inner {
-  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
   margin-inline: auto;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-xl);
 }
 
 .c-store-location-hours__title {
   margin: 0;
-  font-size: var(--font-size-4);
-  line-height: var(--line-height-heading);
+  font-size: var(--size-3xl);
 }
 
 .c-store-location-hours__grid {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-lg);
 }
 
 @media (width >= 64rem) {
@@ -28,25 +27,25 @@
 
 .c-store-location-hours__panel {
   min-width: 0;
-  padding: var(--space-4);
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--surface-background);
-  box-shadow: var(--shadow-sm);
+  padding: var(--space-lg);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .c-store-location-hours__panel-title {
-  margin: 0 0 var(--space-3);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-2);
-  line-height: var(--line-height-heading);
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--size-xl);
 }
 
 .c-store-location-hours__map-frame {
-  border-radius: var(--radius-lg);
-  border: var(--border-width-1) solid var(--color-border);
-  background: var(--color-surface-alt);
+  border-radius: var(--radius);
+  background: var(--surface);
   overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .c-store-location-hours__map {
@@ -59,27 +58,29 @@
 
 .c-store-location-hours__contact-list {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-md);
   margin: 0;
 }
 
 .c-store-location-hours__contact-row {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--space-xs);
 }
 
 .c-store-location-hours__contact-label {
   margin: 0;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-0);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  font-family: var(--font-heading);
+  font-size: var(--size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  color: var(--primary);
 }
 
 .c-store-location-hours__contact-value {
   margin: 0;
-  color: var(--color-text-muted);
-  line-height: var(--line-height-loose);
+  color: var(--muted);
+  font-size: var(--size-base);
 }
 
 .c-store-location-hours__address {
@@ -89,27 +90,27 @@
 .c-store-location-hours__hours-table {
   width: 100%;
   border-collapse: collapse;
-  font-variant-numeric: tabular-nums;
 }
 
 .c-store-location-hours__hours-day,
 .c-store-location-hours__hours-value {
-  padding-block: var(--space-2);
-  border-block-end: var(--border-width-1) solid var(--color-border);
+  padding-block: var(--space-sm);
+  border-block-end: 1px solid var(--border);
 }
 
 .c-store-location-hours__hours-day {
-  width: 52%;
-  padding-inline-end: var(--space-3);
+  width: 50%;
+  padding-inline-end: var(--space-md);
   text-align: left;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-0);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 600;
+  font-size: var(--size-sm);
 }
 
 .c-store-location-hours__hours-value {
   text-align: right;
   white-space: nowrap;
+  font-size: var(--size-sm);
+  color: var(--muted);
 }
 
 .c-store-location-hours__hours-table tbody tr:last-child .c-store-location-hours__hours-day,
@@ -119,16 +120,12 @@
 
 .c-store-location-hours__hours-range {
   display: inline-flex;
-  gap: var(--space-2);
-}
-
-.c-store-location-hours__hours-separator {
-  color: var(--color-text-muted);
+  gap: var(--space-xs);
 }
 
 @media (width <= 40rem) {
   .c-store-location-hours__panel {
-    padding: var(--space-3);
+    padding: var(--space-md);
   }
 
   .c-store-location-hours__hours-day,

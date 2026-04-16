@@ -3,61 +3,45 @@ import { createThemeDefinition } from "./tokens.js";
 export const brutalismTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#ffffff",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#f4f4f4",
-    "--color-text": "#000000",
-    "--color-text-muted": "#333333",
-    "--color-border": "#000000",
-    "--color-primary": "#000000",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#d4f134",
-    "--color-link": "#000000",
-    "--color-link-hover": "#000000",
-    "--color-focus-ring": "#d4f134",
-    "--page-background": "#ffffff",
-    "--surface-background": "#ffffff",
-    "--hero-background": "#ffffff",
-    "--cta-background": "#d4f134",
-    "--font-family-body": "\"Space Grotesk\", sans-serif",
-    "--font-family-heading": "\"Space Grotesk\", sans-serif",
-    "--font-size-4": "2rem",
-    "--font-size-5": "3rem",
-    "--font-size-6": "4rem",
-    "--line-height-heading": "0.95",
-    "--font-weight-semibold": "700",
-    "--font-weight-bold": "800",
-    "--heading-letter-spacing": "-0.04em",
-    "--button-letter-spacing": "0.02em",
-    "--space-7": "3.5rem",
-    "--space-8": "5.5rem",
-    "--button-height": "3.25rem",
-    "--radius-sm": "0.25rem",
-    "--radius-md": "0.5rem",
-    "--radius-lg": "0.75rem",
-    "--radius-xl": "1rem",
-    "--border-width-2": "2px",
-    "--border-width-3": "4px",
-    "--shadow-sm": "3px 3px 0 rgb(0 0 0 / 1)",
-    "--shadow-md": "6px 6px 0 rgb(0 0 0 / 1)",
-    "--shadow-lg": "10px 10px 0 rgb(0 0 0 / 1)",
-    "--button-hover-transform": "translate(-2px, -2px)",
+    "--bg": "#ffffff",
+    "--text": "#000000",
+    "--muted": "#333333",
+    "--primary": "#000000",
+    "--primary-fg": "#ffffff",
+    "--accent": "#d4f134",
+    "--accent-fg": "#000000",
+    "--border": "#000000",
+    "--surface": "#ffffff",
+    "--surface-fg": "#000000",
+    "--link": "#000000",
+    "--link-hover": "#000000",
+    "--focus-ring": "#d4f134",
+    "--font-body": "\"Space Grotesk\", sans-serif",
+    "--font-heading": "\"Space Grotesk\", sans-serif",
+    "--font-mono": "ui-monospace, monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.25rem",
+    "--size-xl": "1.5rem",
+    "--size-2xl": "2rem",
+    "--size-3xl": "3rem",
+    "--size-4xl": "4rem",
+    "--size-5xl": "6rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3.5rem",
+    "--space-2xl": "5.5rem",
+    "--radius": "0rem",
+    "--shadow": "4px 4px 0 #000000",
+    "--max-width": "80rem",
   },
   `
     .c-navbar {
-      position: sticky;
-      top: var(--space-4);
-      z-index: var(--z-header);
-      width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
-      margin-inline: auto;
-      background: rgb(255 255 255 / 0.9);
-      backdrop-filter: blur(var(--blur-sm));
-      border: var(--border-width-2) solid var(--color-border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
+      border-bottom: 2px solid var(--border);
     }
 
-    .c-navbar__link,
     .c-button,
     .c-before-after__item,
     .c-feature-grid__item,
@@ -65,51 +49,40 @@ export const brutalismTheme = createThemeDefinition(
     .c-logo-strip__link,
     .c-contact-form__inner,
     .c-cta-band__inner,
-    .c-testimonials__item {
-      border: var(--border-width-2) solid var(--color-border);
-      box-shadow: var(--shadow-sm);
-      transition: transform var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+    .c-testimonials__item,
+    .c-image-text__image,
+    .c-media__image {
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
 
     .c-button:hover,
     .c-feature-grid__item:hover {
-      transform: var(--button-hover-transform);
-      box-shadow: var(--shadow-md);
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--border);
     }
 
     .c-button--primary:hover {
-      background: var(--color-accent);
-      color: var(--color-text);
-    }
-
-    .c-button--secondary:hover {
-      background: var(--color-primary);
-      color: var(--color-primary-contrast);
+      background: var(--accent);
+      color: var(--text);
     }
 
     .c-navbar__link:hover {
-      background: var(--color-accent);
-      color: var(--color-text);
-      box-shadow: 2px 2px 0 var(--color-border);
+      background: var(--accent);
+      color: var(--text);
     }
 
     .c-navbar__brand-text,
     .c-navbar__link,
-    .c-button,
-    .c-feature-grid__item-status {
+    .c-button {
       text-transform: uppercase;
-      font-weight: var(--font-weight-bold);
-    }
-
-    .c-hero__body {
-      background: transparent;
-      box-shadow: none;
-      border: none;
+      font-weight: 800;
     }
 
     .c-cta-band__inner {
-      background: var(--color-accent);
-      color: var(--color-text);
+      background: var(--accent);
+      color: var(--text);
     }
   `,
 );

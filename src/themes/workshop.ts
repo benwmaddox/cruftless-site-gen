@@ -3,72 +3,49 @@ import { createThemeDefinition } from "./tokens.js";
 export const workshopTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#fffbf4",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#f3e7d4",
-    "--color-text": "#2b1d12",
-    "--color-text-muted": "#6b4f3b",
-    "--color-border": "rgb(43 29 18 / 0.12)",
-    "--color-primary": "#c3512f",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#2f6f4e",
-    "--color-link": "#8f2e1c",
-    "--color-link-hover": "#2f6f4e",
-    "--color-focus-ring": "#2f6f4e",
-    "--page-background": "radial-gradient(at 0% 0%, #fffbf4 0%, #f7efe1 100%)",
-    "--surface-background": "#ffffff",
-    "--hero-background": "transparent",
-    "--cta-background": "#f3e7d4",
-    "--font-family-body": "\"Public Sans\", sans-serif",
-    "--font-family-heading": "\"Source Serif 4\", serif",
-    "--heading-letter-spacing": "-0.02em",
-    "--font-size-5": "2.25rem",
-    "--font-size-6": "3rem",
-    "--line-height-heading": "1.1",
-    "--line-height-loose": "1.78",
-    "--font-weight-semibold": "700",
-    "--button-letter-spacing": "0.03em",
-    "--button-secondary-text": "var(--color-text)",
-    "--space-6": "2.25rem",
-    "--space-7": "3.5rem",
-    "--space-8": "5rem",
-    "--container-max": "70rem",
-    "--button-height": "3.125rem",
-    "--radius-md": "0.5rem",
-    "--radius-lg": "0.75rem",
-    "--radius-xl": "1rem",
-    "--border-width-2": "2px",
-    "--shadow-sm": "var(--shadow-subtle)",
-    "--shadow-md": "0 10px 25px -5px rgb(43 29 18 / 0.1)",
-    "--shadow-lg": "0 20px 40px -10px rgb(43 29 18 / 0.15)",
-    "--button-hover-transform": "translateY(-2px)",
+    "--bg": "#fffbf4",
+    "--text": "#2b1d12",
+    "--muted": "#6b4f3b",
+    "--primary": "#c3512f",
+    "--primary-fg": "#ffffff",
+    "--accent": "#2f6f4e",
+    "--accent-fg": "#ffffff",
+    "--border": "rgb(43 29 18 / 0.12)",
+    "--surface": "#ffffff",
+    "--surface-fg": "#2b1d12",
+    "--link": "#8f2e1c",
+    "--link-hover": "#2f6f4e",
+    "--focus-ring": "#2f6f4e",
+    "--font-body": "\"Public Sans\", sans-serif",
+    "--font-heading": "\"Source Serif 4\", serif",
+    "--font-mono": "monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.125rem",
+    "--size-xl": "1.25rem",
+    "--size-2xl": "1.5rem",
+    "--size-3xl": "2.25rem",
+    "--size-4xl": "3rem",
+    "--size-5xl": "4.5rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2.25rem",
+    "--space-xl": "3.5rem",
+    "--space-2xl": "5rem",
+    "--radius": "0.5rem",
+    "--shadow": "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+    "--max-width": "70rem",
   },
   `
+    body {
+      background: radial-gradient(at 0% 0%, #fffbf4 0%, #f7efe1 100%);
+    }
+
     .c-navbar {
-      position: sticky;
-      top: 0;
-      z-index: var(--z-header);
-      backdrop-filter: blur(var(--blur-md));
+      backdrop-filter: blur(8px);
       background: rgb(255 251 244 / 0.8);
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .c-hero__body,
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-contact-form__inner,
-    .c-testimonials__item {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--color-border);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .c-hero__body {
-      background: transparent;
-      box-shadow: none;
-      border: none;
+      border-bottom: 1px solid var(--border);
     }
 
     .c-hero__body::before,
@@ -94,24 +71,15 @@ export const workshopTheme = createThemeDefinition(
       pointer-events: none;
     }
 
-    .c-feature-grid__item {
-      transition: transform var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard);
-    }
-
-    .c-feature-grid__item:hover {
-      transform: var(--button-hover-transform);
-      box-shadow: var(--shadow-md);
-    }
-
     .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
     .c-testimonials__item {
-      border-top: var(--border-width-3) solid var(--color-primary);
+      border-top: 4px solid var(--primary);
+      border-radius: 0;
     }
 
     .c-button {
-      border: none;
       box-shadow: 0 4px 0 rgb(43 29 18 / 0.1);
     }
 

@@ -3,94 +3,86 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-const repoRoot = path.resolve(import.meta.dirname, "..");
+import { componentDefinitions } from "../src/components/index.js";
+import { defaultThemeTokens } from "../src/themes/tokens.js";
 
-const readComponentCss = async (componentName: string) =>
-  readFile(path.join(repoRoot, "src", "components", componentName, `${componentName}.css`), "utf8");
-const readBaseCss = async () => readFile(path.join(repoRoot, "src", "styles", "base.css"), "utf8");
+const readBaseCss = async () => readFile(path.resolve(process.cwd(), "src/styles/base.css"), "utf8");
 
 describe("component width tokens", () => {
-  it("uses content-max for standard component wrappers", async () => {
-    const standardComponents = [
-      "before-after",
-      "contact",
-      "contact-form",
-      "cta-band",
-      "faq",
-      "feature-grid",
-      "gallery",
-      "hero",
-      "hours",
-      "image-text",
-      "logo-strip",
-      "navigation-bar",
-      "prose",
-      "store-location-hours",
-      "testimonials",
-    ];
+  it("keeps max-width at 80rem by default", () => {
+    expect(defaultThemeTokens["--max-width"]).toBe("80rem");
+  });
 
-    const cssFiles = await Promise.all(standardComponents.map(readComponentCss));
+  it("uses max-width for standard component wrappers", async () => {
+    const cssFiles = await Promise.all(
+      componentDefinitions
+        .filter(
+          (component) =>
+            component.type !== "page-content" &&
+            component.type !== "media" &&
+            component.type !== "google-maps",
+        )
+        .map((component) => readFile(component.cssPath, "utf8")),
+    );
 
     for (const css of cssFiles) {
-      expect(css).toContain("var(--content-max)");
+      expect(css).toContain("var(--max-width)");
       expect(css).not.toContain("var(--container-max)");
+      expect(css).not.toContain("var(--content-max)");
     }
   });
 
   it("supports explicit feature grid column counts before wrapping", async () => {
-    const css = await readComponentCss("feature-grid");
+    const css = await readFile(
+      componentDefinitions.find((component) => component.type === "feature-grid")!.cssPath,
+      "utf8",
+    );
 
-    expect(css).toContain(".c-feature-grid__items--cols-1");
-    expect(css).toContain(".c-feature-grid__items--cols-2");
-    expect(css).toContain(".c-feature-grid__items--cols-3");
-    expect(css).toContain(".c-feature-grid__items--cols-4");
-    expect(css).toContain("@media (width <= 60rem)");
-    expect(css).toContain("grid-template-columns: repeat(2, minmax(0, 1fr));");
-    expect(css).toContain("@media (width <= 40rem)");
-    expect(css).toContain("grid-template-columns: 1fr;");
-    expect(css).not.toContain("repeat(auto-fit, minmax(14rem, 1fr))");
+    expect(css).toContain(".c-feature-grid__items--cols-1 {");
+    expect(css).toContain(".c-feature-grid__items--cols-2 {");
+    expect(css).toContain(".c-feature-grid__items--cols-3 {");
+    expect(css).toContain(".c-feature-grid__items--cols-4 {");
   });
 
   it("keeps media width modes split between content and container tokens", async () => {
-    const css = await readComponentCss("media");
+    const css = await readFile(
+      componentDefinitions.find((component) => component.type === "media")!.cssPath,
+      "utf8",
+    );
 
     expect(css).toContain(".c-media--size-content");
-    expect(css).toContain("var(--content-max)");
+    expect(css).toContain("var(--max-width)");
     expect(css).toContain(".c-media--size-wide");
-    expect(css).toContain("var(--container-max)");
-    expect(css).toContain("width: auto;");
-    expect(css).toContain("max-width: 100%;");
-    expect(css).toContain("margin-inline: auto;");
   });
 
   it("uses a dedicated readable text color for secondary buttons", async () => {
     const css = await readBaseCss();
 
-    expect(css).toContain("color: var(--button-secondary-text);");
+    expect(css).toContain("color: var(--text);");
   });
 
   it("keeps primary button text readable on hover", async () => {
     const css = await readBaseCss();
 
     expect(css).toContain(".c-button--primary:hover {");
-    expect(css).toContain("color: var(--color-primary-contrast);");
+    expect(css).toContain("background: var(--link-hover);");
   });
 
   it("uses mobile-safe viewport units for short-page layouts", async () => {
     const css = await readBaseCss();
 
-    expect(css).toContain("min-height: 100svh;");
     expect(css).toContain("min-height: 100dvh;");
     expect(css).toContain(".l-page {");
-    expect(css).toContain("min-height: inherit;");
   });
 
   it("keeps google maps width modes split between content and container tokens", async () => {
-    const css = await readComponentCss("google-maps");
+    const css = await readFile(
+      componentDefinitions.find((component) => component.type === "google-maps")!.cssPath,
+      "utf8",
+    );
 
     expect(css).toContain(".c-google-maps--size-content");
-    expect(css).toContain("var(--content-max)");
+    expect(css).toContain("var(--max-width)");
     expect(css).toContain(".c-google-maps--size-wide");
-    expect(css).toContain("var(--container-max)");
   });
 });

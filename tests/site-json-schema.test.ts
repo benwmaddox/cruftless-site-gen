@@ -400,12 +400,12 @@ describe("site JSON schema", async () => {
     const cssVariableProperties = (cssVariables.properties ?? {}) as JsonSchemaObject;
 
     expect(cssVariables.type).toBe("object");
-    expect(cssVariableProperties["--space-5"]).toEqual({
+    expect(cssVariableProperties["--space-md"]).toEqual({
       type: "string",
       minLength: 1,
       maxLength: 400,
     });
-    expect(cssVariableProperties["--color-primary"]).toEqual({
+    expect(cssVariableProperties["--primary"]).toEqual({
       type: "string",
       minLength: 1,
       maxLength: 400,
@@ -423,10 +423,9 @@ describe("site JSON schema", async () => {
         baseUrl: "https://launchkit.example",
         theme: "friendly-modern",
         cssVariables: {
-          "--space-5": "2.25rem",
-          "--color-primary": "#ff5500",
-        },
-      },
+          "--space-md": "2.25rem",
+          "--primary": "#ff5500",
+        },      },
       pages: [
         {
           slug: "/",
@@ -459,7 +458,7 @@ describe("site JSON schema", async () => {
         baseUrl: "https://launchkit.example",
         theme: "friendly-modern",
         cssVariables: {
-          "--space-5": "2.25rem",
+          "--space-md": "2.25rem",
           "--not-a-token": "1rem",
         },
       },

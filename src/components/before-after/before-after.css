@@ -1,34 +1,31 @@
 .c-before-after {
-  padding-block: var(--space-7);
+  padding-block: var(--space-xl);
 }
 
 .c-before-after__inner {
-  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
   margin-inline: auto;
   display: grid;
-  gap: var(--space-5);
-}
-
-.c-before-after__title,
-.c-before-after__lead {
-  margin: 0;
+  gap: var(--space-lg);
 }
 
 .c-before-after__title {
-  font-size: var(--font-size-4);
-  line-height: var(--line-height-heading);
+  margin: 0;
+  font-size: var(--size-3xl);
+  font-weight: 700;
 }
 
 .c-before-after__lead {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-2);
-  line-height: var(--line-height-loose);
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--size-lg);
+  max-width: 45rem;
 }
 
 .c-before-after__items {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-lg);
 }
 
 @media (width <= 48rem) {
@@ -39,37 +36,32 @@
 
 .c-before-after__item {
   margin: 0;
-  padding: var(--space-4);
   display: grid;
-  gap: var(--space-3);
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--surface-background);
-  box-shadow: var(--shadow-sm);
+  gap: var(--space-sm);
 }
 
 .c-before-after__label {
   margin: 0;
-  color: var(--color-primary);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-0);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: var(--size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
 .c-before-after__image {
   display: block;
   width: 100%;
   height: auto;
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-alt);
-  box-shadow: var(--shadow-md);
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: var(--surface);
 }
 
 .c-before-after__caption {
   margin: 0;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-0);
-  line-height: var(--line-height-loose);
+  color: var(--muted);
+  font-size: var(--size-sm);
 }

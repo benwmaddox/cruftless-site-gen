@@ -1,12 +1,15 @@
 .c-navbar {
-  position: relative;
-  padding-block: var(--space-5) var(--space-4);
-  background: var(--navbar-background, transparent);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding-block: var(--space-md);
+  background: var(--bg);
+  border-block-end: 1px solid var(--border);
 }
 
 .c-navbar__inner,
 .c-navbar__panel {
-  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
   margin-inline: auto;
 }
 
@@ -15,38 +18,37 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
-  min-height: calc(var(--button-height) + (2 * var(--space-1)));
+  gap: var(--space-lg);
+  min-height: 3rem;
 }
 
 .c-navbar__brand {
   min-width: 0;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
-  color: var(--color-text);
+  gap: var(--space-sm);
+  color: var(--text);
+  font-weight: 700;
   text-decoration: none;
 }
 
 .c-navbar__brand:hover {
-  color: var(--color-link-hover);
+  color: var(--link-hover);
 }
 
 .c-navbar__brand-image {
   display: block;
   width: auto;
-  max-width: min(100%, 12rem);
-  max-height: clamp(2rem, 6vw, 3rem);
-  border-radius: var(--radius-sm);
+  max-width: 12rem;
+  max-height: 2.5rem;
+  border-radius: var(--radius);
   flex-shrink: 0;
 }
 
 .c-navbar__brand-text {
   min-width: 0;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-2);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  font-family: var(--font-heading);
+  font-size: var(--size-lg);
   white-space: nowrap;
 }
 
@@ -60,25 +62,23 @@
 }
 
 .c-navbar__menu-button {
-  min-height: var(--button-height);
-  padding-inline: var(--space-3);
+  min-height: 2.75rem;
+  padding-inline: var(--space-md);
   display: none;
   align-items: center;
-  gap: var(--space-2);
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--surface-background);
-  color: var(--color-text);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-1);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  gap: var(--space-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: var(--size-sm);
+  font-weight: 600;
   cursor: pointer;
 }
 
 .c-navbar__menu-button:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  border-color: var(--text);
 }
 
 .c-navbar__menu-icon {
@@ -99,40 +99,37 @@
   padding: 0;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-sm);
   list-style: none;
 }
 
 .c-navbar__link {
-  min-height: var(--button-height);
-  padding-inline: var(--space-3);
+  min-height: 2.5rem;
+  padding-inline: var(--space-md);
   display: inline-flex;
   align-items: center;
-  border-radius: var(--radius-md);
-  color: var(--color-text);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-1);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-heading);
+  font-size: var(--size-base);
+  font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition:
-    background var(--duration-normal) var(--ease-standard),
-    color var(--duration-normal) var(--ease-standard);
+  transition: all var(--duration) var(--ease);
 }
 
 .c-navbar__link:hover {
-  background: var(--surface-background);
-  color: var(--color-link-hover);
+  background: var(--surface);
+  color: var(--link-hover);
 }
 
 .c-navbar__panel {
-  margin-block: var(--space-3) 0;
-  padding: var(--space-2);
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--surface-background);
-  box-shadow: var(--shadow-sm);
+  margin-block: var(--space-sm) 0;
+  padding: var(--space-sm);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
 }
 
 .c-navbar__panel .c-navbar__list {
@@ -152,10 +149,6 @@
   height: 0;
   opacity: 0;
   overflow: hidden;
-}
-
-.c-navbar__measure .c-navbar__list {
-  width: max-content;
 }
 
 .c-navbar[data-navigation-bar-mode="collapsed"] .c-navbar__inline-nav {

@@ -1,18 +1,19 @@
 .c-image-text {
-  padding-block: var(--space-7);
+  padding-block: var(--space-xl);
 }
 
 .c-image-text__inner {
-  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
   margin-inline: auto;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-lg);
   align-items: center;
 }
 
 @media (width >= 56rem) {
   .c-image-text__inner {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: var(--space-xl);
   }
 }
 
@@ -20,7 +21,7 @@
 .c-image-text__content,
 .c-image-text__media {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-md);
 }
 
 .c-image-text__media {
@@ -35,41 +36,40 @@
 }
 
 .c-image-text__eyebrow {
-  color: var(--color-primary);
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-0);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  color: var(--primary);
+  font-family: var(--font-heading);
+  font-size: var(--size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
 .c-image-text__title {
-  font-size: var(--font-size-4);
-  line-height: var(--line-height-heading);
+  font-size: var(--size-3xl);
+  line-height: 1.1;
 }
 
 .c-image-text__paragraph {
-  font-size: var(--font-size-2);
-  line-height: var(--line-height-loose);
+  font-size: var(--size-lg);
+  color: var(--muted);
 }
 
 .c-image-text__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-md);
+  margin-block: var(--space-sm) 0;
 }
 
 .c-image-text__image {
   display: block;
   width: 100%;
   height: auto;
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-xl);
-  background: var(--color-surface-alt);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
 .c-image-text__caption {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-0);
-  line-height: var(--line-height-loose);
+  color: var(--muted);
+  font-size: var(--size-sm);
 }
