@@ -10,6 +10,7 @@
   height: auto;
   margin-inline: auto;
   border-radius: var(--radius);
+
   /* shadow handled by section card if this is the root */
 }
 
