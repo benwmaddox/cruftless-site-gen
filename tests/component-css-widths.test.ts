@@ -18,7 +18,6 @@ describe("component width tokens", () => {
       componentDefinitions
         .filter(
           (component) =>
-            component.type !== "page-content" &&
             component.type !== "media" &&
             component.type !== "google-maps" &&
             component.type !== "hero",

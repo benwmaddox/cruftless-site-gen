@@ -136,13 +136,29 @@ const createLocalImageProject = async (
 };
 
 describe("image pipeline", () => {
-  it("rejects local raster images that are smaller than the required component slot", async () => {
+  it("accepts local raster images smaller than the component slot without upscaling them", async () => {
     const fixture = await createLocalImageProject(480, 320);
+    const outDir = path.join(fixture.rootDir, "dist");
 
     try {
-      await expect(loadValidatedSite(fixture.contentPath)).rejects.toThrow(
-        /source image width 480px is smaller than required 560px for gallery-thumb-3/,
+      await buildSiteFromFile(fixture.contentPath, outDir);
+
+      const homeHtml = await readFile(path.join(outDir, "index.html"), "utf8");
+      const outputImagesDir = path.join(outDir, "assets", "images");
+      const outputImageNames = await readdir(outputImagesDir);
+      const thumbOutputName = outputImageNames.find((name) =>
+        name.startsWith("showroom-gallery-thumb-3-"),
       );
+
+      if (!thumbOutputName) {
+        throw new Error(`missing optimized thumbnail output: ${outputImageNames.join(", ")}`);
+      }
+
+      const thumbOutputMetadata = await sharp(path.join(outputImagesDir, thumbOutputName)).metadata();
+
+      expect(thumbOutputMetadata.width).toBe(480);
+      expect(homeHtml).toMatch(/srcset="[^"]+ 480w"/u);
+      expect(homeHtml).not.toMatch(/srcset="[^"]+ 640w/u);
     } finally {
       await removeDirectory(fixture.rootDir);
     }

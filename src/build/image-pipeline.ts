@@ -13,7 +13,7 @@ import type {
 } from "../components/render-context.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
 
-const rasterExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
+const rasterExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"]);
 const svgExtension = ".svg";
 const imagePipelineVersion = "v1";
 
@@ -36,20 +36,6 @@ const usageOutputWidths: Record<ComponentImageUsage, number> = {
 const responsiveMediaOutputWidths: Record<"media-content" | "media-wide", number[]> = {
   "media-content": [480, 640, 960, 1024],
   "media-wide": [480, 640, 960, 1152],
-};
-
-const usageMinimumSourceWidths: Partial<Record<ComponentImageUsage, number>> = {
-  "before-after-panel": 960,
-  "feature-grid-inline": 640,
-  "feature-grid-stacked": 960,
-  "gallery-thumb-2": 720,
-  "gallery-thumb-3": 560,
-  "gallery-thumb-4": 420,
-  "image-text": 1200,
-  "media-content": 1024,
-  "media-wide": 1600,
-  "navbar-brand": 320,
-  "testimonial-avatar": 256,
 };
 
 const galleryColumnUsage: Record<"2" | "3" | "4", ComponentImageUsage> = {
@@ -481,7 +467,6 @@ const processLocalImageVariant = async (
 const validateLocalImageUsage = async (
   usageEntry: { path: Array<string | number>; usage: ImageReferenceUsage },
   contentPath: string,
-  accumulatedRequirements: Map<string, number>,
 ): Promise<ImageBuildIssue[]> => {
   const localSource = resolveLocalImageSource(usageEntry.usage.sourceHref, contentPath);
 
@@ -514,21 +499,6 @@ const validateLocalImageUsage = async (
     return issues;
   }
 
-  const requiredWidth = usageMinimumSourceWidths[usageEntry.usage.usage];
-  if (requiredWidth === undefined) {
-    return issues;
-  }
-
-  const previousRequirement = accumulatedRequirements.get(localSource.sourcePath) ?? 0;
-  accumulatedRequirements.set(localSource.sourcePath, Math.max(previousRequirement, requiredWidth));
-
-  if (metadata.isRaster && metadata.width !== undefined && metadata.width < requiredWidth) {
-    issues.push({
-      message: `source image width ${metadata.width}px is smaller than required ${requiredWidth}px for ${usageEntry.usage.usage}`,
-      path: usageEntry.path,
-    });
-  }
-
   return issues;
 };
 
@@ -548,11 +518,8 @@ export const collectImageValidationIssues = async (
   siteContent: SiteContentData,
   contentPath: string,
 ): Promise<ImageBuildIssue[]> => {
-  const requirements = new Map<string, number>();
   const issues = await Promise.all(
-    collectImageUsages(siteContent).map((usageEntry) =>
-      validateLocalImageUsage(usageEntry, contentPath, requirements),
-    ),
+    collectImageUsages(siteContent).map((usageEntry) => validateLocalImageUsage(usageEntry, contentPath)),
   );
 
   return issues.flat();
@@ -686,6 +653,7 @@ export const prepareImagePipeline = async (
           return undefined;
         }
 
+        const seenWidths = new Set<number>();
         const variants = targetWidths
           .flatMap((targetWidth) => {
             const variantKey = createPreparedVariantKey(image.src, usage, targetWidth);
@@ -703,7 +671,18 @@ export const prepareImagePipeline = async (
               },
             ];
           })
-          .filter((variant) => variant.width !== undefined && variant.height !== undefined);
+          .filter((variant) => {
+            if (variant.width === undefined || variant.height === undefined) {
+              return false;
+            }
+
+            if (seenWidths.has(variant.width)) {
+              return false;
+            }
+
+            seenWidths.add(variant.width);
+            return true;
+          });
 
         if (variants.length === 0) {
           return undefined;
