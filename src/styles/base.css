@@ -61,12 +61,32 @@ button:focus-visible {
 .l-page {
   display: grid;
   align-content: start;
-  gap: 0;
-  background: var(--bg);
-  width: 100%;
+  gap: var(--space-xl);
+  background: transparent;
+  min-height: 100vh;
+  padding-block: var(--space-xl);
+}
+
+.l-section {
+  width: calc(100% - (var(--space-md) * 2));
   max-width: var(--max-width);
   margin-inline: auto;
-  min-height: 100vh;
+  padding: var(--space-xl);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.l-section--hero {
+  padding: clamp(var(--space-lg), 8vw, var(--space-2xl));
+}
+
+.l-item {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: var(--space-md);
+  /* No borders or shadows by default */
 }
 
 .c-button {

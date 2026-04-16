@@ -1,12 +1,11 @@
 .c-image-text {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
 
+/* l-section handles card look */
+
 .c-image-text__inner {
   width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
   align-items: center;

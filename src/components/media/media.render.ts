@@ -39,10 +39,10 @@ export const renderMedia = (
   const loadingAttribute = data.loading ? ` loading="${escapeHtml(data.loading)}"` : "";
 
   return [
-    `<figure class="c-media c-media--size-${escapeHtml(data.size)}">`,
+    `<section class="c-media l-section c-media--size-${escapeHtml(data.size)}">`,
     `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${loadingAttribute} decoding="async" />`,
-    data.caption ? `  <figcaption class="c-media__caption">${escapeHtml(data.caption)}</figcaption>` : "",
-    "</figure>",
+    data.caption ? `  <p class="c-media__caption">${escapeHtml(data.caption)}</p>` : "",
+    "</section>",
   ]
     .filter(Boolean)
     .join("\n");

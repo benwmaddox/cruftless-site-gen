@@ -1,9 +1,12 @@
 .c-contact {
-  padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
+/* l-section handles card look */
+
 .c-contact__inner {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
@@ -13,55 +16,50 @@
   margin: 0;
   font-size: var(--size-3xl);
   font-weight: 700;
+  padding-inline: var(--space-md);
 }
 
 .c-contact__list {
-  margin: 0;
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   gap: var(--space-md);
+  margin: 0;
 }
+
+/* l-item handles cell look */
 
 .c-contact__item {
   display: grid;
-  grid-template-columns: 8rem 1fr;
-  gap: var(--space-sm);
-  align-items: baseline;
-  padding-block: var(--space-sm);
-  border-block-end: 1px solid var(--border);
-}
-
-.c-contact__label,
-.c-contact__value {
-  margin: 0;
+  gap: var(--space-xs);
 }
 
 .c-contact__label {
-  color: var(--muted);
+  margin: 0;
   font-family: var(--font-heading);
   font-size: var(--size-sm);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
+  color: var(--primary);
 }
 
 .c-contact__value {
-  display: grid;
-  gap: var(--space-xs);
-  min-width: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--size-base);
 }
 
 .c-contact__address {
   font-style: normal;
+  line-height: 1.5;
 }
 
 .c-contact__link {
-  overflow-wrap: anywhere;
+  color: var(--link);
+  text-decoration: none;
 }
 
-@media (width <= 40rem) {
-  .c-contact__item {
-    grid-template-columns: 1fr;
-    gap: var(--space-xs);
-    padding-block: var(--space-md);
-  }
+.c-contact__link:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
 }

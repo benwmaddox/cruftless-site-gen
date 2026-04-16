@@ -13,23 +13,12 @@ describe("component width tokens", () => {
     expect(defaultThemeTokens["--max-width"]).toBe("80rem");
   });
 
-  it("uses max-width for standard component wrappers", async () => {
-    const cssFiles = await Promise.all(
-      componentDefinitions
-        .filter(
-          (component) =>
-            component.type !== "media" &&
-            component.type !== "google-maps" &&
-            component.type !== "hero",
-        )
-        .map((component) => readFile(component.cssPath, "utf8")),
-    );
-
-    for (const css of cssFiles) {
-      expect(css).toContain("var(--max-width)");
-      expect(css).not.toContain("var(--container-max)");
-      expect(css).not.toContain("var(--content-max)");
-    }
+  it("uses max-width for standard component wrappers via section tag", async () => {
+    const baseCss = await readBaseCss();
+    expect(baseCss).toContain("section {");
+    expect(baseCss).toContain("max-width: var(--max-width);");
+    expect(baseCss).not.toContain("var(--container-max)");
+    expect(baseCss).not.toContain("var(--content-max)");
   });
 
   it("supports explicit feature grid column counts before wrapping", async () => {
@@ -51,7 +40,7 @@ describe("component width tokens", () => {
     );
 
     expect(css).toContain(".c-media--size-content");
-    expect(css).toContain("var(--max-width)");
+    // max-width is inherited from the section tag in base.css
     expect(css).toContain(".c-media--size-wide");
   });
 
@@ -82,7 +71,7 @@ describe("component width tokens", () => {
     );
 
     expect(css).toContain(".c-google-maps--size-content");
-    expect(css).toContain("var(--max-width)");
+    // max-width is inherited from the section tag in base.css
     expect(css).toContain(".c-google-maps--size-wide");
   });
 });

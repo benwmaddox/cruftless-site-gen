@@ -1,16 +1,16 @@
 .c-media {
   margin: 0;
-  padding-block: var(--space-lg);
+  display: grid;
+  gap: var(--space-md);
 }
 
 .c-media--size-content {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
-  margin-inline: auto;
+  width: 100%;
 }
 
 .c-media--size-wide {
-  width: min(calc(100% - (2 * var(--space-lg))), 90rem); /* slightly wider than content max */
-  margin-inline: auto;
+  width: 100%;
+  max-width: 90rem;
 }
 
 .c-media__image {
@@ -20,11 +20,11 @@
   height: auto;
   margin-inline: auto;
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  /* shadow handled by section card if this is the root */
 }
 
 .c-media__caption {
-  margin: var(--space-md) 0 0;
+  margin: 0;
   color: var(--muted);
   font-size: var(--size-sm);
   text-align: center;

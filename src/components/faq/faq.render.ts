@@ -15,7 +15,7 @@ export const renderFaq = (data: FaqData): string => {
   const itemsHtml = data.items
     .map(
       (item) => [
-        '      <details class="c-faq__item">',
+        '      <details class="c-faq__item l-item">',
         `        <summary class="c-faq__question">${escapeHtml(item.question)}</summary>`,
         `        <p class="c-faq__answer">${escapeHtml(item.answer)}</p>`,
         "      </details>",
@@ -24,7 +24,7 @@ export const renderFaq = (data: FaqData): string => {
     .join("\n");
 
   return [
-    '<section class="c-faq">',
+    '<section class="c-faq l-section">',
     '  <div class="c-faq__inner">',
     `    <h2 class="c-faq__title">${escapeHtml(data.title)}</h2>`,
     '    <div class="c-faq__items">',

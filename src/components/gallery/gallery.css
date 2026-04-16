@@ -1,9 +1,12 @@
 .c-gallery {
-  padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
+/* l-section handles card look */
+
 .c-gallery__inner {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
@@ -12,6 +15,7 @@
 .c-gallery__title,
 .c-gallery__lead {
   margin: 0;
+  padding-inline: var(--space-md);
 }
 
 .c-gallery__title {
@@ -71,6 +75,8 @@
 .c-gallery__figure {
   margin: 0;
 }
+
+/* l-item handles cell look */
 
 .c-gallery__figure {
   display: grid;

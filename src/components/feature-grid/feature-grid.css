@@ -1,15 +1,8 @@
 .c-feature-grid {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
 
-.c-feature-grid__inner {
-  width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
-  display: grid;
-  gap: var(--space-xl);
-}
+/* l-section handles background, border, radius, shadow, padding, max-width, centering */
 
 .c-feature-grid__title,
 .c-feature-grid__lead {
@@ -27,12 +20,12 @@
   color: var(--muted);
   max-width: 40rem;
   line-height: 1.5;
-  margin-block: calc(-1 * var(--space-lg)) 0;
+  margin-block: var(--space-sm) 0;
 }
 
 .c-feature-grid__items {
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--space-md);
   padding: 0;
   margin: 0;
   list-style: none;
@@ -77,10 +70,10 @@
   display: grid;
   gap: var(--space-md);
   position: relative;
-  padding: var(--space-md);
-  border-radius: var(--radius);
-  transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease), background var(--duration) var(--ease);
+  transition: transform var(--duration) var(--ease), background var(--duration) var(--ease);
 }
+
+/* l-item handles background: var(--bg), padding, radius */
 
 .c-feature-grid__item--selected {
   background: var(--surface);

@@ -41,7 +41,7 @@ export const renderFeatureGrid = (
   const itemsHtml = data.items
     .map(
       (item) => {
-        const itemClasses = ["c-feature-grid__item"];
+        const itemClasses = ["c-feature-grid__item", "l-item"];
         const isCompact = !item.image && !item.body;
 
         if (item.image) {
@@ -114,7 +114,7 @@ export const renderFeatureGrid = (
     .join("\n");
 
   return [
-    '<section class="c-feature-grid">',
+    '<section class="c-feature-grid l-section">',
     '  <div class="c-feature-grid__inner">',
     `    <h2 class="c-feature-grid__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-feature-grid__lead">${escapeHtml(data.lead)}</p>` : "",

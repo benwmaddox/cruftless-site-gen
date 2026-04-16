@@ -19,7 +19,7 @@ const renderMultilineAddress = (address: string): string =>
 
 const renderContactItem = (label: string, valueHtml: string): string =>
   [
-    '      <div class="c-contact__item">',
+    '      <div class="c-contact__item l-item">',
     `        <dt class="c-contact__label">${escapeHtml(label)}</dt>`,
     `        <dd class="c-contact__value">${valueHtml}</dd>`,
     "      </div>",
@@ -49,7 +49,7 @@ export const renderContact = (data: ContactData): string => {
     .join("\n");
 
   return [
-    '<section class="c-contact">',
+    '<section class="c-contact l-section">',
     '  <div class="c-contact__inner">',
     data.title ? `    <h2 class="c-contact__title">${escapeHtml(data.title)}</h2>` : "",
     '    <dl class="c-contact__list">',

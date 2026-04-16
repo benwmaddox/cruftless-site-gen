@@ -349,6 +349,13 @@
                                 "type": "string",
                                 "const": "contact-form"
                               },
+                              "mode": {
+                                "type": "string",
+                                "enum": [
+                                  "production",
+                                  "demo"
+                                ]
+                              },
                               "title": {
                                 "type": "string",
                                 "minLength": 1,
@@ -382,6 +389,7 @@
                             },
                             "required": [
                               "type",
+                              "mode",
                               "title",
                               "action",
                               "submitLabel"
@@ -1212,9 +1220,10 @@
                             "description": "Insert a contact-form component with required fields.",
                             "body": {
                               "type": "contact-form",
-                              "title": "$2",
-                              "action": "$3",
-                              "submitLabel": "$4"
+                              "mode": "${2|production,demo|}",
+                              "title": "$3",
+                              "action": "$4",
+                              "submitLabel": "$5"
                             }
                           },
                           {
@@ -1481,9 +1490,10 @@
                         "description": "Insert a contact-form component with required fields.",
                         "body": {
                           "type": "contact-form",
-                          "title": "$2",
-                          "action": "$3",
-                          "submitLabel": "$4"
+                          "mode": "${2|production,demo|}",
+                          "title": "$3",
+                          "action": "$4",
+                          "submitLabel": "$5"
                         }
                       },
                       {

@@ -1,15 +1,8 @@
 .c-testimonials {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
 
-.c-testimonials__inner {
-  width: 100%;
-  max-width: var(--max-width);
-  margin-inline: auto;
-  display: grid;
-  gap: var(--space-xl);
-}
+/* l-section handles card look */
 
 .c-testimonials__title,
 .c-testimonials__lead {
@@ -23,12 +16,13 @@
 .c-testimonials__lead {
   color: var(--muted);
   font-size: var(--size-lg);
+  margin-block: var(--space-sm) 0;
 }
 
 .c-testimonials__items {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-lg);
+  gap: var(--space-md);
   padding: 0;
   margin: 0;
   list-style: none;
@@ -47,14 +41,11 @@
 }
 
 .c-testimonials__item {
-  padding: var(--space-lg);
   display: grid;
   gap: var(--space-md);
-  border-radius: var(--radius);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
 }
+
+/* l-item handles cell look */
 
 .c-testimonials__quote,
 .c-testimonials__name,

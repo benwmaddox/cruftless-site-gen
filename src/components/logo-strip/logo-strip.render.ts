@@ -30,8 +30,8 @@ const renderLogo = (
   return [
     '      <li class="c-logo-strip__item">',
     logo.href
-      ? `        <a class="c-logo-strip__link" href="${escapeHtml(logo.href)}">${imageHtml}</a>`
-      : `        <div class="c-logo-strip__link">${imageHtml}</div>`,
+      ? `        <a class="c-logo-strip__link l-item" href="${escapeHtml(logo.href)}">${imageHtml}</a>`
+      : `        <div class="c-logo-strip__link l-item">${imageHtml}</div>`,
     "      </li>",
   ].join("\n");
 };
@@ -43,7 +43,7 @@ export const renderLogoStrip = (
   const logosHtml = data.logos.map((logo) => renderLogo(logo, renderContext)).join("\n");
 
   return [
-    '<section class="c-logo-strip">',
+    '<section class="c-logo-strip l-section">',
     '  <div class="c-logo-strip__inner">',
     `    <h2 class="c-logo-strip__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-logo-strip__lead">${escapeHtml(data.lead)}</p>` : "",

@@ -14,7 +14,7 @@ I used the live site as source material, but translated it into the current comp
 - `hero` for the site pitch and page-level calls to action
 - `media` for real production-hosted image URLs from the live site
 - `prose` for the longer about-page narrative
-- `feature-grid` and `feature-list` for grouped highlights and history notes
+- `feature-grid` for grouped highlights and history notes
 - `cta-band` for live-site follow-through links
 
 I also added a dedicated `studio-industrial` theme so the sample gets materially closer to the live site's warm, warehouse-like atmosphere instead of reusing a generic product theme.

@@ -1,7 +1,8 @@
 .c-contact-form {
-  padding-block: var(--space-xl);
   padding-inline: var(--space-md);
 }
+
+/* l-section handles card look */
 
 .c-contact-form__inner {
   width: 100%;
@@ -11,30 +12,27 @@
   gap: var(--space-lg);
 }
 
-.c-contact-form__title,
-.c-contact-form__intro,
-.c-contact-form__note {
-  margin: 0;
-}
-
 .c-contact-form__title {
+  margin: 0;
   font-size: var(--size-3xl);
   font-weight: 700;
+  padding-inline: var(--space-md);
 }
 
-.c-contact-form__intro,
-.c-contact-form__note {
+.c-contact-form__intro {
+  margin: 0;
   color: var(--muted);
+  font-size: var(--size-lg);
+  max-width: 45rem;
+  padding-inline: var(--space-md);
 }
 
-.c-contact-form__form,
+/* l-item handles form cell look */
+
 .c-contact-form__grid {
   display: grid;
-  gap: var(--space-md);
-}
-
-.c-contact-form__grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md) var(--space-lg);
 }
 
 .c-contact-form__field {
@@ -56,35 +54,34 @@
 .c-contact-form__textarea {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
+  border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  font-family: var(--font-body);
+  font-family: inherit;
   font-size: var(--size-base);
-  line-height: 1.5;
-  transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
-}
-
-.c-contact-form__textarea {
-  min-height: 10rem;
+  transition: border-color var(--duration) var(--ease);
 }
 
 .c-contact-form__input:focus,
 .c-contact-form__textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--focus-ring);
+  box-shadow: 0 0 0 2px rgb(var(--primary-rgb) / 0.1);
 }
 
 .c-contact-form__actions {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-md);
-  margin-block: var(--space-sm) 0;
+  align-items: start;
+  margin-block-start: var(--space-md);
 }
 
-.c-contact-form__submit {
-  place-self: start;
+.c-contact-form__note {
+  margin: 0;
+  font-size: var(--size-sm);
+  color: var(--muted);
 }
 
 .c-contact-form__honeypot {
