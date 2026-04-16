@@ -3,15 +3,6 @@
   gap: var(--space-md);
 }
 
-.c-media--size-content {
-  width: 100%;
-}
-
-.c-media--size-wide {
-  width: 100%;
-  max-width: 90rem;
-}
-
 .c-media__image {
   display: block;
   width: auto;
@@ -19,7 +10,6 @@
   height: auto;
   margin-inline: auto;
   border-radius: var(--radius);
-
   /* shadow handled by section card if this is the root */
 }
 

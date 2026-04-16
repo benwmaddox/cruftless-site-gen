@@ -24,7 +24,7 @@ describe("HoursSchema", () => {
 
     const html = renderHours(parsed);
 
-    expect(html).toContain('<section class="c-hours">');
+    expect(html).toContain('<section class="c-hours l-section">');
     expect(html).toContain('<th class="c-hours__day" scope="row">Monday</th>');
     expect(html).toContain("8:00 AM");
     expect(html).toContain("Holiday");
