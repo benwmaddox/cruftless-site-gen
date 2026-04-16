@@ -31,21 +31,18 @@ export const heritageLocalTheme = createThemeDefinition(
     "--space-sm": "0.5rem",
     "--space-md": "1rem",
     "--space-lg": "2rem",
-    "--space-xl": "3.5rem",
-    "--space-2xl": "5.5rem",
+    "--space-xl": "3rem",
+    "--space-2xl": "5rem",
     "--radius": "0.25rem",
-    "--shadow": "0 2px 4px rgb(0 0 0 / 0.05)",
-    "--max-width": "70rem",
-  },
+    "--shadow": "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+    "--max-width": "80rem",
+    },
+
   `
     .c-navbar {
       backdrop-filter: blur(8px);
       background: rgb(249 247 242 / 0.85);
       border-bottom: 1px solid var(--border);
-    }
-
-    .c-hero__body {
-      padding-block: var(--space-2xl);
     }
 
     .c-hero__body::after {

@@ -10,7 +10,7 @@ import {
   renderComponent,
 } from "../components/index.js";
 import { defaultComponentRenderContext } from "../components/render-context.js";
-import { resolvePageComponents } from "../layout/page-layout.js";
+import { isPageContentSlot, resolvePageComponents } from "../layout/page-layout.js";
 import {
   SiteContentSchema,
   type SiteData,
@@ -632,10 +632,28 @@ export const buildSite = async (
   });
 
   for (const [pageIndex, page] of siteContent.pages.entries()) {
-    const renderContext = imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
-    const bodyHtml = resolvePageComponents(siteContent.site, page, pageIndex)
-      .map((component) => renderComponent(component, renderContext))
-      .join("\n");
+    const renderContext =
+      imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
+
+    const layoutComponents = siteContent.site.layout?.components;
+
+    const bodyHtml = !layoutComponents
+      ? `<main class="l-page">\n${page.components
+          .map((component) => renderComponent(component, renderContext))
+          .join("\n")}\n</main>`
+      : layoutComponents
+          .map((layoutComponent) => {
+            if (isPageContentSlot(layoutComponent)) {
+              const pageContentHtml = page.components
+                .map((component) => renderComponent(component, renderContext))
+                .join("\n");
+              return `<main class="l-page">\n${pageContentHtml}\n</main>`;
+            }
+
+            return renderComponent(layoutComponent, renderContext);
+          })
+          .join("\n");
+
     const documentHtml = renderPageDocument({
       site: siteContent.site,
       page,

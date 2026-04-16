@@ -1,5 +1,6 @@
 .c-hero {
   padding-block: var(--space-2xl);
+  padding-inline: var(--space-md);
   display: grid;
   place-content: center;
   min-height: 40vh;
@@ -11,7 +12,8 @@
 }
 
 .c-hero__body {
-  width: min(calc(100% - (2 * var(--space-md))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-lg);
@@ -31,7 +33,7 @@
 .c-hero__subheadline {
   font-size: var(--size-xl);
   color: var(--muted);
-  max-width: 40rem;
+  max-width: 54rem;
   line-height: 1.4;
 }
 

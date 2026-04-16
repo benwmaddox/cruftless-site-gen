@@ -30,12 +30,12 @@ export const refinedProfessionalTheme = createThemeDefinition(
     "--space-xs": "0.25rem",
     "--space-sm": "0.5rem",
     "--space-md": "1rem",
-    "--space-lg": "2.25rem",
-    "--space-xl": "3.5rem",
-    "--space-2xl": "5.5rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3rem",
+    "--space-2xl": "5rem",
     "--radius": "0.125rem",
     "--shadow": "0 10px 30px -5px rgb(0 0 0 / 0.5)",
-    "--max-width": "66rem",
+    "--max-width": "80rem",
   },
   `
     .c-navbar {

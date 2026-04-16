@@ -1,17 +1,20 @@
 .c-google-maps {
   margin: 0;
   padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
   display: grid;
   gap: var(--space-sm);
 }
 
 .c-google-maps--size-content {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
 }
 
 .c-google-maps--size-wide {
-  width: min(calc(100% - (2 * var(--space-lg))), 100rem);
+  width: 100%;
+  max-width: 100rem;
   margin-inline: auto;
 }
 

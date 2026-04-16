@@ -30,7 +30,7 @@ export const wellnessCalmTheme = createThemeDefinition(
     "--space-xs": "0.25rem",
     "--space-sm": "0.5rem",
     "--space-md": "1rem",
-    "--space-lg": "2.25rem",
+    "--space-lg": "2rem",
     "--space-xl": "3.5rem",
     "--space-2xl": "5.5rem",
     "--radius": "1.25rem",
@@ -46,6 +46,10 @@ export const wellnessCalmTheme = createThemeDefinition(
       backdrop-filter: blur(8px);
       background: rgb(248 252 251 / 0.8);
       border-bottom: 1px solid var(--border);
+    }
+
+    .l-page {
+      padding-block: var(--space-lg);
     }
 
     .c-hero__body::before {

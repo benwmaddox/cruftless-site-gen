@@ -3,13 +3,15 @@
   top: 0;
   z-index: 100;
   padding-block: var(--space-md);
+  padding-inline: var(--space-md);
   background: var(--bg);
   border-block-end: 1px solid var(--border);
 }
 
 .c-navbar__inner,
 .c-navbar__panel {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
 }
 

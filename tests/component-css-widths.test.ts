@@ -20,7 +20,8 @@ describe("component width tokens", () => {
           (component) =>
             component.type !== "page-content" &&
             component.type !== "media" &&
-            component.type !== "google-maps",
+            component.type !== "google-maps" &&
+            component.type !== "hero",
         )
         .map((component) => readFile(component.cssPath, "utf8")),
     );

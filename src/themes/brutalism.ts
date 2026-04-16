@@ -31,8 +31,8 @@ export const brutalismTheme = createThemeDefinition(
     "--space-sm": "0.5rem",
     "--space-md": "1rem",
     "--space-lg": "2rem",
-    "--space-xl": "3.5rem",
-    "--space-2xl": "5.5rem",
+    "--space-xl": "3rem",
+    "--space-2xl": "5rem",
     "--radius": "0rem",
     "--shadow": "4px 4px 0 #000000",
     "--max-width": "80rem",
@@ -40,6 +40,11 @@ export const brutalismTheme = createThemeDefinition(
   `
     .c-navbar {
       border-bottom: 2px solid var(--border);
+    }
+
+    .l-page {
+      padding-block: var(--space-xs);
+      gap: var(--space-xl);
     }
 
     .c-button,
@@ -55,6 +60,16 @@ export const brutalismTheme = createThemeDefinition(
       border: 2px solid var(--border);
       box-shadow: var(--shadow);
       transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .c-before-after__item,
+    .c-feature-grid__item,
+    .c-faq__item,
+    .c-logo-strip__link,
+    .c-contact-form__inner,
+    .c-cta-band__inner,
+    .c-testimonials__item {
+      padding: var(--space-lg);
     }
 
     .c-button:hover,

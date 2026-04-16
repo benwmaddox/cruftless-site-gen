@@ -30,16 +30,30 @@ export const workshopTheme = createThemeDefinition(
     "--space-xs": "0.25rem",
     "--space-sm": "0.5rem",
     "--space-md": "1rem",
-    "--space-lg": "2.25rem",
-    "--space-xl": "3.5rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3rem",
     "--space-2xl": "5rem",
     "--radius": "0.5rem",
     "--shadow": "0 1px 3px 0 rgb(0 0 0 / 0.1)",
-    "--max-width": "70rem",
+    "--max-width": "80rem",
   },
   `
     body {
-      background: radial-gradient(at 0% 0%, #fffbf4 0%, #f7efe1 100%);
+      background-image: 
+        linear-gradient(
+          45deg,
+          rgb(43 29 18 / 0.035) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgb(43 29 18 / 0.035) 50%,
+          rgb(43 29 18 / 0.035) 75%,
+          transparent 75%,
+          transparent 100%
+        ),
+        var(--site-page-background-image, none),
+        radial-gradient(at 0% 0%, #fffbf4 0%, #f7efe1 100%);
+      background-size: 40px 40px, cover, 100% 100%;
+      background-attachment: fixed, scroll, fixed;
     }
 
     .c-navbar {
@@ -48,35 +62,21 @@ export const workshopTheme = createThemeDefinition(
       border-bottom: 1px solid var(--border);
     }
 
-    .c-hero__body::before,
-    .c-before-after__item::before,
-    .c-feature-grid__item::before,
-    .c-faq__item::before,
-    .c-contact-form__inner::before,
-    .c-testimonials__item::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: linear-gradient(
-        45deg,
-        rgb(43 29 18 / 0.03) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgb(43 29 18 / 0.03) 50%,
-        rgb(43 29 18 / 0.03) 75%,
-        transparent 75%,
-        transparent 100%
-      );
-      background-size: 8px 8px;
-      pointer-events: none;
+    .l-page {
+      padding-block: var(--space-md);
     }
 
     .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
-    .c-testimonials__item {
+    .c-testimonials__item,
+    .c-contact-form__inner,
+    .c-cta-band__inner {
+      background: var(--surface);
       border-top: 4px solid var(--primary);
+      padding: var(--space-lg);
       border-radius: 0;
+      box-shadow: 0 2px 4px rgb(43 29 18 / 0.05);
     }
 
     .c-button {

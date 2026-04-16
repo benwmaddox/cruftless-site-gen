@@ -1,9 +1,11 @@
 .c-cta-band {
   padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
 .c-cta-band__inner {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   padding: var(--space-lg);
   display: grid;

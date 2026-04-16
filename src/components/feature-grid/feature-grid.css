@@ -1,9 +1,11 @@
 .c-feature-grid {
   padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
 .c-feature-grid__inner {
-  width: min(calc(100% - (2 * var(--space-md))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-xl);
@@ -124,12 +126,18 @@
 }
 
 .c-feature-grid__item-status {
+  display: inline-flex;
+  padding-inline: var(--space-sm);
+  padding-block: 2px;
+  background: var(--primary);
+  color: var(--primary-fg);
+  border-radius: calc(var(--radius) / 2);
   font-size: var(--size-sm);
-  font-weight: 600;
-  color: var(--primary);
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05rem;
   margin-block: var(--space-xs) 0;
+  width: fit-content;
 }
 
 .c-feature-grid__item-cta {

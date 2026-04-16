@@ -1,9 +1,11 @@
 .c-faq {
   padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
 .c-faq__inner {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-lg);

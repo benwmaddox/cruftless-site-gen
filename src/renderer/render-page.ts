@@ -43,6 +43,12 @@ export const renderPageDocument = ({
     : "";
   const canonicalUrl = page.metadata?.canonicalUrl ?? new URL(page.slug, site.baseUrl).toString();
 
+  const indent = (html: string, spaces: number = 4): string =>
+    html
+      .split("\n")
+      .map((line) => line ? `${" ".repeat(spaces)}${line}` : "")
+      .join("\n");
+
   return [
     "<!doctype html>",
     `<html lang="en">`,
@@ -57,12 +63,7 @@ export const renderPageDocument = ({
     scriptHref ? `    <script src="${escapeHtml(scriptHref)}" defer></script>` : "",
     "  </head>",
     `  <body data-theme="${escapeHtml(site.theme)}">`,
-    '    <main class="l-page">',
-    bodyHtml
-      .split("\n")
-      .map((line) => `      ${line}`)
-      .join("\n"),
-    "    </main>",
+    indent(bodyHtml),
     "  </body>",
     "</html>",
   ]
