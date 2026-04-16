@@ -1,17 +1,14 @@
 .c-media {
   display: grid;
   gap: var(--space-md);
+  width: 100%;
 }
 
 .c-media__image {
   display: block;
-  width: auto;
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  margin-inline: auto;
   border-radius: var(--radius);
-
-  /* shadow handled by section card if this is the root */
 }
 
 .c-media__caption {

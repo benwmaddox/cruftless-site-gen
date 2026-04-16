@@ -51,8 +51,7 @@ export const brutalismTheme = createThemeDefinition(
     .l-section,
     .l-item,
     .c-button,
-    .c-image-text__image,
-    .c-media__image {
+    .c-image-text__image {
       border: 2px solid var(--border);
       box-shadow: var(--shadow);
       transition: transform 0.1s ease, box-shadow 0.1s ease;

@@ -65,6 +65,9 @@ button:focus-visible {
   background: transparent;
   min-height: 100vh;
   padding-block: var(--space-xl);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
 }
 
 .l-section {
