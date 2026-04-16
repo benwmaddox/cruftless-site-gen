@@ -16,10 +16,6 @@ describe("78th Street Studios example", () => {
     const siteContent = await loadValidatedSite(exampleContentPath);
 
     expect(siteContent.site.name).toBe("78th Street Studios");
-    expect(siteContent.site.themeOverrides).toEqual({
-      structure: "plain",
-      secondaryColorScheme: "twilight-mist",
-    });
     expect(siteContent.site.layout?.components).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual(["/", "/about"]);
 
@@ -62,16 +58,15 @@ describe("78th Street Studios example", () => {
       );
       expect(homeHtml).toContain('data-theme="workshop"');
       expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
-      expect(css).toContain('--font-family-heading: "Source Serif 4", Georgia, serif;');
-      expect(css).toContain("--color-scheme: dark;");
-      expect(css).toContain("--color-primary: #9d7cd8;");
-      expect(css).toContain("--color-accent: #ff9e64;");
+      expect(css).toContain('--font-heading: "Source Serif 4", serif;');
+      expect(css).toContain("--color-scheme: light;");
+      expect(css).toContain("--primary: #c3512f;");
+      expect(css).toContain("--accent: #2f6f4e;");
       expect(js).toContain("resolveNavigationBarMode");
       expect(css).toContain("--site-page-background-image:");
-      expect(css).toContain("background: var(--page-background);");
-      expect(css).toContain("background-image: var(--site-page-background-image, none);");
-      expect(css).toContain("background-position: left top;");
-      expect(css).toContain("background-attachment: scroll;");
+      expect(css).toContain(
+        "background: var(--site-page-background-image, none) left top / cover no-repeat scroll var(--bg);",
+      );
       expect(css).toContain(
         'url("https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX")',
       );

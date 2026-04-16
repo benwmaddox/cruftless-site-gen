@@ -9,14 +9,14 @@ import { SiteContentSchema } from "../src/schemas/site.schema.js";
 import { themeNames, type ThemeName } from "../src/themes/index.js";
 
 const themeMarkers: Record<ThemeName, string> = {
-  corporate: "--color-primary: #0b5fff;",
-  brutalism: '--font-family-heading: "IBM Plex Mono", "Space Grotesk", monospace;',
-  workshop: '--font-family-heading: "Source Serif 4", Georgia, serif;',
-  "refined-professional": "--color-primary: #c9a227;",
-  "friendly-modern": "--color-accent: #e11d48;",
-  "heritage-local": "--color-accent: #7a1f2b;",
-  "wellness-calm": "--color-primary: #2f7c64;",
-  "high-vis-service": "--color-primary: #ffd400;",
+  corporate: "--accent: #2563eb;",
+  brutalism: '--font-heading: "Space Grotesk", sans-serif;',
+  workshop: '--font-heading: "Source Serif 4", serif;',
+  "refined-professional": "--accent: #e2c46a;",
+  "friendly-modern": "--accent: #e11d48;",
+  "heritage-local": "--accent: #7a1f2b;",
+  "wellness-calm": "--primary: #2f7c64;",
+  "high-vis-service": "--primary: #ffd400;",
 };
 
 const createSite = (theme: ThemeName) =>
@@ -45,36 +45,6 @@ const createSite = (theme: ThemeName) =>
     ],
   });
 
-const createSiteWithOverrides = (theme: ThemeName) =>
-  SiteContentSchema.parse({
-    site: {
-      name: "LaunchKit",
-      baseUrl: "https://launchkit.example",
-      theme,
-      themeOverrides: {
-        structure: "divider",
-        secondaryColorScheme: "midnight-canvas",
-      },
-    },
-    pages: [
-      {
-        slug: "/",
-        title: "Home",
-        components: [
-          {
-            type: "hero",
-            headline: "Launch faster",
-            subheadline: "Theme-driven static pages without custom templates.",
-            primaryCta: {
-              label: "Get started",
-              href: "/start",
-            },
-          },
-        ],
-      },
-    ],
-  });
-
 const createSiteWithCssVariables = (theme: ThemeName) =>
   SiteContentSchema.parse({
     site: {
@@ -82,8 +52,8 @@ const createSiteWithCssVariables = (theme: ThemeName) =>
       baseUrl: "https://launchkit.example",
       theme,
       cssVariables: {
-        "--space-5": "2.25rem",
-        "--color-primary": "#ff5500",
+        "--space-md": "2.25rem",
+        "--primary": "#ff5500",
       },
     },
     pages: [
@@ -131,25 +101,6 @@ describe("buildSite theme CSS", () => {
     }
   });
 
-  it("emits override CSS and tokens for a supported override combination", async () => {
-    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-overrides-"));
-
-    try {
-      await buildSite(createSiteWithOverrides("corporate"), outDir);
-
-      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
-
-      expect(css).toContain("--color-scheme: dark;");
-      expect(css).toContain("--color-bg: #0a0e27;");
-      expect(css).toContain("--color-primary: #6c8eff;");
-      expect(css).toContain("--color-link: #a78bfa;");
-      expect(css).toContain("--color-accent: #f472b6;");
-      expect(css).toContain("border-width: 0 0 var(--border-width-1) 0;");
-    } finally {
-      await rm(outDir, { recursive: true, force: true });
-    }
-  });
-
   it("emits site css variable overrides from content", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-theme-css-vars-"));
 
@@ -158,8 +109,8 @@ describe("buildSite theme CSS", () => {
 
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
 
-      expect(css).toContain("--space-5: 2.25rem;");
-      expect(css).toContain("--color-primary: #ff5500;");
+      expect(css).toContain("--space-md: 2.25rem;");
+      expect(css).toContain("--primary: #ff5500;");
     } finally {
       await rm(outDir, { recursive: true, force: true });
     }

@@ -3,79 +3,68 @@ import { createThemeDefinition } from "./tokens.js";
 export const corporateTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#f5f7fa",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#e6f0ff",
-    "--color-text": "#0f172a",
-    "--color-text-muted": "#475569",
-    "--color-border": "#c6d4e1",
-    "--color-primary": "#0b5fff",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#0f766e",
-    "--color-link": "#0b5fff",
-    "--color-link-hover": "#0a4bd9",
-    "--color-focus-ring": "#0b5fff",
-    "--page-background": "linear-gradient(180deg, #ffffff 0%, #eef4ff 100%)",
-    "--surface-background": "#ffffff",
-    "--hero-background": "linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%)",
-    "--cta-background": "linear-gradient(180deg, #f8fbff 0%, #e6f0ff 100%)",
-    "--navbar-background":
-      "linear-gradient(180deg, rgb(255 255 255 / 0.94), rgb(245 249 255 / 0.94))",
-    "--font-family-body": "\"IBM Plex Sans\", \"Helvetica Neue\", sans-serif",
-    "--font-family-heading": "\"IBM Plex Sans\", \"Helvetica Neue\", sans-serif",
-    "--heading-letter-spacing": "-0.02em",
-    "--font-size-5": "2.1rem",
-    "--font-size-6": "2.7rem",
-    "--line-height-heading": "1.06",
-    "--font-weight-semibold": "700",
-    "--button-letter-spacing": "0.02em",
-    "--space-7": "3rem",
-    "--space-8": "4rem",
-    "--container-max": "72rem",
-    "--radius-md": "0.375rem",
-    "--radius-lg": "0.5rem",
-    "--radius-xl": "0.625rem",
-    "--shadow-sm": "0 1px 2px rgb(15 23 42 / 0.05)",
-    "--shadow-md": "0 6px 16px rgb(15 23 42 / 0.08)",
-    "--shadow-lg": "0 12px 24px rgb(15 23 42 / 0.12)",
+    "--bg": "#fcfcfd",
+    "--text": "#020617",
+    "--muted": "#475569",
+    "--primary": "#0f172a",
+    "--primary-fg": "#ffffff",
+    "--accent": "#2563eb",
+    "--accent-fg": "#ffffff",
+    "--border": "rgb(15 23 42 / 0.08)",
+    "--surface": "#ffffff",
+    "--surface-fg": "#020617",
+    "--link": "#2563eb",
+    "--link-hover": "#1d4ed8",
+    "--focus-ring": "#2563eb",
+    "--font-body": "\"Inter\", system-ui, sans-serif",
+    "--font-heading": "\"Inter\", system-ui, sans-serif",
+    "--font-mono": "ui-monospace, monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.125rem",
+    "--size-xl": "1.25rem",
+    "--size-2xl": "1.5rem",
+    "--size-3xl": "2.25rem",
+    "--size-4xl": "3.25rem",
+    "--size-5xl": "5rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3.5rem",
+    "--space-2xl": "5.5rem",
+    "--radius": "0.5rem",
+    "--shadow": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='100%25' height='2' viewBox='0 0 100%25 2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 1h100%25' stroke='%23000' stroke-opacity='0.08' fill='none'/%3E%3C/svg%3E\")",
   },
   `
     .c-navbar {
-      border-bottom: var(--border-width-1) solid rgb(11 95 255 / 0.12);
-    }
-
-    .c-hero__body {
-      position: relative;
-      overflow: hidden;
+      backdrop-filter: blur(8px);
+      background: rgb(255 255 255 / 0.8);
+      border-bottom: 1px solid var(--border);
     }
 
     .c-hero__body::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(90deg, rgb(11 95 255 / 0.08) 0 1px, transparent 1px 1.5rem),
-        linear-gradient(rgb(15 118 110 / 0.06) 0 1px, transparent 1px 1.5rem);
-      opacity: 0.3;
+      background-image: radial-gradient(circle at 2px 2px, var(--border) 1px, transparent 0);
+      background-size: 24px 24px;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
+      opacity: 0.4;
       pointer-events: none;
     }
 
-    .c-hero__body > * {
-      position: relative;
-      z-index: 1;
+    .c-cta-band__inner {
+      background: var(--primary);
+      color: var(--primary-fg);
     }
 
-    .c-feature-grid__item--selected {
-      box-shadow:
-        inset 0 0 0 var(--border-width-1) var(--color-primary),
-        var(--shadow-sm);
-    }
-
-    .c-image-text__image,
-    .c-gallery__image,
-    .c-before-after__image,
-    .c-testimonials__avatar {
-      border-color: rgb(11 95 255 / 0.16);
+    .c-cta-band__inner .c-button--secondary {
+      background: rgb(255 255 255 / 0.1);
+      border: 1px solid rgb(255 255 255 / 0.2);
+      color: white;
     }
   `,
 );

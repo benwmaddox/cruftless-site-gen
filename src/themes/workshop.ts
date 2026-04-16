@@ -3,95 +3,72 @@ import { createThemeDefinition } from "./tokens.js";
 export const workshopTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#fffbf4",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#f3e7d4",
-    "--color-text": "#2b1d12",
-    "--color-text-muted": "#6b4f3b",
-    "--color-border": "#dac4aa",
-    "--color-primary": "#c3512f",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#2f6f4e",
-    "--color-link": "#8f2e1c",
-    "--color-link-hover": "#2f6f4e",
-    "--color-focus-ring": "#2f6f4e",
-    "--page-background": "linear-gradient(180deg, #fffbf4 0%, #f7efe1 100%)",
-    "--surface-background": "#ffffff",
-    "--hero-background": "linear-gradient(180deg, #f9efe2 0%, #fffbf4 100%)",
-    "--cta-background": "#f3e7d4",
-    "--font-family-body": "\"Public Sans\", \"Helvetica Neue\", sans-serif",
-    "--font-family-heading": "\"Source Serif 4\", Georgia, serif",
-    "--heading-letter-spacing": "-0.02em",
-    "--font-size-5": "2.1rem",
-    "--font-size-6": "2.7rem",
-    "--line-height-heading": "1.06",
-    "--line-height-loose": "1.78",
-    "--font-weight-semibold": "700",
-    "--button-letter-spacing": "0.03em",
-    "--button-secondary-text": "var(--color-text)",
-    "--space-6": "2.25rem",
-    "--space-7": "3rem",
-    "--space-8": "4rem",
-    "--container-max": "70rem",
-    "--button-height": "2.875rem",
-    "--radius-md": "0.5rem",
-    "--radius-lg": "0.625rem",
-    "--radius-xl": "0.75rem",
-    "--border-width-2": "2px",
-    "--shadow-sm": "0 2px 6px rgb(43 29 18 / 0.08)",
-    "--shadow-md": "0 8px 20px rgb(43 29 18 / 0.12)",
-    "--shadow-lg": "0 16px 24px rgb(43 29 18 / 0.16)",
-    "--button-hover-transform": "none",
+    "--bg": "#fffbf4",
+    "--text": "#2b1d12",
+    "--muted": "#6b4f3b",
+    "--primary": "#c3512f",
+    "--primary-fg": "#ffffff",
+    "--accent": "#2f6f4e",
+    "--accent-fg": "#ffffff",
+    "--border": "rgb(43 29 18 / 0.12)",
+    "--surface": "#ffffff",
+    "--surface-fg": "#2b1d12",
+    "--link": "#8f2e1c",
+    "--link-hover": "#2f6f4e",
+    "--focus-ring": "#2f6f4e",
+    "--font-body": "\"Public Sans\", sans-serif",
+    "--font-heading": "\"Source Serif 4\", serif",
+    "--font-mono": "monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.125rem",
+    "--size-xl": "1.25rem",
+    "--size-2xl": "1.5rem",
+    "--size-3xl": "2.25rem",
+    "--size-4xl": "3rem",
+    "--size-5xl": "4.5rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3rem",
+    "--space-2xl": "5rem",
+    "--radius": "0.5rem",
+    "--shadow": "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+    "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60h60M60 0v60' stroke='%232b1d12' stroke-opacity='0.1' stroke-width='1'/%3E%3C/svg%3E\")",
   },
   `
-    .c-hero__body,
+    .c-navbar {
+      backdrop-filter: blur(8px);
+      background: rgb(255 251 244 / 0.8);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .l-page {
+      padding-block: var(--space-md);
+    }
+
     .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
+    .c-testimonials__item,
     .c-contact-form__inner,
-    .c-testimonials__item {
-      position: relative;
-      overflow: hidden;
+    .c-cta-band__inner {
+      background: var(--surface);
+      border-top: 4px solid var(--primary);
+      padding: var(--space-lg);
+      border-radius: 0;
+      box-shadow: 0 2px 4px rgb(43 29 18 / 0.05);
     }
 
-    .c-hero__body::before,
-    .c-before-after__item::before,
-    .c-feature-grid__item::before,
-    .c-faq__item::before,
-    .c-contact-form__inner::before,
-    .c-testimonials__item::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(
-          135deg,
-          rgb(195 81 47 / 0.08) 0,
-          rgb(195 81 47 / 0.08) 0.5rem,
-          transparent 0.5rem,
-          transparent 1rem
-        );
-      background-size: 1rem 1rem;
-      opacity: 0.35;
-      pointer-events: none;
+    .c-button {
+      box-shadow: 0 4px 0 rgb(43 29 18 / 0.1);
     }
 
-    .c-hero__body > *,
-    .c-before-after__item > *,
-    .c-feature-grid__item > *,
-    .c-faq__item > *,
-    .c-contact-form__inner > *,
-    .c-testimonials__item > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-testimonials__item {
-      border-top-width: var(--border-width-3);
-      border-top-color: var(--color-primary);
+    .c-button:active {
+      transform: translateY(2px);
+      box-shadow: none;
     }
   `,
 );

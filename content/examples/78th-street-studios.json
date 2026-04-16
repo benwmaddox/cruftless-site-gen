@@ -3,10 +3,6 @@
     "name": "78th Street Studios",
     "baseUrl": "https://78thstreetstudios.com",
     "theme": "workshop",
-    "themeOverrides": {
-      "structure": "plain",
-      "secondaryColorScheme": "twilight-mist"
-    },
     "pageBackgroundImageUrl": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX",
     "layout": {
       "components": [

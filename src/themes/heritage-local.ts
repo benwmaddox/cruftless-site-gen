@@ -3,86 +3,66 @@ import { createThemeDefinition } from "./tokens.js";
 export const heritageLocalTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#f7f2e9",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#e7ddcf",
-    "--color-text": "#1b1b1b",
-    "--color-text-muted": "#5b4a3d",
-    "--color-border": "#b89f8a",
-    "--color-primary": "#12355b",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#7a1f2b",
-    "--color-link": "#12355b",
-    "--color-link-hover": "#7a1f2b",
-    "--color-focus-ring": "#7a1f2b",
-    "--page-background": "linear-gradient(180deg, #f7f2e9 0%, #efe5d5 100%)",
-    "--surface-background": "#ffffff",
-    "--hero-background": "linear-gradient(180deg, #ffffff 0%, #f7f2e9 100%)",
-    "--cta-background": "#e7ddcf",
-    "--font-family-body": "\"Source Serif 4\", Georgia, serif",
-    "--font-family-heading": "\"Cormorant Garamond\", Georgia, serif",
-    "--font-size-5": "2.15rem",
-    "--font-size-6": "2.8rem",
-    "--line-height-heading": "1.04",
-    "--line-height-loose": "1.8",
-    "--heading-letter-spacing": "-0.01em",
-    "--button-letter-spacing": "0.04em",
-    "--space-7": "3rem",
-    "--space-8": "4rem",
-    "--container-max": "70rem",
-    "--radius-md": "0.375rem",
-    "--radius-lg": "0.5rem",
-    "--radius-xl": "0.625rem",
-    "--shadow-sm": "none",
-    "--shadow-md": "none",
-    "--shadow-lg": "none",
-    "--button-hover-transform": "none",
-  },
+    "--bg": "#f9f7f2",
+    "--text": "#1a1a1a",
+    "--muted": "#5b4a3d",
+    "--primary": "#12355b",
+    "--primary-fg": "#ffffff",
+    "--accent": "#7a1f2b",
+    "--accent-fg": "#ffffff",
+    "--border": "rgb(184 159 138 / 0.2)",
+    "--surface": "#ffffff",
+    "--surface-fg": "#1a1a1a",
+    "--link": "#12355b",
+    "--link-hover": "#7a1f2b",
+    "--focus-ring": "#7a1f2b",
+    "--font-body": "\"Source Serif 4\", serif",
+    "--font-heading": "\"Cormorant Garamond\", serif",
+    "--font-mono": "monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.125rem",
+    "--size-xl": "1.25rem",
+    "--size-2xl": "1.75rem",
+    "--size-3xl": "2.5rem",
+    "--size-4xl": "3.5rem",
+    "--size-5xl": "5rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3rem",
+    "--space-2xl": "5rem",
+    "--radius": "0.25rem",
+    "--shadow": "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+    "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E\")",
+    },
+
   `
-    .c-navbar,
-    .c-before-after,
-    .c-gallery,
-    .c-image-text,
-    .c-logo-strip,
-    .c-prose,
-    .c-feature-grid,
-    .c-faq,
-    .c-cta-band,
-    .c-testimonials {
-      position: relative;
+    .c-navbar {
+      backdrop-filter: blur(8px);
+      background: rgb(249 247 242 / 0.85);
+      border-bottom: 1px solid var(--border);
     }
 
-    .c-navbar::before,
-    .c-before-after::before,
-    .c-gallery::before,
-    .c-image-text::before,
-    .c-logo-strip::before,
-    .c-prose::before,
-    .c-feature-grid::before,
-    .c-faq::before,
-    .c-cta-band::before,
-    .c-testimonials::before {
+    .c-hero__body::after {
       content: "";
       display: block;
-      width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
-      margin: 0 auto var(--space-4);
-      border-top: var(--border-width-1) solid rgb(18 53 91 / 0.28);
+      width: 4rem;
+      height: 1px;
+      background: var(--border);
+      margin: var(--space-lg) auto 0;
     }
 
-    .c-hero__body,
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-contact-form__inner,
-    .c-logo-strip__link,
-    .c-google-maps__frame,
-    .c-image-text__image,
-    .c-gallery__image,
-    .c-media__image,
-    .c-testimonials__item,
-    .c-testimonials__avatar {
-      box-shadow: none;
-      border-width: var(--border-width-2);
+    .c-button {
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 0;
+    }
+
+    .c-button--secondary {
+      border: 1px solid var(--border);
     }
   `,
 );

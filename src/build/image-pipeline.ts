@@ -687,15 +687,21 @@ export const prepareImagePipeline = async (
         }
 
         const variants = targetWidths
-          .map((targetWidth) => {
+          .flatMap((targetWidth) => {
+            const variantKey = createPreparedVariantKey(image.src, usage, targetWidth);
+
+            if (!preparedVariants.has(variantKey)) {
+              return [];
+            }
+
             const resolved = resolvePreparedVariant(image, usage, targetWidth);
 
-            return {
-              ...resolved,
-              src: preparedVariants.has(createPreparedVariantKey(image.src, usage, targetWidth))
-                ? createOutputHref(pageSlug, resolved.src)
-                : resolved.src,
-            };
+            return [
+              {
+                ...resolved,
+                src: createOutputHref(pageSlug, resolved.src),
+              },
+            ];
           })
           .filter((variant) => variant.width !== undefined && variant.height !== undefined);
 

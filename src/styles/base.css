@@ -10,9 +10,10 @@
 
 html {
   min-height: 100%;
-  font-family: var(--font-family-body);
-  line-height: var(--line-height-body);
-  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--size-base);
+  line-height: 1.5;
+  color: var(--text);
 }
 
 body {
@@ -20,33 +21,43 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  background: var(--page-background);
-  background-image: var(--site-page-background-image, none);
-  background-position: left top;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: scroll;
-  color: var(--color-text);
+  background-color: var(--bg);
+  background-image: var(--theme-pattern);
+  background-image: var(--site-page-background-image, var(--theme-pattern));
+  background-attachment: fixed;
+  color: var(--text);
 }
 
 h1,
 h2,
-h3 {
-  font-family: var(--font-family-heading);
-  letter-spacing: var(--heading-letter-spacing);
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+p {
+  margin: 0;
 }
 
 a {
-  color: var(--color-link);
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--duration) var(--ease);
 }
 
 a:hover {
-  color: var(--color-link-hover);
+  color: var(--link-hover);
 }
 
 a:focus-visible,
 button:focus-visible {
-  outline: var(--border-width-2) solid var(--color-focus-ring);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -54,50 +65,47 @@ button:focus-visible {
   display: grid;
   align-content: start;
   gap: 0;
-  min-height: inherit;
+  background: var(--bg);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  min-height: 100vh;
 }
 
 .c-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--button-height);
-  padding-inline: var(--space-4);
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--surface-background);
-  font-family: var(--font-family-heading);
-  letter-spacing: var(--button-letter-spacing);
-  font-weight: var(--font-weight-semibold);
+  padding-inline: var(--space-md);
+  padding-block: var(--space-sm);
+  border-radius: var(--radius);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--size-base);
   text-decoration: none;
-  transition:
-    background var(--duration-normal) var(--ease-standard),
-    border-color var(--duration-normal) var(--ease-standard),
-    color var(--duration-normal) var(--ease-standard);
-}
-
-.c-button:hover {
-  transform: var(--button-hover-transform);
+  transition: all var(--duration) var(--ease);
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .c-button--primary {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--color-primary-contrast);
-}
-
-.c-button--secondary {
-  background: var(--surface-background);
-  color: var(--button-secondary-text);
+  background: var(--primary);
+  color: var(--primary-fg);
+  box-shadow: var(--shadow);
 }
 
 .c-button--primary:hover {
-  border-color: var(--color-link-hover);
-  background: var(--color-link-hover);
-  color: var(--color-primary-contrast);
+  background: var(--link-hover);
+  transform: translateY(-1px);
+}
+
+.c-button--secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
 }
 
 .c-button--secondary:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  background: var(--bg);
+  border-color: var(--text);
 }

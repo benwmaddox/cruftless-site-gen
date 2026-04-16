@@ -3,10 +3,6 @@
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
     "theme": "friendly-modern",
-    "themeOverrides": {
-      "structure": "panel",
-      "secondaryColorScheme": "porcelain-clean"
-    },
     "layout": {
       "components": [
         {

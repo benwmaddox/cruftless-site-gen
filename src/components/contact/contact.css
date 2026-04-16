@@ -1,36 +1,33 @@
 .c-contact {
-  padding-block: var(--space-7);
+  padding-block: var(--space-xl);
 }
 
 .c-contact__inner {
-  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
   margin-inline: auto;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-lg);
 }
 
 .c-contact__title {
   margin: 0;
-  font-size: var(--font-size-4);
-  line-height: var(--line-height-heading);
+  font-size: var(--size-3xl);
+  font-weight: 700;
 }
 
 .c-contact__list {
   margin: 0;
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-md);
 }
 
 .c-contact__item {
   display: grid;
-  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
-  gap: var(--space-2) var(--space-4);
-  align-items: start;
-  padding: var(--space-4);
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--surface-background);
-  box-shadow: var(--shadow-sm);
+  grid-template-columns: 8rem 1fr;
+  gap: var(--space-sm);
+  align-items: baseline;
+  padding-block: var(--space-sm);
+  border-block-end: 1px solid var(--border);
 }
 
 .c-contact__label,
@@ -39,22 +36,22 @@
 }
 
 .c-contact__label {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-0);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--button-letter-spacing);
+  color: var(--muted);
+  font-family: var(--font-heading);
+  font-size: var(--size-sm);
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.05rem;
 }
 
 .c-contact__value {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--space-xs);
   min-width: 0;
 }
 
 .c-contact__address {
   font-style: normal;
-  line-height: var(--line-height-loose);
 }
 
 .c-contact__link {
@@ -64,5 +61,7 @@
 @media (width <= 40rem) {
   .c-contact__item {
     grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    padding-block: var(--space-md);
   }
 }

@@ -1,42 +1,39 @@
 .c-hours {
-  padding-block: var(--space-7);
+  padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
 .c-hours__inner {
-  width: min(calc(100% - (2 * var(--space-5))), var(--content-max));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-lg);
 }
 
 .c-hours__title {
   margin: 0;
-  font-size: var(--font-size-4);
-  line-height: var(--line-height-heading);
+  font-size: var(--size-3xl);
+  font-weight: 700;
 }
 
 .c-hours__table {
   width: 100%;
   border-collapse: collapse;
-  border: var(--border-width-1) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: var(--surface-background);
-  box-shadow: var(--shadow-sm);
 }
 
 .c-hours__day,
 .c-hours__value {
-  padding: var(--space-4);
-  border-block-end: var(--border-width-1) solid var(--color-border);
+  padding-block: var(--space-sm);
+  border-block-end: 1px solid var(--border);
 }
 
 .c-hours__day {
-  width: 42%;
+  width: 40%;
   text-align: left;
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-1);
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-heading);
+  font-size: var(--size-base);
+  font-weight: 600;
 }
 
 .c-hours__value {
@@ -52,12 +49,12 @@
 
 .c-hours__range {
   display: inline-flex;
-  gap: var(--space-2);
+  gap: var(--space-xs);
   align-items: baseline;
 }
 
 .c-hours__separator {
-  color: var(--color-text-muted);
+  color: var(--muted);
 }
 
 @media (width <= 40rem) {
@@ -66,9 +63,15 @@
     display: block;
     width: auto;
     text-align: left;
+    border-block-end: none;
+    padding-block: var(--space-xs);
   }
 
-  .c-hours__value {
-    padding-block-start: 0;
+  .c-hours__day {
+    padding-block-start: var(--space-sm);
+  }
+
+  .c-hours__table tbody tr {
+    border-block-end: 1px solid var(--border);
   }
 }

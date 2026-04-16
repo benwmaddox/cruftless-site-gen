@@ -13,16 +13,49 @@ import {
 import { collectWatchableLocalImagePaths } from "./image-pipeline.js";
 
 const args = process.argv.slice(2);
-const watchMode = args.includes("--watch") || args.includes("-w");
-const positionalArgs = args.filter((arg) => arg !== "--watch" && arg !== "-w");
+let watchMode = false;
+const preserveArgs: string[] = [];
+const positionalArgs: string[] = [];
+
+for (let index = 0; index < args.length; index += 1) {
+  const arg = args[index];
+
+  if (arg === "--watch" || arg === "-w") {
+    watchMode = true;
+    continue;
+  }
+
+  if (arg === "--preserve") {
+    const preservePath = args[index + 1];
+    if (!preservePath) {
+      throw new Error("Missing path after --preserve");
+    }
+
+    preserveArgs.push(preservePath);
+    index += 1;
+    continue;
+  }
+
+  if (arg.startsWith("--preserve=")) {
+    preserveArgs.push(arg.slice("--preserve=".length));
+    continue;
+  }
+
+  positionalArgs.push(arg);
+}
 
 if (positionalArgs.length > 2) {
-  throw new Error("Usage: tsx src/build/build.ts [content-path] [out-dir] [--watch]");
+  throw new Error(
+    "Usage: tsx src/build/build.ts [content-path] [out-dir] [--watch] [--preserve output-path]",
+  );
 }
 
 const [contentArg, outArg] = positionalArgs;
 const contentPath = contentArg ? path.resolve(process.cwd(), contentArg) : defaultContentPath;
 const outDir = outArg ? path.resolve(process.cwd(), outArg) : defaultOutDir;
+const preservePaths = preserveArgs.map((preserveArg) =>
+  path.resolve(path.isAbsolute(preserveArg) ? preserveArg : path.join(outDir, preserveArg)),
+);
 const relativeContentPath = path.relative(process.cwd(), contentPath);
 
 const formatBuildSummary = (pageCount: number, outDirectory: string, changedFiles: number): string => {
@@ -50,7 +83,7 @@ const loadWatchableImagePaths = async (): Promise<string[]> => {
 const runBuild = async (): Promise<boolean> => {
   try {
     const siteContent = await loadValidatedSite(contentPath);
-    const buildResult = await buildSite(siteContent, outDir, { contentPath });
+    const buildResult = await buildSite(siteContent, outDir, { contentPath, preservePaths });
     const changedFiles =
       buildResult.filesCreated + buildResult.filesUpdated + buildResult.filesRemoved;
 

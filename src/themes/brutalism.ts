@@ -3,72 +3,102 @@ import { createThemeDefinition } from "./tokens.js";
 export const brutalismTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#ffffff",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#f4f4f4",
-    "--color-text": "#111111",
-    "--color-text-muted": "#333333",
-    "--color-border": "#000000",
-    "--color-primary": "#000000",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#b6ff00",
-    "--color-link": "#000000",
-    "--color-link-hover": "#ff2da6",
-    "--color-focus-ring": "#000000",
-    "--page-background": "linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%)",
-    "--surface-background": "#ffffff",
-    "--hero-background": "#f4f4f4",
-    "--cta-background": "#ffffff",
-    "--font-family-body": "\"Space Grotesk\", \"Helvetica Neue\", sans-serif",
-    "--font-family-heading": "\"IBM Plex Mono\", \"Space Grotesk\", monospace",
-    "--font-size-4": "1.9rem",
-    "--font-size-5": "2.6rem",
-    "--font-size-6": "3.4rem",
-    "--line-height-heading": "0.92",
-    "--font-weight-semibold": "700",
-    "--font-weight-bold": "800",
-    "--heading-letter-spacing": "0.04em",
-    "--button-letter-spacing": "0.05em",
-    "--space-7": "3.25rem",
-    "--space-8": "4.5rem",
-    "--button-height": "3rem",
-    "--radius-sm": "0",
-    "--radius-md": "0",
-    "--radius-lg": "0",
-    "--radius-xl": "0",
-    "--border-width-2": "3px",
-    "--border-width-3": "4px",
-    "--shadow-sm": "2px 2px 0 rgb(0 0 0 / 1)",
-    "--shadow-md": "4px 4px 0 rgb(0 0 0 / 1)",
-    "--shadow-lg": "6px 6px 0 rgb(0 0 0 / 1)",
-    "--button-hover-transform": "none",
+    "--bg": "#ffffff",
+    "--text": "#000000",
+    "--muted": "#333333",
+    "--primary": "#000000",
+    "--primary-fg": "#ffffff",
+    "--accent": "#d4f134",
+    "--accent-fg": "#000000",
+    "--border": "#000000",
+    "--surface": "#ffffff",
+    "--surface-fg": "#000000",
+    "--link": "#000000",
+    "--link-hover": "#000000",
+    "--focus-ring": "#d4f134",
+    "--font-body": "\"Space Grotesk\", sans-serif",
+    "--font-heading": "\"Space Grotesk\", sans-serif",
+    "--font-mono": "ui-monospace, monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.25rem",
+    "--size-xl": "1.5rem",
+    "--size-2xl": "2rem",
+    "--size-3xl": "3rem",
+    "--size-4xl": "4rem",
+    "--size-5xl": "6rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3rem",
+    "--space-2xl": "5rem",
+    "--radius": "0rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40h40M40 0v40' stroke='%23000000' stroke-opacity='0.15' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E\")",
+    "--duration": "0.1s",
+    "--ease": "linear",
   },
   `
-    .c-navbar__link,
+    .c-navbar {
+      border-bottom: 2px solid var(--border);
+    }
+
+    .l-page {
+      padding-block: var(--space-xs);
+      gap: var(--space-xl);
+    }
+
     .c-button,
     .c-before-after__item,
     .c-feature-grid__item,
     .c-faq__item,
     .c-logo-strip__link,
     .c-contact-form__inner,
-    .c-hero__body,
+    .c-cta-band__inner,
+    .c-testimonials__item,
+    .c-image-text__image,
+    .c-media__image {
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .c-before-after__item,
+    .c-feature-grid__item,
+    .c-faq__item,
+    .c-logo-strip__link,
+    .c-contact-form__inner,
     .c-cta-band__inner,
     .c-testimonials__item {
-      border-width: var(--border-width-2);
-      box-shadow: var(--shadow-md);
+      padding: var(--space-lg);
+    }
+
+    .c-button:hover,
+    .c-feature-grid__item:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--border);
+    }
+
+    .c-button--primary:hover {
+      background: var(--accent);
+      color: var(--text);
+    }
+
+    .c-navbar__link:hover {
+      background: var(--accent);
+      color: var(--text);
     }
 
     .c-navbar__brand-text,
     .c-navbar__link,
-    .c-button,
-    .c-feature-grid__item-status {
+    .c-button {
       text-transform: uppercase;
+      font-weight: 800;
     }
 
-    .c-hero__body {
-      background:
-        linear-gradient(90deg, rgb(182 255 0 / 0.18) 0 0.875rem, transparent 0.875rem 100%),
-        var(--hero-background);
+    .c-cta-band__inner {
+      background: var(--accent);
+      color: var(--text);
     }
   `,
 );

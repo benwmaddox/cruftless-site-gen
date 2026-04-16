@@ -3,79 +3,66 @@ import { createThemeDefinition } from "./tokens.js";
 export const friendlyModernTheme = createThemeDefinition(
   {
     "--color-scheme": "light",
-    "--color-bg": "#f8faff",
-    "--color-surface": "#ffffff",
-    "--color-surface-alt": "#dbeafe",
-    "--color-text": "#111827",
-    "--color-text-muted": "#4b5563",
-    "--color-border": "#c7d2fe",
-    "--color-primary": "#2563eb",
-    "--color-primary-contrast": "#ffffff",
-    "--color-accent": "#e11d48",
-    "--color-link": "#2563eb",
-    "--color-link-hover": "#1d4ed8",
-    "--color-focus-ring": "#2563eb",
-    "--page-background": "linear-gradient(180deg, #f8faff 0%, #eef4ff 100%)",
-    "--surface-background": "#ffffff",
-    "--hero-background": "linear-gradient(145deg, #ffffff 0%, #dbeafe 100%)",
-    "--cta-background": "linear-gradient(145deg, #ffffff 0%, #ffe4e6 100%)",
-    "--font-family-body": "\"Manrope\", \"Avenir Next\", sans-serif",
-    "--font-family-heading": "\"Manrope\", \"Avenir Next\", sans-serif",
-    "--heading-letter-spacing": "-0.03em",
-    "--font-size-5": "2.3rem",
-    "--font-size-6": "3rem",
-    "--line-height-heading": "1.02",
-    "--line-height-loose": "1.75",
-    "--font-weight-semibold": "700",
-    "--font-weight-bold": "800",
-    "--button-letter-spacing": "0.015em",
-    "--space-7": "3.25rem",
-    "--space-8": "4.25rem",
-    "--button-height": "2.875rem",
-    "--radius-md": "0.625rem",
-    "--radius-lg": "0.75rem",
-    "--radius-xl": "0.75rem",
-    "--shadow-sm": "0 2px 6px rgb(17 24 39 / 0.08)",
-    "--shadow-md": "0 10px 24px rgb(17 24 39 / 0.12)",
-    "--shadow-lg": "0 16px 24px rgb(17 24 39 / 0.14)",
-    "--duration-normal": "220ms",
-    "--duration-slow": "260ms",
-    "--ease-emphasized": "cubic-bezier(0.2, 0.8, 0.2, 1)",
-    "--button-hover-transform": "none",
+    "--bg": "#f8faff",
+    "--text": "#111827",
+    "--muted": "#4b5563",
+    "--primary": "#2563eb",
+    "--primary-fg": "#ffffff",
+    "--accent": "#e11d48",
+    "--accent-fg": "#ffffff",
+    "--border": "rgb(37 99 235 / 0.12)",
+    "--surface": "#ffffff",
+    "--surface-fg": "#111827",
+    "--link": "#2563eb",
+    "--link-hover": "#1d4ed8",
+    "--focus-ring": "#2563eb",
+    "--font-body": "\"Manrope\", sans-serif",
+    "--font-heading": "\"Manrope\", sans-serif",
+    "--font-mono": "monospace",
+    "--size-sm": "0.875rem",
+    "--size-base": "1rem",
+    "--size-lg": "1.125rem",
+    "--size-xl": "1.25rem",
+    "--size-2xl": "1.75rem",
+    "--size-3xl": "2.5rem",
+    "--size-4xl": "3.5rem",
+    "--size-5xl": "5rem",
+    "--space-xs": "0.25rem",
+    "--space-sm": "0.5rem",
+    "--space-md": "1rem",
+    "--space-lg": "2rem",
+    "--space-xl": "3.25rem",
+    "--space-2xl": "5rem",
+    "--radius": "1rem",
+    "--shadow": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%232563eb' fill-opacity='0.15'/%3E%3C/svg%3E\")",
   },
   `
-    .c-hero__body,
-    .c-before-after__item,
-    .c-feature-grid__item,
-    .c-faq__item,
-    .c-contact-form__inner,
-    .c-testimonials__item {
-      position: relative;
-      overflow: hidden;
+    body {
+      background: radial-gradient(at 0% 0%, #f8faff 0%, #eef4ff 100%);
     }
 
-    .c-hero__body::before,
-    .c-before-after__item::before,
-    .c-feature-grid__item::before,
-    .c-faq__item::before {
+    .c-navbar {
+      backdrop-filter: blur(8px);
+      background: rgb(255 255 255 / 0.7);
+    }
+
+    .c-hero__body::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at top right, rgb(37 99 235 / 0.12), transparent 42%),
-        radial-gradient(circle at bottom left, rgb(225 29 72 / 0.1), transparent 38%);
-      pointer-events: none;
+      background: 
+        radial-gradient(circle at 20% 30%, rgb(37 99 235 / 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgb(225 29 72 / 0.06) 0%, transparent 50%);
+      filter: blur(40px);
+      z-index: -1;
     }
 
-    .c-hero__body > *,
-    .c-before-after__item > *,
-    .c-feature-grid__item > *,
-    .c-faq__item > * {
-      position: relative;
-      z-index: 1;
+    .c-feature-grid__item:hover {
+      transform: translateY(-4px);
     }
 
-    .c-navbar__link,
     .c-button {
       border-radius: 999px;
     }
