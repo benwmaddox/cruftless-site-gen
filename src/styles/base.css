@@ -74,8 +74,8 @@ button:focus-visible {
   width: calc(100% - (var(--space-md) * 2));
   max-width: var(--max-width);
   margin-inline: auto;
-  padding-block: var(--space-xl);
-  padding-inline: var(--space-lg);
+  padding-block: var(--space-lg);
+  padding-inline: var(--space-md);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
