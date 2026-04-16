@@ -15,7 +15,7 @@ describe("component width tokens", () => {
 
   it("uses max-width for standard component wrappers via section tag", async () => {
     const baseCss = await readBaseCss();
-    expect(baseCss).toContain("section {");
+    expect(baseCss).toContain(".l-section {");
     expect(baseCss).toContain("max-width: var(--max-width);");
     expect(baseCss).not.toContain("var(--container-max)");
     expect(baseCss).not.toContain("var(--content-max)");
@@ -33,15 +33,14 @@ describe("component width tokens", () => {
     expect(css).toContain(".c-feature-grid__items--cols-4 {");
   });
 
-  it("keeps media width modes split between content and container tokens", async () => {
+  it("uses standard width for media items", async () => {
     const css = await readFile(
       componentDefinitions.find((component) => component.type === "media")!.cssPath,
       "utf8",
     );
 
-    expect(css).toContain(".c-media--size-content");
-    // max-width is inherited from the section tag in base.css
-    expect(css).toContain(".c-media--size-wide");
+    expect(css).toContain(".c-media {");
+    // max-width is inherited from the .l-section class in base.css
   });
 
   it("uses a dedicated readable text color for secondary buttons", async () => {
@@ -71,7 +70,6 @@ describe("component width tokens", () => {
     );
 
     expect(css).toContain(".c-google-maps--size-content");
-    // max-width is inherited from the section tag in base.css
     expect(css).toContain(".c-google-maps--size-wide");
   });
 });

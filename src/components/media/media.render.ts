@@ -7,8 +7,6 @@ import {
 
 export const mediaClassNames = [
   "c-media",
-  "c-media--size-content",
-  "c-media--size-wide",
   "c-media__image",
   "c-media__caption",
 ] as const;
@@ -17,14 +15,8 @@ export const renderMedia = (
   data: MediaData,
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string => {
-  const resolvedImage = renderContext.resolveImage(
-    data,
-    data.size === "content" ? "media-content" : "media-wide",
-  );
-  const responsiveImage = renderContext.resolveResponsiveImage?.(
-    data,
-    data.size === "content" ? "media-content" : "media-wide",
-  );
+  const resolvedImage = renderContext.resolveImage(data, "media-content");
+  const responsiveImage = renderContext.resolveResponsiveImage?.(data, "media-content");
   const altText = data.alt ?? "";
   const intrinsicWidth = data.width ?? resolvedImage.width;
   const intrinsicHeight = data.height ?? resolvedImage.height;
@@ -39,7 +31,7 @@ export const renderMedia = (
   const loadingAttribute = data.loading ? ` loading="${escapeHtml(data.loading)}"` : "";
 
   return [
-    `<section class="c-media l-section c-media--size-${escapeHtml(data.size)}">`,
+    '<section class="c-media l-section">',
     `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${loadingAttribute} decoding="async" />`,
     data.caption ? `  <p class="c-media__caption">${escapeHtml(data.caption)}</p>` : "",
     "</section>",

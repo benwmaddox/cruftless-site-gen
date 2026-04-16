@@ -1,13 +1,4 @@
-.c-feature-grid {
-  padding-inline: var(--space-md);
-}
-
 /* l-section handles background, border, radius, shadow, padding, max-width, centering */
-
-.c-feature-grid__title,
-.c-feature-grid__lead {
-  padding-inline: var(--space-md);
-}
 
 .c-feature-grid__title {
   font-size: var(--size-3xl);

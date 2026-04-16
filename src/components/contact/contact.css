@@ -16,7 +16,6 @@
   margin: 0;
   font-size: var(--size-3xl);
   font-weight: 700;
-  padding-inline: var(--space-md);
 }
 
 .c-contact__list {
@@ -24,6 +23,8 @@
   grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   gap: var(--space-md);
   margin: 0;
+  list-style: none;
+  padding: 0;
 }
 
 /* l-item handles cell look */
@@ -31,6 +32,13 @@
 .c-contact__item {
   display: grid;
   gap: var(--space-xs);
+  text-decoration: none;
+  transition: transform var(--duration) var(--ease), background-color var(--duration) var(--ease);
+}
+
+.c-contact__item--link:hover {
+  background-color: var(--surface);
+  transform: translateY(-2px);
 }
 
 .c-contact__label {

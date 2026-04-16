@@ -8,6 +8,7 @@ export const contactClassNames = [
   "c-contact__title",
   "c-contact__list",
   "c-contact__item",
+  "c-contact__item--link",
   "c-contact__label",
   "c-contact__value",
   "c-contact__address",
@@ -17,13 +18,21 @@ export const contactClassNames = [
 const renderMultilineAddress = (address: string): string =>
   escapeHtml(address.trim()).replace(/\r?\n/g, "<br />");
 
-const renderContactItem = (label: string, valueHtml: string): string =>
-  [
-    '      <div class="c-contact__item l-item">',
+const renderContactItem = (label: string, valueHtml: string, href?: string): string => {
+  const tag = href ? "a" : "div";
+  const hrefAttr = href ? ` href="${escapeHtml(href)}"` : "";
+  const classes = ["c-contact__item", "l-item"];
+  if (href) {
+    classes.push("c-contact__item--link");
+  }
+
+  return [
+    `      <${tag} class="${classes.join(" ")}"${hrefAttr}>`,
     `        <dt class="c-contact__label">${escapeHtml(label)}</dt>`,
     `        <dd class="c-contact__value">${valueHtml}</dd>`,
-    "      </div>",
+    `      </${tag}>`,
   ].join("\n");
+};
 
 export const renderContact = (data: ContactData): string => {
   const phoneHref = data.phone ? normalizePhoneForTelHref(data.phone) : undefined;
@@ -33,16 +42,10 @@ export const renderContact = (data: ContactData): string => {
       `<address class="c-contact__address">${renderMultilineAddress(data.address)}</address>`,
     ),
     data.phone && phoneHref
-      ? renderContactItem(
-          "Phone",
-          `<a class="c-contact__link" href="tel:${escapeHtml(phoneHref)}">${escapeHtml(data.phone)}</a>`,
-        )
+      ? renderContactItem("Phone", escapeHtml(data.phone), `tel:${phoneHref}`)
       : "",
     data.email
-      ? renderContactItem(
-          "Email",
-          `<a class="c-contact__link" href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a>`,
-        )
+      ? renderContactItem("Email", escapeHtml(data.email), `mailto:${data.email}`)
       : "",
   ]
     .filter(Boolean)
