@@ -21,10 +21,7 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  background-color: var(--bg);
-  background-image: var(--theme-pattern);
-  background-image: var(--site-page-background-image, var(--theme-pattern));
-  background-attachment: fixed;
+  background: var(--site-page-background-image, none) center / cover no-repeat fixed, var(--theme-pattern) fixed var(--bg);
   color: var(--text);
 }
 
