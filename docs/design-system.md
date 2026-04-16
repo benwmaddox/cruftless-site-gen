@@ -57,9 +57,24 @@ Themes are defined by a strict set of tokens, but can provide surgical CSS overr
 - **Padding**: Components that require internal backgrounds or borders (e.g., `cta-band`, `feature-grid` cards) must apply their internal padding *inside* the `__inner` alignment boundary.
 - **Borders**: Component-specific borders and shadows should be applied to the `__inner` container or its child elements, never to the section container itself.
 
-## 5. Background & Textures
+## 5. Background & Textures (The "Framed Stage")
 
-To ensure readability and proper layering:
-- **Body Textures**: Visual patterns (stripes, dots, gradients) must be applied to the `body` element using a multi-layer `background-image` stack.
-- **Readability**: Content containers sitting on top of textured backgrounds must use `background: var(--surface)` to mask the texture behind text.
-- **Fixed Backgrounds**: Textures should generally use `background-attachment: fixed` to feel like they belong to the "initial viewable window" rather than individual scrolling sections.
+To ensure visual depth without sacrificing readability, we use a two-layer background architecture:
+
+### A. The Decorative Stage (Body)
+The `body` element carries the theme's background pattern. This is visible in the gutters (left/right margins) on desktop.
+
+- **Token**: `--theme-pattern` (Default: `none`). Stores an SVG data URI or gradient.
+- **Overrides**: Users can override this pattern by providing a background image via `--site-page-background-image`.
+
+### B. The Content Sheet (Main)
+The `<main class="l-page">` element acts as a solid "sheet" of content.
+
+- **Style**: `background: var(--bg)`.
+- **Constraint**: It is centered and constrained to `var(--max-width)`.
+- **Readability**: This ensures text is always rendered on a solid, clean surface, regardless of how complex the body pattern is.
+
+### Spacing Rules:
+- **Vertical Rhythm**: Vertical breathing room is controlled via `padding-block`.
+- **Standard Vertical Padding**: Most components should use `padding-block: var(--space-xl)` (default 3rem).
+- **Hero Separation**: The Hero component may use `padding-block: var(--space-2xl)` (default 5rem).

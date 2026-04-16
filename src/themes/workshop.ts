@@ -36,26 +36,9 @@ export const workshopTheme = createThemeDefinition(
     "--radius": "0.5rem",
     "--shadow": "0 1px 3px 0 rgb(0 0 0 / 0.1)",
     "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60h60M60 0v60' stroke='%232b1d12' stroke-opacity='0.1' stroke-width='1'/%3E%3C/svg%3E\")",
   },
   `
-    body {
-      background-image: 
-        linear-gradient(
-          45deg,
-          rgb(43 29 18 / 0.035) 25%,
-          transparent 25%,
-          transparent 50%,
-          rgb(43 29 18 / 0.035) 50%,
-          rgb(43 29 18 / 0.035) 75%,
-          transparent 75%,
-          transparent 100%
-        ),
-        var(--site-page-background-image, none),
-        radial-gradient(at 0% 0%, #fffbf4 0%, #f7efe1 100%);
-      background-size: 40px 40px, cover, 100% 100%;
-      background-attachment: fixed, scroll, fixed;
-    }
-
     .c-navbar {
       backdrop-filter: blur(8px);
       background: rgb(255 251 244 / 0.8);

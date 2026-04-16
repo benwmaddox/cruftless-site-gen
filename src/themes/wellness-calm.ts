@@ -36,12 +36,9 @@ export const wellnessCalmTheme = createThemeDefinition(
     "--radius": "1.25rem",
     "--shadow": "0 10px 25px -5px rgb(47 124 100 / 0.1)",
     "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='50' cy='50' r='1' fill='%232f7c64' fill-opacity='0.15'/%3E%3C/svg%3E\")",
   },
   `
-    body {
-      background: radial-gradient(at 0% 0%, #f8fcfb 0%, #eef8f3 100%);
-    }
-
     .c-navbar {
       backdrop-filter: blur(8px);
       background: rgb(248 252 251 / 0.8);

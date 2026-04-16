@@ -36,6 +36,7 @@ export const corporateTheme = createThemeDefinition(
     "--radius": "0.5rem",
     "--shadow": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
     "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='100%25' height='2' viewBox='0 0 100%25 2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 1h100%25' stroke='%23000' stroke-opacity='0.08' fill='none'/%3E%3C/svg%3E\")",
   },
   `
     .c-navbar {

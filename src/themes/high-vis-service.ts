@@ -36,19 +36,9 @@ export const highVisServiceTheme = createThemeDefinition(
     "--radius": "0.25rem",
     "--shadow": "0 4px 20px rgb(0 0 0 / 0.4)",
     "--max-width": "80rem",
+    "--theme-pattern": "repeating-linear-gradient(-45deg, rgb(255 212 0 / 0.15) 0 1rem, transparent 1rem 2rem)",
   },
   `
-    body {
-      background-image: 
-        repeating-linear-gradient(
-          -45deg,
-          rgb(255 212 0 / 0.05) 0 1rem,
-          transparent 1rem 2rem
-        ),
-        var(--site-page-background-image, none);
-      background-attachment: fixed, scroll;
-    }
-
     .c-navbar {
       backdrop-filter: blur(8px);
       background: rgb(10 12 16 / 0.85);

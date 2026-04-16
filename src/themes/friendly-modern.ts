@@ -36,6 +36,7 @@ export const friendlyModernTheme = createThemeDefinition(
     "--radius": "1rem",
     "--shadow": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
     "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%232563eb' fill-opacity='0.15'/%3E%3C/svg%3E\")",
   },
   `
     body {

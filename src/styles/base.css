@@ -21,7 +21,10 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  background: var(--site-page-background-image, none) left top / cover no-repeat scroll var(--bg);
+  background-color: var(--bg);
+  background-image: var(--theme-pattern);
+  background-image: var(--site-page-background-image, var(--theme-pattern));
+  background-attachment: fixed;
   color: var(--text);
 }
 
@@ -62,6 +65,11 @@ button:focus-visible {
   display: grid;
   align-content: start;
   gap: 0;
+  background: var(--bg);
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  min-height: 100vh;
 }
 
 .c-button {

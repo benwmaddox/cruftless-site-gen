@@ -34,8 +34,9 @@ export const brutalismTheme = createThemeDefinition(
     "--space-xl": "3rem",
     "--space-2xl": "5rem",
     "--radius": "0rem",
-    "--shadow": "4px 4px 0 #000000",
-    "--max-width": "80rem",
+    "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40h40M40 0v40' stroke='%23000000' stroke-opacity='0.15' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E\")",
+    "--duration": "0.1s",
+    "--ease": "linear",
   },
   `
     .c-navbar {

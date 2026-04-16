@@ -38,6 +38,8 @@ const canonicalThemeTokens = {
   "--shadow": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
   "--max-width": "80rem",
 
+  "--theme-pattern": "none",
+
   "--duration": "200ms",
   "--ease": "cubic-bezier(0.4, 0, 0.2, 1)",
 } as const;
