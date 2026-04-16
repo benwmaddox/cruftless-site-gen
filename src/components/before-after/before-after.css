@@ -36,7 +36,6 @@
 }
 
 .c-before-after__item {
-  margin: 0;
   display: grid;
   gap: var(--space-sm);
 }

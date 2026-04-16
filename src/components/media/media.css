@@ -1,5 +1,4 @@
 .c-media {
-  margin: 0;
   display: grid;
   gap: var(--space-md);
 }
@@ -20,6 +19,7 @@
   height: auto;
   margin-inline: auto;
   border-radius: var(--radius);
+
   /* shadow handled by section card if this is the root */
 }
 

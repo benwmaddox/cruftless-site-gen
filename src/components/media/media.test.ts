@@ -17,7 +17,7 @@ describe("MediaSchema", () => {
 
     const html = renderMedia(parsed);
 
-    expect(html).toContain('<figure class="c-media c-media--size-content">');
+    expect(html).toContain('<section class="c-media l-section c-media--size-content">');
     expect(html).toContain('<img class="c-media__image"');
     expect(html).toContain('alt="Founder standing in the studio"');
     expect(html).not.toContain('fetchpriority=');
@@ -25,7 +25,7 @@ describe("MediaSchema", () => {
     expect(html).toContain('width="1600" height="900"');
     expect(html).not.toContain('style="width:');
     expect(html).not.toContain('loading="');
-    expect(html).toContain("<figcaption");
+    expect(html).toContain('<p class="c-media__caption">');
   });
 
   it("renders lazy loading when requested", () => {

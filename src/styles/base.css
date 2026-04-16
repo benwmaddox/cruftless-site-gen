@@ -86,6 +86,7 @@ button:focus-visible {
   background: var(--bg);
   border-radius: var(--radius);
   padding: var(--space-md);
+
   /* No borders or shadows by default */
 }
 

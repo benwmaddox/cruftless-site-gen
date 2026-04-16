@@ -27,7 +27,9 @@ describe("GallerySchema", () => {
 
     const html = renderGallery(parsed);
 
-    expect(html).toContain('<section class="c-gallery" data-js="gallery" data-gallery-open="false">');
+    expect(html).toContain(
+      '<section class="c-gallery l-section" data-js="gallery" data-gallery-open="false">',
+    );
     expect(html).toContain("c-gallery__items--columns-4");
     expect(html).toContain('class="c-gallery__trigger"');
     expect(html).toContain('class="c-gallery__dialog" hidden');

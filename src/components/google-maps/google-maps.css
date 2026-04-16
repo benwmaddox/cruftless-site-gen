@@ -1,7 +1,4 @@
 .c-google-maps {
-  margin: 0;
-  padding-block: var(--space-xl);
-  padding-inline: var(--space-md);
   display: grid;
   gap: var(--space-sm);
 }

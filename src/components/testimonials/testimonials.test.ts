@@ -30,7 +30,7 @@ describe("TestimonialsSchema", () => {
 
     const html = renderTestimonials(parsed);
 
-    expect(html).toContain('<section class="c-testimonials">');
+    expect(html).toContain('<section class="c-testimonials l-section">');
     expect(html).toContain("North Harbor Studio");
     expect(html).toContain('class="c-testimonials__avatar"');
   });

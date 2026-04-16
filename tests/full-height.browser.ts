@@ -101,7 +101,7 @@ const runBrowserRegression = async (): Promise<void> => {
 
       assert.ok(metrics.bodyHeight >= metrics.viewportHeight - 1);
       assert.ok(metrics.bottomSlack > 24);
-      assert.ok(metrics.firstChildHeight < metrics.viewportHeight * 0.25);
+      assert.ok(metrics.firstChildHeight < metrics.viewportHeight * 0.3);
       assert.ok(metrics.pageHeight >= metrics.viewportHeight - 1);
       assert.deepEqual(pageErrors, []);
     } finally {

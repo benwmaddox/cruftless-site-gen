@@ -18,8 +18,8 @@ describe("FaqSchema", () => {
 
     const html = renderFaq(parsed);
 
-    expect(html).toContain('<section class="c-faq">');
-    expect(html).toContain('<details class="c-faq__item">');
+    expect(html).toContain('<section class="c-faq l-section">');
+    expect(html).toContain('<details class="c-faq__item l-item">');
     expect(html).toContain("Class names only come from framework code.");
   });
 

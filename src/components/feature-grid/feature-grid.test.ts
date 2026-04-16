@@ -34,7 +34,7 @@ describe("FeatureGridSchema", () => {
 
     const html = renderFeatureGrid(parsed);
 
-    expect(html).toContain('<section class="c-feature-grid">');
+    expect(html).toContain('<section class="c-feature-grid l-section">');
     expect(html).toContain('<p class="c-feature-grid__lead">');
     expect(html).toContain('<ul class="c-feature-grid__items c-feature-grid__items--cols-2">');
     expect(html).toContain('c-feature-grid__item--has-image');
