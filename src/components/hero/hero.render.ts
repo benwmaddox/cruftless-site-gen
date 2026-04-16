@@ -40,4 +40,3 @@ export const renderHero = (data: HeroData): string => {
     .filter(Boolean)
     .join("\n");
 };
-

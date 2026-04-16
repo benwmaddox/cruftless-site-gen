@@ -39,7 +39,7 @@ export const renderGallery = (
           : "";
 
       return [
-        '      <li class="c-gallery__item">',
+        '      <li class="c-gallery__item l-item">',
         '        <figure class="c-gallery__figure">',
         `          <button class="c-gallery__trigger" type="button" data-gallery-full-src="${escapeHtml(resolvedImage.fullSrc ?? resolvedImage.src)}" data-gallery-alt="${escapeHtml(image.alt)}" data-gallery-caption="${escapeHtml(image.caption ?? "")}">`,
         `            <img class="c-gallery__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(image.alt)}"${dimensions} />`,
@@ -56,7 +56,7 @@ export const renderGallery = (
     .join("\n");
 
   return [
-    '<section class="c-gallery" data-js="gallery" data-gallery-open="false">',
+    '<section class="c-gallery l-section" data-js="gallery" data-gallery-open="false">',
     '  <div class="c-gallery__inner">',
     `    <h2 class="c-gallery__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-gallery__lead">${escapeHtml(data.lead)}</p>` : "",

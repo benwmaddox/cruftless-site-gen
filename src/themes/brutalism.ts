@@ -49,6 +49,7 @@ export const brutalismTheme = createThemeDefinition(
     }
 
     .l-section,
+    .l-item,
     .c-button,
     .c-image-text__image,
     .c-media__image {
@@ -58,6 +59,7 @@ export const brutalismTheme = createThemeDefinition(
     }
 
     .l-section:hover,
+    .l-item:hover,
     .c-button:hover {
       transform: translate(-2px, -2px);
       box-shadow: 6px 6px 0 var(--border);
@@ -78,11 +80,6 @@ export const brutalismTheme = createThemeDefinition(
     .c-button {
       text-transform: uppercase;
       font-weight: 800;
-    }
-
-    .c-cta-band__inner {
-      background: var(--accent);
-      color: var(--text);
     }
   `,
 );

@@ -33,11 +33,11 @@ export const renderContactForm = (data: ContactFormData): string => {
       : ' data-js="contact-form" data-contact-form-mode="production"';
 
   return [
-    '<section class="c-contact-form">',
+    '<section class="c-contact-form l-section">',
     '  <div class="c-contact-form__inner">',
     `    <h2 class="c-contact-form__title">${escapeHtml(data.title)}</h2>`,
     data.intro ? `    <p class="c-contact-form__intro">${escapeHtml(data.intro)}</p>` : "",
-    `    <form class="c-contact-form__form" action="${escapeHtml(data.action)}" method="post"${modeAttributes}>`,
+    `    <form class="c-contact-form__form l-item" action="${escapeHtml(data.action)}" method="post"${modeAttributes}>`,
     subjectHtml,
     '      <div class="c-contact-form__honeypot" aria-hidden="true">',
     '        <label class="c-contact-form__label" for="contact-website">Website</label>',

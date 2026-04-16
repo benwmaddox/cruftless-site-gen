@@ -20,12 +20,12 @@
   color: var(--muted);
   max-width: 40rem;
   line-height: 1.5;
-  margin-block: calc(-1 * var(--space-lg)) 0;
+  margin-block: var(--space-sm) 0;
 }
 
 .c-feature-grid__items {
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--space-md);
   padding: 0;
   margin: 0;
   list-style: none;

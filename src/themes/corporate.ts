@@ -56,15 +56,10 @@ export const corporateTheme = createThemeDefinition(
       pointer-events: none;
     }
 
-    .c-cta-band__inner {
-      background: var(--primary);
-      color: var(--primary-fg);
-    }
-
     .c-cta-band__inner .c-button--secondary {
-      background: rgb(255 255 255 / 0.1);
-      border: 1px solid rgb(255 255 255 / 0.2);
-      color: white;
+      background: rgb(15 23 42 / 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
     }
   `,
 );

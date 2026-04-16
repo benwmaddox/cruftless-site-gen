@@ -72,11 +72,5 @@ export const highVisServiceTheme = createThemeDefinition(
       transform: translateY(2px);
       box-shadow: none;
     }
-
-    .c-cta-band__inner {
-      background: var(--surface);
-      border: 2px solid var(--primary);
-      box-shadow: 0 20px 40px rgb(255 212 0 / 0.1);
-    }
   `,
 );

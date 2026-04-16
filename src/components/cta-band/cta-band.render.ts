@@ -38,4 +38,3 @@ export const renderCtaBand = (data: CtaBandData): string => {
     .filter(Boolean)
     .join("\n");
 };
-

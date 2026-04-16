@@ -1,9 +1,12 @@
 .c-store-location-hours {
-  padding-block: var(--space-xl);
+  padding-inline: var(--space-md);
 }
 
+/* l-section handles card look */
+
 .c-store-location-hours__inner {
-  width: min(calc(100% - (2 * var(--space-lg))), var(--max-width));
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   display: grid;
   gap: var(--space-xl);
@@ -12,6 +15,7 @@
 .c-store-location-hours__title {
   margin: 0;
   font-size: var(--size-3xl);
+  padding-inline: var(--space-md);
 }
 
 .c-store-location-hours__grid {
@@ -27,12 +31,9 @@
 
 .c-store-location-hours__panel {
   min-width: 0;
-  padding: var(--space-lg);
-  border-radius: var(--radius);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
 }
+
+/* l-item handles background, radius, padding */
 
 .c-store-location-hours__panel-title {
   margin: 0 0 var(--space-md);
@@ -41,10 +42,7 @@
 }
 
 .c-store-location-hours__map-frame {
-  border-radius: var(--radius);
-  background: var(--surface);
   overflow: hidden;
-  box-shadow: var(--shadow);
   border: 1px solid var(--border);
 }
 
@@ -124,10 +122,6 @@
 }
 
 @media (width <= 40rem) {
-  .c-store-location-hours__panel {
-    padding: var(--space-md);
-  }
-
   .c-store-location-hours__hours-day,
   .c-store-location-hours__hours-value {
     display: block;

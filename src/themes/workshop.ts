@@ -66,11 +66,5 @@ export const workshopTheme = createThemeDefinition(
       transform: translateY(2px);
       box-shadow: none;
     }
-
-    .c-cta-band__inner {
-      background: var(--accent);
-      color: var(--accent-fg);
-      border: none;
-    }
   `,
 );

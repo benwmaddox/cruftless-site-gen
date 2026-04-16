@@ -16,12 +16,13 @@
 .c-testimonials__lead {
   color: var(--muted);
   font-size: var(--size-lg);
+  margin-block: var(--space-sm) 0;
 }
 
 .c-testimonials__items {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-lg);
+  gap: var(--space-md);
   padding: 0;
   margin: 0;
   list-style: none;

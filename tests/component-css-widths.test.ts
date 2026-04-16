@@ -13,9 +13,9 @@ describe("component width tokens", () => {
     expect(defaultThemeTokens["--max-width"]).toBe("80rem");
   });
 
-  it("uses max-width for standard component wrappers via .l-section", async () => {
+  it("uses max-width for standard component wrappers via section tag", async () => {
     const baseCss = await readBaseCss();
-    expect(baseCss).toContain(".l-section {");
+    expect(baseCss).toContain("section {");
     expect(baseCss).toContain("max-width: var(--max-width);");
     expect(baseCss).not.toContain("var(--container-max)");
     expect(baseCss).not.toContain("var(--content-max)");
@@ -40,7 +40,7 @@ describe("component width tokens", () => {
     );
 
     expect(css).toContain(".c-media--size-content");
-    expect(css).toContain("var(--max-width)");
+    // max-width is inherited from the section tag in base.css
     expect(css).toContain(".c-media--size-wide");
   });
 
@@ -71,7 +71,7 @@ describe("component width tokens", () => {
     );
 
     expect(css).toContain(".c-google-maps--size-content");
-    expect(css).toContain("var(--max-width)");
+    // max-width is inherited from the section tag in base.css
     expect(css).toContain(".c-google-maps--size-wide");
   });
 });

@@ -12,14 +12,14 @@ export const googleMapsClassNames = [
 
 export const renderGoogleMaps = (data: GoogleMapsData): string => {
   return [
-    `<figure class="c-google-maps c-google-maps--size-${escapeHtml(data.size)}">`,
-    '  <div class="c-google-maps__frame">',
+    `<section class="c-google-maps c-google-maps--size-${escapeHtml(data.size)}">`,
+    '  <div class="c-google-maps__frame l-item">',
     `    <iframe class="c-google-maps__embed" src="${escapeHtml(data.embedUrl)}" title="${escapeHtml(data.title)}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>`,
     "  </div>",
     data.caption
-      ? `  <figcaption class="c-google-maps__caption">${escapeHtml(data.caption)}</figcaption>`
+      ? `  <p class="c-google-maps__caption">${escapeHtml(data.caption)}</p>`
       : "",
-    "</figure>",
+    "</section>",
   ]
     .filter(Boolean)
     .join("\n");
