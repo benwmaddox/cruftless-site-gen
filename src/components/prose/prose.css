@@ -5,28 +5,8 @@
 }
 
 .c-prose__title,
-.c-prose__lead {
+.c-prose__lead,
+.c-prose__paragraph {
   margin: 0;
   padding-inline: var(--space-md);
-}
-
-.c-prose__title {
-  font-size: var(--size-3xl);
-  line-height: 1.1;
-}
-
-.c-prose__lead {
-  color: var(--muted);
-  font-size: var(--size-xl);
-  line-height: 1.4;
-}
-
-.c-prose__content {
-  display: grid;
-  gap: var(--space-md);
-}
-
-.c-prose__paragraph {
-  font-size: var(--size-lg);
-  line-height: 1.6;
 }

@@ -19,6 +19,12 @@
   place-items: center;
 }
 
+.c-hero__headline,
+.c-hero__subheadline,
+.c-hero__actions {
+  padding-inline: var(--space-md);
+}
+
 .c-hero__headline {
   font-size: clamp(var(--size-3xl), 8vw, var(--size-5xl));
   font-weight: 800;

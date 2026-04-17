@@ -11,6 +11,12 @@
   margin: 0;
 }
 
+.c-cta-band__headline,
+.c-cta-band__body,
+.c-cta-band__actions {
+  padding-inline: var(--space-md);
+}
+
 .c-cta-band__headline {
   font-size: var(--size-3xl);
   font-weight: 700;
