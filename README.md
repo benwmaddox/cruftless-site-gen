@@ -8,16 +8,16 @@ The project is intentionally opinionated. Content authors choose from a fixed se
 
 This repo exists to rebuild existing sites into a cleaner format without opening the door to arbitrary template logic or free-form HTML in content files.
 
-The early issue history shaped that direction:
+The current approach is to keep the authoring surface small and explicit:
 
-- issue `#5` pushed the repo toward real migrations by rebuilding 78th Street Studios as a test site and writing down what worked
-- issue `#9` made themes do more than swap colors, so theme choice materially changes the look and feel
-- issue `#10` added `media` and `prose`, which made visually rich and narrative-heavy pages fit the system better
-- issue `#13` added generated JSON Schema support so editing content in VS Code can stay ergonomic
-- issue `#21` added shared site-level layout with a `page-content` slot for repeated navigation, headers, or footers
-- issue `#22` added a Google Maps component so location-driven sites can keep an embedded map
+- real site migrations are treated as the proving ground, so components need to cover practical brochure-site patterns instead of abstract examples
+- themes control more than color tokens, so changing the theme can materially change spacing, typography, surfaces, and visual rhythm
+- visually rich and narrative-heavy pages are modeled with structured components such as `media`, `image-text`, `gallery`, and `prose`
+- repeated site chrome belongs in shared layout components, with `page-content` marking where each page's own sections render
+- location-driven sites can use first-class contact, hours, store-location-hours, and Google Maps components
+- JSON Schema output keeps editing ergonomic in VS Code while preserving strict validation at build time
 
-The result is a system that aims to be strict, reusable, and reviewable instead of endlessly flexible.
+The goal is a system that stays strict, reusable, and reviewable instead of endlessly flexible.
 
 ## Core approach
 
