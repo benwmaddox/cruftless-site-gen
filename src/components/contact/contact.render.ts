@@ -1,5 +1,5 @@
 import { escapeHtml } from "../../renderer/escape-html.js";
-import { normalizePhoneForTelHref } from "./contact.schema.js";
+import { normalizePhoneForTelHref } from "../contact/contact.schema.js";
 import type { ContactData } from "./contact.schema.js";
 
 export const contactClassNames = [
@@ -52,7 +52,7 @@ export const renderContact = (data: ContactData): string => {
     .join("\n");
 
   return [
-    '<section class="c-contact l-section">',
+    '<section class="c-contact l-container l-section">',
     '  <div class="c-contact__inner">',
     data.title ? `    <h2 class="c-contact__title">${escapeHtml(data.title)}</h2>` : "",
     '    <dl class="c-contact__list">',

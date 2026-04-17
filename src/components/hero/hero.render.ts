@@ -27,7 +27,7 @@ export const renderHero = (data: HeroData): string => {
     .join("");
 
   return [
-    `<section class="c-hero l-section l-section--hero c-hero--align-${escapeHtml(data.align)}">`,
+    `<section class="c-hero l-container l-section l-section--hero c-hero--align-${escapeHtml(data.align)}">`,
     '  <div class="c-hero__body">',
     `    <h1 class="c-hero__headline">${escapeHtml(data.headline)}</h1>`,
     data.subheadline

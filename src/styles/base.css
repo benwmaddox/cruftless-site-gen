@@ -65,15 +65,16 @@ button:focus-visible {
   background: transparent;
   min-height: 100vh;
   padding-block: var(--space-xl);
-  width: 100%;
+}
+
+.l-container {
+  width: calc(100% - (var(--space-md) * 2));
   max-width: var(--max-width);
   margin-inline: auto;
 }
 
 .l-section {
-  width: calc(100% - (var(--space-md) * 2));
-  max-width: var(--max-width);
-  margin-inline: auto;
+  composes: l-container; /* Conceptual - I will apply both classes to the element */
   padding-block: var(--space-lg);
   padding-inline: var(--space-md);
   background: var(--surface);
@@ -81,6 +82,7 @@ button:focus-visible {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
+
 
 .l-section--hero {
   padding: clamp(var(--space-lg), 8vw, var(--space-2xl));

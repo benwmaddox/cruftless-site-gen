@@ -114,7 +114,7 @@ export const renderFeatureGrid = (
     .join("\n");
 
   return [
-    '<section class="c-feature-grid l-section">',
+    '<section class="c-feature-grid l-container l-section">',
     '  <div class="c-feature-grid__inner">',
     `    <h2 class="c-feature-grid__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-feature-grid__lead">${escapeHtml(data.lead)}</p>` : "",

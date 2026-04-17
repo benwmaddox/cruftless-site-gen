@@ -71,7 +71,7 @@ export const renderTestimonials = (
     .join("\n");
 
   return [
-    '<section class="c-testimonials l-section">',
+    '<section class="c-testimonials l-container l-section">',
     '  <div class="c-testimonials__inner">',
     `    <h2 class="c-testimonials__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-testimonials__lead">${escapeHtml(data.lead)}</p>` : "",

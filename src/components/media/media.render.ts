@@ -1,5 +1,5 @@
-import type { MediaData } from "./media.schema.js";
 import { escapeHtml } from "../../renderer/escape-html.js";
+import type { MediaData } from "./media.schema.js";
 import {
   defaultComponentRenderContext,
   type ComponentRenderContext,
@@ -32,7 +32,7 @@ export const renderMedia = (
   const loadingAttribute = data.loading ? ` loading="${escapeHtml(data.loading)}"` : "";
 
   return [
-    '<section class="c-media">',
+    '<section class="c-media l-container">',
     `  <img class="c-media__image" src="${escapeHtml(resolvedImage.src)}" alt="${escapeHtml(altText)}"${intrinsicDimensions}${srcsetAttribute}${sizesAttribute}${loadingAttribute} decoding="async" />`,
     data.caption ? `  <p class="c-media__caption">${escapeHtml(data.caption)}</p>` : "",
     "</section>",
