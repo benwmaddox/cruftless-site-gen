@@ -5,9 +5,9 @@
 }
 
 .c-prose__title,
-.c-prose__lead,
-.c-prose__paragraph {
+.c-prose__lead {
   margin: 0;
+  padding-inline: var(--space-md);
 }
 
 .c-prose__title {

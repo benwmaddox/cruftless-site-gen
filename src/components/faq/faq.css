@@ -4,6 +4,7 @@
   margin: 0;
   font-size: var(--size-3xl);
   font-weight: 700;
+  padding-inline: var(--space-md);
 }
 
 .c-faq__items {
