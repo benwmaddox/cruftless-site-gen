@@ -13,7 +13,7 @@ describe("component width tokens", () => {
     expect(defaultThemeTokens["--max-width"]).toBe("80rem");
   });
 
-  it("uses max-width for standard component wrappers via section tag", async () => {
+  it("uses max-width for standard component wrappers via container class", async () => {
     const baseCss = await readBaseCss();
     expect(baseCss).toContain(".l-section {");
     expect(baseCss).toContain("max-width: var(--max-width);");
@@ -40,7 +40,7 @@ describe("component width tokens", () => {
     );
 
     expect(css).toContain(".c-media {");
-    // max-width is inherited from the .l-section class in base.css
+    // max-width is supplied by the shared .l-container class in base.css
   });
 
   it("uses a dedicated readable text color for secondary buttons", async () => {

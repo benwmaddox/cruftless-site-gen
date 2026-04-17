@@ -19,7 +19,7 @@ describe("HeroSchema", () => {
     const html = renderHero(parsed);
 
     expect(html).toContain(
-      '<section class="c-hero l-section l-section--hero c-hero--align-center">',
+      '<section class="c-hero l-container l-section l-section--hero c-hero--align-center">',
     );
     expect(html).toContain("&lt;faster&gt;");
     expect(html).toContain("/start?x=%3Ctag%3E");

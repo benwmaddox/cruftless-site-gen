@@ -15,7 +15,7 @@ describe("GoogleMapsSchema", () => {
 
     const html = renderGoogleMaps(parsed);
 
-    expect(html).toContain('<section class="c-google-maps l-section c-google-maps--size-content">');
+    expect(html).toContain('<section class="c-google-maps l-container l-section c-google-maps--size-content">');
     expect(html).toContain('<iframe class="c-google-maps__embed"');
     expect(html).toContain('title="Visit &lt;Map&gt; &quot;Preview&quot;"');
     expect(html).toContain("Use the embedded map to plan your route.");

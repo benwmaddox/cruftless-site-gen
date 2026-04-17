@@ -17,7 +17,7 @@ describe("CtaBandSchema", () => {
 
     const html = renderCtaBand(parsed);
 
-    expect(html).toContain('<section class="c-cta-band l-section">');
+    expect(html).toContain('<section class="c-cta-band l-container l-section">');
     expect(html).toContain("Read docs");
   });
 

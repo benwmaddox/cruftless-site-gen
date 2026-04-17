@@ -74,7 +74,6 @@ button:focus-visible {
 }
 
 .l-section {
-  composes: l-container; /* Conceptual - I will apply both classes to the element */
   padding-block: var(--space-lg);
   padding-inline: var(--space-md);
   background: var(--surface);
@@ -82,7 +81,6 @@ button:focus-visible {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
-
 
 .l-section--hero {
   padding: clamp(var(--space-lg), 8vw, var(--space-2xl));

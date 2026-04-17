@@ -77,7 +77,7 @@ describe("Baird Automotive example", () => {
 
       expect(homeHtml).toContain('data-theme="corporate"');
       expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
-      expect(css).toContain('--font-heading: "Inter", system-ui, sans-serif;');
+      expect(css).toContain('--font-heading: "IBM Plex Sans", "Helvetica Neue", sans-serif;');
       expect(css).toContain("--primary: #0f172a;");
       expect(css).toContain("--accent: #2563eb;");
       expect(js).toContain("resolveNavigationBarMode");
