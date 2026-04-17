@@ -308,6 +308,29 @@ describe("buildSite output writes", () => {
     }
   });
 
+  it("omits google analytics tags when analytics are disabled for local builds", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-analytics-disabled-"));
+    const previousDisableAnalytics = process.env.CRUFTLESS_DISABLE_ANALYTICS;
+
+    try {
+      process.env.CRUFTLESS_DISABLE_ANALYTICS = "1";
+      await buildSite(createAnalyticsSite(), outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+
+      expect(html).not.toContain("googletagmanager.com/gtag/js");
+      expect(html).not.toContain("gtag('config', \"G-TEST1234\");");
+    } finally {
+      if (previousDisableAnalytics === undefined) {
+        delete process.env.CRUFTLESS_DISABLE_ANALYTICS;
+      } else {
+        process.env.CRUFTLESS_DISABLE_ANALYTICS = previousDisableAnalytics;
+      }
+
+      await removeDirectory(outDir);
+    }
+  });
+
   it("optimizes referenced content preview images into assets and removes them when no longer needed", async () => {
     const projectRoot = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-local-assets-"));
     const contentDir = path.join(projectRoot, "content");
