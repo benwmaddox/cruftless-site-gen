@@ -1,7 +1,8 @@
 import type { PageData, SiteData } from "../schemas/site.schema.js";
 import { escapeHtml } from "./escape-html.js";
 
-const shouldIncludeGoogleAnalytics = (): boolean => process.env.LIGHTHOUSE_CI !== "1";
+const shouldIncludeGoogleAnalytics = (): boolean =>
+  process.env.LIGHTHOUSE_CI !== "1" && process.env.CRUFTLESS_DISABLE_ANALYTICS !== "1";
 
 const renderGoogleAnalyticsTags = (site: SiteData): string => {
   const measurementId = site.googleAnalyticsMeasurementId;
