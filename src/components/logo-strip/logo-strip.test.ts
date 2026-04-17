@@ -24,7 +24,7 @@ describe("LogoStripSchema", () => {
 
     const html = renderLogoStrip(parsed);
 
-    expect(html).toContain('<section class="c-logo-strip l-section">');
+    expect(html).toContain('<section class="c-logo-strip l-container l-section">');
     expect(html).toContain('href="https://atlas.example.com"');
     expect(html).toContain('class="c-logo-strip__image"');
   });

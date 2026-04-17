@@ -17,7 +17,7 @@ describe("ProseSchema", () => {
 
     const html = renderProse(parsed);
 
-    expect(html).toContain('<section class="c-prose l-section">');
+    expect(html).toContain('<section class="c-prose l-container l-section">');
     expect(html).toContain('<div class="c-prose__content">');
     expect(html).toContain("The generator exists to keep structure rigid");
     expect(html.indexOf("The generator exists")).toBeLessThan(

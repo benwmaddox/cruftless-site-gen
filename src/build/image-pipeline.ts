@@ -27,6 +27,7 @@ const usageOutputWidths: Record<ComponentImageUsage, number> = {
   "gallery-thumb-4": 420,
   "image-text": 1200,
   "page-background": 2400,
+  "page-social": 1200,
   "media-content": 1024,
   "media-wide": 1600,
   "navbar-brand": 320,
@@ -315,6 +316,10 @@ const collectImageUsages = (
   });
 
   siteContent.pages.forEach((page, pageIndex) => {
+    if (page.metadata?.socialImageUrl) {
+      addUsage(["pages", pageIndex, "metadata", "socialImageUrl"], page.metadata.socialImageUrl, "page-social");
+    }
+
     page.components.forEach((component, componentIndex) => {
       visitComponent(component, ["pages", pageIndex, "components", componentIndex]);
     });
@@ -527,6 +532,7 @@ export const collectImageValidationIssues = async (
 
 export interface PreparedImagePipeline {
   expectedFiles: Set<string>;
+  resolveSocialImageUrl: (sourceHref: string) => string;
   resolveStylesheetImageHref: (sourceHref: string) => string;
   renderContextForPage: (pageSlug: string) => ComponentRenderContext;
 }
@@ -602,6 +608,13 @@ export const prepareImagePipeline = async (
 
   return {
     expectedFiles,
+    resolveSocialImageUrl: (sourceHref) => {
+      const preparedVariant = preparedVariants.get(
+        createPreparedVariantKey(sourceHref, "page-social", usageOutputWidths["page-social"]),
+      );
+
+      return preparedVariant?.href ?? sourceHref;
+    },
     resolveStylesheetImageHref: (sourceHref) => {
       const preparedVariant = preparedVariants.get(
         createPreparedVariantKey(sourceHref, "page-background", usageOutputWidths["page-background"]),

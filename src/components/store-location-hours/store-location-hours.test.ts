@@ -29,7 +29,7 @@ describe("StoreLocationHoursSchema", () => {
 
     const html = renderStoreLocationHours(parsed);
 
-    expect(html).toContain('<section class="c-store-location-hours l-section">');
+    expect(html).toContain('<section class="c-store-location-hours l-container l-section">');
     expect(html).toContain('class="c-store-location-hours__map"');
     expect(html).toContain('title="Showroom map"');
     expect(html).toContain('href="tel:5555550100"');

@@ -17,7 +17,7 @@ describe("MediaSchema", () => {
 
     const html = renderMedia(parsed);
 
-    expect(html).toContain('<section class="c-media l-section c-media--size-content">');
+    expect(html).toContain('<section class="c-media l-container">');
     expect(html).toContain('<img class="c-media__image"');
     expect(html).toContain('alt="Founder standing in the studio"');
     expect(html).not.toContain('fetchpriority=');

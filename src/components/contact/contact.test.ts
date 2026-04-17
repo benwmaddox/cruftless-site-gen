@@ -16,7 +16,7 @@ describe("ContactSchema", () => {
     const html = renderContact(parsed);
 
     expect(normalizePhoneForTelHref(parsed.phone ?? "")).toBe("5551234567;ext=89");
-    expect(html).toContain('<section class="c-contact l-section">');
+    expect(html).toContain('<section class="c-contact l-container l-section">');
     expect(html).toContain('href="tel:5551234567;ext=89"');
     expect(html).toContain('href="mailto:hello@example.com"');
     expect(html).toContain("123 Main St<br />Springfield, IL 62701");

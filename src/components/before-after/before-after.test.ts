@@ -25,7 +25,7 @@ describe("BeforeAfterSchema", () => {
 
     const html = renderBeforeAfter(parsed);
 
-    expect(html).toContain('<section class="c-before-after l-section">');
+    expect(html).toContain('<section class="c-before-after l-container l-section">');
     expect(html).toContain("Before");
     expect(html).toContain("After");
     expect(html).toContain('class="c-before-after__image"');

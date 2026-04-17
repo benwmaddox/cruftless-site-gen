@@ -660,6 +660,10 @@ export const buildSite = async (
       bodyHtml,
       stylesheetHref: pageSlugToStylesheetHref(page.slug),
       scriptHref: js ? pageSlugToScriptHref(page.slug) : undefined,
+      socialImageUrl:
+        page.metadata?.socialImageUrl && imagePipeline
+          ? imagePipeline.resolveSocialImageUrl(page.metadata.socialImageUrl)
+          : page.metadata?.socialImageUrl,
     });
     const outputPath = pageSlugToOutputPath(page.slug, outDir);
     await mkdir(path.dirname(outputPath), { recursive: true });

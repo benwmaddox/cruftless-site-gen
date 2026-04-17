@@ -32,6 +32,15 @@ export const PageMetadataSchema = z
   .object({
     description: z.string().min(1).max(200).optional(),
     canonicalUrl: z.string().url().optional(),
+    socialImageUrl: z
+      .string()
+      .min(1)
+      .max(2048)
+      .refine(
+        (value) => z.string().url().safeParse(value).success || isLocalContentAssetReference(value),
+        "socialImageUrl must be an absolute URL or a content-relative asset path",
+      )
+      .optional(),
   })
   .strict();
 
