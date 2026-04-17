@@ -17,6 +17,7 @@
 .c-image-text__copy,
 .c-image-text__content,
 .c-image-text__media {
+  min-width: 0;
   display: grid;
   gap: var(--space-md);
 }
@@ -61,6 +62,7 @@
 .c-image-text__image {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: auto;
   border-radius: var(--radius);
   box-shadow: var(--shadow);

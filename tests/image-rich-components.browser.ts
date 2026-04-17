@@ -147,7 +147,10 @@ const runBrowserRegression = async (): Promise<void> => {
       });
 
       const mobileMetrics = await mobilePage.evaluate(() => {
+        const documentElement = document.documentElement;
         const imageTextInner = document.querySelector(".c-image-text__inner");
+        const imageTextMedia = document.querySelector(".c-image-text__media");
+        const imageTextImage = document.querySelector(".c-image-text__image");
         const beforeAfterItems = Array.from(document.querySelectorAll(".c-before-after__item"));
         const galleryItems = Array.from(document.querySelectorAll(".c-gallery__item"));
         const testimonialItems = Array.from(document.querySelectorAll(".c-testimonials__item"));
@@ -156,9 +159,15 @@ const runBrowserRegression = async (): Promise<void> => {
           throw new Error("Expected image-text section to be present.");
         }
 
+        if (!(imageTextMedia instanceof HTMLElement) || !(imageTextImage instanceof HTMLElement)) {
+          throw new Error("Expected image-text media and image to be present.");
+        }
+
         const beforeAfterFirstTop = beforeAfterItems[0]?.getBoundingClientRect().top;
         const galleryFirstTop = galleryItems[0]?.getBoundingClientRect().top;
         const testimonialFirstTop = testimonialItems[0]?.getBoundingClientRect().top;
+        const mediaRect = imageTextMedia.getBoundingClientRect();
+        const imageRect = imageTextImage.getBoundingClientRect();
 
         if (
           beforeAfterFirstTop === undefined ||
@@ -169,6 +178,8 @@ const runBrowserRegression = async (): Promise<void> => {
         }
 
         return {
+          documentOverflow: documentElement.scrollWidth - documentElement.clientWidth,
+          imageFitsMedia: imageRect.width <= mediaRect.width + 1,
           imageTextColumns: getComputedStyle(imageTextInner).gridTemplateColumns.split(" ").length,
           beforeAfterRowCount: beforeAfterItems.filter(
             (item) => Math.abs(item.getBoundingClientRect().top - beforeAfterFirstTop) < 1,
@@ -182,6 +193,8 @@ const runBrowserRegression = async (): Promise<void> => {
         };
       });
 
+      assert.ok(mobileMetrics.documentOverflow <= 1);
+      assert.equal(mobileMetrics.imageFitsMedia, true);
       assert.equal(mobileMetrics.imageTextColumns, 1);
       assert.equal(mobileMetrics.beforeAfterRowCount, 1);
       assert.equal(mobileMetrics.galleryRowCount, 1);
