@@ -46,7 +46,7 @@ export const renderBeforeAfter = (
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string =>
   [
-    '<section class="c-before-after l-section">',
+    '<section class="c-before-after l-container l-section">',
     '  <div class="c-before-after__inner">',
     `    <h2 class="c-before-after__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-before-after__lead">${escapeHtml(data.lead)}</p>` : "",

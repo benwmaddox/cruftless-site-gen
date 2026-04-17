@@ -11,6 +11,11 @@
   gap: var(--space-lg);
 }
 
+.c-hours__title,
+.c-hours__table {
+  padding-inline: var(--space-md);
+}
+
 .c-hours__title {
   margin: 0;
   font-size: var(--size-3xl);

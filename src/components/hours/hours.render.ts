@@ -28,9 +28,8 @@ const renderHoursEntry = (entry: HoursData["entries"][number]): string =>
 
 export const renderHours = (data: HoursData): string =>
   [
-    '<section class="c-hours l-section">',
+    '<section class="c-hours l-container l-section">',
     '  <div class="c-hours__inner">',
-
     data.title ? `    <h2 class="c-hours__title">${escapeHtml(data.title)}</h2>` : "",
     '    <table class="c-hours__table">',
     "      <tbody>",

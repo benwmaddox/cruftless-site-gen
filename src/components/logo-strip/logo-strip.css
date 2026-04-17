@@ -9,6 +9,7 @@
 .c-logo-strip__title,
 .c-logo-strip__lead {
   margin: 0;
+  padding-inline: var(--space-md);
 }
 
 .c-logo-strip__title {

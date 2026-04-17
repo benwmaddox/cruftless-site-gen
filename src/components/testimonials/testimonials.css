@@ -3,6 +3,7 @@
 .c-testimonials__title,
 .c-testimonials__lead {
   margin: 0;
+  padding-inline: var(--space-md);
 }
 
 .c-testimonials__title {

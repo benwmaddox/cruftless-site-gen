@@ -16,7 +16,7 @@ export const renderProse = (data: ProseData): string => {
     .join("\n");
 
   return [
-    '<section class="c-prose l-section">',
+    '<section class="c-prose l-container l-section">',
     '  <div class="c-prose__inner">',
     data.title ? `    <h2 class="c-prose__title">${escapeHtml(data.title)}</h2>` : "",
     data.lead ? `    <p class="c-prose__lead">${escapeHtml(data.lead)}</p>` : "",

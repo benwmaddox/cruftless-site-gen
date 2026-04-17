@@ -43,7 +43,7 @@ export const renderLogoStrip = (
   const logosHtml = data.logos.map((logo) => renderLogo(logo, renderContext)).join("\n");
 
   return [
-    '<section class="c-logo-strip l-section">',
+    '<section class="c-logo-strip l-container l-section">',
     '  <div class="c-logo-strip__inner">',
     `    <h2 class="c-logo-strip__title">${escapeHtml(data.title)}</h2>`,
     data.lead ? `    <p class="c-logo-strip__lead">${escapeHtml(data.lead)}</p>` : "",

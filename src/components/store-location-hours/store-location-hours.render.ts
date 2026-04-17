@@ -73,7 +73,7 @@ export const renderStoreLocationHours = (data: StoreLocationHoursData): string =
     .join("\n");
 
   return [
-    '<section class="c-store-location-hours l-section">',
+    '<section class="c-store-location-hours l-container l-section">',
     '  <div class="c-store-location-hours__inner">',
     data.title ? `    <h2 class="c-store-location-hours__title">${escapeHtml(data.title)}</h2>` : "",
     '    <div class="c-store-location-hours__grid">',

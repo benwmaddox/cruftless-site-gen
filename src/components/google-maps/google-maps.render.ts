@@ -12,7 +12,7 @@ export const googleMapsClassNames = [
 
 export const renderGoogleMaps = (data: GoogleMapsData): string => {
   return [
-    `<section class="c-google-maps l-section c-google-maps--size-${escapeHtml(data.size)}">`,
+    `<section class="c-google-maps l-container l-section c-google-maps--size-${escapeHtml(data.size)}">`,
     '  <div class="c-google-maps__frame l-item">',
     `    <iframe class="c-google-maps__embed" src="${escapeHtml(data.embedUrl)}" title="${escapeHtml(data.title)}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>`,
     "  </div>",

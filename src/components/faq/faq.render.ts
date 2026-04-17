@@ -24,7 +24,7 @@ export const renderFaq = (data: FaqData): string => {
     .join("\n");
 
   return [
-    '<section class="c-faq l-section">',
+    '<section class="c-faq l-container l-section">',
     '  <div class="c-faq__inner">',
     `    <h2 class="c-faq__title">${escapeHtml(data.title)}</h2>`,
     '    <div class="c-faq__items">',
