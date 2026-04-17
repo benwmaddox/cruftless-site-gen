@@ -285,6 +285,57 @@ describe("buildSite output writes", () => {
     }
   });
 
+  it("renders Open Graph and Twitter metadata when a social image is configured", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-social-metadata-"));
+
+    try {
+      const site = SiteContentSchema.parse({
+        site: {
+          name: "LaunchKit",
+          baseUrl: "https://launchkit.example",
+          theme: "friendly-modern",
+        },
+        pages: [
+          {
+            slug: "/",
+            title: "Home",
+            metadata: {
+              description: "Launch faster with a managed site.",
+              socialImageUrl: "https://launchkit.example/images/social.png",
+            },
+            components: [
+              {
+                type: "hero",
+                headline: "Launch faster",
+                primaryCta: {
+                  label: "Get started",
+                  href: "/start",
+                },
+              },
+            ],
+          },
+        ],
+      });
+
+      await buildSite(site, outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      expect(html).toContain('<meta property="og:title" content="LaunchKit" />');
+      expect(html).toContain(
+        '<meta property="og:description" content="Launch faster with a managed site." />',
+      );
+      expect(html).toContain(
+        '<meta property="og:image" content="https://launchkit.example/images/social.png" />',
+      );
+      expect(html).toContain('<meta name="twitter:card" content="summary_large_image" />');
+      expect(html).toContain(
+        '<meta name="twitter:image" content="https://launchkit.example/images/social.png" />',
+      );
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
   it("omits google analytics tags during lighthouse ci builds", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-analytics-ci-"));
     const previousLighthouseCi = process.env.LIGHTHOUSE_CI;
@@ -512,6 +563,9 @@ describe("buildSite output writes", () => {
           {
             slug: "/gallery",
             title: "Gallery",
+            metadata: {
+              socialImageUrl: "content/images/landing-page.png",
+            },
             components: [
               {
                 type: "media",
@@ -529,12 +583,12 @@ describe("buildSite output writes", () => {
       const nestedHtml = await readFile(path.join(outDir, "gallery", "index.html"), "utf8");
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
       const optimizedPreviewDir = path.join(outDir, "assets", "images");
-      const mediaOutputName = (await readdir(optimizedPreviewDir)).find((name) =>
-        name.startsWith("landing-page-media-wide-"),
-      );
-      const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
+      const optimizedImageNames = await readdir(optimizedPreviewDir);
+      const mediaOutputName = optimizedImageNames.find((name) => name.startsWith("landing-page-media-wide-"));
+      const optimizedPreviewName = optimizedImageNames.find((name) =>
         name.startsWith("landing-page-page-background-2400-"),
       );
+      const socialImageName = optimizedImageNames.find((name) => name.startsWith("landing-page-page-social-"));
       const optimizedPreviewPath = path.join(optimizedPreviewDir, optimizedPreviewName ?? "");
 
       if (!mediaOutputName) {
@@ -543,11 +597,20 @@ describe("buildSite output writes", () => {
       if (!optimizedPreviewName) {
         throw new Error("missing optimized nested preview image");
       }
+      if (!socialImageName) {
+        throw new Error("missing optimized social image");
+      }
 
       expect((await stat(optimizedPreviewPath)).size).toBeLessThan(previewImageBytes.length);
       expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}"`);
       expect(nestedHtml).toContain("srcset=\"../assets/images/landing-page-media-wide-480-");
       expect(nestedHtml).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
+      expect(nestedHtml).toContain(
+        `<meta property="og:image" content="https://launchkit.example/assets/images/${socialImageName}" />`,
+      );
+      expect(nestedHtml).toContain(
+        `<meta name="twitter:image" content="https://launchkit.example/assets/images/${socialImageName}" />`,
+      );
       expect(css).toContain(`url("images/${optimizedPreviewName}")`);
       await expect(access(path.join(outDir, "images", "landing-page.png"))).rejects.toThrow();
     } finally {

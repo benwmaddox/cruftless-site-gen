@@ -30,12 +30,14 @@ export const renderPageDocument = ({
   bodyHtml,
   stylesheetHref,
   scriptHref,
+  socialImageUrl: resolvedSocialImageUrl,
 }: {
   site: SiteData;
   page: PageData;
   bodyHtml: string;
   stylesheetHref: string;
   scriptHref?: string;
+  socialImageUrl?: string;
 }): string => {
   const title =
     page.slug === "/" ? escapeHtml(site.name) : `${escapeHtml(page.title)} | ${escapeHtml(site.name)}`;
@@ -43,6 +45,29 @@ export const renderPageDocument = ({
     ? `<meta name="description" content="${escapeHtml(page.metadata.description)}" />`
     : "";
   const canonicalUrl = page.metadata?.canonicalUrl ?? new URL(page.slug, site.baseUrl).toString();
+  const configuredSocialImageUrl = resolvedSocialImageUrl ?? page.metadata?.socialImageUrl;
+  const socialImageUrl = configuredSocialImageUrl
+    ? new URL(configuredSocialImageUrl, site.baseUrl).toString()
+    : undefined;
+  const socialMetadata = socialImageUrl
+    ? [
+        `    <meta property="og:title" content="${title}" />`,
+        page.metadata?.description
+          ? `    <meta property="og:description" content="${escapeHtml(page.metadata.description)}" />`
+          : "",
+        '    <meta property="og:type" content="website" />',
+        `    <meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`,
+        `    <meta property="og:image" content="${escapeHtml(socialImageUrl)}" />`,
+        '    <meta name="twitter:card" content="summary_large_image" />',
+        `    <meta name="twitter:title" content="${title}" />`,
+        page.metadata?.description
+          ? `    <meta name="twitter:description" content="${escapeHtml(page.metadata.description)}" />`
+          : "",
+        `    <meta name="twitter:image" content="${escapeHtml(socialImageUrl)}" />`,
+      ]
+        .filter(Boolean)
+        .join("\n")
+    : "";
 
   const indent = (html: string, spaces: number = 4): string =>
     html
@@ -58,6 +83,7 @@ export const renderPageDocument = ({
     '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
     `    <title>${title}</title>`,
     description,
+    socialMetadata,
     renderGoogleAnalyticsTags(site),
     `    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`,
     `    <link rel="stylesheet" href="${escapeHtml(stylesheetHref)}" />`,
