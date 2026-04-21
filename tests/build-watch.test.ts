@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
 import { once } from "node:events";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -98,6 +98,51 @@ const waitForWatcherTick = async (): Promise<void> => {
   });
 };
 
+const wait = async (timeoutMs: number): Promise<"timeout"> =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("timeout");
+    }, timeoutMs);
+  });
+
+const signalChildTree = (
+  child: ChildProcess,
+  signal: NodeJS.Signals,
+): void => {
+  try {
+    if (process.platform !== "win32" && child.pid) {
+      process.kill(-child.pid, signal);
+      return;
+    }
+
+    child.kill(signal);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ESRCH") {
+      throw error;
+    }
+  }
+};
+
+const stopChildTree = async (child: ChildProcess): Promise<void> => {
+  if (child.exitCode !== null || child.signalCode !== null) {
+    return;
+  }
+
+  const closePromise = once(child, "close").then(() => "closed" as const);
+
+  signalChildTree(child, "SIGTERM");
+
+  if ((await Promise.race([closePromise, wait(5_000)])) === "closed") {
+    return;
+  }
+
+  if (child.exitCode === null && child.signalCode === null) {
+    signalChildTree(child, "SIGKILL");
+  }
+
+  await closePromise;
+};
+
 describe("build watch mode", () => {
   it("keeps watching after validation failures and rebuilds when content is fixed", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-watch-"));
@@ -112,6 +157,7 @@ describe("build watch mode", () => {
 
       const child = spawn(process.execPath, [tsxCliPath, "src/build/build.ts", contentPath, outDir, "--watch"], {
         cwd: repoRoot,
+        detached: process.platform !== "win32",
         stdio: ["ignore", "pipe", "pipe"],
       });
 
@@ -151,10 +197,7 @@ describe("build watch mode", () => {
         await waitFor(() => countMatches(stdout, /Built 1 page\(s\) into .*dist/g) === initialBuildCount + 1);
         expect(countMatches(stdout, /Built 1 page\(s\) into .*dist/g)).toBe(initialBuildCount + 1);
       } finally {
-        if (child.exitCode === null) {
-          child.kill("SIGKILL");
-          await once(child, "close");
-        }
+        await stopChildTree(child);
       }
     } finally {
       await rm(tempDir, { recursive: true, force: true });
