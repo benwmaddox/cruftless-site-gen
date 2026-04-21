@@ -9,8 +9,11 @@ import {
   type ComponentType,
   renderComponent,
 } from "../components/index.js";
-import { defaultComponentRenderContext } from "../components/render-context.js";
-import { isPageContentSlot, resolvePageComponents } from "../layout/page-layout.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../components/render-context.js";
+import { isPageContentSlot } from "../layout/page-layout.js";
 import {
   SiteContentSchema,
   type SiteData,
@@ -390,6 +393,65 @@ const renderSiteJs = (siteContent: SiteContentData): string => {
     .join("\n\n");
 };
 
+const createSinglePageSiteContent = (
+  siteContent: SiteContentData,
+  page: SiteContentData["pages"][number],
+): SiteContentData => ({
+  ...siteContent,
+  pages: [page],
+});
+
+const renderPageBodyHtml = (
+  siteContent: SiteContentData,
+  page: SiteContentData["pages"][number],
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
+  const layoutComponents = siteContent.site.layout?.components;
+
+  if (!layoutComponents) {
+    return `<main class="l-page">\n${page.components
+      .map((component) => renderComponent(component, renderContext))
+      .join("\n")}\n</main>`;
+  }
+
+  return layoutComponents
+    .map((layoutComponent) => {
+      if (isPageContentSlot(layoutComponent)) {
+        const pageContentHtml = page.components
+          .map((component) => renderComponent(component, renderContext))
+          .join("\n");
+        return `<main class="l-page">\n${pageContentHtml}\n</main>`;
+      }
+
+      return renderComponent(layoutComponent, renderContext);
+    })
+    .join("\n");
+};
+
+const renderSitePageDocument = ({
+  siteContent,
+  page,
+  renderContext = defaultComponentRenderContext,
+  stylesheetHref,
+  scriptHref,
+  socialImageUrl,
+}: {
+  siteContent: SiteContentData;
+  page: SiteContentData["pages"][number];
+  renderContext?: ComponentRenderContext;
+  stylesheetHref: string;
+  scriptHref?: string;
+  socialImageUrl?: string;
+}): string =>
+  renderPageDocument({
+    site: siteContent.site,
+    page,
+    bodyHtml: renderPageBodyHtml(siteContent, page, renderContext),
+    stylesheetHref,
+    scriptHref,
+    socialImageUrl,
+  });
+
 export interface BuildResult {
   pageCount: number;
   filesCreated: number;
@@ -401,6 +463,18 @@ export interface BuildResult {
 export interface BuildOptions {
   contentPath?: string;
   preservePaths?: readonly string[];
+}
+
+export interface SitePreviewResult {
+  slug: string;
+  html: string;
+  css: string;
+  js?: string;
+}
+
+export interface SitePreviewOptions {
+  stylesheetHref?: string;
+  scriptHref?: string;
 }
 const contentDirectoryName = "content";
 
@@ -584,6 +658,36 @@ const removeStaleGeneratedFiles = async (
   }
 };
 
+export const renderSitePreview = async (
+  siteContent: SiteContentData,
+  slug: string,
+  options: SitePreviewOptions = {},
+): Promise<SitePreviewResult> => {
+  const page = siteContent.pages.find((candidatePage) => candidatePage.slug === slug);
+
+  if (!page) {
+    throw new Error(`No page exists for slug '${slug}'`);
+  }
+
+  const pageScopedSiteContent = createSinglePageSiteContent(siteContent, page);
+  const css = await renderSiteCss(pageScopedSiteContent);
+  const js = renderSiteJs(pageScopedSiteContent);
+  const stylesheetHref = options.stylesheetHref ?? "/assets/site.css";
+  const scriptHref = js ? (options.scriptHref ?? "/assets/site.js") : undefined;
+
+  return {
+    slug: page.slug,
+    html: renderSitePageDocument({
+      siteContent: pageScopedSiteContent,
+      page,
+      stylesheetHref,
+      scriptHref,
+    }),
+    css,
+    js: js || undefined,
+  };
+};
+
 export const buildSite = async (
   siteContent: SiteContentData,
   outDir: string = defaultOutDir,
@@ -631,33 +735,14 @@ export const buildSite = async (
     expectedFiles.add(filePath);
   });
 
-  for (const [pageIndex, page] of siteContent.pages.entries()) {
+  for (const page of siteContent.pages) {
     const renderContext =
       imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
 
-    const layoutComponents = siteContent.site.layout?.components;
-
-    const bodyHtml = !layoutComponents
-      ? `<main class="l-page">\n${page.components
-          .map((component) => renderComponent(component, renderContext))
-          .join("\n")}\n</main>`
-      : layoutComponents
-          .map((layoutComponent) => {
-            if (isPageContentSlot(layoutComponent)) {
-              const pageContentHtml = page.components
-                .map((component) => renderComponent(component, renderContext))
-                .join("\n");
-              return `<main class="l-page">\n${pageContentHtml}\n</main>`;
-            }
-
-            return renderComponent(layoutComponent, renderContext);
-          })
-          .join("\n");
-
-    const documentHtml = renderPageDocument({
-      site: siteContent.site,
+    const documentHtml = renderSitePageDocument({
+      siteContent,
       page,
-      bodyHtml,
+      renderContext,
       stylesheetHref: pageSlugToStylesheetHref(page.slug),
       scriptHref: js ? pageSlugToScriptHref(page.slug) : undefined,
       socialImageUrl:
