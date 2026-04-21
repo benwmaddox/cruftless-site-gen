@@ -33,6 +33,7 @@ class PreviewHttpError extends Error {
 const previewStylesheetPath = "/__preview/assets/site.css";
 const previewScriptPath = "/__preview/assets/site.js";
 const draftEndpointPath = "/__preview/draft";
+const eventsEndpointPath = "/__preview/events";
 const saveEndpointPath = "/__preview/save";
 
 const normalizePreviewSlug = (pathname: string): string => {
@@ -107,6 +108,31 @@ const sendText = (
   response.end(body);
 };
 
+const renderLivePreviewRuntime = (): string =>
+  [
+    '    <script data-cruftless-preview-reload="true">',
+    "      (() => {",
+    '        if (!("EventSource" in window)) {',
+    "          return;",
+    "        }",
+    `        const source = new EventSource(${JSON.stringify(eventsEndpointPath)});`,
+    '        source.addEventListener("reload", () => {',
+    "          window.location.reload();",
+    "        });",
+    "      })();",
+    "    </script>",
+  ].join("\n");
+
+const injectLivePreviewRuntime = (html: string): string => {
+  const runtime = renderLivePreviewRuntime();
+
+  if (html.includes("  </body>")) {
+    return html.replace("  </body>", `${runtime}\n  </body>`);
+  }
+
+  return `${html}\n${runtime}`;
+};
+
 const closeServer = async (server: Server): Promise<void> =>
   new Promise<void>((resolve, reject) => {
     server.close((error) => {
@@ -125,6 +151,17 @@ export const createEditorPreviewServer = async (
 ): Promise<EditorPreviewServer> => {
   let currentDraft = initialDraft;
   const host = options.host ?? "127.0.0.1";
+  const livePreviewClients = new Set<ServerResponse>();
+
+  const notifyLivePreviewClients = (): void => {
+    livePreviewClients.forEach((client) => {
+      try {
+        client.write("event: reload\ndata: {}\n\n");
+      } catch {
+        livePreviewClients.delete(client);
+      }
+    });
+  };
 
   const saveDraft = async (): Promise<void> => {
     if (!options.contentPath) {
@@ -171,6 +208,21 @@ export const createEditorPreviewServer = async (
       if (request.method === "POST" && requestUrl.pathname === draftEndpointPath) {
         currentDraft = await parseDraftPayload(request);
         sendText(response, 204, "text/plain; charset=utf-8", "");
+        notifyLivePreviewClients();
+        return;
+      }
+
+      if (request.method === "GET" && requestUrl.pathname === eventsEndpointPath) {
+        response.writeHead(200, {
+          "cache-control": "no-store",
+          "connection": "keep-alive",
+          "content-type": "text/event-stream; charset=utf-8",
+        });
+        response.write("event: ready\ndata: {}\n\n");
+        livePreviewClients.add(response);
+        response.on("close", () => {
+          livePreviewClients.delete(response);
+        });
         return;
       }
 
@@ -181,12 +233,13 @@ export const createEditorPreviewServer = async (
 
         await saveDraft();
         sendText(response, 204, "text/plain; charset=utf-8", "");
+        notifyLivePreviewClients();
         return;
       }
 
       if (request.method === "GET") {
         const preview = await renderPreviewForRequest(requestUrl);
-        sendText(response, 200, "text/html; charset=utf-8", preview.html);
+        sendText(response, 200, "text/html; charset=utf-8", injectLivePreviewRuntime(preview.html));
         return;
       }
 
@@ -218,12 +271,19 @@ export const createEditorPreviewServer = async (
   }
 
   return {
-    close: () => closeServer(server),
+    close: async () => {
+      livePreviewClients.forEach((client) => {
+        client.end();
+      });
+      livePreviewClients.clear();
+      await closeServer(server);
+    },
     getDraft: () => currentDraft,
     origin: `http://${host}:${address.port}`,
     saveDraft,
     updateDraft: (siteContent: SiteContentData) => {
       currentDraft = siteContent;
+      notifyLivePreviewClients();
     },
   };
 };
