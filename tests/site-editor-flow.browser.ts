@@ -174,6 +174,15 @@ const runBrowserRegression = async (): Promise<void> => {
       .frameLocator("[data-testid='preview-frame']")
       .locator("body")
       .evaluate(() => window.scrollY);
+    const previewWindowMarker = await page.locator("[data-testid='preview-frame']").evaluate((iframe) => {
+      if (!(iframe instanceof HTMLIFrameElement) || !iframe.contentWindow) {
+        throw new Error("Expected preview iframe window to exist.");
+      }
+
+      const previewWindow = iframe.contentWindow as Window & { __cruftlessPreviewMarker?: string };
+      previewWindow.__cruftlessPreviewMarker ??= Math.random().toString(36).slice(2);
+      return previewWindow.__cruftlessPreviewMarker;
+    });
 
     assert.equal(scrollPositions.documentTop, 0);
     assert.ok(scrollPositions.editorTop > 0);
@@ -184,7 +193,21 @@ const runBrowserRegression = async (): Promise<void> => {
       .frameLocator("[data-testid='preview-frame']")
       .locator("text=Browser edited title")
       .waitFor();
+    const previewStateAfterEdit = await page.locator("[data-testid='preview-frame']").evaluate((iframe) => {
+      if (!(iframe instanceof HTMLIFrameElement) || !iframe.contentWindow) {
+        throw new Error("Expected preview iframe window to exist.");
+      }
+
+      const previewWindow = iframe.contentWindow as Window & { __cruftlessPreviewMarker?: string };
+      return {
+        marker: previewWindow.__cruftlessPreviewMarker,
+        scrollTop: previewWindow.scrollY,
+      };
+    });
     await page.locator("button", { hasText: "Down" }).first().click();
+
+    assert.equal(previewStateAfterEdit.marker, previewWindowMarker);
+    assert.ok(previewStateAfterEdit.scrollTop >= previewTop);
 
     assert.equal((await readFile(siblingContentPath, "utf8")).includes("Browser edited title"), false);
 

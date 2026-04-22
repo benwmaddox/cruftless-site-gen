@@ -332,6 +332,91 @@ const renderEditorHtml = (): string => `<!doctype html>
   </body>
 </html>`;
 
+const renderLivePreviewRuntime = (): string =>
+  [
+    '    <script data-cruftless-preview-runtime="true">',
+    "      (() => {",
+    '        if (!("EventSource" in window) || !("DOMParser" in window)) {',
+    "          return;",
+    "        }",
+    `        const eventsUrl = ${JSON.stringify(previewEventsPath)};`,
+    "        let refreshPromise = null;",
+    "        let refreshQueued = false;",
+    "        const bustHref = (href) => {",
+    "          const url = new URL(href, window.location.href);",
+    '          url.searchParams.set("__preview_ts", String(Date.now()));',
+    "          return url.toString();",
+    "        };",
+    "        const syncManagedHead = (nextDocument) => {",
+    '          const nextStylesheet = nextDocument.querySelector(\'link[rel=\"stylesheet\"]\');',
+    '          const currentStylesheet = document.querySelector(\'link[rel=\"stylesheet\"]\');',
+    '          if (currentStylesheet && nextStylesheet?.getAttribute(\"href\")) {',
+    '            currentStylesheet.setAttribute(\"href\", bustHref(nextStylesheet.getAttribute(\"href\")));',
+    "          }",
+    "        };",
+    "        const syncBody = (nextDocument) => {",
+    "          const nextBody = nextDocument.body;",
+    "          const scrollX = window.scrollX;",
+    "          const scrollY = window.scrollY;",
+    "          for (const name of document.body.getAttributeNames()) {",
+    "            document.body.removeAttribute(name);",
+    "          }",
+    "          for (const name of nextBody.getAttributeNames()) {",
+    "            const value = nextBody.getAttribute(name);",
+    "            if (value !== null) {",
+    "              document.body.setAttribute(name, value);",
+    "            }",
+    "          }",
+    "          document.body.innerHTML = nextBody.innerHTML;",
+    "          document.title = nextDocument.title;",
+    "          syncManagedHead(nextDocument);",
+    "          window.requestAnimationFrame(() => {",
+    "            window.scrollTo(scrollX, scrollY);",
+    "          });",
+    "        };",
+    "        const refreshPreview = async () => {",
+    "          if (refreshPromise) {",
+    "            refreshQueued = true;",
+    "            return refreshPromise;",
+    "          }",
+    "          refreshPromise = (async () => {",
+    "            do {",
+    "              refreshQueued = false;",
+    "              const nextUrl = new URL(window.location.href);",
+    '              nextUrl.searchParams.set("__preview_reload", String(Date.now()));',
+    '              const response = await fetch(nextUrl.toString(), { cache: "no-store" });',
+    "              if (!response.ok) {",
+    "                window.location.reload();",
+    "                return;",
+    "              }",
+    "              const nextHtml = await response.text();",
+    "              const nextDocument = new DOMParser().parseFromString(nextHtml, \"text/html\");",
+    '              nextDocument.querySelector(\'script[data-cruftless-preview-runtime=\"true\"]\')?.remove();',
+    "              syncBody(nextDocument);",
+    "            } while (refreshQueued);",
+    "          })().finally(() => {",
+    "            refreshPromise = null;",
+    "          });",
+    "          return refreshPromise;",
+    "        };",
+    "        const source = new EventSource(eventsUrl);",
+    '        source.addEventListener("reload", () => {',
+    "          void refreshPreview();",
+    "        });",
+    "      })();",
+    "    </script>",
+  ].join("\n");
+
+const injectLivePreviewRuntime = (html: string): string => {
+  const runtime = renderLivePreviewRuntime();
+
+  if (html.includes("  </head>")) {
+    return html.replace("  </head>", `${runtime}\n  </head>`);
+  }
+
+  return `${runtime}\n${html}`;
+};
+
 const serveEditorAsset = async (pathname: string, response: ServerResponse): Promise<void> => {
   const assetName = pathname.slice(editorAssetPrefix.length);
   const safeAssetName = path.basename(assetName);
@@ -615,7 +700,7 @@ export const createSiteEditorServer = async (
 
       if (request.method === "GET" && requestUrl.pathname === previewPagePath) {
         const preview = await renderPreviewForRequest(requestUrl);
-        send(response, 200, "text/html; charset=utf-8", preview.html);
+        send(response, 200, "text/html; charset=utf-8", injectLivePreviewRuntime(preview.html));
         return;
       }
 

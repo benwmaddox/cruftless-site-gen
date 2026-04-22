@@ -986,7 +986,7 @@ const App = () => {
     selectedScope.type === "page" ? draft?.pages[selectedScope.pageIndex] : undefined;
   const previewSlug = selectedScope.type === "page" ? (selectedPage?.slug ?? "/") : "/";
   const previewSrc = useMemo(
-    () => `/__preview/page?slug=${encodeURIComponent(previewSlug)}&t=${previewVersion}`,
+    () => `/__preview/page?slug=${encodeURIComponent(previewSlug)}&v=${previewVersion}`,
     [previewSlug, previewVersion],
   );
 
@@ -1046,7 +1046,6 @@ const App = () => {
       setDirty(false);
       setStatusMessage(`Saved ${selectedFile}.`);
       await refreshBrowser();
-      setPreviewVersion(Date.now());
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : String(error), "error");
     }
@@ -1075,12 +1074,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const events = new EventSource("/__preview/events");
-    events.addEventListener("reload", () => setPreviewVersion(Date.now()));
-    return () => events.close();
-  }, []);
-
-  useEffect(() => {
     if (!hasLoaded.current || !dirty || !draft) {
       return;
     }
@@ -1091,7 +1084,6 @@ const App = () => {
       try {
         await postJson("/__preview/draft", draft);
         setStatusMessage("Draft preview updated.");
-        setPreviewVersion(Date.now());
       } catch (error) {
         setStatusMessage(error instanceof Error ? error.message : String(error), "error");
       }
