@@ -10,10 +10,13 @@ import { chromium } from "playwright";
 import { createSiteEditorServer } from "../src/editor/site-editor-server.js";
 import { SiteContentSchema, type SiteContentData } from "../src/schemas/site.schema.js";
 
-const createDraft = (aboutTitle = "About LaunchKit"): SiteContentData =>
+const createDraft = (
+  aboutTitle = "About LaunchKit",
+  siteName = "LaunchKit",
+): SiteContentData =>
   SiteContentSchema.parse({
     site: {
-      name: "LaunchKit",
+      name: siteName,
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
     },
@@ -68,9 +71,13 @@ const writeJson = async (filePath: string, value: unknown): Promise<void> => {
 
 const runBrowserRegression = async (): Promise<void> => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-browser-"));
-  const contentPath = path.join(tempDir, "site.json");
-  await writeJson(contentPath, createDraft());
-  const server = await createSiteEditorServer({ contentPath: tempDir });
+  const firstDir = path.join(tempDir, "first");
+  const siblingDir = path.join(tempDir, "sibling");
+  const firstContentPath = path.join(firstDir, "site.json");
+  const siblingContentPath = path.join(siblingDir, "site.json");
+  await writeJson(firstContentPath, createDraft("About FirstKit", "FirstKit"));
+  await writeJson(siblingContentPath, createDraft("About SiblingKit", "SiblingKit"));
+  const server = await createSiteEditorServer({ contentPath: firstDir });
   const browser = await chromium.launch();
 
   try {
@@ -86,12 +93,20 @@ const runBrowserRegression = async (): Promise<void> => {
     await page.goto(server.origin, { waitUntil: "domcontentloaded" });
     await page.locator("button", { hasText: "Site details" }).waitFor();
     assert.equal(await page.locator("h2").first().textContent(), "Site");
+    await page.locator("button", { hasText: "Up one folder" }).click();
+    await page.locator("button", { hasText: "[dir] sibling" }).click();
+    await page.locator("button", { hasText: "SiblingKit" }).click();
+    await page.waitForFunction(() => {
+      const field = document.querySelector("[data-testid='field-name']");
+      return field instanceof HTMLInputElement && field.value === "SiblingKit";
+    });
+    assert.equal(await page.locator("[data-testid='field-name']").inputValue(), "SiblingKit");
 
     await page.locator("button", { hasText: "2. About" }).click();
     await page.locator("h2", { hasText: "Page" }).waitFor();
     await page.locator("h2", { hasText: "Components" }).waitFor();
     assert.equal(await page.locator("label", { hasText: "Type" }).count(), 0);
-    await page.frameLocator("[data-testid='preview-frame']").locator("text=About LaunchKit").waitFor();
+    await page.frameLocator("[data-testid='preview-frame']").locator("text=About SiblingKit").waitFor();
     const scrollLayout = await page.evaluate(() => {
       const editorPanel = document.querySelector(".editor-panel");
 
@@ -149,13 +164,13 @@ const runBrowserRegression = async (): Promise<void> => {
       .waitFor();
     await page.locator("button", { hasText: "Down" }).first().click();
 
-    assert.equal((await readFile(contentPath, "utf8")).includes("Browser edited title"), false);
+    assert.equal((await readFile(siblingContentPath, "utf8")).includes("Browser edited title"), false);
 
     await page.locator("button", { hasText: "Save" }).click();
     await page.locator("[data-role='status']").waitFor({ state: "visible" });
     await page.waitForFunction(() => document.querySelector("[data-role='status']")?.textContent?.includes("Saved"));
 
-    const savedDraft = SiteContentSchema.parse(JSON.parse(await readFile(contentPath, "utf8")));
+    const savedDraft = SiteContentSchema.parse(JSON.parse(await readFile(siblingContentPath, "utf8")));
     const firstSavedComponent = savedDraft.pages[1]?.components[0];
     const secondSavedComponent = savedDraft.pages[1]?.components[1];
 

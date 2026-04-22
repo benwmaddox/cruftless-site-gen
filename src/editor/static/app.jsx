@@ -689,21 +689,69 @@ const PageScopeEditor = ({
 };
 
 const Sidebar = ({
+  browser,
   dirty,
   draft,
-  files,
+  openDirectory,
   openFile,
   selectedScope,
   selectedFile,
   setSelectedScope,
   showScope,
 }) => {
+  const [folderPath, setFolderPath] = useState(browser.directory);
+
+  useEffect(() => {
+    setFolderPath(browser.directory);
+  }, [browser.directory]);
+
   return (
     <aside className="sidebar">
       <div className="brand">Cruftless Editor</div>
-      <div className="section-title">Sites</div>
+      <div className="section-title">Folder</div>
+      <form
+        className="path-picker"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void openDirectory(folderPath);
+        }}
+      >
+        <input
+          aria-label="Folder path"
+          className="folder-path"
+          value={folderPath}
+          onChange={(event) => setFolderPath(event.currentTarget.value)}
+        />
+        <button type="submit">Go</button>
+      </form>
       <div className="nav-list">
-        {files.map((file) => (
+        <button
+          type="button"
+          className="nav-item"
+          disabled={!browser.parentDirectory}
+          onClick={() => {
+            if (browser.parentDirectory) {
+              void openDirectory(browser.parentDirectory);
+            }
+          }}
+        >
+          Up one folder
+        </button>
+        {browser.directories.map((directory) => (
+          <button
+            key={directory.path}
+            type="button"
+            className="nav-item"
+            onClick={() => void openDirectory(directory.path)}
+          >
+            [dir] {directory.name}
+          </button>
+        ))}
+      </div>
+      <div className="section-title">JSON Files</div>
+      <div className="nav-list">
+        {browser.files.length === 0 ? <div className="hint">No JSON files in this folder.</div> : null}
+        {browser.files.map((file) => (
           <button
             key={file.path}
             type="button"
@@ -718,8 +766,9 @@ const Sidebar = ({
               }
               void openFile(file.path);
             }}
+            title={file.path}
           >
-            {file.siteName ?? file.path}
+            {file.siteName ?? file.name}
             {file.valid ? "" : " (invalid)"}
           </button>
         ))}
@@ -800,7 +849,7 @@ const RawEditor = ({ draft, setDraft, refreshPreview }) => {
 const App = () => {
   const [config, setConfig] = useState(null);
   const [draft, setDraft] = useState(null);
-  const [files, setFiles] = useState([]);
+  const [browser, setBrowser] = useState(null);
   const [selectedFile, setSelectedFile] = useState("");
   const [selectedScope, setSelectedScope] = useState({ type: "site" });
   const [dirty, setDirty] = useState(false);
@@ -835,10 +884,10 @@ const App = () => {
     }
   };
 
-  const refreshFiles = async () => {
+  const refreshBrowser = async () => {
     const response = await fetch("/__editor/files");
     const payload = await response.json();
-    setFiles(payload.files);
+    setBrowser(payload);
     setSelectedFile(payload.selectedFile);
   };
 
@@ -847,10 +896,23 @@ const App = () => {
     const payload = await postJson("/__editor/open", { path: filePath });
     setDraft(payload.draft);
     setSelectedFile(payload.path);
+    setBrowser(payload.browser);
     setSelectedScope({ type: "site" });
     setDirty(false);
-    setStatusMessage(`Opened ${payload.path}.`);
+    setStatusMessage(`Opened ${payload.name}.`);
     setPreviewVersion(Date.now());
+  };
+
+  const openDirectory = async (directoryPath) => {
+    setStatusMessage(`Browsing ${directoryPath}...`);
+
+    try {
+      const payload = await postJson("/__editor/open-directory", { path: directoryPath });
+      setBrowser(payload);
+      setStatusMessage(`Browsing ${payload.directory}.`);
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : String(error), "error");
+    }
   };
 
   const saveDraft = async () => {
@@ -861,7 +923,7 @@ const App = () => {
       await postJson("/__editor/save", draft);
       setDirty(false);
       setStatusMessage(`Saved ${selectedFile}.`);
-      await refreshFiles();
+      await refreshBrowser();
       setPreviewVersion(Date.now());
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : String(error), "error");
@@ -871,14 +933,14 @@ const App = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const [configResponse, filesResponse] = await Promise.all([
+        const [configResponse, browserResponse] = await Promise.all([
           fetch("/__editor/config"),
           fetch("/__editor/files"),
         ]);
         const nextConfig = await configResponse.json();
-        const filePayload = await filesResponse.json();
+        const filePayload = await browserResponse.json();
         setConfig(nextConfig);
-        setFiles(filePayload.files);
+        setBrowser(filePayload);
         setSelectedFile(filePayload.selectedFile);
         await openFile(filePayload.selectedFile);
         hasLoaded.current = true;
@@ -916,16 +978,17 @@ const App = () => {
     return () => window.clearTimeout(updateTimer.current);
   }, [draft, dirty]);
 
-  if (!config || !draft) {
+  if (!config || !draft || !browser) {
     return <div className="card">{status}</div>;
   }
 
   return (
     <div className="editor-layout">
       <Sidebar
+        browser={browser}
         dirty={dirty}
         draft={draft}
-        files={files}
+        openDirectory={openDirectory}
         openFile={openFile}
         selectedScope={selectedScope}
         selectedFile={selectedFile}

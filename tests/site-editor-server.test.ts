@@ -60,7 +60,7 @@ afterEach(async () => {
 });
 
 describe("createSiteEditorServer", () => {
-  it("serves a user-facing editor and lists valid JSON files from a content directory", async () => {
+  it("serves a user-facing editor and browses JSON files from the current directory", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
     await writeJson(path.join(tempDir, "site.json"), createDraft("LaunchKit"));
     await writeJson(path.join(tempDir, "examples", "baird.json"), createDraft("Baird"));
@@ -73,7 +73,10 @@ describe("createSiteEditorServer", () => {
     const html = await htmlResponse.text();
     const filesResponse = await fetch(`${server.origin}/__editor/files`);
     const filesPayload = await filesResponse.json() as {
-      files: { path: string; valid: boolean; siteName?: string }[];
+      directories: { name: string; path: string }[];
+      directory: string;
+      files: { name: string; path: string; valid: boolean; siteName?: string }[];
+      parentDirectory?: string;
       selectedFile: string;
     };
     const assetResponse = await fetch(`${server.origin}/content/assets/mark.svg`);
@@ -86,12 +89,77 @@ describe("createSiteEditorServer", () => {
     expect(assetBody).toContain("<title>Mark</title>");
     expect(filesPayload.files).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ path: "site.json", valid: true, siteName: "LaunchKit" }),
-        expect.objectContaining({ path: "examples/baird.json", valid: true, siteName: "Baird" }),
-        expect.objectContaining({ path: "notes.json", valid: false }),
+        expect.objectContaining({ name: "site.json", valid: true, siteName: "LaunchKit" }),
+        expect.objectContaining({ name: "notes.json", valid: false }),
       ]),
     );
-    expect(filesPayload.selectedFile).toBe("site.json");
+    expect(filesPayload.files).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "baird.json" }),
+      ]),
+    );
+    expect(filesPayload.directories).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "assets" }),
+        expect.objectContaining({ name: "examples" }),
+      ]),
+    );
+    expect(filesPayload.directory).toBe(tempDir);
+    expect(filesPayload.selectedFile).toBe(path.join(tempDir, "site.json"));
+  });
+
+  it("moves up to a parent directory, browses into a sibling folder, and opens a site JSON there", async () => {
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
+    const firstDir = path.join(tempDir, "first");
+    const siblingDir = path.join(tempDir, "sibling");
+    const siblingPath = path.join(siblingDir, "site.json");
+    await writeJson(path.join(firstDir, "site.json"), createDraft("First"));
+    await writeJson(siblingPath, createDraft("Sibling"));
+    const server = await createServer(firstDir);
+
+    const parentResponse = await fetch(`${server.origin}/__editor/open-directory`, {
+      body: JSON.stringify({ path: tempDir }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const parentPayload = await parentResponse.json() as {
+      directories: { name: string; path: string }[];
+      files: { name: string }[];
+    };
+    const siblingResponse = await fetch(`${server.origin}/__editor/open-directory`, {
+      body: JSON.stringify({ path: siblingDir }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const siblingPayload = await siblingResponse.json() as {
+      files: { name: string; valid: boolean; siteName?: string }[];
+    };
+    const openResponse = await fetch(`${server.origin}/__editor/open`, {
+      body: JSON.stringify({ path: siblingPath }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const openPayload = await openResponse.json() as {
+      draft: SiteContentData;
+      path: string;
+    };
+
+    expect(parentResponse.status).toBe(200);
+    expect(parentPayload.directories).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "first" }),
+        expect.objectContaining({ name: "sibling" }),
+      ]),
+    );
+    expect(parentPayload.files).toEqual([]);
+    expect(siblingResponse.status).toBe(200);
+    expect(siblingPayload.files).toEqual([
+      expect.objectContaining({ name: "site.json", valid: true, siteName: "Sibling" }),
+    ]);
+    expect(openResponse.status).toBe(200);
+    expect(openPayload.draft.site.name).toBe("Sibling");
+    expect(openPayload.path).toBe(siblingPath);
+    expect(server.getSelectedFilePath()).toBe(siblingPath);
   });
 
   it("opens, previews, drafts, and saves a selected JSON file", async () => {

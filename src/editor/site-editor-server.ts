@@ -16,11 +16,26 @@ export interface SiteEditorServerOptions {
 }
 
 export interface EditableFileSummary {
+  name: string;
   path: string;
   valid: boolean;
   siteName?: string;
   pageCount?: number;
   error?: string;
+}
+
+export interface EditableDirectorySummary {
+  name: string;
+  path: string;
+}
+
+export interface EditorFileBrowserListing {
+  contentRoot: string;
+  directory: string;
+  directories: EditableDirectorySummary[];
+  files: EditableFileSummary[];
+  parentDirectory?: string;
+  selectedFile: string;
 }
 
 export interface SiteEditorServer {
@@ -46,6 +61,7 @@ const editorAppSourcePath = fileURLToPath(new URL("./static/app.jsx", import.met
 const editorAssetPrefix = "/__editor/assets/";
 const editorFilesPath = "/__editor/files";
 const editorConfigPath = "/__editor/config";
+const editorOpenDirectoryPath = "/__editor/open-directory";
 const editorOpenPath = "/__editor/open";
 const editorSavePath = "/__editor/save";
 const previewPagePath = "/__preview/page";
@@ -55,8 +71,6 @@ const previewDraftPath = "/__preview/draft";
 const previewEventsPath = "/__preview/events";
 const previewSavePath = "/__preview/save";
 const contentAssetPrefix = "/content/";
-
-const toSlashPath = (filePath: string): string => filePath.split(path.sep).join("/");
 
 const send = (
   response: ServerResponse,
@@ -191,6 +205,14 @@ const assertRelativeJsonPath = (relativePath: string): string => {
   return normalized;
 };
 
+const assertJsonFilePath = (filePath: string): string => {
+  if (path.extname(filePath).toLowerCase() !== ".json") {
+    throw new EditorHttpError(400, "Editable content files must be JSON files.");
+  }
+
+  return path.resolve(filePath);
+};
+
 const resolveEditableFilePath = (
   contentRoot: string,
   relativePath: string,
@@ -210,6 +232,19 @@ const resolveEditableFilePath = (
   }
 
   return resolved;
+};
+
+const resolveBrowserFilePath = (
+  browseDirectory: string,
+  requestedPath: string,
+): string => {
+  if (path.isAbsolute(requestedPath)) {
+    return assertJsonFilePath(requestedPath);
+  }
+
+  const normalized = assertRelativeJsonPath(requestedPath);
+
+  return path.resolve(browseDirectory, normalized);
 };
 
 const collectJsonFiles = async (directoryPath: string): Promise<string[]> => {
@@ -246,27 +281,41 @@ const readSiteContentFile = async (filePath: string): Promise<SiteContentData> =
 };
 
 const summarizeEditableFile = async (
-  contentRoot: string,
   filePath: string,
 ): Promise<EditableFileSummary> => {
-  const relativePath = toSlashPath(path.relative(contentRoot, filePath));
-
   try {
     const siteContent = await readSiteContentFile(filePath);
 
     return {
-      path: relativePath,
+      name: path.basename(filePath),
+      path: filePath,
       valid: true,
       siteName: siteContent.site.name,
       pageCount: siteContent.pages.length,
     };
   } catch (error) {
     return {
-      path: relativePath,
+      name: path.basename(filePath),
+      path: filePath,
       valid: false,
       error: error instanceof Error ? error.message : String(error),
     };
   }
+};
+
+const resolveBrowseDirectory = async (directoryPath: string): Promise<string> => {
+  if (!directoryPath.trim()) {
+    throw new EditorHttpError(400, "Browser path is required.");
+  }
+
+  const resolvedPath = path.resolve(directoryPath);
+  const directoryStat = await stat(resolvedPath);
+
+  if (!directoryStat.isDirectory()) {
+    throw new EditorHttpError(400, "Browser path must be a directory.");
+  }
+
+  return resolvedPath;
 };
 
 const renderEditorHtml = (): string => `<!doctype html>
@@ -410,22 +459,26 @@ const serveContentAsset = async (
 export const createSiteEditorServer = async (
   options: SiteEditorServerOptions,
 ): Promise<SiteEditorServer> => {
-  const { root: contentRoot, singleFile } = await resolveContentTarget(options.contentPath);
+  const { root: initialContentRoot, singleFile } = await resolveContentTarget(options.contentPath);
   const host = options.host ?? "127.0.0.1";
-  const initialFiles = singleFile ? [path.join(contentRoot, singleFile)] : await collectJsonFiles(contentRoot);
+  const initialFiles = singleFile
+    ? [path.join(initialContentRoot, singleFile)]
+    : await collectJsonFiles(initialContentRoot);
   const initialSummaries = await Promise.all(
-    initialFiles.map((filePath) => summarizeEditableFile(contentRoot, filePath)),
+    initialFiles.map((filePath) => summarizeEditableFile(filePath)),
   );
   const initialFile =
-    initialSummaries.find((file) => file.valid && file.path === "site.json")?.path
+    initialSummaries.find((file) => file.valid && file.name === "site.json")?.path
     ?? initialSummaries.find((file) => file.valid)?.path;
 
   if (!initialFile) {
-    throw new Error(`No valid site content JSON files found in ${contentRoot}.`);
+    throw new Error(`No valid site content JSON files found in ${initialContentRoot}.`);
   }
 
-  let selectedFilePath = initialFile;
-  let currentDraft = await readSiteContentFile(resolveEditableFilePath(contentRoot, selectedFilePath, singleFile));
+  let contentRoot = path.dirname(initialFile);
+  let browseDirectory = contentRoot;
+  let selectedFilePath = path.basename(initialFile);
+  let currentDraft = await readSiteContentFile(path.join(contentRoot, selectedFilePath));
   const livePreviewClients = new Set<ServerResponse>();
 
   const notifyLivePreviewClients = (): void => {
@@ -438,13 +491,36 @@ export const createSiteEditorServer = async (
     });
   };
 
-  const listEditableFiles = async (): Promise<EditableFileSummary[]> => {
-    const files = singleFile ? [path.join(contentRoot, singleFile)] : await collectJsonFiles(contentRoot);
-    return Promise.all(files.map((filePath) => summarizeEditableFile(contentRoot, filePath)));
+  const selectedFileAbsolutePath = (): string => path.join(contentRoot, selectedFilePath);
+
+  const listBrowserDirectory = async (): Promise<EditorFileBrowserListing> => {
+    const entries = await readdir(browseDirectory, { withFileTypes: true });
+    const directories = entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => ({
+        name: entry.name,
+        path: path.join(browseDirectory, entry.name),
+      }))
+      .sort((left, right) => left.name.localeCompare(right.name));
+    const files = await Promise.all(
+      entries
+        .filter((entry) => entry.isFile() && path.extname(entry.name).toLowerCase() === ".json")
+        .map((entry) => summarizeEditableFile(path.join(browseDirectory, entry.name))),
+    );
+    const parentDirectory = path.dirname(browseDirectory);
+
+    return {
+      contentRoot,
+      directory: browseDirectory,
+      directories,
+      files: files.sort((left, right) => left.name.localeCompare(right.name)),
+      parentDirectory: parentDirectory === browseDirectory ? undefined : parentDirectory,
+      selectedFile: selectedFileAbsolutePath(),
+    };
   };
 
   const saveDraft = async (): Promise<void> => {
-    const filePath = resolveEditableFilePath(contentRoot, selectedFilePath, singleFile);
+    const filePath = resolveEditableFilePath(contentRoot, selectedFilePath);
     await mkdir(path.dirname(filePath), { recursive: true });
     await writeFile(filePath, `${JSON.stringify(currentDraft, null, 2)}\n`, "utf8");
   };
@@ -483,11 +559,19 @@ export const createSiteEditorServer = async (
       }
 
       if (request.method === "GET" && requestUrl.pathname === editorFilesPath) {
-        sendJson(response, 200, {
-          contentRoot,
-          files: await listEditableFiles(),
-          selectedFile: selectedFilePath,
-        });
+        sendJson(response, 200, await listBrowserDirectory());
+        return;
+      }
+
+      if (request.method === "POST" && requestUrl.pathname === editorOpenDirectoryPath) {
+        const payload = await readJsonRequestBody(request);
+        const nextDirectoryPath =
+          typeof payload === "object" && payload !== null && "path" in payload
+            ? String((payload as { path: unknown }).path)
+            : "";
+
+        browseDirectory = await resolveBrowseDirectory(nextDirectoryPath);
+        sendJson(response, 200, await listBrowserDirectory());
         return;
       }
 
@@ -497,13 +581,17 @@ export const createSiteEditorServer = async (
           typeof payload === "object" && payload !== null && "path" in payload
             ? String((payload as { path: unknown }).path)
             : "";
-        const resolvedPath = resolveEditableFilePath(contentRoot, nextFilePath, singleFile);
+        const resolvedPath = resolveBrowserFilePath(browseDirectory, nextFilePath);
 
         currentDraft = await readSiteContentFile(resolvedPath);
-        selectedFilePath = assertRelativeJsonPath(nextFilePath);
+        contentRoot = path.dirname(resolvedPath);
+        browseDirectory = contentRoot;
+        selectedFilePath = path.basename(resolvedPath);
         sendJson(response, 200, {
           draft: currentDraft,
-          path: selectedFilePath,
+          browser: await listBrowserDirectory(),
+          name: selectedFilePath,
+          path: selectedFileAbsolutePath(),
         });
         notifyLivePreviewClients();
         return;
@@ -618,7 +706,7 @@ export const createSiteEditorServer = async (
     },
     contentRoot,
     getDraft: () => currentDraft,
-    getSelectedFilePath: () => selectedFilePath,
+    getSelectedFilePath: () => selectedFileAbsolutePath(),
     origin: `http://${host}:${address.port}`,
   };
 };
