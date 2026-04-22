@@ -19,6 +19,23 @@ const createDraft = (
       name: siteName,
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
+      layout: {
+        components: [
+          {
+            type: "navigation-bar",
+            brandText: siteName,
+            links: [
+              {
+                label: "Home",
+                href: "/",
+              },
+            ],
+          },
+          {
+            type: "page-content",
+          },
+        ],
+      },
     },
     pages: [
       {
@@ -101,9 +118,14 @@ const runBrowserRegression = async (): Promise<void> => {
       return field instanceof HTMLInputElement && field.value === "SiblingKit";
     });
     assert.equal(await page.locator("[data-testid='field-name']").inputValue(), "SiblingKit");
+    await page.locator("[data-testid='field-brandText']").fill("SiblingKit Nav");
+    await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("text=SiblingKit Nav")
+      .waitFor();
 
     await page.locator("button", { hasText: "2. About" }).click();
-    await page.locator("h2", { hasText: "Page" }).waitFor();
+    await page.locator("h2", { hasText: /^Page$/u }).waitFor();
     await page.locator("h2", { hasText: "Components" }).waitFor();
     assert.equal(await page.locator("label", { hasText: "Type" }).count(), 0);
     await page.frameLocator("[data-testid='preview-frame']").locator("text=About SiblingKit").waitFor();
@@ -173,12 +195,15 @@ const runBrowserRegression = async (): Promise<void> => {
     const savedDraft = SiteContentSchema.parse(JSON.parse(await readFile(siblingContentPath, "utf8")));
     const firstSavedComponent = savedDraft.pages[1]?.components[0];
     const secondSavedComponent = savedDraft.pages[1]?.components[1];
+    const sharedNav = savedDraft.site.layout?.components[0];
 
     if (firstSavedComponent?.type !== "cta-band" || secondSavedComponent?.type !== "prose") {
       throw new Error("Expected the saved about page components to be reordered.");
     }
 
     assert.equal(secondSavedComponent.title, "Browser edited title");
+    assert.equal(sharedNav?.type, "navigation-bar");
+    assert.equal(sharedNav.brandText, "SiblingKit Nav");
     assert.deepEqual(pageErrors, []);
   } finally {
     await browser.close();

@@ -336,64 +336,97 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
     refreshPreview();
   };
 
+  const enableSharedLayout = () => {
+    setDraft((currentDraft) =>
+      setAtPath(currentDraft, [...sitePath, "layout"], {
+        components: [{ type: "page-content" }],
+      }),
+    );
+    refreshPreview();
+  };
+
   return (
-    <div className="card">
-      <h2>Site</h2>
-      <div className="form-grid">
-        <FieldRenderer
-          draft={draft}
-          field={{ kind: "text", key: "name", label: "Name" }}
-          path={[...sitePath, "name"]}
-          setDraft={setDraft}
-          refreshPreview={refreshPreview}
-        />
-        <FieldRenderer
-          draft={draft}
-          field={{ kind: "text", key: "baseUrl", label: "Base URL" }}
-          path={[...sitePath, "baseUrl"]}
-          setDraft={setDraft}
-          refreshPreview={refreshPreview}
-        />
-        <div className="field">
-          <label>Theme</label>
-          <select
-            data-testid="field-theme"
-            value={draft.site.theme}
-            onChange={(event) => updateSiteField("theme", event.currentTarget.value)}
-          >
-            {config.themes.map((theme) => (
-              <option key={theme} value={theme}>
-                {theme}
-              </option>
-            ))}
-          </select>
+    <>
+      <div className="card">
+        <h2>Site</h2>
+        <div className="form-grid">
+          <FieldRenderer
+            draft={draft}
+            field={{ kind: "text", key: "name", label: "Name" }}
+            path={[...sitePath, "name"]}
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+          />
+          <FieldRenderer
+            draft={draft}
+            field={{ kind: "text", key: "baseUrl", label: "Base URL" }}
+            path={[...sitePath, "baseUrl"]}
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+          />
+          <div className="field">
+            <label>Theme</label>
+            <select
+              data-testid="field-theme"
+              value={draft.site.theme}
+              onChange={(event) => updateSiteField("theme", event.currentTarget.value)}
+            >
+              {config.themes.map((theme) => (
+                <option key={theme} value={theme}>
+                  {theme}
+                </option>
+              ))}
+            </select>
+          </div>
+          <FieldRenderer
+            draft={draft}
+            field={{
+              kind: "text",
+              key: "pageBackgroundImageUrl",
+              label: "Page background image",
+              optional: true,
+            }}
+            path={[...sitePath, "pageBackgroundImageUrl"]}
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+          />
+          <FieldRenderer
+            draft={draft}
+            field={{
+              kind: "text",
+              key: "googleAnalyticsMeasurementId",
+              label: "Google Analytics measurement ID",
+              optional: true,
+            }}
+            path={[...sitePath, "googleAnalyticsMeasurementId"]}
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+          />
         </div>
-        <FieldRenderer
-          draft={draft}
-          field={{
-            kind: "text",
-            key: "pageBackgroundImageUrl",
-            label: "Page background image",
-            optional: true,
-          }}
-          path={[...sitePath, "pageBackgroundImageUrl"]}
-          setDraft={setDraft}
-          refreshPreview={refreshPreview}
-        />
-        <FieldRenderer
-          draft={draft}
-          field={{
-            kind: "text",
-            key: "googleAnalyticsMeasurementId",
-            label: "Google Analytics measurement ID",
-            optional: true,
-          }}
-          path={[...sitePath, "googleAnalyticsMeasurementId"]}
-          setDraft={setDraft}
-          refreshPreview={refreshPreview}
-        />
       </div>
-    </div>
+      {draft.site.layout?.components ? (
+        <ComponentListEditor
+          config={config}
+          draft={draft}
+          components={draft.site.layout.components}
+          componentsPath={["site", "layout", "components"]}
+          mode="layout"
+          setDraft={setDraft}
+          refreshPreview={refreshPreview}
+          title="Shared Layout Components"
+        />
+      ) : (
+        <div className="card">
+          <div className="list-item-header">
+            <h2>Shared Layout Components</h2>
+            <button type="button" onClick={enableSharedLayout}>
+              Add Shared Layout
+            </button>
+          </div>
+          <div className="hint">No shared layout is configured for this site.</div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -500,23 +533,73 @@ const PageEditor = ({
 const ComponentEditor = ({
   config,
   draft,
-  page,
-  pageIndex,
+  component,
+  componentCount,
   componentIndex,
+  componentsPath,
+  mode,
   setDraft,
   refreshPreview,
 }) => {
-  const component = page.components[componentIndex];
   const editor = config.componentSpecs[component.type];
 
-  const updatePageComponents = (updater) => {
+  const updateComponents = (updater) => {
     setDraft((currentDraft) => {
       const nextDraft = clone(currentDraft);
-      updater(nextDraft.pages[pageIndex].components);
+      updater(getAtPath(nextDraft, componentsPath));
       return nextDraft;
     });
     refreshPreview();
   };
+
+  if (component.type === "page-content") {
+    return (
+      <div className="card">
+        <div className="list-item-header">
+          <h2>Page Content Slot</h2>
+          <div className="row">
+            <button
+              type="button"
+              disabled={componentIndex === 0}
+              onClick={() => {
+                updateComponents((components) => {
+                  const moved = moveItem(components, componentIndex, componentIndex - 1);
+                  components.splice(0, components.length, ...moved);
+                });
+              }}
+            >
+              Up
+            </button>
+            <button
+              type="button"
+              disabled={componentIndex === componentCount - 1}
+              onClick={() => {
+                updateComponents((components) => {
+                  const moved = moveItem(components, componentIndex, componentIndex + 1);
+                  components.splice(0, components.length, ...moved);
+                });
+              }}
+            >
+              Down
+            </button>
+            <button
+              className="danger"
+              type="button"
+              disabled={componentCount <= 1}
+              onClick={() => {
+                updateComponents((components) => {
+                  components.splice(componentIndex, 1);
+                });
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+        <div className="hint">This is where each page's own components render inside the shared layout.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="card">
@@ -527,7 +610,7 @@ const ComponentEditor = ({
             type="button"
             disabled={componentIndex === 0}
             onClick={() => {
-              updatePageComponents((components) => {
+              updateComponents((components) => {
                 const moved = moveItem(components, componentIndex, componentIndex - 1);
                 components.splice(0, components.length, ...moved);
               });
@@ -537,9 +620,9 @@ const ComponentEditor = ({
           </button>
           <button
             type="button"
-            disabled={componentIndex === page.components.length - 1}
+            disabled={componentIndex === componentCount - 1}
             onClick={() => {
-              updatePageComponents((components) => {
+              updateComponents((components) => {
                 const moved = moveItem(components, componentIndex, componentIndex + 1);
                 components.splice(0, components.length, ...moved);
               });
@@ -550,7 +633,7 @@ const ComponentEditor = ({
           <button
             type="button"
             onClick={() => {
-              updatePageComponents((components) => {
+              updateComponents((components) => {
                 components.splice(componentIndex + 1, 0, clone(component));
               });
             }}
@@ -561,10 +644,10 @@ const ComponentEditor = ({
             className="danger"
             type="button"
             onClick={() => {
-              if (page.components.length <= 1) {
+              if (componentCount <= 1) {
                 return;
               }
-              updatePageComponents((components) => {
+              updateComponents((components) => {
                 components.splice(componentIndex, 1);
               });
             }}
@@ -579,7 +662,7 @@ const ComponentEditor = ({
             key={section.title}
             draft={draft}
             section={section}
-            basePath={["pages", pageIndex, "components", componentIndex]}
+            basePath={[...componentsPath, componentIndex]}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
           />
@@ -587,6 +670,76 @@ const ComponentEditor = ({
       ) : (
         <div className="empty-state">No editor exists for this component type.</div>
       )}
+    </div>
+  );
+};
+
+const ComponentListEditor = ({
+  config,
+  draft,
+  components,
+  componentsPath,
+  mode,
+  setDraft,
+  refreshPreview,
+  title,
+}) => {
+  const componentTypeRef = useRef(null);
+  const componentTypeOptions =
+    mode === "layout" ? ["page-content", ...config.componentTypes] : config.componentTypes;
+
+  const addComponent = () => {
+    const componentType = componentTypeRef.current?.value ?? "prose";
+    const nextComponent =
+      componentType === "page-content"
+        ? { type: "page-content" }
+        : clone(config.componentSpecs[componentType].defaults);
+
+    setDraft((currentDraft) => {
+      const nextDraft = clone(currentDraft);
+      getAtPath(nextDraft, componentsPath).push(nextComponent);
+      return nextDraft;
+    });
+    refreshPreview();
+  };
+
+  return (
+    <div className="component-scope">
+      <div className="list-item-header">
+        <h2>{title}</h2>
+        <div className="row">
+          <div className="grow">
+            <select ref={componentTypeRef} defaultValue={mode === "layout" ? "page-content" : "prose"}>
+              {componentTypeOptions.map((componentType) => (
+                <option key={componentType} value={componentType}>
+                  {componentType === "page-content"
+                    ? "Page Content Slot"
+                    : config.componentSpecs[componentType].title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="button" onClick={addComponent}>
+            Add Component
+          </button>
+        </div>
+      </div>
+      <div className="list-stack">
+        {components.map((component, componentIndex) => (
+          <ComponentEditor
+            key={`${component.type}-${componentIndex}`}
+            config={config}
+            draft={draft}
+            component={component}
+            componentCount={components.length}
+            componentIndex={componentIndex}
+            componentsPath={componentsPath}
+            mode={mode}
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -600,8 +753,6 @@ const PageScopeEditor = ({
   setSelectedScope,
   refreshPreview,
 }) => {
-  const componentTypeRef = useRef(null);
-
   const addPage = () => {
     const slugs = new Set(draft.pages.map((candidate) => candidate.slug));
     let index = draft.pages.length + 1;
@@ -625,17 +776,6 @@ const PageScopeEditor = ({
     refreshPreview();
   };
 
-  const addComponent = () => {
-    const componentType = componentTypeRef.current?.value ?? "prose";
-
-    setDraft((currentDraft) => {
-      const nextDraft = clone(currentDraft);
-      nextDraft.pages[pageIndex].components.push(clone(config.componentSpecs[componentType].defaults));
-      return nextDraft;
-    });
-    refreshPreview();
-  };
-
   return (
     <>
       <PageEditor
@@ -648,40 +788,22 @@ const PageScopeEditor = ({
         }
         refreshPreview={refreshPreview}
       />
-      <div className="component-scope">
+      <ComponentListEditor
+        config={config}
+        draft={draft}
+        components={page.components}
+        componentsPath={["pages", pageIndex, "components"]}
+        mode="page"
+        setDraft={setDraft}
+        refreshPreview={refreshPreview}
+        title="Components"
+      />
+      <div className="card">
         <div className="list-item-header">
-          <h2>Components</h2>
-          <div className="row">
-            <div className="grow">
-              <select ref={componentTypeRef} defaultValue="prose">
-                {config.componentTypes.map((componentType) => (
-                  <option key={componentType} value={componentType}>
-                    {config.componentSpecs[componentType].title}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button type="button" onClick={addComponent}>
-              Add Component
-            </button>
-            <button type="button" onClick={addPage}>
-              Add Page
-            </button>
-          </div>
-        </div>
-        <div className="list-stack">
-          {page.components.map((component, componentIndex) => (
-            <ComponentEditor
-              key={`${component.type}-${componentIndex}`}
-              config={config}
-              draft={draft}
-              page={page}
-              pageIndex={pageIndex}
-              componentIndex={componentIndex}
-              setDraft={setDraft}
-              refreshPreview={refreshPreview}
-            />
-          ))}
+          <h2>Pages</h2>
+          <button type="button" onClick={addPage}>
+            Add Page
+          </button>
         </div>
       </div>
     </>
