@@ -1074,6 +1074,22 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (
+        (event.ctrlKey || event.metaKey)
+        && !event.altKey
+        && String(event.key).toLowerCase() === "s"
+      ) {
+        event.preventDefault();
+        void saveDraft();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [saveDraft]);
+
+  useEffect(() => {
     if (!hasLoaded.current || !dirty || !draft) {
       return;
     }

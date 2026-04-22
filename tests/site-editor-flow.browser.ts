@@ -211,7 +211,7 @@ const runBrowserRegression = async (): Promise<void> => {
 
     assert.equal((await readFile(siblingContentPath, "utf8")).includes("Browser edited title"), false);
 
-    await page.locator("button", { hasText: "Save" }).click();
+    await page.keyboard.press("Control+S");
     await page.locator("[data-role='status']").waitFor({ state: "visible" });
     await page.waitForFunction(() => document.querySelector("[data-role='status']")?.textContent?.includes("Saved"));
 
