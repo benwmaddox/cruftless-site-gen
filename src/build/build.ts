@@ -11,9 +11,11 @@ import {
   loadValidatedSite,
 } from "./framework.js";
 import { collectWatchableLocalImagePaths } from "./image-pipeline.js";
+import { resolveSiteTargetPaths } from "./site-target.js";
 
 const args = process.argv.slice(2);
 let watchMode = false;
+let siteDirArg: string | undefined;
 const preserveArgs: string[] = [];
 const positionalArgs: string[] = [];
 
@@ -22,6 +24,37 @@ for (let index = 0; index < args.length; index += 1) {
 
   if (arg === "--watch" || arg === "-w") {
     watchMode = true;
+    continue;
+  }
+
+  if (arg === "--site-dir" || arg === "--site") {
+    const sitePath = args[index + 1];
+    if (!sitePath) {
+      throw new Error(`Missing path after ${arg}`);
+    }
+
+    siteDirArg = sitePath;
+    index += 1;
+    continue;
+  }
+
+  if (arg.startsWith("--site-dir=")) {
+    const sitePath = arg.slice("--site-dir=".length);
+    if (!sitePath) {
+      throw new Error("Missing path after --site-dir");
+    }
+
+    siteDirArg = sitePath;
+    continue;
+  }
+
+  if (arg.startsWith("--site=")) {
+    const sitePath = arg.slice("--site=".length);
+    if (!sitePath) {
+      throw new Error("Missing path after --site");
+    }
+
+    siteDirArg = sitePath;
     continue;
   }
 
@@ -44,15 +77,17 @@ for (let index = 0; index < args.length; index += 1) {
   positionalArgs.push(arg);
 }
 
-if (positionalArgs.length > 2) {
+if (positionalArgs.length > 2 || (siteDirArg && positionalArgs.length > 0)) {
   throw new Error(
-    "Usage: tsx src/build/build.ts [content-path] [out-dir] [--watch] [--preserve output-path]",
+    "Usage: tsx src/build/build.ts [content-path] [out-dir] [--watch] [--preserve output-path] or tsx src/build/build.ts --site-dir site-directory [--watch]",
   );
 }
 
 const [contentArg, outArg] = positionalArgs;
-const contentPath = contentArg ? path.resolve(process.cwd(), contentArg) : defaultContentPath;
-const outDir = outArg ? path.resolve(process.cwd(), outArg) : defaultOutDir;
+const siteTarget = siteDirArg ? resolveSiteTargetPaths(siteDirArg) : undefined;
+const contentPath =
+  siteTarget?.contentPath ?? (contentArg ? path.resolve(process.cwd(), contentArg) : defaultContentPath);
+const outDir = siteTarget?.outDir ?? (outArg ? path.resolve(process.cwd(), outArg) : defaultOutDir);
 const preservePaths = preserveArgs.map((preserveArg) =>
   path.resolve(path.isAbsolute(preserveArg) ? preserveArg : path.join(outDir, preserveArg)),
 );

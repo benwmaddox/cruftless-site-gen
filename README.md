@@ -152,6 +152,12 @@ npm run validate:strict
 
 `npm run check` is an alias for the same full validation run.
 
+To validate a standalone site folder from this generator checkout, point the CLI at the folder. The target folder only needs `content/site.json`; generated files are written under that same folder's `dist/`.
+
+```bash
+npm run site:validate -- ../my-site
+```
+
 ### 3. Edit content in the browser
 
 ```bash
@@ -164,6 +170,12 @@ You can also point it at one JSON file:
 
 ```bash
 npm run edit -- content/examples/baird-automotive.json
+```
+
+To edit a standalone site folder, use:
+
+```bash
+npm run edit -- --site-dir ../my-site
 ```
 
 ### 4. Build the default site
@@ -195,11 +207,25 @@ Or watch a specific content file and output directory:
 npm run build -- content/examples/78th-street-studios.json dist/78th-street-studios --watch
 ```
 
+To build a standalone target folder without adding a project setup to that folder, run:
+
+```bash
+npm run site:build -- ../my-site
+```
+
+That reads `../my-site/content/site.json` and writes `../my-site/dist/`. If the package is linked or installed as a CLI, the equivalent command is:
+
+```bash
+cruftless-site-gen build ../my-site
+```
+
 ### 5. Build or validate a specific content file
 
 ```bash
 npm run validate -- content/examples/78th-street-studios.json
 npm run build -- content/examples/78th-street-studios.json dist/78th-street-studios
+npm run validate -- --site-dir ../my-site
+npm run build -- --site-dir ../my-site
 ```
 
 ### 5b. Discover likely first-party page images
