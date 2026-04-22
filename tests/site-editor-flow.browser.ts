@@ -49,6 +49,13 @@ const createDraft = (aboutTitle = "About LaunchKit"): SiteContentData =>
               href: "/contact",
             },
           },
+          ...Array.from({ length: 6 }, (_, index) => ({
+            type: "prose",
+            title: `About section ${index + 2}`,
+            paragraphs: [
+              "Structured content stays editable while the rendered preview keeps the final page shape.",
+            ],
+          })),
         ],
       },
     ],
@@ -68,7 +75,7 @@ const runBrowserRegression = async (): Promise<void> => {
 
   try {
     const page = await browser.newPage({
-      viewport: { width: 1440, height: 920 },
+      viewport: { width: 1440, height: 720 },
     });
     const pageErrors: string[] = [];
 
@@ -85,8 +92,57 @@ const runBrowserRegression = async (): Promise<void> => {
     await page.locator("h2", { hasText: "Components" }).waitFor();
     assert.equal(await page.locator("label", { hasText: "Type" }).count(), 0);
     await page.frameLocator("[data-testid='preview-frame']").locator("text=About LaunchKit").waitFor();
+    const scrollLayout = await page.evaluate(() => {
+      const editorPanel = document.querySelector(".editor-panel");
 
-    await page.locator("[data-testid='field-title']").last().fill("Browser edited title");
+      if (!(editorPanel instanceof HTMLElement)) {
+        throw new Error("Expected editor panel to exist.");
+      }
+
+      return {
+        documentCanScroll:
+          document.documentElement.scrollHeight > document.documentElement.clientHeight + 1,
+        editorCanScroll: editorPanel.scrollHeight > editorPanel.clientHeight + 1,
+      };
+    });
+    const previewCanScroll = await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("body")
+      .evaluate(() => document.documentElement.scrollHeight > document.documentElement.clientHeight + 1);
+
+    assert.equal(scrollLayout.documentCanScroll, false);
+    assert.equal(scrollLayout.editorCanScroll, true);
+    assert.equal(previewCanScroll, true);
+
+    await page.locator(".editor-panel").evaluate((editorPanel) => {
+      editorPanel.scrollTop = 240;
+    });
+    await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("body")
+      .evaluate(() => window.scrollTo(0, 240));
+    const scrollPositions = await page.evaluate(() => {
+      const editorPanel = document.querySelector(".editor-panel");
+
+      if (!(editorPanel instanceof HTMLElement)) {
+        throw new Error("Expected editor panel to exist.");
+      }
+
+      return {
+        documentTop: document.documentElement.scrollTop,
+        editorTop: editorPanel.scrollTop,
+      };
+    });
+    const previewTop = await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("body")
+      .evaluate(() => window.scrollY);
+
+    assert.equal(scrollPositions.documentTop, 0);
+    assert.ok(scrollPositions.editorTop > 0);
+    assert.ok(previewTop > 0);
+
+    await page.locator("[data-testid='field-title']").nth(1).fill("Browser edited title");
     await page
       .frameLocator("[data-testid='preview-frame']")
       .locator("text=Browser edited title")
