@@ -63,6 +63,30 @@ describe("component width tokens", () => {
     expect(css).toContain(".l-page {");
   });
 
+  it("enables default interpolated transitions for site elements", async () => {
+    const css = await readBaseCss();
+
+    expect(defaultThemeTokens["--duration"]).toBe("0.5s");
+    expect(css).toContain("@supports (interpolate-size: allow-keywords) {");
+    expect(css).toContain("interpolate-size: allow-keywords;");
+    expect(css).toContain("transition-property: all;");
+    expect(css).toContain("transition-duration: var(--duration);");
+    expect(css).toContain("transition-behavior: allow-discrete;");
+  });
+
+  it("allows navigation menu display and auto-height transitions", async () => {
+    const css = await readFile(
+      componentDefinitions.find((component) => component.type === "navigation-bar")!.cssPath,
+      "utf8",
+    );
+
+    expect(css).toContain("transition-property: opacity, transform, height, display;");
+    expect(css).toContain("transition-behavior: allow-discrete;");
+    expect(css).toContain("@supports (interpolate-size: allow-keywords) {");
+    expect(css).toContain("height: auto;");
+    expect(css).toContain("@starting-style");
+  });
+
   it("keeps google maps width modes split between content and container tokens", async () => {
     const css = await readFile(
       componentDefinitions.find((component) => component.type === "google-maps")!.cssPath,

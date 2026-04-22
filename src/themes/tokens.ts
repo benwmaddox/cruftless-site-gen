@@ -40,7 +40,7 @@ const canonicalThemeTokens = {
 
   "--theme-pattern": "none",
 
-  "--duration": "200ms",
+  "--duration": "0.5s",
   "--ease": "cubic-bezier(0.4, 0, 0.2, 1)",
 } as const;
 

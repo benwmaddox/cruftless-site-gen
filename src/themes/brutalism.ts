@@ -35,7 +35,7 @@ export const brutalismTheme = createThemeDefinition(
     "--space-2xl": "5rem",
     "--radius": "0rem",
     "--theme-pattern": "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40h40M40 0v40' stroke='%23000000' stroke-opacity='0.15' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E\")",
-    "--duration": "0.1s",
+    "--duration": "0.5s",
     "--ease": "linear",
   },
   `
@@ -54,7 +54,7 @@ export const brutalismTheme = createThemeDefinition(
     .c-image-text__image {
       border: 2px solid var(--border);
       box-shadow: var(--shadow);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
     }
 
     .l-section:hover,

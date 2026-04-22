@@ -97,6 +97,7 @@
       "overflow": [
         "visible",
         "hidden",
+        "clip",
         "auto",
         "scroll"
       ]
@@ -119,6 +120,7 @@
       "aspect-ratio",
       "box-sizing",
       "color-scheme",
+      "interpolate-size",
       "flex-grow",
       "flex-shrink",
       "flex-basis",
@@ -172,6 +174,10 @@
       "padding-inline-end",
       "padding-block-start",
       "transition",
+      "transition-property",
+      "transition-duration",
+      "transition-timing-function",
+      "transition-behavior",
       "transform"
     ],
     "selector-class-pattern": [
