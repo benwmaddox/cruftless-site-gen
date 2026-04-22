@@ -303,11 +303,12 @@ describe("editorFor", () => {
           fields: [
             { kind: "readonly", key: "type" },
             { kind: "text", key: "headline", label: "Headline" },
-            { kind: "textarea", key: "subheadline", label: "Subheadline" },
+            { kind: "textarea", key: "subheadline", label: "Subheadline", optional: true },
             {
               kind: "select",
               key: "align",
               label: "Alignment",
+              optional: true,
               options: [
                 { label: "Start", value: "start" },
                 { label: "Center", value: "center" },

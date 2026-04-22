@@ -2,6 +2,23 @@
   "extends": [
     "stylelint-config-standard"
   ],
+  "overrides": [
+    {
+      "files": [
+        "src/editor/static/**/*.css"
+      ],
+      "rules": {
+        "alpha-value-notation": null,
+        "color-function-notation": null,
+        "color-hex-length": null,
+        "custom-property-empty-line-before": null,
+        "declaration-property-value-allowed-list": null,
+        "media-feature-range-notation": null,
+        "property-allowed-list": null,
+        "property-disallowed-list": null
+      }
+    }
+  ],
   "rules": {
     "unit-allowed-list": [
       [

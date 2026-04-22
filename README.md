@@ -152,7 +152,21 @@ npm run validate:strict
 
 `npm run check` is an alias for the same full validation run.
 
-### 3. Build the default site
+### 3. Edit content in the browser
+
+```bash
+npm run edit -- content
+```
+
+That starts the local content editor for JSON files under `content/` and prints the browser URL to open. The editor opens `content/site.json` first when it exists, lets you switch to other valid site JSON files, updates the preview from an in-memory draft while you edit, and writes the JSON file only when you press Save.
+
+You can also point it at one JSON file:
+
+```bash
+npm run edit -- content/examples/baird-automotive.json
+```
+
+### 4. Build the default site
 
 ```bash
 npm run build
@@ -181,14 +195,14 @@ Or watch a specific content file and output directory:
 npm run build -- content/examples/78th-street-studios.json dist/78th-street-studios --watch
 ```
 
-### 4. Build or validate a specific content file
+### 5. Build or validate a specific content file
 
 ```bash
 npm run validate -- content/examples/78th-street-studios.json
 npm run build -- content/examples/78th-street-studios.json dist/78th-street-studios
 ```
 
-### 4b. Discover likely first-party page images
+### 5b. Discover likely first-party page images
 
 ```bash
 npm run discover:images -- https://example.com/
@@ -196,7 +210,7 @@ npm run discover:images -- https://example.com/
 
 That fetches the page, inspects `og:image` and `twitter:image`, scans inline styles and `<style>` blocks for background images, follows linked stylesheets, and lists deduped image candidates ranked by usefulness.
 
-### 4c. Localize the selected landing image into content
+### 5c. Localize the selected landing image into content
 
 ```bash
 npm run localize:landing-image -- https://example.com/
@@ -204,7 +218,7 @@ npm run localize:landing-image -- https://example.com/
 
 That downloads the top-ranked candidate into `content/images/landing-page.*`, removes stale `landing-page.*` extension variants in that folder, and rewrites any existing `/content/images/landing-page.*` references in `content/site.json`. Use `--candidate-index 2` or another positive integer when the default ranking is not the image you want.
 
-### 5. Build the bundled example sites
+### 6. Build the bundled example sites
 
 ```bash
 npm run validate:examples

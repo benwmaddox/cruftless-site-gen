@@ -4,6 +4,9 @@ import type {
   CheckboxFieldDef,
   FieldDef,
   NumberFieldDef,
+  ObjectFieldDef,
+  ObjectListFieldDef,
+  OptionalObjectFieldDef,
   ReadonlyFieldDef,
   SectionDef,
   SelectFieldDef,
@@ -19,11 +22,21 @@ import type {
   BooleanKeys,
   DiscriminatorValue,
   NumberKeys,
+  ObjectArrayKeys,
+  ObjectKeys,
   SelectKeys,
   SelectValue,
   StringArrayKeys,
   StringKeys,
 } from "./types.js";
+
+const isOptionalField = (schema: AnyZodObject, key: string): boolean => {
+  const fieldSchema = schema.shape[key];
+  return Boolean(fieldSchema?.isOptional());
+};
+
+const optionalFlag = (schema: AnyZodObject, key: string): { optional: true } | {} =>
+  isOptionalField(schema, key) ? { optional: true } : {};
 
 export type EditorFor<
   TSchema extends AnyZodObject,
@@ -48,7 +61,29 @@ export type EditorFor<
   stringList<TKey extends StringArrayKeys<TSchema>>(
     key: TKey,
     label: string,
+    createItem?: string,
   ): StringListFieldDef<TKey>;
+
+  objectField<TKey extends ObjectKeys<TSchema>>(
+    key: TKey,
+    label: string,
+    fields: readonly FieldDef<string>[],
+  ): ObjectFieldDef<TKey>;
+
+  optionalObject<TKey extends ObjectKeys<TSchema>>(
+    key: TKey,
+    label: string,
+    createValue: Record<string, unknown>,
+    fields: readonly FieldDef<string>[],
+  ): OptionalObjectFieldDef<TKey>;
+
+  objectList<TKey extends ObjectArrayKeys<TSchema>>(
+    key: TKey,
+    label: string,
+    createItem: Record<string, unknown>,
+    fields: readonly FieldDef<string>[],
+    options?: { itemLabelKey?: string },
+  ): ObjectListFieldDef<TKey>;
 
   section<TField extends FieldDef<AllKeys<TSchema>>>(
     title: string,
@@ -80,6 +115,7 @@ export function editorFor<
         kind: "text",
         key,
         label,
+        ...optionalFlag(schema, key),
       };
     },
 
@@ -88,6 +124,7 @@ export function editorFor<
         kind: "textarea",
         key,
         label,
+        ...optionalFlag(schema, key),
       };
     },
 
@@ -96,6 +133,7 @@ export function editorFor<
         kind: "number",
         key,
         label,
+        ...optionalFlag(schema, key),
       };
     },
 
@@ -104,6 +142,7 @@ export function editorFor<
         kind: "checkbox",
         key,
         label,
+        ...optionalFlag(schema, key),
       };
     },
 
@@ -113,14 +152,47 @@ export function editorFor<
         key,
         label,
         options,
+        ...optionalFlag(schema, key),
       };
     },
 
-    stringList(key, label) {
+    stringList(key, label, createItem) {
       return {
         kind: "string-list",
         key,
         label,
+        createItem,
+        ...optionalFlag(schema, key),
+      };
+    },
+
+    objectField(key, label, fields) {
+      return {
+        kind: "object",
+        key,
+        label,
+        fields,
+      };
+    },
+
+    optionalObject(key, label, createValue, fields) {
+      return {
+        kind: "optional-object",
+        key,
+        label,
+        createValue,
+        fields,
+      };
+    },
+
+    objectList(key, label, createItem, fields, options) {
+      return {
+        kind: "object-list",
+        key,
+        label,
+        createItem,
+        itemLabelKey: options?.itemLabelKey,
+        fields,
       };
     },
 

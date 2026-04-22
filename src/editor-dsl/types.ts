@@ -16,8 +16,11 @@ type UnwrapNullable<TSchema extends z.ZodTypeAny> =
 type UnwrapDefault<TSchema extends z.ZodTypeAny> =
   TSchema extends z.ZodDefault<infer TInner> ? UnwrapWrappers<TInner> : TSchema;
 
-export type UnwrapWrappers<TSchema extends z.ZodTypeAny> = UnwrapDefault<
-  UnwrapNullable<UnwrapOptional<TSchema>>
+type UnwrapEffects<TSchema extends z.ZodTypeAny> =
+  TSchema extends z.ZodEffects<infer TInner> ? UnwrapWrappers<TInner> : TSchema;
+
+export type UnwrapWrappers<TSchema extends z.ZodTypeAny> = UnwrapEffects<
+  UnwrapDefault<UnwrapNullable<UnwrapOptional<TSchema>>>
 >;
 
 type ShapeKey<TSchema extends AnyZodObject> = keyof InferShape<TSchema> & string;
@@ -57,6 +60,18 @@ export type StringArrayKeys<TSchema extends AnyZodObject> = {
     infer TItem
   >
     ? UnwrapWrappers<TItem> extends z.ZodString
+      ? K
+      : never
+    : never;
+}[ShapeKey<TSchema>];
+
+export type ObjectKeys<TSchema extends AnyZodObject> = KeysMatchingSchema<TSchema, AnyZodObject>;
+
+export type ObjectArrayKeys<TSchema extends AnyZodObject> = {
+  [K in ShapeKey<TSchema>]: UnwrapWrappers<FieldSchema<TSchema, K>> extends z.ZodArray<
+    infer TItem
+  >
+    ? UnwrapWrappers<TItem> extends AnyZodObject
       ? K
       : never
     : never;
