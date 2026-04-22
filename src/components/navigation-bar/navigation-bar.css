@@ -132,6 +132,20 @@
   background: var(--surface);
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  overflow: clip;
+  opacity: 1;
+  transform: translateY(0);
+  transition-property: opacity, transform, height, display;
+  transition-duration: var(--duration);
+  transition-timing-function: var(--ease);
+  transition-behavior: allow-discrete;
+}
+
+.c-navbar__panel[hidden] {
+  display: none;
+  height: 0;
+  opacity: 0;
+  transform: translateY(calc(var(--space-xs) * -1));
 }
 
 .c-navbar__panel .c-navbar__list {
@@ -172,5 +186,19 @@
 
   .c-navbar__menu-button {
     display: inline-flex;
+  }
+}
+
+@supports (interpolate-size: allow-keywords) {
+  .c-navbar__panel {
+    height: auto;
+  }
+
+  @starting-style {
+    .c-navbar__panel:not([hidden]) {
+      height: 0;
+      opacity: 0;
+      transform: translateY(calc(var(--space-xs) * -1));
+    }
   }
 }

@@ -2,10 +2,20 @@
   color-scheme: var(--color-scheme);
 }
 
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+}
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  transition-property: all;
+  transition-duration: var(--duration);
+  transition-timing-function: var(--ease);
+  transition-behavior: allow-discrete;
 }
 
 html {
