@@ -2,16 +2,12 @@
   "site": {
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
-    "theme": "friendly-modern",
+    "theme": "brutalism",
     "layout": {
       "components": [
         {
           "type": "navigation-bar",
           "brandText": "LaunchKit",
-          "brandImage": {
-            "src": "https://images.example.com/launchkit-mark.svg",
-            "alt": "LaunchKit mark"
-          },
           "links": [
             {
               "label": "Home",
@@ -88,6 +84,7 @@
         {
           "type": "feature-grid",
           "title": "Why this approach works",
+          "columns": "3",
           "items": [
             {
               "title": "Strict validation",
