@@ -117,6 +117,13 @@ const skippedContentSearchDirectories = new Set([
   "reports",
 ]);
 
+const toContentAssetHref = (relativePath: string): string =>
+  `${contentAssetPrefix}${relativePath
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => encodeURIComponent(segment))
+    .join("/")}`;
+
 const send = (
   response: ServerResponse,
   statusCode: number,
@@ -862,7 +869,7 @@ export const createSiteEditorServer = async (
         const relativePath = path.relative(contentRoot, filePath).replaceAll("\\", "/");
 
         return {
-          href: `${contentAssetPrefix}${relativePath}`,
+          href: toContentAssetHref(relativePath),
           kind: mediaFileExtensions.get(extension) ?? "image",
           path: filePath,
           relativePath,

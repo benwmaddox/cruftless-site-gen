@@ -246,7 +246,7 @@ describe("createSiteEditorServer", () => {
 
   it("lists media files from the current content folder and nested subdirectories", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
-    const imagePath = path.join(tempDir, "images", "hero.jpg");
+    const imagePath = path.join(tempDir, "images", "hero image.jpg");
     const logoPath = path.join(tempDir, "logos", "mark.svg");
     const videoPath = path.join(tempDir, "videos", "intro.mp4");
     await writeJson(path.join(tempDir, "site.json"), createDraft("LaunchKit"));
@@ -272,9 +272,9 @@ describe("createSiteEditorServer", () => {
     expect(payload.files).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          href: "/content/images/hero.jpg",
+          href: "/content/images/hero%20image.jpg",
           kind: "image",
-          relativePath: "images/hero.jpg",
+          relativePath: "images/hero image.jpg",
         }),
         expect.objectContaining({
           href: "/content/logos/mark.svg",

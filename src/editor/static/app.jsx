@@ -99,6 +99,19 @@ const normalizeFieldValue = (field, value) => {
 
 const imageExtensions = new Set([".avif", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"]);
 
+const encodeContentAssetPath = (value) =>
+  value
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => {
+      try {
+        return encodeURIComponent(decodeURIComponent(segment));
+      } catch {
+        return encodeURIComponent(segment);
+      }
+    })
+    .join("/");
+
 const toContentAssetHref = (value) => {
   const trimmedValue = String(value ?? "").trim();
 
@@ -113,18 +126,18 @@ const toContentAssetHref = (value) => {
   const normalizedValue = trimmedValue.replaceAll("\\", "/");
 
   if (normalizedValue.startsWith("/content/")) {
-    return normalizedValue;
+    return `/content/${encodeContentAssetPath(normalizedValue.slice("/content/".length))}`;
   }
 
   if (normalizedValue.startsWith("content/")) {
-    return `/${normalizedValue}`;
+    return `/content/${encodeContentAssetPath(normalizedValue.slice("content/".length))}`;
   }
 
   if (normalizedValue.startsWith("/")) {
     return normalizedValue;
   }
 
-  return `/content/${normalizedValue.replace(/^\/+/u, "")}`;
+  return `/content/${encodeContentAssetPath(normalizedValue.replace(/^\/+/u, ""))}`;
 };
 
 const isPreviewableImageHref = (value) => {

@@ -94,6 +94,12 @@ const runBrowserRegression = async (): Promise<void> => {
   const siblingContentPath = path.join(siblingContentDir, "site.json");
   await writeJson(firstContentPath, createDraft("About FirstKit", "FirstKit"));
   await writeJson(siblingContentPath, createDraft("About SiblingKit", "SiblingKit"));
+  await mkdir(path.join(siblingContentDir, "images"), { recursive: true });
+  await writeFile(
+    path.join(siblingContentDir, "images", "hero image.svg"),
+    '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="20"><rect width="40" height="20" fill="#0f766e"/></svg>\n',
+    "utf8",
+  );
   const server = await createSiteEditorServer({ contentPath: firstContentDir });
   const browser = await chromium.launch();
 
@@ -124,6 +130,21 @@ const runBrowserRegression = async (): Promise<void> => {
       return field instanceof HTMLInputElement && field.value === "SiblingKit";
     });
     assert.equal(await page.locator("[data-testid='field-name']").inputValue(), "SiblingKit");
+    await page.locator("[data-testid='field-pageBackgroundImageUrl']").scrollIntoViewIfNeeded();
+    await page.locator("[data-testid='field-pageBackgroundImageUrl']").fill("images/hero image.svg");
+    await page.waitForFunction(() => {
+      const image = document.querySelector(".media-preview-image");
+      return image instanceof HTMLImageElement && image.currentSrc.includes("hero%20image.svg");
+    });
+    await page.locator("button", { hasText: "Pick media" }).first().click();
+    await page.locator(".media-picker-item", { hasText: "images/hero image.svg" }).click();
+    await page.waitForFunction(() => {
+      const image = document.querySelector(".media-preview-image");
+
+      return image instanceof HTMLImageElement
+        && image.currentSrc.includes("hero%20image.svg")
+        && image.naturalWidth > 0;
+    });
     await page.locator("[data-testid='field-brandText']").fill("SiblingKit Nav");
     await page
       .frameLocator("[data-testid='preview-frame']")
