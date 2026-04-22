@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
@@ -5,10 +7,68 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import chokidar from "chokidar";
 
 const generatorDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const repoRoot = process.cwd();
-const mainSiteContentPath = path.join(repoRoot, "content", "site.json");
-const composedDistDir = path.join(repoRoot, "dist");
 const tsxCliPath = path.join(generatorDir, "node_modules", "tsx", "dist", "cli.mjs");
+
+const resolveSitePaths = (siteDir = ".") => {
+  const root = path.resolve(process.cwd(), siteDir);
+
+  return {
+    root,
+    contentPath: path.join(root, "content", "site.json"),
+    distDir: path.join(root, "dist"),
+  };
+};
+
+const parseSiteCommandArgs = (args) => {
+  let siteDir = ".";
+  let siteDirWasSet = false;
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+
+    if (arg === "--site-dir" || arg === "--site") {
+      const value = args[index + 1];
+      if (!value) {
+        throw new Error(`Missing path after ${arg}`);
+      }
+
+      siteDir = value;
+      siteDirWasSet = true;
+      index += 1;
+      continue;
+    }
+
+    if (arg.startsWith("--site-dir=")) {
+      siteDir = arg.slice("--site-dir=".length);
+      if (!siteDir) {
+        throw new Error("Missing path after --site-dir");
+      }
+
+      siteDirWasSet = true;
+      continue;
+    }
+
+    if (arg.startsWith("--site=")) {
+      siteDir = arg.slice("--site=".length);
+      if (!siteDir) {
+        throw new Error("Missing path after --site");
+      }
+
+      siteDirWasSet = true;
+      continue;
+    }
+
+    if (!siteDirWasSet && !arg.startsWith("-")) {
+      siteDir = arg;
+      siteDirWasSet = true;
+      continue;
+    }
+  }
+
+  return {
+    sitePaths: resolveSitePaths(siteDir),
+  };
+};
 
 const runInherited = (command, args, cwd, { exitOnError = true } = {}) => {
   const [spawnCommand, spawnArgs] =
@@ -45,39 +105,40 @@ const ensureGeneratorDependenciesAvailable = () => {
   }
 };
 
-const runGeneratorEntryPoint = (entryPoint, args, inheritedOptions) => {
+const runGeneratorEntryPoint = (entryPoint, args, cwd, inheritedOptions) => {
   const entryPath = path.join(generatorDir, "src", "build", `${entryPoint}.ts`);
-  runInherited(process.execPath, [tsxCliPath, entryPath, ...args], repoRoot, inheritedOptions);
+  runInherited(process.execPath, [tsxCliPath, entryPath, ...args], cwd, inheritedOptions);
 };
 
-const validateSite = (contentPath = mainSiteContentPath, inheritedOptions) => {
-  runGeneratorEntryPoint("validate", [contentPath], inheritedOptions);
+const validateSite = (sitePaths, contentPath = sitePaths.contentPath, inheritedOptions) => {
+  runGeneratorEntryPoint("validate", [contentPath], sitePaths.root, inheritedOptions);
 };
 
 const discoverPageImages = (args, inheritedOptions) => {
-  runGeneratorEntryPoint("discover-page-images", args, inheritedOptions);
+  runGeneratorEntryPoint("discover-page-images", args, process.cwd(), inheritedOptions);
 };
 
-const lighthouseCi = (inheritedOptions) => {
-  runGeneratorEntryPoint("lighthouse-ci", [], inheritedOptions);
+const lighthouseCi = (sitePaths, inheritedOptions) => {
+  runGeneratorEntryPoint("lighthouse-ci", [], sitePaths.root, inheritedOptions);
 };
 
 const localizeLandingImage = (args, inheritedOptions) => {
-  runGeneratorEntryPoint("localize-landing-image", args, inheritedOptions);
+  runGeneratorEntryPoint("localize-landing-image", args, process.cwd(), inheritedOptions);
 };
 
 const buildSite = (
-  contentPath = mainSiteContentPath,
-  outDir = composedDistDir,
+  sitePaths,
+  contentPath = sitePaths.contentPath,
+  outDir = sitePaths.distDir,
   inheritedOptions,
 ) => {
-  validateSite(contentPath, inheritedOptions);
-  runGeneratorEntryPoint("build", [contentPath, outDir], inheritedOptions);
+  validateSite(sitePaths, contentPath, inheritedOptions);
+  runGeneratorEntryPoint("build", [contentPath, outDir], sitePaths.root, inheritedOptions);
 };
 
-const watchSiteBuild = async ({ skipInitialBuild = false } = {}) => {
+const watchSiteBuild = async (sitePaths, { skipInitialBuild = false } = {}) => {
   const watchRoots = [
-    path.join(repoRoot, "content"),
+    path.join(sitePaths.root, "content"),
     path.join(generatorDir, "src"),
   ];
   const watchers = [];
@@ -94,7 +155,7 @@ const watchSiteBuild = async ({ skipInitialBuild = false } = {}) => {
     buildInProgress = true;
 
     try {
-      buildSite(mainSiteContentPath, composedDistDir, { exitOnError: false });
+      buildSite(sitePaths, sitePaths.contentPath, sitePaths.distDir, { exitOnError: false });
       process.exitCode = 0;
     } catch (error) {
       if (error instanceof Error) {
@@ -134,7 +195,7 @@ const watchSiteBuild = async ({ skipInitialBuild = false } = {}) => {
     });
 
     watcher.on("all", (_eventName, changedPath) => {
-      const relativePath = path.relative(repoRoot, changedPath);
+      const relativePath = path.relative(sitePaths.root, changedPath);
       console.log(`Detected change in ${relativePath}. Rebuilding site...`);
       queueBuild();
     });
@@ -143,7 +204,7 @@ const watchSiteBuild = async ({ skipInitialBuild = false } = {}) => {
   }
 
   console.log(
-    `Watching ${watchRoots.map((root) => path.relative(repoRoot, root)).join(", ")} for changes...`,
+    `Watching ${watchRoots.map((root) => path.relative(sitePaths.root, root)).join(", ")} for changes...`,
   );
 
   if (!skipInitialBuild) {
@@ -185,24 +246,33 @@ if (isDirectExecution) {
     ensureGeneratorDependenciesAvailable();
 
     if (command === "validate") {
-      console.log(`Validating with shared generator at ${generatorDir}.`);
-      validateSite();
+      const { sitePaths } = parseSiteCommandArgs(commandArgs);
+      console.log(
+        `Validating ${path.relative(process.cwd(), sitePaths.root) || "."} with shared generator at ${generatorDir}.`,
+      );
+      validateSite(sitePaths);
       process.exit(0);
     }
 
-    if (command === "build:site") {
-      console.log(`Building with shared generator at ${generatorDir}.`);
+    if (command === "build" || command === "build:site") {
+      const { sitePaths } = parseSiteCommandArgs(commandArgs);
+      console.log(
+        `Building ${path.relative(process.cwd(), sitePaths.root) || "."} with shared generator at ${generatorDir}.`,
+      );
       if (watchMode) {
-        await watchSiteBuild({ skipInitialBuild });
+        await watchSiteBuild(sitePaths, { skipInitialBuild });
       } else {
-        buildSite();
+        buildSite(sitePaths);
       }
       process.exit(0);
     }
 
-    if (command === "dev:prepare") {
-      console.log(`Preparing local dev build with shared generator at ${generatorDir}.`);
-      buildSite();
+    if (command === "dev:prepare" || command === "prepare") {
+      const { sitePaths } = parseSiteCommandArgs(commandArgs);
+      console.log(
+        `Preparing ${path.relative(process.cwd(), sitePaths.root) || "."} with shared generator at ${generatorDir}.`,
+      );
+      buildSite(sitePaths);
       process.exit(0);
     }
 
@@ -213,8 +283,11 @@ if (isDirectExecution) {
     }
 
     if (command === "lighthouse:ci") {
-      console.log(`Running Lighthouse CI with shared generator at ${generatorDir}.`);
-      lighthouseCi();
+      const { sitePaths } = parseSiteCommandArgs(commandArgs);
+      console.log(
+        `Running Lighthouse CI for ${path.relative(process.cwd(), sitePaths.root) || "."} with shared generator at ${generatorDir}.`,
+      );
+      lighthouseCi(sitePaths);
       process.exit(0);
     }
 
@@ -225,7 +298,7 @@ if (isDirectExecution) {
     }
 
     throw new Error(
-      "Usage: node scripts/shared-site-gen.mjs <validate|build:site|dev:prepare|discover:images|lighthouse:ci|localize:landing-image>",
+      "Usage: cruftless-site-gen <validate|build|build:site|prepare|dev:prepare|discover:images|lighthouse:ci|localize:landing-image> [site-dir]",
     );
   } catch (error) {
     if (error instanceof Error) {

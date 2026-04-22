@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "cruftless-site-gen": "scripts/shared-site-gen.mjs"
+  },
   "engines": {
     "node": ">=20"
   },
@@ -13,6 +16,9 @@
     "dev": "concurrently -k \"npm:build:watch\" \"npm:build:examples:watch\" \"npm:build:example:78th:watch\" \"npm:build:example:baird:watch\" \"npm:serve:watch\"",
     "build:examples": "tsx src/build/build-examples.ts",
     "build:examples:watch": "tsx src/build/build-examples.ts --watch",
+    "site": "node scripts/shared-site-gen.mjs",
+    "site:build": "node scripts/shared-site-gen.mjs build",
+    "site:validate": "node scripts/shared-site-gen.mjs validate",
     "build:example:baird": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive",
     "build:example:baird:watch": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive --watch",
     "build:example:78th": "tsx src/build/build.ts content/examples/78th-street-studios.json dist/78th-street-studios",
