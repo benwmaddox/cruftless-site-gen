@@ -34,6 +34,29 @@ const moveItem = (items, fromIndex, toIndex) => {
   return nextItems;
 };
 
+class HttpError extends Error {
+  constructor(message, issues = []) {
+    super(message);
+    this.name = "HttpError";
+    this.issues = Array.isArray(issues) ? issues : [];
+  }
+}
+
+const pathKey = (path) => JSON.stringify(path);
+
+const issuesToMap = (issues) => {
+  const map = new Map();
+
+  for (const issue of Array.isArray(issues) ? issues : []) {
+    const key = pathKey(issue.path ?? []);
+    const nextIssues = map.get(key) ?? [];
+    nextIssues.push(issue.message);
+    map.set(key, nextIssues);
+  }
+
+  return map;
+};
+
 const postJson = async (url, body) => {
   const response = await fetch(url, {
     method: "POST",
@@ -44,14 +67,17 @@ const postJson = async (url, body) => {
   if (!response.ok) {
     const text = await response.text();
     let message = text;
+    let issues = [];
 
     try {
-      message = JSON.parse(text).error ?? text;
+      const payload = JSON.parse(text);
+      message = payload.error ?? text;
+      issues = payload.issues ?? [];
     } catch {
       message = text;
     }
 
-    throw new Error(message || `${response.status} ${response.statusText}`);
+    throw new HttpError(message || `${response.status} ${response.statusText}`, issues);
   }
 
   if (response.status === 204) {
@@ -71,8 +97,155 @@ const normalizeFieldValue = (field, value) => {
   return value;
 };
 
-const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
+const imageExtensions = new Set([".avif", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"]);
+
+const toContentAssetHref = (value) => {
+  const trimmedValue = String(value ?? "").trim();
+
+  if (!trimmedValue) {
+    return "";
+  }
+
+  if (/^https?:\/\//iu.test(trimmedValue) || trimmedValue.startsWith("//")) {
+    return trimmedValue;
+  }
+
+  const normalizedValue = trimmedValue.replaceAll("\\", "/");
+
+  if (normalizedValue.startsWith("/content/")) {
+    return normalizedValue;
+  }
+
+  if (normalizedValue.startsWith("content/")) {
+    return `/${normalizedValue}`;
+  }
+
+  if (normalizedValue.startsWith("/")) {
+    return normalizedValue;
+  }
+
+  return `/content/${normalizedValue.replace(/^\/+/u, "")}`;
+};
+
+const isPreviewableImageHref = (value) => {
+  const href = toContentAssetHref(value);
+
+  if (!href || /^data:/iu.test(href)) {
+    return false;
+  }
+
+  const pathname = href.startsWith("http")
+    ? new URL(href).pathname
+    : href.split("?")[0] ?? href;
+  const extensionIndex = pathname.lastIndexOf(".");
+
+  if (extensionIndex < 0) {
+    return false;
+  }
+
+  return imageExtensions.has(pathname.slice(extensionIndex).toLowerCase());
+};
+
+const MediaSourceField = ({ browser, errors, field, update, value }) => {
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
+  const previewHref = isPreviewableImageHref(value) ? toContentAssetHref(value) : "";
+
+  const loadMediaFiles = async () => {
+    setLoading(true);
+    setLoadError("");
+
+    try {
+      const params = new URLSearchParams({ directory: browser.directory });
+      const payload = await fetch(`/__editor/media?${params.toString()}`);
+
+      if (!payload.ok) {
+        throw new Error(await payload.text());
+      }
+
+      const nextListing = await payload.json();
+      setMediaFiles(nextListing.files ?? []);
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : String(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!pickerOpen) {
+      return;
+    }
+
+    void loadMediaFiles();
+  }, [pickerOpen, browser.directory]);
+
+  return (
+    <div className="field">
+      <label>{fieldLabel(field)}</label>
+      <input
+        data-testid={`field-${field.key}`}
+        type="text"
+        value={value ?? ""}
+        onChange={(event) => update(event.currentTarget.value)}
+      />
+      {errors.map((error) => (
+        <div className="field-error" key={error}>{error}</div>
+      ))}
+      <div className="row">
+        <button type="button" onClick={() => setPickerOpen((open) => !open)}>
+          {pickerOpen ? "Hide media" : "Pick media"}
+        </button>
+      </div>
+      {previewHref ? (
+        <div className="media-preview-card">
+          <img alt="" className="media-preview-image" src={previewHref} />
+          <div className="hint">{previewHref}</div>
+        </div>
+      ) : null}
+      {pickerOpen ? (
+        <div className="media-picker">
+          {loading ? <div className="hint">Loading media…</div> : null}
+          {loadError ? <div className="hint">{loadError}</div> : null}
+          {!loading && !loadError && mediaFiles.length === 0 ? (
+            <div className="hint">No media files found in this folder or its subdirectories.</div>
+          ) : null}
+          {!loading && !loadError ? (
+            <div className="media-picker-list">
+              {mediaFiles.map((file) => (
+                <button
+                  key={file.path}
+                  className="media-picker-item"
+                  type="button"
+                  onClick={() => {
+                    update(file.href);
+                    setPickerOpen(false);
+                  }}
+                >
+                  {file.kind === "image" ? (
+                    <img alt="" className="media-picker-thumb" src={file.href} />
+                  ) : (
+                    <div className="media-picker-thumb media-picker-thumb-placeholder">{file.kind}</div>
+                  )}
+                  <div className="media-picker-meta">
+                    <div className="media-picker-name">{file.relativePath}</div>
+                    <div className="hint">{file.href}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+const FieldRenderer = ({ browser, draft, field, path, setDraft, refreshPreview, validationErrors }) => {
   const value = getAtPath(draft, path);
+  const fieldErrors = validationErrors.get(pathKey(path)) ?? [];
 
   const update = (nextValue) => {
     setDraft((currentDraft) =>
@@ -83,6 +256,18 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
 
   if (field.kind === "readonly") {
     return null;
+  }
+
+  if (field.kind === "media") {
+    return (
+      <MediaSourceField
+        browser={browser}
+        errors={fieldErrors}
+        field={field}
+        update={update}
+        value={value}
+      />
+    );
   }
 
   if (field.kind === "text" || field.kind === "number") {
@@ -101,6 +286,9 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
             update(nextValue);
           }}
         />
+        {fieldErrors.map((error) => (
+          <div className="field-error" key={error}>{error}</div>
+        ))}
       </div>
     );
   }
@@ -114,20 +302,28 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
           value={value ?? ""}
           onChange={(event) => update(event.currentTarget.value)}
         />
+        {fieldErrors.map((error) => (
+          <div className="field-error" key={error}>{error}</div>
+        ))}
       </div>
     );
   }
 
   if (field.kind === "checkbox") {
     return (
-      <label className="field-inline">
-        <input
-          type="checkbox"
-          checked={Boolean(value)}
-          onChange={(event) => update(field.optional && !event.currentTarget.checked ? undefined : event.currentTarget.checked)}
-        />
-        <span>{fieldLabel(field)}</span>
-      </label>
+      <div className="field">
+        <label className="field-inline">
+          <input
+            type="checkbox"
+            checked={Boolean(value)}
+            onChange={(event) => update(field.optional && !event.currentTarget.checked ? undefined : event.currentTarget.checked)}
+          />
+          <span>{fieldLabel(field)}</span>
+        </label>
+        {fieldErrors.map((error) => (
+          <div className="field-error" key={error}>{error}</div>
+        ))}
+      </div>
     );
   }
 
@@ -151,6 +347,9 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
             );
           })}
         </select>
+        {fieldErrors.map((error) => (
+          <div className="field-error" key={error}>{error}</div>
+        ))}
       </div>
     );
   }
@@ -203,12 +402,14 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
         <div className="form-grid">
           {field.fields.map((childField) => (
             <FieldRenderer
+              browser={browser}
               key={childField.key}
               draft={draft}
               field={childField}
               path={[...path, childField.key]}
               setDraft={setDraft}
               refreshPreview={refreshPreview}
+              validationErrors={validationErrors}
             />
           ))}
         </div>
@@ -233,12 +434,14 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
           <div className="form-grid">
             {field.fields.map((childField) => (
               <FieldRenderer
+                browser={browser}
                 key={childField.key}
                 draft={draft}
                 field={childField}
                 path={[...path, childField.key]}
                 setDraft={setDraft}
                 refreshPreview={refreshPreview}
+                validationErrors={validationErrors}
               />
             ))}
           </div>
@@ -292,12 +495,14 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
               <div className="form-grid">
                 {field.fields.map((childField) => (
                   <FieldRenderer
+                    browser={browser}
                     key={childField.key}
                     draft={draft}
                     field={childField}
                     path={[...path, index, childField.key]}
                     setDraft={setDraft}
                     refreshPreview={refreshPreview}
+                    validationErrors={validationErrors}
                   />
                 ))}
               </div>
@@ -311,25 +516,35 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
   return <div className="empty-state">Unsupported field {field.kind}</div>;
 };
 
-const SectionRenderer = ({ draft, section, basePath, setDraft, refreshPreview }) => (
+const SectionRenderer = ({
+  basePath,
+  browser,
+  draft,
+  refreshPreview,
+  section,
+  setDraft,
+  validationErrors,
+}) => (
   <div className="field-group">
     <h3>{section.title}</h3>
     <div className="form-grid">
       {section.fields.map((field) => (
         <FieldRenderer
+          browser={browser}
           key={field.key}
           draft={draft}
           field={field}
           path={[...basePath, field.key]}
           setDraft={setDraft}
           refreshPreview={refreshPreview}
+          validationErrors={validationErrors}
         />
       ))}
     </div>
   </div>
 );
 
-const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
+const SiteEditor = ({ browser, config, draft, refreshPreview, setDraft, validationErrors }) => {
   const sitePath = ["site"];
   const updateSiteField = (key, value) => {
     setDraft((currentDraft) => setAtPath(currentDraft, [...sitePath, key], value || undefined));
@@ -351,18 +566,22 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
         <h2>Site</h2>
         <div className="form-grid">
           <FieldRenderer
+            browser={browser}
             draft={draft}
             field={{ kind: "text", key: "name", label: "Name" }}
             path={[...sitePath, "name"]}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
           <FieldRenderer
+            browser={browser}
             draft={draft}
             field={{ kind: "text", key: "baseUrl", label: "Base URL" }}
             path={[...sitePath, "baseUrl"]}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
           <div className="field">
             <label>Theme</label>
@@ -379,9 +598,10 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
             </select>
           </div>
           <FieldRenderer
+            browser={browser}
             draft={draft}
             field={{
-              kind: "text",
+              kind: "media",
               key: "pageBackgroundImageUrl",
               label: "Page background image",
               optional: true,
@@ -389,8 +609,10 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
             path={[...sitePath, "pageBackgroundImageUrl"]}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
           <FieldRenderer
+            browser={browser}
             draft={draft}
             field={{
               kind: "text",
@@ -401,11 +623,13 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
             path={[...sitePath, "googleAnalyticsMeasurementId"]}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
         </div>
       </div>
       {draft.site.layout?.components ? (
         <ComponentListEditor
+          browser={browser}
           config={config}
           draft={draft}
           components={draft.site.layout.components}
@@ -414,6 +638,7 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
           setDraft={setDraft}
           refreshPreview={refreshPreview}
           title="Shared Layout Components"
+          validationErrors={validationErrors}
         />
       ) : (
         <div className="card">
@@ -431,9 +656,11 @@ const SiteEditor = ({ config, draft, setDraft, refreshPreview }) => {
 };
 
 const PageEditor = ({
+  browser,
   draft,
   page,
   pageIndex,
+  validationErrors,
   setDraft,
   setSelectedPageIndex,
   refreshPreview,
@@ -492,28 +719,33 @@ const PageEditor = ({
       </div>
       <div className="form-grid">
         <FieldRenderer
+          browser={browser}
           draft={draft}
           field={{ kind: "text", key: "slug", label: "Slug" }}
           path={["pages", pageIndex, "slug"]}
           setDraft={setDraft}
           refreshPreview={refreshPreview}
+          validationErrors={validationErrors}
         />
         <FieldRenderer
+          browser={browser}
           draft={draft}
           field={{ kind: "text", key: "title", label: "Title" }}
           path={["pages", pageIndex, "title"]}
           setDraft={setDraft}
           refreshPreview={refreshPreview}
+          validationErrors={validationErrors}
         />
         <div className="field-group">
           <h3>Metadata</h3>
           <div className="form-grid">
             {["description", "canonicalUrl", "socialImageUrl"].map((key) => (
               <FieldRenderer
+                browser={browser}
                 key={key}
                 draft={draft}
                 field={{
-                  kind: key === "description" ? "textarea" : "text",
+                  kind: key === "description" ? "textarea" : key === "socialImageUrl" ? "media" : "text",
                   key,
                   label: key,
                   optional: true,
@@ -521,6 +753,7 @@ const PageEditor = ({
                 path={["pages", pageIndex, "metadata", key]}
                 setDraft={setDraft}
                 refreshPreview={refreshPreview}
+                validationErrors={validationErrors}
               />
             ))}
           </div>
@@ -531,6 +764,7 @@ const PageEditor = ({
 };
 
 const ComponentEditor = ({
+  browser,
   config,
   draft,
   component,
@@ -540,6 +774,7 @@ const ComponentEditor = ({
   mode,
   setDraft,
   refreshPreview,
+  validationErrors,
 }) => {
   const editor = config.componentSpecs[component.type];
 
@@ -659,12 +894,14 @@ const ComponentEditor = ({
       {editor ? (
         editor.fields.map((section) => (
           <SectionRenderer
+            browser={browser}
             key={section.title}
             draft={draft}
             section={section}
             basePath={[...componentsPath, componentIndex]}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
         ))
       ) : (
@@ -675,6 +912,7 @@ const ComponentEditor = ({
 };
 
 const ComponentListEditor = ({
+  browser,
   config,
   draft,
   components,
@@ -683,6 +921,7 @@ const ComponentListEditor = ({
   setDraft,
   refreshPreview,
   title,
+  validationErrors,
 }) => {
   const componentTypeRef = useRef(null);
   const componentTypeOptions =
@@ -727,6 +966,7 @@ const ComponentListEditor = ({
       <div className="list-stack">
         {components.map((component, componentIndex) => (
           <ComponentEditor
+            browser={browser}
             key={`${component.type}-${componentIndex}`}
             config={config}
             draft={draft}
@@ -737,6 +977,7 @@ const ComponentListEditor = ({
             mode={mode}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
         ))}
       </div>
@@ -745,6 +986,7 @@ const ComponentListEditor = ({
 };
 
 const PageScopeEditor = ({
+  browser,
   config,
   draft,
   page,
@@ -752,6 +994,7 @@ const PageScopeEditor = ({
   setDraft,
   setSelectedScope,
   refreshPreview,
+  validationErrors,
 }) => {
   const addPage = () => {
     const slugs = new Set(draft.pages.map((candidate) => candidate.slug));
@@ -779,9 +1022,11 @@ const PageScopeEditor = ({
   return (
     <>
       <PageEditor
+        browser={browser}
         draft={draft}
         page={page}
         pageIndex={pageIndex}
+        validationErrors={validationErrors}
         setDraft={setDraft}
         setSelectedPageIndex={(nextPageIndex) =>
           setSelectedScope({ type: "page", pageIndex: nextPageIndex })
@@ -789,6 +1034,7 @@ const PageScopeEditor = ({
         refreshPreview={refreshPreview}
       />
       <ComponentListEditor
+        browser={browser}
         config={config}
         draft={draft}
         components={page.components}
@@ -797,6 +1043,7 @@ const PageScopeEditor = ({
         setDraft={setDraft}
         refreshPreview={refreshPreview}
         title="Components"
+        validationErrors={validationErrors}
       />
       <div className="card">
         <div className="list-item-header">
@@ -992,6 +1239,7 @@ const App = () => {
   const [selectedScope, setSelectedScope] = useState({ type: "site" });
   const [dirty, setDirty] = useState(false);
   const [rawOpen, setRawOpen] = useState(false);
+  const [validationErrors, setValidationErrors] = useState(() => new Map());
   const [status, setStatus] = useState("Loading editor...");
   const [statusKind, setStatusKind] = useState("info");
   const [previewVersion, setPreviewVersion] = useState(0);
@@ -1037,6 +1285,7 @@ const App = () => {
     setBrowser(payload.browser);
     setSelectedScope({ type: "site" });
     setDirty(false);
+    setValidationErrors(new Map());
     setStatusMessage(`Opened ${payload.name}.`);
     setPreviewVersion(Date.now());
   };
@@ -1063,9 +1312,11 @@ const App = () => {
     try {
       await postJson("/__editor/save", draft);
       setDirty(false);
+      setValidationErrors(new Map());
       setStatusMessage(`Saved ${selectedFile}.`);
       await refreshBrowser();
     } catch (error) {
+      setValidationErrors(issuesToMap(error.issues));
       setStatusMessage(error instanceof Error ? error.message : String(error), "error");
     }
   };
@@ -1118,8 +1369,10 @@ const App = () => {
     updateTimer.current = window.setTimeout(async () => {
       try {
         await postJson("/__preview/draft", draft);
+        setValidationErrors(new Map());
         setStatusMessage("Draft preview updated.");
       } catch (error) {
+        setValidationErrors(issuesToMap(error.issues));
         setStatusMessage(error instanceof Error ? error.message : String(error), "error");
       }
     }, 100);
@@ -1163,14 +1416,17 @@ const App = () => {
         </div>
         {selectedScope.type === "site" ? (
           <SiteEditor
+            browser={browser}
             config={config}
             draft={draft}
             setDraft={setDraft}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
         ) : null}
         {selectedScope.type === "page" && selectedPage ? (
           <PageScopeEditor
+            browser={browser}
             config={config}
             draft={draft}
             page={selectedPage}
@@ -1178,6 +1434,7 @@ const App = () => {
             setDraft={setDraft}
             setSelectedScope={setSelectedScope}
             refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
           />
         ) : null}
         {rawOpen ? <RawEditor draft={draft} setDraft={setDraft} refreshPreview={refreshPreview} /> : null}

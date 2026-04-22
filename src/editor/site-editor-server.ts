@@ -15,6 +15,11 @@ export interface SiteEditorServerOptions {
   port?: number;
 }
 
+export interface EditorValidationIssue {
+  message: string;
+  path: (string | number)[];
+}
+
 export interface EditableFileSummary {
   name: string;
   path: string;
@@ -39,6 +44,19 @@ export interface EditorFileBrowserListing {
   selectedFile: string;
 }
 
+export interface EditableMediaFile {
+  href: string;
+  kind: "audio" | "image" | "video";
+  path: string;
+  relativePath: string;
+}
+
+export interface EditorMediaBrowserListing {
+  contentRoot: string;
+  directory: string;
+  files: EditableMediaFile[];
+}
+
 export interface SiteEditorServer {
   close: () => Promise<void>;
   contentRoot: string;
@@ -51,6 +69,7 @@ class EditorHttpError extends Error {
   constructor(
     readonly statusCode: number,
     message: string,
+    readonly issues?: readonly EditorValidationIssue[],
   ) {
     super(message);
     this.name = "EditorHttpError";
@@ -64,6 +83,7 @@ const editorFilesPath = "/__editor/files";
 const editorConfigPath = "/__editor/config";
 const editorOpenDirectoryPath = "/__editor/open-directory";
 const editorOpenPath = "/__editor/open";
+const editorMediaPath = "/__editor/media";
 const editorSavePath = "/__editor/save";
 const previewPagePath = "/__preview/page";
 const previewStylesheetPath = "/__preview/assets/site.css";
@@ -74,6 +94,19 @@ const previewSavePath = "/__preview/save";
 const contentAssetPrefix = "/content/";
 const contentDirectoryName = "content";
 const maxContentRootSearchDepth = 3;
+const mediaFileExtensions = new Map<string, "audio" | "image" | "video">([
+  [".avif", "image"],
+  [".gif", "image"],
+  [".jpeg", "image"],
+  [".jpg", "image"],
+  [".mp3", "audio"],
+  [".mp4", "video"],
+  [".png", "image"],
+  [".svg", "image"],
+  [".wav", "audio"],
+  [".webm", "video"],
+  [".webp", "image"],
+]);
 const skippedContentSearchDirectories = new Set([
   ".git",
   ".next",
@@ -145,11 +178,21 @@ const formatSiteContentIssues = (issues: readonly ZodIssue[]): string =>
     })
     .join("; ");
 
+const serializeValidationIssues = (issues: readonly ZodIssue[]): EditorValidationIssue[] =>
+  issues.map((issue) => ({
+    message: issue.message,
+    path: [...issue.path],
+  }));
+
 const parseSiteContent = (value: unknown): SiteContentData => {
   const parsed = SiteContentSchema.safeParse(value);
 
   if (!parsed.success) {
-    throw new EditorHttpError(400, `Invalid site content: ${formatSiteContentIssues(parsed.error.issues)}`);
+    throw new EditorHttpError(
+      400,
+      `Invalid site content: ${formatSiteContentIssues(parsed.error.issues)}`,
+      serializeValidationIssues(parsed.error.issues),
+    );
   }
 
   return parsed.data;
@@ -259,6 +302,20 @@ const resolveBrowserFilePath = (
   return path.resolve(browseDirectory, normalized);
 };
 
+const resolveDirectoryWithinRoot = (rootPath: string, requestedPath: string): string => {
+  const resolvedRootPath = path.resolve(rootPath);
+  const resolvedRequestedPath = path.resolve(requestedPath);
+  const rootWithSeparator = resolvedRootPath.endsWith(path.sep)
+    ? resolvedRootPath
+    : `${resolvedRootPath}${path.sep}`;
+
+  if (resolvedRequestedPath !== resolvedRootPath && !resolvedRequestedPath.startsWith(rootWithSeparator)) {
+    throw new EditorHttpError(400, "Directory is outside the editor root.");
+  }
+
+  return resolvedRequestedPath;
+};
+
 const collectJsonFiles = async (directoryPath: string): Promise<string[]> => {
   const entries = await readdir(directoryPath, { withFileTypes: true });
   const nestedFiles = await Promise.all(
@@ -270,6 +327,25 @@ const collectJsonFiles = async (directoryPath: string): Promise<string[]> => {
       }
 
       return entry.isFile() && entry.name.endsWith(".json") ? [entryPath] : [];
+    }),
+  );
+
+  return nestedFiles.flat().sort();
+};
+
+const collectMediaFiles = async (directoryPath: string): Promise<string[]> => {
+  const entries = await readdir(directoryPath, { withFileTypes: true });
+  const nestedFiles = await Promise.all(
+    entries.map(async (entry) => {
+      const entryPath = path.join(directoryPath, entry.name);
+
+      if (entry.isDirectory()) {
+        return collectMediaFiles(entryPath);
+      }
+
+      return entry.isFile() && mediaFileExtensions.has(path.extname(entry.name).toLowerCase())
+        ? [entryPath]
+        : [];
     }),
   );
 
@@ -379,6 +455,53 @@ const findNestedContentDirectory = async (
   }
 
   return undefined;
+};
+
+const findUniqueNestedContentDirectory = async (
+  directoryPath: string,
+  maxDepth: number = maxContentRootSearchDepth,
+): Promise<string | undefined> => {
+  const resolvedPath = path.resolve(directoryPath);
+  const directContentDirectory = await findDirectContentDirectory(resolvedPath);
+
+  if (directContentDirectory) {
+    return directContentDirectory;
+  }
+
+  if (maxDepth <= 0) {
+    return undefined;
+  }
+
+  let entries;
+
+  try {
+    entries = await readdir(resolvedPath, { withFileTypes: true });
+  } catch {
+    return undefined;
+  }
+
+  const directories = entries
+    .filter((entry) => entry.isDirectory() && isContentSearchableDirectory(entry.name))
+    .map((entry) => path.join(resolvedPath, entry.name))
+    .sort((left, right) => left.localeCompare(right));
+
+  let candidate: string | undefined;
+
+  for (const childDirectory of directories) {
+    const nestedContentDirectory = await findUniqueNestedContentDirectory(childDirectory, maxDepth - 1);
+
+    if (!nestedContentDirectory) {
+      continue;
+    }
+
+    if (candidate && candidate !== nestedContentDirectory) {
+      return undefined;
+    }
+
+    candidate = nestedContentDirectory;
+  }
+
+  return candidate;
 };
 
 const isInsideContentRoot = (contentRoot: string, directoryPath: string): boolean => {
@@ -696,15 +819,15 @@ export const createSiteEditorServer = async (
       : (await Promise.all(
         candidateDirectories.map(async (entry) => ({
           ...entry,
-          snapToContent: true,
           targetPath: await findNestedContentDirectory(entry.path),
+          uniqueTargetPath: await findUniqueNestedContentDirectory(entry.path),
         })),
       ))
         .filter((entry) => entry.targetPath)
-        .map(({ name, path: directoryPath, snapToContent }) => ({
+        .map(({ name, path: directoryPath, uniqueTargetPath }) => ({
           name,
           path: directoryPath,
-          snapToContent,
+          snapToContent: Boolean(uniqueTargetPath),
         }))
         .sort((left, right) => left.name.localeCompare(right.name));
     const files = await Promise.all(
@@ -721,6 +844,30 @@ export const createSiteEditorServer = async (
       files: files.sort((left, right) => left.name.localeCompare(right.name)),
       parentDirectory: parentDirectory === browseDirectory ? undefined : parentDirectory,
       selectedFile: selectedFileAbsolutePath(),
+    };
+  };
+
+  const listMediaDirectory = async (requestedDirectory?: string): Promise<EditorMediaBrowserListing> => {
+    const directoryPath = requestedDirectory
+      ? resolveDirectoryWithinRoot(contentRoot, requestedDirectory)
+      : browseDirectory;
+    const resolvedDirectoryPath = isInsideContentRoot(contentRoot, directoryPath) ? directoryPath : contentRoot;
+    const mediaFiles = await collectMediaFiles(resolvedDirectoryPath);
+
+    return {
+      contentRoot,
+      directory: resolvedDirectoryPath,
+      files: mediaFiles.map((filePath) => {
+        const extension = path.extname(filePath).toLowerCase();
+        const relativePath = path.relative(contentRoot, filePath).replaceAll("\\", "/");
+
+        return {
+          href: `${contentAssetPrefix}${relativePath}`,
+          kind: mediaFileExtensions.get(extension) ?? "image",
+          path: filePath,
+          relativePath,
+        };
+      }),
     };
   };
 
@@ -765,6 +912,11 @@ export const createSiteEditorServer = async (
 
       if (request.method === "GET" && requestUrl.pathname === editorFilesPath) {
         sendJson(response, 200, await listBrowserDirectory());
+        return;
+      }
+
+      if (request.method === "GET" && requestUrl.pathname === editorMediaPath) {
+        sendJson(response, 200, await listMediaDirectory(requestUrl.searchParams.get("directory") ?? undefined));
         return;
       }
 
@@ -883,7 +1035,10 @@ export const createSiteEditorServer = async (
       send(response, 404, "text/plain; charset=utf-8", "Not found");
     } catch (error) {
       if (error instanceof EditorHttpError) {
-        sendJson(response, error.statusCode, { error: error.message });
+        sendJson(response, error.statusCode, {
+          error: error.message,
+          issues: error.issues,
+        });
         return;
       }
 

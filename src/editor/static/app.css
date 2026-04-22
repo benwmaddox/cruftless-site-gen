@@ -280,6 +280,11 @@ button:focus {
   font-weight: 650;
 }
 
+.field-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+}
+
 .field-inline {
   display: flex;
   gap: 0.5rem;
@@ -296,6 +301,77 @@ button:focus {
 
 .field-group + .field-group {
   margin-top: 0.75rem;
+}
+
+.media-preview-card,
+.media-picker {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-2);
+  padding: 0.65rem;
+}
+
+.media-preview-card {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.media-preview-image {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.media-picker {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.media-picker-list {
+  display: grid;
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.media-picker-item {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.media-picker-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: #ffffff;
+}
+
+.media-picker-thumb-placeholder {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.media-picker-meta {
+  min-width: 0;
+}
+
+.media-picker-name {
+  overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .row {

@@ -3,6 +3,7 @@ export { defineEditorRegistry, type EditorRegistryForUnion } from "./registry.js
 export type {
   CheckboxFieldDef,
   FieldDef,
+  MediaFieldDef,
   NumberFieldDef,
   ObjectFieldDef,
   ObjectListFieldDef,

@@ -3,6 +3,7 @@ import { z } from "zod";
 import type {
   CheckboxFieldDef,
   FieldDef,
+  MediaFieldDef,
   NumberFieldDef,
   ObjectFieldDef,
   ObjectListFieldDef,
@@ -45,6 +46,8 @@ export type EditorFor<
   readonly<TKey extends AllKeys<TSchema>>(key: TKey): ReadonlyFieldDef<TKey>;
 
   text<TKey extends StringKeys<TSchema>>(key: TKey, label: string): TextFieldDef<TKey>;
+
+  media<TKey extends StringKeys<TSchema>>(key: TKey, label: string): MediaFieldDef<TKey>;
 
   textarea<TKey extends StringKeys<TSchema>>(key: TKey, label: string): TextAreaFieldDef<TKey>;
 
@@ -113,6 +116,15 @@ export function editorFor<
     text(key, label) {
       return {
         kind: "text",
+        key,
+        label,
+        ...optionalFlag(schema, key),
+      };
+    },
+
+    media(key, label) {
+      return {
+        kind: "media",
         key,
         label,
         ...optionalFlag(schema, key),

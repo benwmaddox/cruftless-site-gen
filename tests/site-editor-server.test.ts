@@ -201,8 +201,9 @@ describe("createSiteEditorServer", () => {
 
   it("does not jump into the first nested content tree when a broad directory is opened directly", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
-    const firstContentDir = path.join(tempDir, "first", "content");
-    const siblingContentDir = path.join(tempDir, "sibling", "nested", "content");
+    const broadDir = path.join(tempDir, "refreshes");
+    const firstContentDir = path.join(broadDir, "first", "content");
+    const siblingContentDir = path.join(broadDir, "sibling", "nested", "content");
     await writeJson(path.join(firstContentDir, "site.json"), createDraft("First"));
     await writeJson(path.join(siblingContentDir, "site.json"), createDraft("Sibling"));
     const server = await createServer(firstContentDir);
@@ -216,13 +217,108 @@ describe("createSiteEditorServer", () => {
       directory: string;
       directories: { name: string; path: string; snapToContent: boolean }[];
     };
+    const broadResponse = await fetch(`${server.origin}/__editor/open-directory`, {
+      body: JSON.stringify({ path: broadDir, snapToContent: "none" }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const broadPayload = await broadResponse.json() as {
+      directory: string;
+      directories: { name: string; path: string; snapToContent: boolean }[];
+    };
 
     expect(response.status).toBe(200);
     expect(payload.directory).toBe(tempDir);
     expect(payload.directories).toEqual(
       expect.arrayContaining([
+        expect.objectContaining({ name: "refreshes", snapToContent: false }),
+      ]),
+    );
+    expect(broadResponse.status).toBe(200);
+    expect(broadPayload.directory).toBe(broadDir);
+    expect(broadPayload.directories).toEqual(
+      expect.arrayContaining([
         expect.objectContaining({ name: "first", snapToContent: true }),
         expect.objectContaining({ name: "sibling", snapToContent: true }),
+      ]),
+    );
+  });
+
+  it("lists media files from the current content folder and nested subdirectories", async () => {
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
+    const imagePath = path.join(tempDir, "images", "hero.jpg");
+    const logoPath = path.join(tempDir, "logos", "mark.svg");
+    const videoPath = path.join(tempDir, "videos", "intro.mp4");
+    await writeJson(path.join(tempDir, "site.json"), createDraft("LaunchKit"));
+    await mkdir(path.dirname(imagePath), { recursive: true });
+    await mkdir(path.dirname(logoPath), { recursive: true });
+    await mkdir(path.dirname(videoPath), { recursive: true });
+    await writeFile(imagePath, "jpg\n", "utf8");
+    await writeFile(logoPath, "<svg />\n", "utf8");
+    await writeFile(videoPath, "mp4\n", "utf8");
+    await writeFile(path.join(tempDir, "notes.txt"), "ignore\n", "utf8");
+    const server = await createServer(tempDir);
+
+    const response = await fetch(
+      `${server.origin}/__editor/media?directory=${encodeURIComponent(tempDir)}`,
+    );
+    const payload = await response.json() as {
+      directory: string;
+      files: { href: string; kind: string; relativePath: string }[];
+    };
+
+    expect(response.status).toBe(200);
+    expect(payload.directory).toBe(tempDir);
+    expect(payload.files).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          href: "/content/images/hero.jpg",
+          kind: "image",
+          relativePath: "images/hero.jpg",
+        }),
+        expect.objectContaining({
+          href: "/content/logos/mark.svg",
+          kind: "image",
+          relativePath: "logos/mark.svg",
+        }),
+        expect.objectContaining({
+          href: "/content/videos/intro.mp4",
+          kind: "video",
+          relativePath: "videos/intro.mp4",
+        }),
+      ]),
+    );
+    expect(payload.files).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ relativePath: "notes.txt" }),
+      ]),
+    );
+  });
+
+  it("returns structured validation issues for invalid draft updates", async () => {
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
+    await writeJson(path.join(tempDir, "site.json"), createDraft("LaunchKit"));
+    const server = await createServer(tempDir);
+    const invalidDraft = createDraft("LaunchKit");
+    invalidDraft.site.name = "L".repeat(81);
+
+    const response = await fetch(`${server.origin}/__preview/draft`, {
+      body: JSON.stringify(invalidDraft),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const payload = await response.json() as {
+      error: string;
+      issues?: { message: string; path: (string | number)[] }[];
+    };
+
+    expect(response.status).toBe(400);
+    expect(payload.error).toContain("Invalid site content");
+    expect(payload.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: ["site", "name"],
+        }),
       ]),
     );
   });

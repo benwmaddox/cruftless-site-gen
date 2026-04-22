@@ -129,6 +129,13 @@ const runBrowserRegression = async (): Promise<void> => {
       .frameLocator("[data-testid='preview-frame']")
       .locator("text=SiblingKit Nav")
       .waitFor();
+    await page.locator("[data-testid='field-name']").fill("S".repeat(81));
+    await page.locator(".field-error").filter({ hasText: "String must contain at most 80 character(s)" }).waitFor();
+    await page.locator("[data-testid='field-name']").fill("SiblingKit");
+    await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("text=SiblingKit Nav")
+      .waitFor();
 
     await page.locator("button", { hasText: "2. About" }).click();
     await page.locator("h2", { hasText: /^Page$/u }).waitFor();
