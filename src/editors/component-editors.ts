@@ -47,7 +47,7 @@ const linkFields = [
 ] as const satisfies readonly FieldDef<string>[];
 
 const imageFields = [
-  { kind: "text", key: "src", label: "Source" },
+  { kind: "media", key: "src", label: "Source" },
   { kind: "text", key: "alt", label: "Alt text" },
   { kind: "textarea", key: "caption", label: "Caption", optional: true },
   { kind: "number", key: "width", label: "Width", optional: true },
@@ -392,7 +392,7 @@ export const logoStripEditor = logoStrip.object({
         "Logos",
         { src: "/content/logo.svg", alt: "Logo" },
         [
-          { kind: "text", key: "src", label: "Source" },
+          { kind: "media", key: "src", label: "Source" },
           { kind: "text", key: "alt", label: "Alt text" },
           { kind: "text", key: "href", label: "Href", optional: true },
           { kind: "number", key: "width", label: "Width", optional: true },
@@ -416,7 +416,7 @@ export const mediaEditor = media.object({
   fields: [
     media.section("Main", [
       media.readonly("type"),
-      media.text("src", "Source"),
+      media.media("src", "Source"),
       media.text("alt", "Alt text"),
       media.textarea("caption", "Caption"),
       media.select("loading", "Loading", [
@@ -446,7 +446,7 @@ export const navigationBarEditor = navigationBar.object({
       navigationBar.readonly("type"),
       navigationBar.text("brandText", "Brand text"),
       navigationBar.optionalObject("brandImage", "Brand image", emptyImage, [
-        { kind: "text", key: "src", label: "Source" },
+        { kind: "media", key: "src", label: "Source" },
         { kind: "text", key: "alt", label: "Alt text" },
       ]),
       navigationBar.objectList("links", "Links", emptyLink, linkFields, {

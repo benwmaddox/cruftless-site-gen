@@ -170,6 +170,20 @@ button:focus {
   align-items: stretch;
 }
 
+.picker-summary {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.picker-summary-title {
+  overflow: hidden;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .folder-path {
   flex: 1 1 auto;
   min-width: 0;
@@ -210,6 +224,7 @@ button:focus {
 .hint {
   color: var(--muted);
   font-size: 0.86rem;
+  overflow-wrap: anywhere;
 }
 
 .card,
@@ -265,6 +280,11 @@ button:focus {
   font-weight: 650;
 }
 
+.field-error {
+  color: var(--danger);
+  font-size: 0.82rem;
+}
+
 .field-inline {
   display: flex;
   gap: 0.5rem;
@@ -281,6 +301,77 @@ button:focus {
 
 .field-group + .field-group {
   margin-top: 0.75rem;
+}
+
+.media-preview-card,
+.media-picker {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-2);
+  padding: 0.65rem;
+}
+
+.media-preview-card {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.media-preview-image {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.media-picker {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.media-picker-list {
+  display: grid;
+  gap: 0.5rem;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.media-picker-item {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.media-picker-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: #ffffff;
+}
+
+.media-picker-thumb-placeholder {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.media-picker-meta {
+  min-width: 0;
+}
+
+.media-picker-name {
+  overflow: hidden;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .row {
@@ -301,6 +392,17 @@ button:focus {
 .list-stack {
   display: grid;
   gap: 0.75rem;
+}
+
+.component-add-row {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.component-add-row .grow {
+  min-width: 0;
 }
 
 .list-item {
@@ -341,6 +443,12 @@ button:focus {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.86rem;
   line-height: 1.45;
+}
+
+@media (width <= 820px) {
+  .component-add-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .empty-state {

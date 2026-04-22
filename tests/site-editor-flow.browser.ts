@@ -88,13 +88,19 @@ const writeJson = async (filePath: string, value: unknown): Promise<void> => {
 
 const runBrowserRegression = async (): Promise<void> => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-browser-"));
-  const firstDir = path.join(tempDir, "first");
-  const siblingDir = path.join(tempDir, "sibling");
-  const firstContentPath = path.join(firstDir, "site.json");
-  const siblingContentPath = path.join(siblingDir, "site.json");
+  const firstContentDir = path.join(tempDir, "first", "content");
+  const siblingContentDir = path.join(tempDir, "sibling", "nested", "content");
+  const firstContentPath = path.join(firstContentDir, "site.json");
+  const siblingContentPath = path.join(siblingContentDir, "site.json");
   await writeJson(firstContentPath, createDraft("About FirstKit", "FirstKit"));
   await writeJson(siblingContentPath, createDraft("About SiblingKit", "SiblingKit"));
-  const server = await createSiteEditorServer({ contentPath: firstDir });
+  await mkdir(path.join(siblingContentDir, "images"), { recursive: true });
+  await writeFile(
+    path.join(siblingContentDir, "images", "hero image.svg"),
+    '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="20"><rect width="40" height="20" fill="#0f766e"/></svg>\n',
+    "utf8",
+  );
+  const server = await createSiteEditorServer({ contentPath: firstContentDir });
   const browser = await chromium.launch();
 
   try {
@@ -110,15 +116,43 @@ const runBrowserRegression = async (): Promise<void> => {
     await page.goto(server.origin, { waitUntil: "domcontentloaded" });
     await page.locator("button", { hasText: "Site details" }).waitFor();
     assert.equal(await page.locator("h2").first().textContent(), "Site");
+    assert.equal(await page.locator("button", { hasText: "Change site" }).count(), 1);
+    assert.equal(await page.locator("button", { hasText: "Up one folder" }).count(), 0);
+    await page.locator("button", { hasText: "Change site" }).click();
+    await page.locator("button", { hasText: "Up one folder" }).click();
     await page.locator("button", { hasText: "Up one folder" }).click();
     await page.locator("button", { hasText: "[dir] sibling" }).click();
     await page.locator("button", { hasText: "SiblingKit" }).click();
+    await page.locator("button", { hasText: "Change site" }).waitFor();
+    assert.equal(await page.locator("button", { hasText: "Up one folder" }).count(), 0);
     await page.waitForFunction(() => {
       const field = document.querySelector("[data-testid='field-name']");
       return field instanceof HTMLInputElement && field.value === "SiblingKit";
     });
     assert.equal(await page.locator("[data-testid='field-name']").inputValue(), "SiblingKit");
+    await page.locator("[data-testid='field-pageBackgroundImageUrl']").scrollIntoViewIfNeeded();
+    await page.locator("[data-testid='field-pageBackgroundImageUrl']").fill("images/hero image.svg");
+    await page.waitForFunction(() => {
+      const image = document.querySelector(".media-preview-image");
+      return image instanceof HTMLImageElement && image.currentSrc.includes("hero%20image.svg");
+    });
+    await page.locator("button", { hasText: "Pick media" }).first().click();
+    await page.locator(".media-picker-item", { hasText: "images/hero image.svg" }).click();
+    await page.waitForFunction(() => {
+      const image = document.querySelector(".media-preview-image");
+
+      return image instanceof HTMLImageElement
+        && image.currentSrc.includes("hero%20image.svg")
+        && image.naturalWidth > 0;
+    });
     await page.locator("[data-testid='field-brandText']").fill("SiblingKit Nav");
+    await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("text=SiblingKit Nav")
+      .waitFor();
+    await page.locator("[data-testid='field-name']").fill("S".repeat(81));
+    await page.locator(".field-error").filter({ hasText: "String must contain at most 80 character(s)" }).waitFor();
+    await page.locator("[data-testid='field-name']").fill("SiblingKit");
     await page
       .frameLocator("[data-testid='preview-frame']")
       .locator("text=SiblingKit Nav")

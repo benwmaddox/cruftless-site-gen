@@ -10,6 +10,13 @@ export type TextFieldDef<TKey extends string> = {
   optional?: boolean;
 };
 
+export type MediaFieldDef<TKey extends string> = {
+  kind: "media";
+  key: TKey;
+  label: string;
+  optional?: boolean;
+};
+
 export type TextAreaFieldDef<TKey extends string> = {
   kind: "textarea";
   key: TKey;
@@ -79,6 +86,7 @@ export type ObjectListFieldDef<TKey extends string> = {
 export type FieldDef<TKey extends string> =
   | ReadonlyFieldDef<TKey>
   | TextFieldDef<TKey>
+  | MediaFieldDef<TKey>
   | TextAreaFieldDef<TKey>
   | NumberFieldDef<TKey>
   | CheckboxFieldDef<TKey>
