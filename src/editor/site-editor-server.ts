@@ -54,6 +54,7 @@ const previewScriptPath = "/__preview/assets/site.js";
 const previewDraftPath = "/__preview/draft";
 const previewEventsPath = "/__preview/events";
 const previewSavePath = "/__preview/save";
+const contentAssetPrefix = "/content/";
 
 const toSlashPath = (filePath: string): string => filePath.split(path.sep).join("/");
 
@@ -319,6 +320,93 @@ const serveEditorAsset = async (pathname: string, response: ServerResponse): Pro
   send(response, 200, contentType, await readFile(assetPath));
 };
 
+const getContentAssetType = (filePath: string): string => {
+  const extension = path.extname(filePath).toLowerCase();
+
+  if (extension === ".avif") {
+    return "image/avif";
+  }
+
+  if (extension === ".gif") {
+    return "image/gif";
+  }
+
+  if (extension === ".jpg" || extension === ".jpeg") {
+    return "image/jpeg";
+  }
+
+  if (extension === ".json") {
+    return "application/json; charset=utf-8";
+  }
+
+  if (extension === ".png") {
+    return "image/png";
+  }
+
+  if (extension === ".svg") {
+    return "image/svg+xml; charset=utf-8";
+  }
+
+  if (extension === ".webp") {
+    return "image/webp";
+  }
+
+  return "application/octet-stream";
+};
+
+const resolveContentAssetPath = (contentRoot: string, pathname: string): string => {
+  let decodedPath: string;
+
+  try {
+    decodedPath = decodeURIComponent(pathname);
+  } catch {
+    throw new EditorHttpError(400, "Invalid content asset path.");
+  }
+
+  const normalized = decodedPath
+    .slice(contentAssetPrefix.length)
+    .replaceAll("\\", "/")
+    .replace(/^\/+/u, "");
+
+  if (!normalized || normalized.split("/").includes("..") || path.isAbsolute(normalized)) {
+    throw new EditorHttpError(400, "Invalid content asset path.");
+  }
+
+  const resolved = path.resolve(contentRoot, normalized);
+  const rootWithSeparator = contentRoot.endsWith(path.sep) ? contentRoot : `${contentRoot}${path.sep}`;
+
+  if (resolved !== contentRoot && !resolved.startsWith(rootWithSeparator)) {
+    throw new EditorHttpError(400, "Content asset is outside the editor root.");
+  }
+
+  return resolved;
+};
+
+const serveContentAsset = async (
+  contentRoot: string,
+  pathname: string,
+  response: ServerResponse,
+): Promise<void> => {
+  const assetPath = resolveContentAssetPath(contentRoot, pathname);
+  let assetStat;
+
+  try {
+    assetStat = await stat(assetPath);
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+      throw new EditorHttpError(404, "Content asset not found.");
+    }
+
+    throw error;
+  }
+
+  if (!assetStat.isFile()) {
+    throw new EditorHttpError(404, "Content asset not found.");
+  }
+
+  send(response, 200, getContentAssetType(assetPath), await readFile(assetPath));
+};
+
 export const createSiteEditorServer = async (
   options: SiteEditorServerOptions,
 ): Promise<SiteEditorServer> => {
@@ -381,6 +469,11 @@ export const createSiteEditorServer = async (
 
       if (request.method === "GET" && requestUrl.pathname.startsWith(editorAssetPrefix)) {
         await serveEditorAsset(requestUrl.pathname, response);
+        return;
+      }
+
+      if (request.method === "GET" && requestUrl.pathname.startsWith(contentAssetPrefix)) {
+        await serveContentAsset(contentRoot, requestUrl.pathname, response);
         return;
       }
 

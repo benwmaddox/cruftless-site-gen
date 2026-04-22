@@ -1,6 +1,7 @@
 .c-hero {
   display: grid;
-  place-content: center;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
   min-height: 40vh;
   text-align: left;
 }

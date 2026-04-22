@@ -64,6 +64,8 @@ describe("createSiteEditorServer", () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
     await writeJson(path.join(tempDir, "site.json"), createDraft("LaunchKit"));
     await writeJson(path.join(tempDir, "examples", "baird.json"), createDraft("Baird"));
+    await mkdir(path.join(tempDir, "assets"), { recursive: true });
+    await writeFile(path.join(tempDir, "assets", "mark.svg"), "<svg><title>Mark</title></svg>\n", "utf8");
     await writeFile(path.join(tempDir, "notes.json"), "{\"hello\": true}\n", "utf8");
     const server = await createServer(tempDir);
 
@@ -74,9 +76,14 @@ describe("createSiteEditorServer", () => {
       files: { path: string; valid: boolean; siteName?: string }[];
       selectedFile: string;
     };
+    const assetResponse = await fetch(`${server.origin}/content/assets/mark.svg`);
+    const assetBody = await assetResponse.text();
 
     expect(htmlResponse.status).toBe(200);
     expect(html).toContain("Cruftless Content Editor");
+    expect(assetResponse.status).toBe(200);
+    expect(assetResponse.headers.get("content-type")).toContain("image/svg+xml");
+    expect(assetBody).toContain("<title>Mark</title>");
     expect(filesPayload.files).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ path: "site.json", valid: true, siteName: "LaunchKit" }),

@@ -82,12 +82,7 @@ const FieldRenderer = ({ draft, field, path, setDraft, refreshPreview }) => {
   };
 
   if (field.kind === "readonly") {
-    return (
-      <div className="field">
-        <label>{field.key}</label>
-        <input readOnly value={value ?? ""} />
-      </div>
-    );
+    return null;
   }
 
   if (field.kind === "text" || field.kind === "number") {
@@ -530,6 +525,30 @@ const ComponentEditor = ({
         <div className="row">
           <button
             type="button"
+            disabled={componentIndex === 0}
+            onClick={() => {
+              updatePageComponents((components) => {
+                const moved = moveItem(components, componentIndex, componentIndex - 1);
+                components.splice(0, components.length, ...moved);
+              });
+            }}
+          >
+            Up
+          </button>
+          <button
+            type="button"
+            disabled={componentIndex === page.components.length - 1}
+            onClick={() => {
+              updatePageComponents((components) => {
+                const moved = moveItem(components, componentIndex, componentIndex + 1);
+                components.splice(0, components.length, ...moved);
+              });
+            }}
+          >
+            Down
+          </button>
+          <button
+            type="button"
             onClick={() => {
               updatePageComponents((components) => {
                 components.splice(componentIndex + 1, 0, clone(component));
@@ -553,24 +572,6 @@ const ComponentEditor = ({
             Delete
           </button>
         </div>
-      </div>
-      <div className="field">
-        <label>Type</label>
-        <select
-          value={component.type}
-          onChange={(event) => {
-            const nextType = event.currentTarget.value;
-            updatePageComponents((components) => {
-              components[componentIndex] = clone(config.componentSpecs[nextType].defaults);
-            });
-          }}
-        >
-          {config.componentTypes.map((componentType) => (
-            <option key={componentType} value={componentType}>
-              {config.componentSpecs[componentType].title}
-            </option>
-          ))}
-        </select>
       </div>
       {editor ? (
         editor.fields.map((section) => (
