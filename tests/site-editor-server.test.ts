@@ -108,30 +108,45 @@ describe("createSiteEditorServer", () => {
     expect(filesPayload.selectedFile).toBe(path.join(tempDir, "site.json"));
   });
 
-  it("moves up to a parent directory, browses into a sibling folder, and opens a site JSON there", async () => {
+  it("lets you browse above the current content root, filters sibling project directories, and snaps into nested content", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
-    const firstDir = path.join(tempDir, "first");
-    const siblingDir = path.join(tempDir, "sibling");
-    const siblingPath = path.join(siblingDir, "site.json");
-    await writeJson(path.join(firstDir, "site.json"), createDraft("First"));
+    const firstProjectDir = path.join(tempDir, "first");
+    const firstContentDir = path.join(firstProjectDir, "content");
+    const siblingProjectDir = path.join(tempDir, "sibling");
+    const siblingContentDir = path.join(siblingProjectDir, "nested", "content");
+    const unrelatedDir = path.join(tempDir, "notes-only");
+    const siblingPath = path.join(siblingContentDir, "site.json");
+    await writeJson(path.join(firstContentDir, "site.json"), createDraft("First"));
     await writeJson(siblingPath, createDraft("Sibling"));
-    const server = await createServer(firstDir);
+    await mkdir(unrelatedDir, { recursive: true });
+    const server = await createServer(firstContentDir);
 
+    const projectResponse = await fetch(`${server.origin}/__editor/open-directory`, {
+      body: JSON.stringify({ path: firstProjectDir, snapToContent: false }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const projectPayload = await projectResponse.json() as {
+      directory: string;
+      directories: { name: string; path: string; snapToContent: boolean }[];
+      parentDirectory?: string;
+    };
     const parentResponse = await fetch(`${server.origin}/__editor/open-directory`, {
-      body: JSON.stringify({ path: tempDir }),
+      body: JSON.stringify({ path: tempDir, snapToContent: false }),
       headers: { "content-type": "application/json" },
       method: "POST",
     });
     const parentPayload = await parentResponse.json() as {
-      directories: { name: string; path: string }[];
-      files: { name: string }[];
+      directory: string;
+      directories: { name: string; path: string; snapToContent: boolean }[];
     };
     const siblingResponse = await fetch(`${server.origin}/__editor/open-directory`, {
-      body: JSON.stringify({ path: siblingDir }),
+      body: JSON.stringify({ path: siblingProjectDir, snapToContent: "nested" }),
       headers: { "content-type": "application/json" },
       method: "POST",
     });
     const siblingPayload = await siblingResponse.json() as {
+      directory: string;
       files: { name: string; valid: boolean; siteName?: string }[];
     };
     const openResponse = await fetch(`${server.origin}/__editor/open`, {
@@ -144,15 +159,37 @@ describe("createSiteEditorServer", () => {
       path: string;
     };
 
+    expect(projectResponse.status).toBe(200);
+    expect(projectPayload.directory).toBe(firstProjectDir);
+    expect(projectPayload.parentDirectory).toBe(tempDir);
+    expect(projectPayload.directories).toEqual([
+      expect.objectContaining({
+        name: "content",
+        path: firstContentDir,
+        snapToContent: true,
+      }),
+    ]);
     expect(parentResponse.status).toBe(200);
-    expect(parentPayload.directories).toEqual(
+    expect(parentPayload.directory).toBe(tempDir);
+    expect(parentPayload.directories).toEqual([
+      expect.objectContaining({
+        name: "first",
+        path: firstProjectDir,
+        snapToContent: true,
+      }),
+      expect.objectContaining({
+        name: "sibling",
+        path: siblingProjectDir,
+        snapToContent: true,
+      }),
+    ]);
+    expect(parentPayload.directories).not.toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ name: "first" }),
-        expect.objectContaining({ name: "sibling" }),
+        expect.objectContaining({ name: path.basename(unrelatedDir) }),
       ]),
     );
-    expect(parentPayload.files).toEqual([]);
     expect(siblingResponse.status).toBe(200);
+    expect(siblingPayload.directory).toBe(siblingContentDir);
     expect(siblingPayload.files).toEqual([
       expect.objectContaining({ name: "site.json", valid: true, siteName: "Sibling" }),
     ]);
@@ -160,6 +197,34 @@ describe("createSiteEditorServer", () => {
     expect(openPayload.draft.site.name).toBe("Sibling");
     expect(openPayload.path).toBe(siblingPath);
     expect(server.getSelectedFilePath()).toBe(siblingPath);
+  });
+
+  it("does not jump into the first nested content tree when a broad directory is opened directly", async () => {
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
+    const firstContentDir = path.join(tempDir, "first", "content");
+    const siblingContentDir = path.join(tempDir, "sibling", "nested", "content");
+    await writeJson(path.join(firstContentDir, "site.json"), createDraft("First"));
+    await writeJson(path.join(siblingContentDir, "site.json"), createDraft("Sibling"));
+    const server = await createServer(firstContentDir);
+
+    const response = await fetch(`${server.origin}/__editor/open-directory`, {
+      body: JSON.stringify({ path: tempDir, snapToContent: "direct" }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+    const payload = await response.json() as {
+      directory: string;
+      directories: { name: string; path: string; snapToContent: boolean }[];
+    };
+
+    expect(response.status).toBe(200);
+    expect(payload.directory).toBe(tempDir);
+    expect(payload.directories).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "first", snapToContent: true }),
+        expect.objectContaining({ name: "sibling", snapToContent: true }),
+      ]),
+    );
   });
 
   it("opens, previews, drafts, and saves a selected JSON file", async () => {

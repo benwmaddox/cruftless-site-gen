@@ -170,6 +170,20 @@ button:focus {
   align-items: stretch;
 }
 
+.picker-summary {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.picker-summary-title {
+  overflow: hidden;
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .folder-path {
   flex: 1 1 auto;
   min-width: 0;
@@ -210,6 +224,7 @@ button:focus {
 .hint {
   color: var(--muted);
   font-size: 0.86rem;
+  overflow-wrap: anywhere;
 }
 
 .card,
@@ -303,6 +318,17 @@ button:focus {
   gap: 0.75rem;
 }
 
+.component-add-row {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.component-add-row .grow {
+  min-width: 0;
+}
+
 .list-item {
   padding: 0.75rem;
 }
@@ -341,6 +367,12 @@ button:focus {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.86rem;
   line-height: 1.45;
+}
+
+@media (width <= 820px) {
+  .component-add-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .empty-state {

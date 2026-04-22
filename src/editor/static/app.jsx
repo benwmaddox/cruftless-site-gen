@@ -707,7 +707,7 @@ const ComponentListEditor = ({
     <div className="component-scope">
       <div className="list-item-header">
         <h2>{title}</h2>
-        <div className="row">
+        <div className="component-add-row">
           <div className="grow">
             <select ref={componentTypeRef} defaultValue={mode === "layout" ? "page-content" : "prose"}>
               {componentTypeOptions.map((componentType) => (
@@ -822,6 +822,8 @@ const Sidebar = ({
   showScope,
 }) => {
   const [folderPath, setFolderPath] = useState(browser.directory);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const currentFileLabel = selectedFile.split(/[/\\]/u).pop() || selectedFile;
 
   useEffect(() => {
     setFolderPath(browser.directory);
@@ -830,71 +832,85 @@ const Sidebar = ({
   return (
     <aside className="sidebar">
       <div className="brand">Cruftless Editor</div>
-      <div className="section-title">Folder</div>
-      <form
-        className="path-picker"
-        onSubmit={(event) => {
-          event.preventDefault();
-          void openDirectory(folderPath);
-        }}
-      >
-        <input
-          aria-label="Folder path"
-          className="folder-path"
-          value={folderPath}
-          onChange={(event) => setFolderPath(event.currentTarget.value)}
-        />
-        <button type="submit">Go</button>
-      </form>
-      <div className="nav-list">
-        <button
-          type="button"
-          className="nav-item"
-          disabled={!browser.parentDirectory}
-          onClick={() => {
-            if (browser.parentDirectory) {
-              void openDirectory(browser.parentDirectory);
-            }
-          }}
-        >
-          Up one folder
+      <div className="section-title">Site File</div>
+      <div className="picker-summary">
+        <div className="picker-summary-title" title={selectedFile}>
+          {currentFileLabel}
+        </div>
+        <div className="hint" title={browser.directory}>
+          {browser.directory}
+        </div>
+        <button type="button" onClick={() => setPickerOpen((open) => !open)}>
+          {pickerOpen ? "Hide picker" : "Change site"}
         </button>
-        {browser.directories.map((directory) => (
-          <button
-            key={directory.path}
-            type="button"
-            className="nav-item"
-            onClick={() => void openDirectory(directory.path)}
-          >
-            [dir] {directory.name}
-          </button>
-        ))}
       </div>
-      <div className="section-title">JSON Files</div>
-      <div className="nav-list">
-        {browser.files.length === 0 ? <div className="hint">No JSON files in this folder.</div> : null}
-        {browser.files.map((file) => (
-          <button
-            key={file.path}
-            type="button"
-            className={`nav-item ${selectedFile === file.path ? "active" : ""} ${file.valid ? "" : "invalid"}`}
-            onClick={() => {
-              if (!file.valid) {
-                window.alert(file.error ?? "This JSON file is not valid site content.");
-                return;
-              }
-              if (dirty && !window.confirm("Discard unsaved draft changes?")) {
-                return;
-              }
-              void openFile(file.path);
+      {pickerOpen ? (
+        <>
+          <div className="section-title">Folder</div>
+          <form
+            className="path-picker"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void openDirectory(folderPath, "direct");
             }}
-            title={file.path}
           >
-            {file.siteName ?? file.name}
-            {file.valid ? "" : " (invalid)"}
-          </button>
-        ))}
-      </div>
+            <input
+              aria-label="Project or content path"
+              className="folder-path"
+              value={folderPath}
+              onChange={(event) => setFolderPath(event.currentTarget.value)}
+            />
+            <button type="submit">Go</button>
+          </form>
+          <div className="nav-list">
+            {browser.parentDirectory ? (
+              <button
+                type="button"
+                className="nav-item"
+                onClick={() => void openDirectory(browser.parentDirectory, "none")}
+              >
+                Up one folder
+              </button>
+            ) : null}
+            {browser.directories.map((directory) => (
+              <button
+                key={directory.path}
+                type="button"
+                className="nav-item"
+                onClick={() => void openDirectory(directory.path, directory.snapToContent ? "nested" : "none")}
+              >
+                [dir] {directory.name}
+              </button>
+            ))}
+          </div>
+          <div className="section-title">JSON Files</div>
+          <div className="nav-list">
+            {browser.files.length === 0 ? <div className="hint">No JSON files in this folder.</div> : null}
+            {browser.files.map((file) => (
+              <button
+                key={file.path}
+                type="button"
+                className={`nav-item ${selectedFile === file.path ? "active" : ""} ${file.valid ? "" : "invalid"}`}
+                onClick={async () => {
+                  if (!file.valid) {
+                    window.alert(file.error ?? "This JSON file is not valid site content.");
+                    return;
+                  }
+                  if (dirty && !window.confirm("Discard unsaved draft changes?")) {
+                    return;
+                  }
+                  await openFile(file.path);
+                  setPickerOpen(false);
+                }}
+                title={file.path}
+              >
+                {file.siteName ?? file.name}
+                {file.valid ? "" : " (invalid)"}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : null}
       <div className="section-title">Edit</div>
       <div className="nav-list">
         <button
@@ -1025,11 +1041,14 @@ const App = () => {
     setPreviewVersion(Date.now());
   };
 
-  const openDirectory = async (directoryPath) => {
+  const openDirectory = async (directoryPath, snapToContent = "none") => {
     setStatusMessage(`Browsing ${directoryPath}...`);
 
     try {
-      const payload = await postJson("/__editor/open-directory", { path: directoryPath });
+      const payload = await postJson("/__editor/open-directory", {
+        path: directoryPath,
+        snapToContent,
+      });
       setBrowser(payload);
       setStatusMessage(`Browsing ${payload.directory}.`);
     } catch (error) {

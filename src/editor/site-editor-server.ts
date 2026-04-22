@@ -27,6 +27,7 @@ export interface EditableFileSummary {
 export interface EditableDirectorySummary {
   name: string;
   path: string;
+  snapToContent: boolean;
 }
 
 export interface EditorFileBrowserListing {
@@ -71,6 +72,17 @@ const previewDraftPath = "/__preview/draft";
 const previewEventsPath = "/__preview/events";
 const previewSavePath = "/__preview/save";
 const contentAssetPrefix = "/content/";
+const contentDirectoryName = "content";
+const maxContentRootSearchDepth = 3;
+const skippedContentSearchDirectories = new Set([
+  ".git",
+  ".next",
+  ".turbo",
+  "coverage",
+  "dist",
+  "node_modules",
+  "reports",
+]);
 
 const send = (
   response: ServerResponse,
@@ -303,7 +315,86 @@ const summarizeEditableFile = async (
   }
 };
 
-const resolveBrowseDirectory = async (directoryPath: string): Promise<string> => {
+const isContentSearchableDirectory = (directoryName: string): boolean =>
+  !directoryName.startsWith(".")
+  && !skippedContentSearchDirectories.has(directoryName.toLowerCase());
+
+const findDirectContentDirectory = async (directoryPath: string): Promise<string | undefined> => {
+  const resolvedPath = path.resolve(directoryPath);
+
+  if (path.basename(resolvedPath).toLowerCase() === contentDirectoryName) {
+    return resolvedPath;
+  }
+
+  const candidatePath = path.join(resolvedPath, contentDirectoryName);
+
+  try {
+    const candidateStat = await stat(candidatePath);
+
+    if (candidateStat.isDirectory()) {
+      return candidatePath;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+};
+
+const findNestedContentDirectory = async (
+  directoryPath: string,
+  maxDepth: number = maxContentRootSearchDepth,
+): Promise<string | undefined> => {
+  const resolvedPath = path.resolve(directoryPath);
+
+  const directContentDirectory = await findDirectContentDirectory(resolvedPath);
+
+  if (directContentDirectory) {
+    return directContentDirectory;
+  }
+
+  if (maxDepth <= 0) {
+    return undefined;
+  }
+
+  let entries;
+
+  try {
+    entries = await readdir(resolvedPath, { withFileTypes: true });
+  } catch {
+    return undefined;
+  }
+
+  const directories = entries
+    .filter((entry) => entry.isDirectory() && isContentSearchableDirectory(entry.name))
+    .map((entry) => path.join(resolvedPath, entry.name))
+    .sort((left, right) => left.localeCompare(right));
+
+  for (const childDirectory of directories) {
+    const nestedContentDirectory = await findNestedContentDirectory(childDirectory, maxDepth - 1);
+
+    if (nestedContentDirectory) {
+      return nestedContentDirectory;
+    }
+  }
+
+  return undefined;
+};
+
+const isInsideContentRoot = (contentRoot: string, directoryPath: string): boolean => {
+  const resolvedContentRoot = path.resolve(contentRoot);
+  const resolvedDirectoryPath = path.resolve(directoryPath);
+  const contentRootPrefix = resolvedContentRoot.endsWith(path.sep)
+    ? resolvedContentRoot
+    : `${resolvedContentRoot}${path.sep}`;
+
+  return resolvedDirectoryPath === resolvedContentRoot || resolvedDirectoryPath.startsWith(contentRootPrefix);
+};
+
+const resolveBrowseDirectory = async (
+  directoryPath: string,
+  options?: { snapToContent?: "none" | "direct" | "nested" },
+): Promise<string> => {
   if (!directoryPath.trim()) {
     throw new EditorHttpError(400, "Browser path is required.");
   }
@@ -315,7 +406,15 @@ const resolveBrowseDirectory = async (directoryPath: string): Promise<string> =>
     throw new EditorHttpError(400, "Browser path must be a directory.");
   }
 
-  return resolvedPath;
+  if (!options?.snapToContent || options.snapToContent === "none") {
+    return resolvedPath;
+  }
+
+  if (options.snapToContent === "direct") {
+    return (await findDirectContentDirectory(resolvedPath)) ?? resolvedPath;
+  }
+
+  return (await findNestedContentDirectory(resolvedPath)) ?? resolvedPath;
 };
 
 const renderEditorHtml = (): string => `<!doctype html>
@@ -580,13 +679,34 @@ export const createSiteEditorServer = async (
 
   const listBrowserDirectory = async (): Promise<EditorFileBrowserListing> => {
     const entries = await readdir(browseDirectory, { withFileTypes: true });
-    const directories = entries
+    const inContentTree = isInsideContentRoot(contentRoot, browseDirectory);
+    const candidateDirectories = entries
       .filter((entry) => entry.isDirectory())
       .map((entry) => ({
         name: entry.name,
         path: path.join(browseDirectory, entry.name),
-      }))
-      .sort((left, right) => left.name.localeCompare(right.name));
+      }));
+    const directories = inContentTree
+      ? candidateDirectories
+        .map((entry) => ({
+          ...entry,
+          snapToContent: false,
+        }))
+        .sort((left, right) => left.name.localeCompare(right.name))
+      : (await Promise.all(
+        candidateDirectories.map(async (entry) => ({
+          ...entry,
+          snapToContent: true,
+          targetPath: await findNestedContentDirectory(entry.path),
+        })),
+      ))
+        .filter((entry) => entry.targetPath)
+        .map(({ name, path: directoryPath, snapToContent }) => ({
+          name,
+          path: directoryPath,
+          snapToContent,
+        }))
+        .sort((left, right) => left.name.localeCompare(right.name));
     const files = await Promise.all(
       entries
         .filter((entry) => entry.isFile() && path.extname(entry.name).toLowerCase() === ".json")
@@ -654,8 +774,14 @@ export const createSiteEditorServer = async (
           typeof payload === "object" && payload !== null && "path" in payload
             ? String((payload as { path: unknown }).path)
             : "";
+        const rawSnapToContent =
+          typeof payload === "object" && payload !== null && "snapToContent" in payload
+            ? String((payload as { snapToContent: unknown }).snapToContent)
+            : "none";
+        const snapToContent =
+          rawSnapToContent === "direct" || rawSnapToContent === "nested" ? rawSnapToContent : "none";
 
-        browseDirectory = await resolveBrowseDirectory(nextDirectoryPath);
+        browseDirectory = await resolveBrowseDirectory(nextDirectoryPath, { snapToContent });
         sendJson(response, 200, await listBrowserDirectory());
         return;
       }
