@@ -52,8 +52,9 @@ describe("component width tokens", () => {
   it("keeps primary button text readable on hover", async () => {
     const css = await readBaseCss();
 
-    expect(css).toContain(".c-button--primary:hover {");
-    expect(css).toContain("background: var(--link-hover);");
+    expect(css).toMatch(
+      /\.c-button--primary:hover \{[\s\S]*background: var\(--link-hover\);[\s\S]*color: var\(--primary-fg\);/,
+    );
   });
 
   it("uses mobile-safe viewport units for short-page layouts", async () => {

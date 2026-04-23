@@ -118,6 +118,7 @@ button:focus-visible {
 
 .c-button--primary:hover {
   background: var(--link-hover);
+  color: var(--primary-fg);
   transform: translateY(-1px);
 }
 
