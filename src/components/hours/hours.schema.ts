@@ -14,12 +14,17 @@ export const hoursDayNames = [
 ] as const;
 
 const hoursTimePattern = /^(?:0?[1-9]|1[0-2])(?::[0-5]\d)?\s?(?:AM|PM)$/iu;
+const hoursClosedPattern = /^Closed$/u;
+const hoursTimeOrClosedPattern = new RegExp(
+  `${hoursTimePattern.source.slice(1, -1)}|${hoursClosedPattern.source.slice(1, -1)}`,
+  "iu",
+);
 
 export const HoursEntrySchema = z
   .object({
     day: z.enum(hoursDayNames),
-    open: z.string().regex(hoursTimePattern, "open must use h:mm AM/PM"),
-    close: z.string().regex(hoursTimePattern, "close must use h:mm AM/PM"),
+    open: z.string().regex(hoursTimeOrClosedPattern, "open must use h:mm AM/PM or Closed"),
+    close: z.string().regex(hoursTimeOrClosedPattern, "close must use h:mm AM/PM or Closed"),
   })
   .strict();
 

@@ -36,18 +36,29 @@ const renderContactRow = (label: string, valueHtml: string): string =>
   ].join("\n");
 
 const renderHoursEntry = (entry: StoreLocationHoursData["hours"][number]): string =>
-  [
-    "            <tr>",
-    `              <th class="c-store-location-hours__hours-day" scope="row">${escapeHtml(entry.day)}</th>`,
-    '              <td class="c-store-location-hours__hours-value">',
-    '                <span class="c-store-location-hours__hours-range">',
-    `                  <span>${escapeHtml(entry.open)}</span>`,
-    '                  <span class="c-store-location-hours__hours-separator" aria-hidden="true">-</span>',
-    `                  <span>${escapeHtml(entry.close)}</span>`,
-    "                </span>",
-    "              </td>",
-    "            </tr>",
-  ].join("\n");
+  entry.open.toLowerCase() === "closed" && entry.close.toLowerCase() === "closed"
+    ? [
+        "            <tr>",
+        `              <th class="c-store-location-hours__hours-day" scope="row">${escapeHtml(entry.day)}</th>`,
+        '              <td class="c-store-location-hours__hours-value">',
+        '                <span class="c-store-location-hours__hours-range">',
+        "                  <span>Closed</span>",
+        "                </span>",
+        "              </td>",
+        "            </tr>",
+      ].join("\n")
+    : [
+        "            <tr>",
+        `              <th class="c-store-location-hours__hours-day" scope="row">${escapeHtml(entry.day)}</th>`,
+        '              <td class="c-store-location-hours__hours-value">',
+        '                <span class="c-store-location-hours__hours-range">',
+        `                  <span>${escapeHtml(entry.open)}</span>`,
+        '                  <span class="c-store-location-hours__hours-separator" aria-hidden="true">-</span>',
+        `                  <span>${escapeHtml(entry.close)}</span>`,
+        "                </span>",
+        "              </td>",
+        "            </tr>",
+      ].join("\n");
 
 export const renderStoreLocationHours = (data: StoreLocationHoursData): string => {
   const phoneHref = data.phone ? normalizePhoneForTelHref(data.phone) : undefined;
