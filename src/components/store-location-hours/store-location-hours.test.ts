@@ -24,6 +24,11 @@ describe("StoreLocationHoursSchema", () => {
           open: "10:00 AM",
           close: "2:00 PM",
         },
+        {
+          day: "Sunday",
+          open: "Closed",
+          close: "Closed",
+        },
       ],
     });
 
@@ -36,6 +41,7 @@ describe("StoreLocationHoursSchema", () => {
     expect(html).toContain('href="mailto:hello@example.com"');
     expect(html).toContain("Holiday");
     expect(html).toContain("8:30 AM");
+    expect(html).toContain("Closed");
   });
 
   it("rejects invalid phone numbers", () => {

@@ -12,19 +12,33 @@ export const hoursClassNames = [
   "c-hours__separator",
 ] as const;
 
+const isClosedEntry = (entry: HoursData["entries"][number]): boolean =>
+  entry.open.toLowerCase() === "closed" && entry.close.toLowerCase() === "closed";
+
 const renderHoursEntry = (entry: HoursData["entries"][number]): string =>
-  [
-    "        <tr>",
-    `          <th class="c-hours__day" scope="row">${escapeHtml(entry.day)}</th>`,
-    '          <td class="c-hours__value">',
-    '            <span class="c-hours__range">',
-    `              <span>${escapeHtml(entry.open)}</span>`,
-    '              <span class="c-hours__separator" aria-hidden="true">-</span>',
-    `              <span>${escapeHtml(entry.close)}</span>`,
-    "            </span>",
-    "          </td>",
-    "        </tr>",
-  ].join("\n");
+  isClosedEntry(entry)
+    ? [
+        "        <tr>",
+        `          <th class="c-hours__day" scope="row">${escapeHtml(entry.day)}</th>`,
+        '          <td class="c-hours__value">',
+        '            <span class="c-hours__range">',
+        "              <span>Closed</span>",
+        "            </span>",
+        "          </td>",
+        "        </tr>",
+      ].join("\n")
+    : [
+        "        <tr>",
+        `          <th class="c-hours__day" scope="row">${escapeHtml(entry.day)}</th>`,
+        '          <td class="c-hours__value">',
+        '            <span class="c-hours__range">',
+        `              <span>${escapeHtml(entry.open)}</span>`,
+        '              <span class="c-hours__separator" aria-hidden="true">-</span>',
+        `              <span>${escapeHtml(entry.close)}</span>`,
+        "            </span>",
+        "          </td>",
+        "        </tr>",
+      ].join("\n");
 
 export const renderHours = (data: HoursData): string =>
   [

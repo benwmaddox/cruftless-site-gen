@@ -19,6 +19,11 @@ describe("HoursSchema", () => {
           open: "9:00 AM",
           close: "1:00 PM",
         },
+        {
+          day: "Sunday",
+          open: "Closed",
+          close: "Closed",
+        },
       ],
     });
 
@@ -28,6 +33,8 @@ describe("HoursSchema", () => {
     expect(html).toContain('<th class="c-hours__day" scope="row">Monday</th>');
     expect(html).toContain("8:00 AM");
     expect(html).toContain("Holiday");
+    expect(html).toContain("Closed");
+    expect(html).not.toContain('<span class="c-hours__separator" aria-hidden="true">-</span>\n              <span>Closed</span>');
   });
 
   it("rejects invalid day labels and malformed time strings", () => {
@@ -56,5 +63,26 @@ describe("HoursSchema", () => {
     expect(result.error.issues.some((issue) => String(issue.path.join(".")) === "entries.0.close")).toBe(
       true,
     );
+  });
+
+  it("accepts a closed day using Closed for both bounds", () => {
+    const result = HoursSchema.safeParse({
+      type: "hours",
+      entries: [
+        {
+          day: "Sunday",
+          open: "Closed",
+          close: "Closed",
+        },
+      ],
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) {
+      return;
+    }
+
+    const html = renderHours(result.data);
+    expect(html).toContain("<span>Closed</span>");
   });
 });
