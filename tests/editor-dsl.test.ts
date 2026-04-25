@@ -265,7 +265,7 @@ describe("editorFor", () => {
     } as const;
 
     const themeField = site.select("theme", "Theme", [
-      { label: "Friendly Modern", value: "friendly-modern" },
+      { label: "Corporate", value: "corporate" },
     ]);
     const heroEditor = hero.object({
       type: "hero",
@@ -288,7 +288,7 @@ describe("editorFor", () => {
       kind: "select",
       key: "theme",
       label: "Theme",
-      options: [{ label: "Friendly Modern", value: "friendly-modern" }],
+      options: [{ label: "Corporate", value: "corporate" }],
     });
     expect(heroEditor).toEqual({
       kind: "object-editor",

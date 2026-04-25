@@ -2,7 +2,7 @@
   "site": {
     "name": "Theme Previews",
     "baseUrl": "https://example.com/examples/",
-    "theme": "friendly-modern",
+    "theme": "corporate",
     "layout": {
       "components": [
         {
@@ -101,18 +101,18 @@
               }
             },
             {
-              "title": "Refined Professional",
+              "title": "Dark Mode Professional",
               "body": "A more polished, service-oriented presentation.",
               "imageLayout": "stacked",
               "image": {
-                "src": "assets/previews/refined-professional.png",
-                "alt": "Real mobile screenshot preview of the refined professional theme example page",
+                "src": "assets/previews/dark-mode-professional.png",
+                "alt": "Real mobile screenshot preview of the dark mode professional theme example page",
                 "width": 390,
                 "height": 700
               },
               "cta": {
                 "label": "Open preview",
-                "href": "/examples/refined-professional/"
+                "href": "/examples/dark-mode-professional/"
               }
             }
           ]

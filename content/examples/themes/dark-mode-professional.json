@@ -1,17 +1,17 @@
 {
   "site": {
-    "name": "Refined Professional Theme Example",
-    "baseUrl": "https://example.com/examples/refined-professional/",
-    "theme": "refined-professional",
+    "name": "Dark Mode Professional Theme Example",
+    "baseUrl": "https://example.com/examples/dark-mode-professional/",
+    "theme": "dark-mode-professional",
     "layout": {
       "components": [
         {
           "type": "navigation-bar",
-          "brandText": "Refined Professional",
+          "brandText": "Dark Mode Professional",
           "links": [
             {
               "label": "Preview",
-              "href": "/examples/refined-professional/"
+              "href": "/examples/dark-mode-professional/"
             },
             {
               "label": "Theme List",
@@ -28,7 +28,7 @@
           "title": "Shared theme wrapper",
           "lead": "This site-level block renders before the page-local examples.",
           "paragraphs": [
-            "Use the shared layout wrapper to verify how global sections look in the refined-professional theme."
+            "Use the shared layout wrapper to verify how global sections look in the dark-mode-professional theme."
           ]
         },
         {
@@ -47,14 +47,14 @@
   "pages": [
     {
       "slug": "/",
-      "title": "Refined Professional Preview",
+      "title": "Dark Mode Professional Preview",
       "metadata": {
-        "description": "Single-page preview of every component rendered with the refined-professional theme."
+        "description": "Single-page preview of every component rendered with the dark-mode-professional theme."
       },
       "components": [
         {
           "type": "hero",
-          "headline": "Refined Professional theme preview",
+          "headline": "Dark Mode Professional theme preview",
           "subheadline": "Quiet contrast, serif-led hierarchy, and premium dark surfaces on one review page.",
           "primaryCta": {
             "label": "Jump to examples",
@@ -73,7 +73,7 @@
           "columns": "3",
           "items": [
             {
-              "title": "Refined Professional",
+              "title": "Dark Mode Professional",
               "selected": true
             },
             {
@@ -99,7 +99,7 @@
           "items": [
             {
               "title": "Fast visual QA",
-              "body": "Use this page to inspect how spacing, type, and CTA treatments land in the refined-professional theme."
+              "body": "Use this page to inspect how spacing, type, and CTA treatments land in the dark-mode-professional theme."
             },
             {
               "title": "Component coverage",
@@ -407,7 +407,7 @@
         {
           "type": "media",
           "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='%230b0f14'/%3E%3Crect x='120' y='120' width='1360' height='660' rx='24' fill='%23121a23' stroke='%23c9a227' stroke-width='16'/%3E%3Crect x='200' y='220' width='420' height='360' rx='18' fill='%231a2733'/%3E%3Crect x='680' y='220' width='620' height='48' rx='12' fill='%23f2f5f7'/%3E%3Crect x='680' y='308' width='520' height='32' rx='12' fill='%23a7b0ba'/%3E%3Crect x='680' y='390' width='560' height='32' rx='12' fill='%23e6c35c'/%3E%3Crect x='680' y='490' width='220' height='96' rx='18' fill='%23c9a227'/%3E%3C/svg%3E",
-          "alt": "Sample workspace image used for the refined-professional theme preview",
+          "alt": "Sample workspace image used for the dark-mode-professional theme preview",
           "width": 1600,
           "height": 900,
           "caption": "Media is included with a caption so image framing and supporting text can be checked together.",

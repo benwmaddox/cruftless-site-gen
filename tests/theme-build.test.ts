@@ -12,7 +12,7 @@ const themeMarkers: Record<ThemeName, string> = {
   corporate: "--accent: #2563eb;",
   brutalism: '--font-heading: "Space Grotesk", sans-serif;',
   workshop: '--font-heading: "Source Serif 4", serif;',
-  "refined-professional": "--accent: #e2c46a;",
+    "dark-mode-professional": "--accent: #e2c46a;",
   "friendly-modern": "--accent: #e11d48;",
   "heritage-local": "--accent: #7a1f2b;",
   "wellness-calm": "--primary: #2f7c64;",
