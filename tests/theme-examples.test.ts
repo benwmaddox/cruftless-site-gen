@@ -29,7 +29,7 @@ describe("theme examples", () => {
       "Corporate",
       "Brutalism",
       "Workshop",
-      "Refined Professional",
+    "Dark Mode Professional",
       "Friendly Modern",
       "Heritage Local",
       "Wellness Calm",
@@ -71,11 +71,11 @@ describe("theme examples", () => {
         imageWidth: themePreviewViewport.width,
       },
       {
-        href: "/examples/refined-professional/",
-        imageAlt: "Real mobile screenshot preview of the refined professional theme example page",
+    href: "/examples/dark-mode-professional/",
+    imageAlt: "Real mobile screenshot preview of the dark mode professional theme example page",
         imageHeight: themePreviewViewport.height,
         imageLayout: "stacked",
-        imageSrc: themePreviewImageHref("refined-professional"),
+    imageSrc: themePreviewImageHref("dark-mode-professional"),
         imageWidth: themePreviewViewport.width,
       },
       {

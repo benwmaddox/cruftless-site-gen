@@ -77,11 +77,13 @@ The current built-in themes are:
 - `corporate`
 - `brutalism`
 - `workshop`
-- `refined-professional`
+- `dark-mode-professional`
 - `friendly-modern`
 - `heritage-local`
 - `wellness-calm`
 - `high-vis-service`
+
+If you want a neutral light starting point, use `corporate`.
 
 ## Example content shape
 
@@ -92,7 +94,7 @@ This is the rough shape of a site file:
   "site": {
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
-    "theme": "friendly-modern",
+    "theme": "corporate",
     "layout": {
       "components": [
         { "type": "navigation-bar", "brandText": "LaunchKit", "links": [] },

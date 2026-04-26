@@ -61,7 +61,7 @@ const testimonials = editorFor(TestimonialsSchema, "type");
 
 site.text("name", "Name");
 site.text("baseUrl", "Base URL");
-site.select("theme", "Theme", [{ label: "Friendly Modern", value: "friendly-modern" }]);
+site.select("theme", "Theme", [{ label: "Corporate", value: "corporate" }]);
 
 hero.readonly("type");
 hero.text("headline", "Headline");

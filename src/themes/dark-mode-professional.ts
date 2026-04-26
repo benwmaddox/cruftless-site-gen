@@ -1,6 +1,6 @@
 import { createThemeDefinition } from "./tokens.js";
 
-export const refinedProfessionalTheme = createThemeDefinition(
+export const darkModeProfessionalTheme = createThemeDefinition(
   {
     "--color-scheme": "dark",
     "--bg": "#080a0c",
