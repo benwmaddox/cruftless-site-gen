@@ -76,14 +76,14 @@ describe("site layout", () => {
       expect(homeHtml).toContain("Shared header");
       expect(homeHtml).toContain("Launch faster");
       expect(homeHtml).toContain("Shared footer");
-      expect(homeHtml).toContain('<link rel="stylesheet" href="assets/site.css" />');
+      expect(homeHtml).toContain('<link rel="stylesheet" href="assets/site.css?v=');
       expect(homeHtml.indexOf("Shared header")).toBeLessThan(homeHtml.indexOf("Launch faster"));
       expect(homeHtml.indexOf("Launch faster")).toBeLessThan(homeHtml.indexOf("Shared footer"));
 
       expect(pricingHtml).toContain("Shared header");
       expect(pricingHtml).toContain("Pricing FAQ");
       expect(pricingHtml).toContain("Shared footer");
-      expect(pricingHtml).toContain('<link rel="stylesheet" href="../assets/site.css" />');
+      expect(pricingHtml).toContain('<link rel="stylesheet" href="../assets/site.css?v=');
       expect(pricingHtml.indexOf("Shared header")).toBeLessThan(pricingHtml.indexOf("Pricing FAQ"));
       expect(pricingHtml.indexOf("Pricing FAQ")).toBeLessThan(pricingHtml.indexOf("Shared footer"));
     } finally {
@@ -236,8 +236,8 @@ describe("site layout", () => {
       const js = await readFile(path.join(outDir, "assets", "site.js"), "utf8");
 
       expect(homeHtml).toContain('data-js="navigation-bar"');
-      expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
-      expect(pricingHtml).toContain('<script src="../assets/site.js" defer></script>');
+      expect(homeHtml).toContain('<script src="assets/site.js?v=');
+      expect(pricingHtml).toContain('<script src="../assets/site.js?v=');
       expect(homeHtml.indexOf('class="c-navbar"')).toBeLessThan(homeHtml.indexOf("Launch faster"));
       expect(pricingHtml.indexOf('class="c-navbar"')).toBeLessThan(
         pricingHtml.indexOf("Pricing FAQ"),

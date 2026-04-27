@@ -444,7 +444,7 @@ describe("buildSite output writes", () => {
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
-      expect(html).toContain(`src="assets/images/${optimizedPreviewName}"`);
+      expect(html).toContain(`src="assets/images/${optimizedPreviewName}?v=`);
       expect(html).toContain("srcset=\"assets/images/local-preview-media-wide-480-");
       expect(html).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
 
@@ -602,16 +602,16 @@ describe("buildSite output writes", () => {
       }
 
       expect((await stat(optimizedPreviewPath)).size).toBeLessThan(previewImageBytes.length);
-      expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}"`);
+      expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}?v=`);
       expect(nestedHtml).toContain("srcset=\"../assets/images/landing-page-media-wide-480-");
       expect(nestedHtml).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
       expect(nestedHtml).toContain(
-        `<meta property="og:image" content="https://launchkit.example/assets/images/${socialImageName}" />`,
+        `<meta property="og:image" content="https://launchkit.example/assets/images/${socialImageName}?v=`,
       );
       expect(nestedHtml).toContain(
-        `<meta name="twitter:image" content="https://launchkit.example/assets/images/${socialImageName}" />`,
+        `<meta name="twitter:image" content="https://launchkit.example/assets/images/${socialImageName}?v=`,
       );
-      expect(css).toContain(`url("images/${optimizedPreviewName}")`);
+      expect(css).toContain(`url("images/${optimizedPreviewName}?v=`);
       await expect(access(path.join(outDir, "images", "landing-page.png"))).rejects.toThrow();
     } finally {
       await removeDirectory(projectRoot);
@@ -686,6 +686,6 @@ describe("buildSite output writes", () => {
     const optimizedBrandImagePath = path.join(optimizedBrandDir, optimizedBrandName);
 
     expect((await stat(optimizedBrandImagePath)).size).toBeLessThan(brandImageBytes.length);
-    expect(aboutHtml).toContain(`src="../assets/images/${optimizedBrandName}"`);
+    expect(aboutHtml).toContain(`src="../assets/images/${optimizedBrandName}?v=`);
   }, 15000);
 });

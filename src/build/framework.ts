@@ -39,6 +39,7 @@ import {
   validateCssTokenUsage,
   validateThemeDefinition,
 } from "../validation/theme-validation.js";
+import { appendVersionQuery, createContentVersion } from "./asset-version.js";
 
 export const defaultContentPath = path.resolve(process.cwd(), "content/site.json");
 export const defaultOutDir = path.resolve(process.cwd(), "dist");
@@ -286,14 +287,20 @@ const pageSlugToOutputPath = (slug: string, outDir: string): string => {
   return path.join(outDir, slug.replace(/^\//, ""), "index.html");
 };
 
-const pageSlugToStylesheetHref = (slug: string): string => {
+const pageSlugToStylesheetHref = (slug: string, version: string): string => {
   const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
-  return path.posix.relative(path.posix.dirname(pagePath), "/assets/site.css");
+  return appendVersionQuery(
+    path.posix.relative(path.posix.dirname(pagePath), "/assets/site.css"),
+    version,
+  );
 };
 
-const pageSlugToScriptHref = (slug: string): string => {
+const pageSlugToScriptHref = (slug: string, version: string): string => {
   const pagePath = slug === "/" ? "/index.html" : path.posix.join(slug, "index.html");
-  return path.posix.relative(path.posix.dirname(pagePath), "/assets/site.js");
+  return appendVersionQuery(
+    path.posix.relative(path.posix.dirname(pagePath), "/assets/site.js"),
+    version,
+  );
 };
 
 const escapeCssString = (value: string): string =>
@@ -702,6 +709,8 @@ export const buildSite = async (
     : undefined;
   const css = await renderSiteCss(siteContent, imagePipeline);
   const js = renderSiteJs(siteContent);
+  const cssVersion = createContentVersion(css);
+  const jsVersion = js ? createContentVersion(js) : undefined;
   const expectedFiles = new Set<string>();
   let filesCreated = 0;
   let filesUpdated = 0;
@@ -743,8 +752,8 @@ export const buildSite = async (
       siteContent,
       page,
       renderContext,
-      stylesheetHref: pageSlugToStylesheetHref(page.slug),
-      scriptHref: js ? pageSlugToScriptHref(page.slug) : undefined,
+      stylesheetHref: pageSlugToStylesheetHref(page.slug, cssVersion),
+      scriptHref: jsVersion ? pageSlugToScriptHref(page.slug, jsVersion) : undefined,
       socialImageUrl:
         page.metadata?.socialImageUrl && imagePipeline
           ? imagePipeline.resolveSocialImageUrl(page.metadata.socialImageUrl)

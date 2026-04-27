@@ -12,6 +12,7 @@ import type {
   ResponsiveImageData,
 } from "../components/render-context.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
+import { appendVersionQuery } from "./asset-version.js";
 
 const rasterExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"]);
 const svgExtension = ".svg";
@@ -78,6 +79,7 @@ interface PreparedVariant {
   height?: number;
   href: string;
   outputPath: string;
+  version: string;
   width?: number;
 }
 
@@ -346,7 +348,7 @@ const createOutputRelativePath = (
   usage: ComponentImageUsage,
   targetWidth: number,
   extension: string,
-): string => {
+): { relativePath: string; version: string } => {
   const fileHash = createHash("sha1")
     .update(imagePipelineVersion)
     .update(source.sourceProjectRelativePath)
@@ -357,7 +359,10 @@ const createOutputRelativePath = (
     .slice(0, 12);
   const fileName = `${path.basename(source.sourceProjectRelativePath, path.extname(source.sourceProjectRelativePath))}-${usage}-${targetWidth}-${fileHash}${resolveOutputExtension(extension, usage)}`;
 
-  return path.posix.join("assets", "images", fileName);
+  return {
+    relativePath: path.posix.join("assets", "images", fileName),
+    version: fileHash,
+  };
 };
 
 const createOutputHref = (pageSlug: string, outputRelativePath: string): string => {
@@ -394,14 +399,14 @@ const processLocalImageVariant = async (
   outDir: string,
 ): Promise<PreparedVariant> => {
   const sourceStats = await stat(source.sourcePath);
-  const outputRelativePath = createOutputRelativePath(
+  const outputAsset = createOutputRelativePath(
     source,
     sourceStats.mtimeMs,
     usage,
     targetWidth,
     metadata.extension,
   );
-  const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
+  const outputPath = path.join(outDir, ...outputAsset.relativePath.split("/"));
 
   try {
     await access(outputPath);
@@ -463,8 +468,9 @@ const processLocalImageVariant = async (
 
   return {
     height: variantDimensions.height,
-    href: outputRelativePath,
+    href: outputAsset.relativePath,
     outputPath,
+    version: outputAsset.version,
     width: variantDimensions.width,
   };
 };
@@ -613,7 +619,9 @@ export const prepareImagePipeline = async (
         createPreparedVariantKey(sourceHref, "page-social", usageOutputWidths["page-social"]),
       );
 
-      return preparedVariant?.href ?? sourceHref;
+      return preparedVariant
+        ? appendVersionQuery(preparedVariant.href, preparedVariant.version)
+        : sourceHref;
     },
     resolveStylesheetImageHref: (sourceHref) => {
       const preparedVariant = preparedVariants.get(
@@ -624,18 +632,21 @@ export const prepareImagePipeline = async (
         return sourceHref;
       }
 
-      return createStylesheetHref(preparedVariant.href);
+      return appendVersionQuery(createStylesheetHref(preparedVariant.href), preparedVariant.version);
     },
     renderContextForPage: (pageSlug) => ({
       resolveImage: (image, usage) => {
         const usageTargetWidths = getUsageTargetWidths(usage);
         const baseTargetWidth = usageTargetWidths[usageTargetWidths.length - 1];
+        const preparedVariant = preparedVariants.get(
+          createPreparedVariantKey(image.src, usage, baseTargetWidth),
+        );
         const resolved = resolvePreparedVariant(image, usage, baseTargetWidth);
 
         return {
           ...resolved,
-          src: preparedVariants.has(createPreparedVariantKey(image.src, usage, baseTargetWidth))
-            ? createOutputHref(pageSlug, resolved.src)
+          src: preparedVariant
+            ? appendVersionQuery(createOutputHref(pageSlug, resolved.src), preparedVariant.version)
             : resolved.src,
         };
       },
@@ -643,17 +654,26 @@ export const prepareImagePipeline = async (
         const thumbnailUsage = galleryColumnUsage[columns];
         const thumbnailWidth = usageOutputWidths[thumbnailUsage];
         const fullWidth = usageOutputWidths["gallery-full"];
+        const thumbnailPreparedVariant = preparedVariants.get(
+          createPreparedVariantKey(image.src, thumbnailUsage, thumbnailWidth),
+        );
+        const fullPreparedVariant = preparedVariants.get(
+          createPreparedVariantKey(image.src, "gallery-full", fullWidth),
+        );
         const thumbnail = resolvePreparedVariant(image, thumbnailUsage, thumbnailWidth);
         const full = resolvePreparedVariant(image, "gallery-full", fullWidth);
 
         return {
-          src: preparedVariants.has(createPreparedVariantKey(image.src, thumbnailUsage, thumbnailWidth))
-            ? createOutputHref(pageSlug, thumbnail.src)
+          src: thumbnailPreparedVariant
+            ? appendVersionQuery(
+                createOutputHref(pageSlug, thumbnail.src),
+                thumbnailPreparedVariant.version,
+              )
             : thumbnail.src,
           width: thumbnail.width,
           height: thumbnail.height,
-          fullSrc: preparedVariants.has(createPreparedVariantKey(image.src, "gallery-full", fullWidth))
-            ? createOutputHref(pageSlug, full.src)
+          fullSrc: fullPreparedVariant
+            ? appendVersionQuery(createOutputHref(pageSlug, full.src), fullPreparedVariant.version)
             : full.src,
           fullWidth: full.width,
           fullHeight: full.height,
@@ -670,8 +690,9 @@ export const prepareImagePipeline = async (
         const variants = targetWidths
           .flatMap((targetWidth) => {
             const variantKey = createPreparedVariantKey(image.src, usage, targetWidth);
+            const preparedVariant = preparedVariants.get(variantKey);
 
-            if (!preparedVariants.has(variantKey)) {
+            if (!preparedVariant) {
               return [];
             }
 
@@ -680,7 +701,10 @@ export const prepareImagePipeline = async (
             return [
               {
                 ...resolved,
-                src: createOutputHref(pageSlug, resolved.src),
+                src: appendVersionQuery(
+                  createOutputHref(pageSlug, resolved.src),
+                  preparedVariant.version,
+                ),
               },
             ];
           })
