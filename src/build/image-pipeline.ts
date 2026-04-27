@@ -1,4 +1,4 @@
-import { access, copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 
@@ -12,7 +12,7 @@ import type {
   ResponsiveImageData,
 } from "../components/render-context.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
-import { appendVersionQuery } from "./asset-version.js";
+import { appendVersionQuery, createContentVersion } from "./asset-version.js";
 
 const rasterExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"]);
 const svgExtension = ".svg";
@@ -344,25 +344,22 @@ const resolveOutputExtension = (extension: string, usage: ComponentImageUsage): 
 
 const createOutputRelativePath = (
   source: LocalImageSource,
-  sourceMtimeMs: number,
+  sourceVersion: string,
   usage: ComponentImageUsage,
   targetWidth: number,
   extension: string,
-): { relativePath: string; version: string } => {
+): string => {
   const fileHash = createHash("sha1")
     .update(imagePipelineVersion)
     .update(source.sourceProjectRelativePath)
-    .update(String(sourceMtimeMs))
+    .update(sourceVersion)
     .update(usage)
     .update(String(targetWidth))
     .digest("hex")
     .slice(0, 12);
   const fileName = `${path.basename(source.sourceProjectRelativePath, path.extname(source.sourceProjectRelativePath))}-${usage}-${targetWidth}-${fileHash}${resolveOutputExtension(extension, usage)}`;
 
-  return {
-    relativePath: path.posix.join("assets", "images", fileName),
-    version: fileHash,
-  };
+  return path.posix.join("assets", "images", fileName);
 };
 
 const createOutputHref = (pageSlug: string, outputRelativePath: string): string => {
@@ -372,6 +369,18 @@ const createOutputHref = (pageSlug: string, outputRelativePath: string): string 
 
 const createStylesheetHref = (outputRelativePath: string): string =>
   path.posix.relative("/assets", `/${outputRelativePath}`);
+
+const readOutputVersionIfExists = async (outputPath: string): Promise<string | undefined> => {
+  try {
+    return createContentVersion(await readFile(outputPath));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return undefined;
+    }
+
+    throw error;
+  }
+};
 
 const resolveVariantDimensions = (
   sourceWidth: number | undefined,
@@ -398,30 +407,27 @@ const processLocalImageVariant = async (
   targetWidth: number,
   outDir: string,
 ): Promise<PreparedVariant> => {
-  const sourceStats = await stat(source.sourcePath);
-  const outputAsset = createOutputRelativePath(
+  const sourceBytes = await readFile(source.sourcePath);
+  const outputRelativePath = createOutputRelativePath(
     source,
-    sourceStats.mtimeMs,
+    createContentVersion(sourceBytes),
     usage,
     targetWidth,
     metadata.extension,
   );
-  const outputPath = path.join(outDir, ...outputAsset.relativePath.split("/"));
+  const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
+  const existingOutputVersion = await readOutputVersionIfExists(outputPath);
+  let version = existingOutputVersion;
 
-  try {
-    await access(outputPath);
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-      throw error;
-    }
-
+  if (version === undefined) {
     await mkdir(path.dirname(outputPath), { recursive: true });
 
+    let outputBytes: Buffer;
     if (metadata.isSvg) {
-      await copyFile(source.sourcePath, outputPath);
+      outputBytes = sourceBytes;
     } else if (metadata.isRaster) {
-      const transformer = sharp(source.sourcePath).rotate();
-      const resized = await (usage === "page-background"
+      const transformer = sharp(sourceBytes).rotate();
+      outputBytes = await (usage === "page-background"
         ? transformer
             .resize({
               fit: "inside",
@@ -452,10 +458,12 @@ const processLocalImageVariant = async (
               withoutEnlargement: true,
             })
             .toBuffer());
-      await writeBufferIfChanged(outputPath, resized);
     } else {
-      await copyFile(source.sourcePath, outputPath);
+      outputBytes = sourceBytes;
     }
+
+    await writeBufferIfChanged(outputPath, outputBytes);
+    version = createContentVersion(outputBytes);
   }
 
   const variantDimensions =
@@ -468,9 +476,9 @@ const processLocalImageVariant = async (
 
   return {
     height: variantDimensions.height,
-    href: outputAsset.relativePath,
+    href: outputRelativePath,
     outputPath,
-    version: outputAsset.version,
+    version,
     width: variantDimensions.width,
   };
 };
