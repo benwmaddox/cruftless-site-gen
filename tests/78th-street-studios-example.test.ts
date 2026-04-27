@@ -57,7 +57,7 @@ describe("78th Street Studios example", () => {
         aboutHtml.indexOf("Contact 78th Street Studios"),
       );
       expect(homeHtml).toContain('data-theme="workshop"');
-      expect(homeHtml).toContain('<script src="assets/site.js" defer></script>');
+      expect(homeHtml).toContain('<script src="assets/site.js?v=');
       expect(css).toContain('--font-heading: "Source Serif 4", serif;');
       expect(css).toContain("--color-scheme: light;");
       expect(css).toContain("--primary: #c3512f;");

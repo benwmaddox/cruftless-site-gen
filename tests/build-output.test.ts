@@ -1,4 +1,5 @@
 import { access, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 
@@ -70,6 +71,9 @@ const createNoisyPngBytes = (width: number, height: number): Promise<Buffer> => 
     .png()
     .toBuffer();
 };
+
+const createExpectedContentVersion = (contents: string | Uint8Array): string =>
+  createHash("sha1").update(contents).digest("hex").slice(0, 12);
 
 const createWebpBytes = (width: number, height: number): Promise<Buffer> =>
   sharp({
@@ -239,6 +243,28 @@ describe("buildSite output writes", () => {
       expect(secondBuild.filesRemoved).toBe(2);
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
       await expect(access(path.join(outDir, "about", "index.html"))).rejects.toThrow();
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
+  it("uses rendered CSS and JavaScript content hashes in asset query strings", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-asset-versions-"));
+
+    try {
+      await buildSite(createScriptedSite(), outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+      const js = await readFile(path.join(outDir, "assets", "site.js"), "utf8");
+      const homeHtml = await readFile(path.join(outDir, "index.html"), "utf8");
+      const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
+      const cssVersion = createExpectedContentVersion(css);
+      const jsVersion = createExpectedContentVersion(js);
+
+      expect(homeHtml).toContain(`<link rel="stylesheet" href="assets/site.css?v=${cssVersion}" />`);
+      expect(homeHtml).toContain(`<script src="assets/site.js?v=${jsVersion}" defer></script>`);
+      expect(aboutHtml).toContain(`<link rel="stylesheet" href="../assets/site.css?v=${cssVersion}" />`);
+      expect(aboutHtml).toContain(`<script src="../assets/site.js?v=${jsVersion}" defer></script>`);
     } finally {
       await removeDirectory(outDir);
     }
@@ -435,16 +461,17 @@ describe("buildSite output writes", () => {
       const firstBuild = await buildSite(await loadValidatedSite(contentPath), outDir, { contentPath });
       const optimizedPreviewDir = path.join(outDir, "assets", "images");
       const optimizedPreviewName = (await readdir(optimizedPreviewDir)).find((name) =>
-        name.startsWith("local-preview-media-wide-"),
+        name.startsWith("local-preview-media-wide-1152-"),
       );
       if (!optimizedPreviewName) {
         throw new Error("missing optimized preview image");
       }
       const optimizedPreviewPath = path.join(optimizedPreviewDir, optimizedPreviewName);
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const optimizedPreviewVersion = createExpectedContentVersion(await readFile(optimizedPreviewPath));
 
       expect(firstBuild.filesCreated).toBeGreaterThan(0);
-      expect(html).toContain(`src="assets/images/${optimizedPreviewName}"`);
+      expect(html).toContain(`src="assets/images/${optimizedPreviewName}?v=${optimizedPreviewVersion}"`);
       expect(html).toContain("srcset=\"assets/images/local-preview-media-wide-480-");
       expect(html).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
 
@@ -584,7 +611,9 @@ describe("buildSite output writes", () => {
       const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
       const optimizedPreviewDir = path.join(outDir, "assets", "images");
       const optimizedImageNames = await readdir(optimizedPreviewDir);
-      const mediaOutputName = optimizedImageNames.find((name) => name.startsWith("landing-page-media-wide-"));
+      const mediaOutputName = optimizedImageNames.find((name) =>
+        name.startsWith("landing-page-media-wide-1152-"),
+      );
       const optimizedPreviewName = optimizedImageNames.find((name) =>
         name.startsWith("landing-page-page-background-2400-"),
       );
@@ -601,17 +630,25 @@ describe("buildSite output writes", () => {
         throw new Error("missing optimized social image");
       }
 
+      const mediaVersion = createExpectedContentVersion(
+        await readFile(path.join(optimizedPreviewDir, mediaOutputName)),
+      );
+      const previewVersion = createExpectedContentVersion(await readFile(optimizedPreviewPath));
+      const socialVersion = createExpectedContentVersion(
+        await readFile(path.join(optimizedPreviewDir, socialImageName)),
+      );
+
       expect((await stat(optimizedPreviewPath)).size).toBeLessThan(previewImageBytes.length);
-      expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}"`);
+      expect(nestedHtml).toContain(`src="../assets/images/${mediaOutputName}?v=${mediaVersion}"`);
       expect(nestedHtml).toContain("srcset=\"../assets/images/landing-page-media-wide-480-");
       expect(nestedHtml).toContain("sizes=\"(min-width: 1184px) 1152px, calc(100vw - 3rem)\"");
       expect(nestedHtml).toContain(
-        `<meta property="og:image" content="https://launchkit.example/assets/images/${socialImageName}" />`,
+        `<meta property="og:image" content="https://launchkit.example/assets/images/${socialImageName}?v=${socialVersion}" />`,
       );
       expect(nestedHtml).toContain(
-        `<meta name="twitter:image" content="https://launchkit.example/assets/images/${socialImageName}" />`,
+        `<meta name="twitter:image" content="https://launchkit.example/assets/images/${socialImageName}?v=${socialVersion}" />`,
       );
-      expect(css).toContain(`url("images/${optimizedPreviewName}")`);
+      expect(css).toContain(`url("images/${optimizedPreviewName}?v=${previewVersion}")`);
       await expect(access(path.join(outDir, "images", "landing-page.png"))).rejects.toThrow();
     } finally {
       await removeDirectory(projectRoot);
@@ -686,6 +723,6 @@ describe("buildSite output writes", () => {
     const optimizedBrandImagePath = path.join(optimizedBrandDir, optimizedBrandName);
 
     expect((await stat(optimizedBrandImagePath)).size).toBeLessThan(brandImageBytes.length);
-    expect(aboutHtml).toContain(`src="../assets/images/${optimizedBrandName}"`);
+    expect(aboutHtml).toContain(`src="../assets/images/${optimizedBrandName}?v=`);
   }, 15000);
 });

@@ -1,4 +1,4 @@
-import { access, copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 
@@ -12,6 +12,7 @@ import type {
   ResponsiveImageData,
 } from "../components/render-context.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
+import { appendVersionQuery, createContentVersion } from "./asset-version.js";
 
 const rasterExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"]);
 const svgExtension = ".svg";
@@ -78,6 +79,7 @@ interface PreparedVariant {
   height?: number;
   href: string;
   outputPath: string;
+  version: string;
   width?: number;
 }
 
@@ -342,7 +344,7 @@ const resolveOutputExtension = (extension: string, usage: ComponentImageUsage): 
 
 const createOutputRelativePath = (
   source: LocalImageSource,
-  sourceMtimeMs: number,
+  sourceVersion: string,
   usage: ComponentImageUsage,
   targetWidth: number,
   extension: string,
@@ -350,7 +352,7 @@ const createOutputRelativePath = (
   const fileHash = createHash("sha1")
     .update(imagePipelineVersion)
     .update(source.sourceProjectRelativePath)
-    .update(String(sourceMtimeMs))
+    .update(sourceVersion)
     .update(usage)
     .update(String(targetWidth))
     .digest("hex")
@@ -367,6 +369,18 @@ const createOutputHref = (pageSlug: string, outputRelativePath: string): string 
 
 const createStylesheetHref = (outputRelativePath: string): string =>
   path.posix.relative("/assets", `/${outputRelativePath}`);
+
+const readOutputVersionIfExists = async (outputPath: string): Promise<string | undefined> => {
+  try {
+    return createContentVersion(await readFile(outputPath));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      return undefined;
+    }
+
+    throw error;
+  }
+};
 
 const resolveVariantDimensions = (
   sourceWidth: number | undefined,
@@ -393,30 +407,27 @@ const processLocalImageVariant = async (
   targetWidth: number,
   outDir: string,
 ): Promise<PreparedVariant> => {
-  const sourceStats = await stat(source.sourcePath);
+  const sourceBytes = await readFile(source.sourcePath);
   const outputRelativePath = createOutputRelativePath(
     source,
-    sourceStats.mtimeMs,
+    createContentVersion(sourceBytes),
     usage,
     targetWidth,
     metadata.extension,
   );
   const outputPath = path.join(outDir, ...outputRelativePath.split("/"));
+  const existingOutputVersion = await readOutputVersionIfExists(outputPath);
+  let version = existingOutputVersion;
 
-  try {
-    await access(outputPath);
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-      throw error;
-    }
-
+  if (version === undefined) {
     await mkdir(path.dirname(outputPath), { recursive: true });
 
+    let outputBytes: Buffer;
     if (metadata.isSvg) {
-      await copyFile(source.sourcePath, outputPath);
+      outputBytes = sourceBytes;
     } else if (metadata.isRaster) {
-      const transformer = sharp(source.sourcePath).rotate();
-      const resized = await (usage === "page-background"
+      const transformer = sharp(sourceBytes).rotate();
+      outputBytes = await (usage === "page-background"
         ? transformer
             .resize({
               fit: "inside",
@@ -447,10 +458,12 @@ const processLocalImageVariant = async (
               withoutEnlargement: true,
             })
             .toBuffer());
-      await writeBufferIfChanged(outputPath, resized);
     } else {
-      await copyFile(source.sourcePath, outputPath);
+      outputBytes = sourceBytes;
     }
+
+    await writeBufferIfChanged(outputPath, outputBytes);
+    version = createContentVersion(outputBytes);
   }
 
   const variantDimensions =
@@ -465,6 +478,7 @@ const processLocalImageVariant = async (
     height: variantDimensions.height,
     href: outputRelativePath,
     outputPath,
+    version,
     width: variantDimensions.width,
   };
 };
@@ -613,7 +627,9 @@ export const prepareImagePipeline = async (
         createPreparedVariantKey(sourceHref, "page-social", usageOutputWidths["page-social"]),
       );
 
-      return preparedVariant?.href ?? sourceHref;
+      return preparedVariant
+        ? appendVersionQuery(preparedVariant.href, preparedVariant.version)
+        : sourceHref;
     },
     resolveStylesheetImageHref: (sourceHref) => {
       const preparedVariant = preparedVariants.get(
@@ -624,18 +640,21 @@ export const prepareImagePipeline = async (
         return sourceHref;
       }
 
-      return createStylesheetHref(preparedVariant.href);
+      return appendVersionQuery(createStylesheetHref(preparedVariant.href), preparedVariant.version);
     },
     renderContextForPage: (pageSlug) => ({
       resolveImage: (image, usage) => {
         const usageTargetWidths = getUsageTargetWidths(usage);
         const baseTargetWidth = usageTargetWidths[usageTargetWidths.length - 1];
+        const preparedVariant = preparedVariants.get(
+          createPreparedVariantKey(image.src, usage, baseTargetWidth),
+        );
         const resolved = resolvePreparedVariant(image, usage, baseTargetWidth);
 
         return {
           ...resolved,
-          src: preparedVariants.has(createPreparedVariantKey(image.src, usage, baseTargetWidth))
-            ? createOutputHref(pageSlug, resolved.src)
+          src: preparedVariant
+            ? appendVersionQuery(createOutputHref(pageSlug, resolved.src), preparedVariant.version)
             : resolved.src,
         };
       },
@@ -643,17 +662,26 @@ export const prepareImagePipeline = async (
         const thumbnailUsage = galleryColumnUsage[columns];
         const thumbnailWidth = usageOutputWidths[thumbnailUsage];
         const fullWidth = usageOutputWidths["gallery-full"];
+        const thumbnailPreparedVariant = preparedVariants.get(
+          createPreparedVariantKey(image.src, thumbnailUsage, thumbnailWidth),
+        );
+        const fullPreparedVariant = preparedVariants.get(
+          createPreparedVariantKey(image.src, "gallery-full", fullWidth),
+        );
         const thumbnail = resolvePreparedVariant(image, thumbnailUsage, thumbnailWidth);
         const full = resolvePreparedVariant(image, "gallery-full", fullWidth);
 
         return {
-          src: preparedVariants.has(createPreparedVariantKey(image.src, thumbnailUsage, thumbnailWidth))
-            ? createOutputHref(pageSlug, thumbnail.src)
+          src: thumbnailPreparedVariant
+            ? appendVersionQuery(
+                createOutputHref(pageSlug, thumbnail.src),
+                thumbnailPreparedVariant.version,
+              )
             : thumbnail.src,
           width: thumbnail.width,
           height: thumbnail.height,
-          fullSrc: preparedVariants.has(createPreparedVariantKey(image.src, "gallery-full", fullWidth))
-            ? createOutputHref(pageSlug, full.src)
+          fullSrc: fullPreparedVariant
+            ? appendVersionQuery(createOutputHref(pageSlug, full.src), fullPreparedVariant.version)
             : full.src,
           fullWidth: full.width,
           fullHeight: full.height,
@@ -670,8 +698,9 @@ export const prepareImagePipeline = async (
         const variants = targetWidths
           .flatMap((targetWidth) => {
             const variantKey = createPreparedVariantKey(image.src, usage, targetWidth);
+            const preparedVariant = preparedVariants.get(variantKey);
 
-            if (!preparedVariants.has(variantKey)) {
+            if (!preparedVariant) {
               return [];
             }
 
@@ -680,7 +709,10 @@ export const prepareImagePipeline = async (
             return [
               {
                 ...resolved,
-                src: createOutputHref(pageSlug, resolved.src),
+                src: appendVersionQuery(
+                  createOutputHref(pageSlug, resolved.src),
+                  preparedVariant.version,
+                ),
               },
             ];
           })

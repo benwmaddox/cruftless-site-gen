@@ -196,10 +196,10 @@ describe("image pipeline", () => {
 
       expect(mediaOutputStats.size).toBeLessThan(sourceStats.size);
       expect(mediaOutputMetadata.width).toBe(1024);
-      expect(homeHtml).toContain(`src="assets/images/${mediaOutputName}"`);
-      expect(homeHtml).toContain(`data-gallery-full-src="assets/images/${fullOutputName}"`);
-      expect(portfolioHtml).toContain(`src="../assets/images/${thumbOutputName}"`);
-      expect(portfolioHtml).toContain(`data-gallery-full-src="../assets/images/${fullOutputName}"`);
+      expect(homeHtml).toContain(`src="assets/images/${mediaOutputName}?v=`);
+      expect(homeHtml).toContain(`data-gallery-full-src="assets/images/${fullOutputName}?v=`);
+      expect(portfolioHtml).toContain(`src="../assets/images/${thumbOutputName}?v=`);
+      expect(portfolioHtml).toContain(`data-gallery-full-src="../assets/images/${fullOutputName}?v=`);
       await expect(readdir(path.join(outDir, "images"))).rejects.toThrow();
     } finally {
       await removeDirectory(fixture.rootDir);
