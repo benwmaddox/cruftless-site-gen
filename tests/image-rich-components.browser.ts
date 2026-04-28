@@ -60,19 +60,39 @@ const runBrowserRegression = async (): Promise<void> => {
       assert.ok(dialogCaption);
 
       await desktopPage.keyboard.press("Escape");
-      await assert.doesNotReject(() =>
-        desktopPage.waitForFunction(() => {
-          const gallery = document.querySelector(".c-gallery");
-          const dialog = document.querySelector(".c-gallery__dialog");
+      const closedDialogState = await desktopPage.evaluate(() => {
+        const gallery = document.querySelector(".c-gallery");
+        const dialog = document.querySelector(".c-gallery__dialog");
+        const dialogImage = document.querySelector(".c-gallery__dialog-image");
 
-          return (
-            gallery instanceof HTMLElement &&
-            dialog instanceof HTMLElement &&
-            gallery.dataset.galleryOpen === "false" &&
-            dialog.hidden
-          );
-        }),
-      );
+        if (
+          !(gallery instanceof HTMLElement) ||
+          !(dialog instanceof HTMLElement) ||
+          !(dialogImage instanceof HTMLImageElement)
+        ) {
+          throw new Error("Expected gallery dialog to be present.");
+        }
+
+        const rect = dialog.getBoundingClientRect();
+
+        return {
+          display: getComputedStyle(dialog).display,
+          galleryOpen: gallery.dataset.galleryOpen,
+          height: rect.height,
+          hidden: dialog.hidden,
+          imageSrc: dialogImage.getAttribute("src"),
+          width: rect.width,
+        };
+      });
+
+      assert.deepEqual(closedDialogState, {
+        display: "none",
+        galleryOpen: "false",
+        height: 0,
+        hidden: true,
+        imageSrc: null,
+        width: 0,
+      });
 
       const desktopMetrics = await desktopPage.evaluate(() => {
         const imageTextInner = document.querySelector(".c-image-text__inner");
