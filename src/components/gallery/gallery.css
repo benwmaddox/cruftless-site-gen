@@ -126,6 +126,7 @@
   place-items: center;
   padding: var(--space-lg);
   background: color-mix(in srgb, var(--bg) 90%, black 10%);
+  transition-property: background;
 }
 
 .c-gallery__dialog[hidden] {
