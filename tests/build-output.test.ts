@@ -270,6 +270,30 @@ describe("buildSite output writes", () => {
     }
   });
 
+  it("minifies dist CSS, JavaScript, and HTML before writing asset hash references", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-minified-output-"));
+
+    try {
+      await buildSite(createScriptedSite(), outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+      const js = await readFile(path.join(outDir, "assets", "site.js"), "utf8");
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const cssVersion = createExpectedContentVersion(css);
+      const jsVersion = createExpectedContentVersion(js);
+
+      expect(css).not.toContain("/*");
+      expect(css).not.toContain("\n");
+      expect(js).not.toContain("/*");
+      expect(js).not.toContain("\n");
+      expect(html).not.toContain("\n");
+      expect(html).toContain(`href="assets/site.css?v=${cssVersion}"`);
+      expect(html).toContain(`src="assets/site.js?v=${jsVersion}"`);
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
   it("preserves configured output subtrees while removing stale generated files", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-preserve-"));
 
@@ -304,7 +328,7 @@ describe("buildSite output writes", () => {
       expect(html).toContain(
         '<script async src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"></script>',
       );
-      expect(html).toContain(`gtag('config', "G-TEST1234");`);
+      expect(html).toContain(`gtag("config","G-TEST1234");`);
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
     } finally {
       await removeDirectory(outDir);
@@ -373,7 +397,7 @@ describe("buildSite output writes", () => {
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
 
       expect(html).not.toContain("googletagmanager.com/gtag/js");
-      expect(html).not.toContain("gtag('config', \"G-TEST1234\");");
+      expect(html).not.toContain("gtag(\"config\",\"G-TEST1234\");");
     } finally {
       if (previousLighthouseCi === undefined) {
         delete process.env.LIGHTHOUSE_CI;
@@ -396,7 +420,7 @@ describe("buildSite output writes", () => {
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
 
       expect(html).not.toContain("googletagmanager.com/gtag/js");
-      expect(html).not.toContain("gtag('config', \"G-TEST1234\");");
+      expect(html).not.toContain("gtag(\"config\",\"G-TEST1234\");");
     } finally {
       if (previousDisableAnalytics === undefined) {
         delete process.env.CRUFTLESS_DISABLE_ANALYTICS;
@@ -648,7 +672,7 @@ describe("buildSite output writes", () => {
       expect(nestedHtml).toContain(
         `<meta name="twitter:image" content="https://launchkit.example/assets/images/${socialImageName}?v=${socialVersion}" />`,
       );
-      expect(css).toContain(`url("images/${optimizedPreviewName}?v=${previewVersion}")`);
+      expect(css).toContain(`url(images/${optimizedPreviewName}?v=${previewVersion})`);
       await expect(access(path.join(outDir, "images", "landing-page.png"))).rejects.toThrow();
     } finally {
       await removeDirectory(projectRoot);

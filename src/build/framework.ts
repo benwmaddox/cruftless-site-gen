@@ -30,6 +30,7 @@ import {
   type PreparedImagePipeline,
   prepareImagePipeline,
 } from "./image-pipeline.js";
+import { minifyCss, minifyHtml, minifyJs } from "./minify-output.js";
 import {
   collectSiteValidationIssues,
   type ValidationIssue,
@@ -707,8 +708,9 @@ export const buildSite = async (
   const imagePipeline = options.contentPath
     ? await prepareImagePipeline(siteContent, options.contentPath, outDir)
     : undefined;
-  const css = await renderSiteCss(siteContent, imagePipeline);
-  const js = renderSiteJs(siteContent);
+  const css = await minifyCss(await renderSiteCss(siteContent, imagePipeline));
+  const renderedJs = renderSiteJs(siteContent);
+  const js = renderedJs ? await minifyJs(renderedJs) : "";
   const cssVersion = createContentVersion(css);
   const jsVersion = js ? createContentVersion(js) : undefined;
   const expectedFiles = new Set<string>();
@@ -748,17 +750,19 @@ export const buildSite = async (
     const renderContext =
       imagePipeline?.renderContextForPage(page.slug) ?? defaultComponentRenderContext;
 
-    const documentHtml = renderSitePageDocument({
-      siteContent,
-      page,
-      renderContext,
-      stylesheetHref: pageSlugToStylesheetHref(page.slug, cssVersion),
-      scriptHref: jsVersion ? pageSlugToScriptHref(page.slug, jsVersion) : undefined,
-      socialImageUrl:
-        page.metadata?.socialImageUrl && imagePipeline
-          ? imagePipeline.resolveSocialImageUrl(page.metadata.socialImageUrl)
-          : page.metadata?.socialImageUrl,
-    });
+    const documentHtml = await minifyHtml(
+      renderSitePageDocument({
+        siteContent,
+        page,
+        renderContext,
+        stylesheetHref: pageSlugToStylesheetHref(page.slug, cssVersion),
+        scriptHref: jsVersion ? pageSlugToScriptHref(page.slug, jsVersion) : undefined,
+        socialImageUrl:
+          page.metadata?.socialImageUrl && imagePipeline
+            ? imagePipeline.resolveSocialImageUrl(page.metadata.socialImageUrl)
+            : page.metadata?.socialImageUrl,
+      }),
+    );
     const outputPath = pageSlugToOutputPath(page.slug, outDir);
     await mkdir(path.dirname(outputPath), { recursive: true });
     expectedFiles.add(outputPath);
