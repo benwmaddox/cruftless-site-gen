@@ -65,10 +65,10 @@ describe("78th Street Studios example", () => {
       expect(js).toContain("resolveNavigationBarMode");
       expect(css).toContain("--site-page-background-image:");
       expect(css).toContain(
-        "background: var(--site-page-background-image, none) center / cover no-repeat fixed, var(--theme-pattern) fixed var(--bg);",
+        "background:var(--site-page-background-image, none) center / cover no-repeat fixed,var(--theme-pattern) fixed var(--bg);",
       );
       expect(css).toContain(
-        'url("https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX")',
+        "url(https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX)",
       );
     } finally {
       await rm(outDir, { recursive: true, force: true });
