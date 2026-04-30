@@ -301,9 +301,20 @@ describe("buildSite output writes", () => {
       await buildSite(createStaticSite(), outDir);
 
       const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
 
       expect(html).toContain('<a class="skip-link" href="#main-content">Skip to content</a>');
       expect(html).toContain('<main id="main-content" class="l-page" tabindex="-1">');
+      expect(css).toContain(".skip-link{");
+      expect(css).toContain("width:1px");
+      expect(css).toContain("height:1px");
+      expect(css).toContain("overflow:hidden");
+      expect(css).toContain("opacity:0");
+      expect(css).toContain("transform:translate(-100%,-100%)");
+      expect(css).toContain(".skip-link:focus,.skip-link:focus-visible{");
+      expect(css).toContain("overflow:visible");
+      expect(css).toContain("opacity:1");
+      expect(css).toContain("transform:translate(0)");
     } finally {
       await removeDirectory(outDir);
     }
