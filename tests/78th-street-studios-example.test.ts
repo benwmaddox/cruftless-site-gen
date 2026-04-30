@@ -60,7 +60,7 @@ describe("78th Street Studios example", () => {
       expect(homeHtml).toContain('<script src="assets/site.js?v=');
       expect(css).toContain('--font-heading: "Source Serif 4", serif;');
       expect(css).toContain("--color-scheme: light;");
-      expect(css).toContain("--primary: #c3512f;");
+      expect(css).toContain("--primary: #be4d2b;");
       expect(css).toContain("--accent: #2f6f4e;");
       expect(js).toContain("resolveNavigationBarMode");
       expect(css).toContain("--site-page-background-image:");

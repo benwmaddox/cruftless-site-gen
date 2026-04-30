@@ -415,11 +415,13 @@ const renderPageBodyHtml = (
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string => {
   const layoutComponents = siteContent.site.layout?.components;
+  const renderMain = (innerHtml: string): string =>
+    `<main id="main-content" class="l-page" tabindex="-1">\n${innerHtml}\n</main>`;
 
   if (!layoutComponents) {
-    return `<main class="l-page">\n${page.components
-      .map((component) => renderComponent(component, renderContext))
-      .join("\n")}\n</main>`;
+    return renderMain(
+      page.components.map((component) => renderComponent(component, renderContext)).join("\n"),
+    );
   }
 
   return layoutComponents
@@ -428,7 +430,7 @@ const renderPageBodyHtml = (
         const pageContentHtml = page.components
           .map((component) => renderComponent(component, renderContext))
           .join("\n");
-        return `<main class="l-page">\n${pageContentHtml}\n</main>`;
+        return renderMain(pageContentHtml);
       }
 
       return renderComponent(layoutComponent, renderContext);

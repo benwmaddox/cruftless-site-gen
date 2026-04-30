@@ -138,13 +138,32 @@ const runBrowserRegression = async (): Promise<void> => {
     });
     await page.locator("button", { hasText: "Pick media" }).first().click();
     await page.locator(".media-picker-item", { hasText: "images/hero image.svg" }).click();
-    await page.waitForFunction(() => {
-      const image = document.querySelector(".media-preview-image");
+    try {
+      await page.waitForFunction(() => {
+        const field = document.querySelector("[data-testid='field-pageBackgroundImageUrl']");
+        const image = document.querySelector(".media-preview-image");
 
-      return image instanceof HTMLImageElement
-        && image.currentSrc.includes("hero%20image.svg")
-        && image.naturalWidth > 0;
-    });
+        return field instanceof HTMLInputElement
+          && decodeURIComponent(field.value).includes("hero image.svg")
+          && image instanceof HTMLImageElement
+          && image.complete;
+      });
+    } catch (error) {
+      const mediaPreviewSnapshot = await page.evaluate(() => {
+        const field = document.querySelector("[data-testid='field-pageBackgroundImageUrl']");
+        const image = document.querySelector(".media-preview-image");
+
+        return {
+          fieldValue: field instanceof HTMLInputElement ? field.value : null,
+          imageComplete: image instanceof HTMLImageElement ? image.complete : null,
+          imageCurrentSrc: image instanceof HTMLImageElement ? image.currentSrc : null,
+        };
+      });
+
+      throw new Error(`Timed out waiting for selected media preview: ${JSON.stringify(mediaPreviewSnapshot)}`, {
+        cause: error,
+      });
+    }
     await page.locator("[data-testid='field-brandText']").fill("SiblingKit Nav");
     await page
       .frameLocator("[data-testid='preview-frame']")

@@ -36,8 +36,9 @@
     "lint:ts": "tsc --noEmit",
     "test": "vitest run",
     "test:browser": "tsx tests/navigation-bar.browser.ts && tsx tests/example-previews.browser.ts && tsx tests/image-rich-components.browser.ts && tsx tests/full-height.browser.ts && tsx tests/editor-preview-flow.browser.ts && tsx tests/site-editor-flow.browser.ts",
+    "test:wcag": "tsx src/build/wcag-accessibility-ci.ts",
     "validate:dist-links": "node scripts/validate-dist-links.mjs",
-    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples && npm run validate:dist-links",
+    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples && npm run test:wcag && npm run validate:dist-links",
     "check": "npm run validate:strict"
   },
   "dependencies": {
@@ -45,6 +46,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.2",
     "@types/node": "^22.10.2",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",

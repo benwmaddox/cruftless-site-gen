@@ -90,6 +90,7 @@ export const renderPageDocument = ({
     scriptHref ? `    <script src="${escapeHtml(scriptHref)}" defer></script>` : "",
     "  </head>",
     `  <body data-theme="${escapeHtml(site.theme)}">`,
+    '    <a class="skip-link" href="#main-content">Skip to content</a>',
     indent(bodyHtml),
     "  </body>",
     "</html>",

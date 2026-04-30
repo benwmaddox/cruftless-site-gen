@@ -294,6 +294,21 @@ describe("buildSite output writes", () => {
     }
   });
 
+  it("renders a skip link to the main page content", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-skip-link-"));
+
+    try {
+      await buildSite(createStaticSite(), outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+
+      expect(html).toContain('<a class="skip-link" href="#main-content">Skip to content</a>');
+      expect(html).toContain('<main id="main-content" class="l-page" tabindex="-1">');
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
   it("preserves configured output subtrees while removing stale generated files", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-preserve-"));
 

@@ -19,18 +19,19 @@ const renderMultilineAddress = (address: string): string =>
   escapeHtml(address.trim()).replace(/\r?\n/g, "<br />");
 
 const renderContactItem = (label: string, valueHtml: string, href?: string): string => {
-  const tag = href ? "a" : "div";
-  const hrefAttr = href ? ` href="${escapeHtml(href)}"` : "";
   const classes = ["c-contact__item", "l-item"];
   if (href) {
     classes.push("c-contact__item--link");
   }
+  const renderedValue = href
+    ? `<a class="c-contact__link" href="${escapeHtml(href)}">${valueHtml}</a>`
+    : valueHtml;
 
   return [
-    `      <${tag} class="${classes.join(" ")}"${hrefAttr}>`,
+    `      <div class="${classes.join(" ")}">`,
     `        <dt class="c-contact__label">${escapeHtml(label)}</dt>`,
-    `        <dd class="c-contact__value">${valueHtml}</dd>`,
-    `      </${tag}>`,
+    `        <dd class="c-contact__value">${renderedValue}</dd>`,
+    "      </div>",
   ].join("\n");
 };
 

@@ -35,6 +35,26 @@ body {
   color: var(--text);
 }
 
+.skip-link {
+  position: fixed;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  z-index: 1000;
+  transform: translateY(calc(-100% - var(--space-md)));
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  color: var(--bg);
+}
+
 h1,
 h2,
 h3,
