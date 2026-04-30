@@ -211,6 +211,12 @@ const runBrowserRegression = async (): Promise<void> => {
       .frameLocator("[data-testid='preview-frame']")
       .locator("body")
       .evaluate(() => window.scrollTo(0, 240));
+    await page.waitForFunction(() => {
+      const iframe = document.querySelector("[data-testid='preview-frame']");
+      return iframe instanceof HTMLIFrameElement
+        && iframe.contentWindow !== null
+        && iframe.contentWindow.scrollY > 0;
+    });
     const scrollPositions = await page.evaluate(() => {
       const editorPanel = document.querySelector(".editor-panel");
 
