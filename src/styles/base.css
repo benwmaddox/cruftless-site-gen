@@ -35,6 +35,40 @@ body {
   color: var(--text);
 }
 
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-100%, -100%);
+  transition-property: opacity, transform;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: var(--space-sm);
+  left: var(--space-sm);
+  width: auto;
+  height: auto;
+  padding: var(--space-xs) var(--space-sm);
+  overflow: visible;
+  color: var(--bg);
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
 h1,
 h2,
 h3,
