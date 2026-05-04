@@ -109,6 +109,7 @@ class FakeDocument {
 
 class FakeWindow {
   readonly listeners = new Map<string, Array<() => void>>();
+  matchesNarrowViewport = false;
 
   getComputedStyle(): { columnGap: string; gap: string } {
     return {
@@ -121,6 +122,13 @@ class FakeWindow {
     const listeners = this.listeners.get(eventName) ?? [];
     listeners.push(listener);
     this.listeners.set(eventName, listeners);
+  }
+
+  matchMedia(query: string): { matches: boolean; media: string } {
+    return {
+      matches: query === "(max-width: 40rem)" && this.matchesNarrowViewport,
+      media: query,
+    };
   }
 }
 
@@ -253,5 +261,42 @@ describe("resolveNavigationBarMode", () => {
     expect(navbar.dataset.navigationBarOpen).toBe("false");
     expect(panel.hidden).toBe(true);
     expect(button.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("opens the menu when the CSS narrow-viewport breakpoint forces the button visible", () => {
+    FakeResizeObserver.instances = [];
+
+    const { button, document, navbar, panel, row, window } = createNavigationBarFixture();
+    const runNavigationRuntime = new Function(
+      "document",
+      "window",
+      "ResizeObserver",
+      "HTMLElement",
+      "HTMLButtonElement",
+      navigationBarRuntimeScript,
+    );
+
+    row.clientWidth = 760;
+    window.matchesNarrowViewport = true;
+
+    runNavigationRuntime(
+      document,
+      window,
+      FakeResizeObserver,
+      FakeElement,
+      FakeButtonElement,
+    );
+
+    document.readyState = "complete";
+    document.dispatchEvent("DOMContentLoaded");
+
+    expect(navbar.dataset.navigationBarMode).toBe("collapsed");
+    expect(panel.hidden).toBe(true);
+
+    button.dispatchEvent("click");
+
+    expect(navbar.dataset.navigationBarOpen).toBe("true");
+    expect(panel.hidden).toBe(false);
+    expect(button.getAttribute("aria-expanded")).toBe("true");
   });
 });
