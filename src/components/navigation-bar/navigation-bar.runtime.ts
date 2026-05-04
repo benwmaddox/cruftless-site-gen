@@ -48,6 +48,9 @@ const resolveNavigationBarMode = ({ containerWidth, brandingWidth, navWidth, gap
 const setupNavigationBarsSource = /* JavaScript */ `
 const setupNavigationBars = () => {
   const navbars = document.querySelectorAll(".c-navbar[data-js='navigation-bar']");
+  const narrowViewportQuery = "(max-width: 40rem)";
+  const isNarrowViewport = () =>
+    typeof window.matchMedia === "function" && window.matchMedia(narrowViewportQuery).matches;
 
   navbars.forEach((navbar) => {
     if (!(navbar instanceof HTMLElement)) {
@@ -86,12 +89,14 @@ const setupNavigationBars = () => {
       const gap = Number.parseFloat(styles.columnGap || styles.gap || "0");
       const brandingWidth = brand instanceof HTMLElement ? brand.getBoundingClientRect().width : 0;
       const navWidth = measure.scrollWidth;
-      const mode = resolveNavigationBarMode({
-        containerWidth: row.clientWidth,
-        brandingWidth,
-        navWidth,
-        gap,
-      });
+      const mode = isNarrowViewport()
+        ? "collapsed"
+        : resolveNavigationBarMode({
+            containerWidth: row.clientWidth,
+            brandingWidth,
+            navWidth,
+            gap,
+          });
 
       navbar.dataset.navigationBarMode = mode;
 
