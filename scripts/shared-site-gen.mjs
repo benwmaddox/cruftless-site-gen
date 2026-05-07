@@ -126,6 +126,10 @@ const localizeLandingImage = (args, inheritedOptions) => {
   runGeneratorEntryPoint("localize-landing-image", args, process.cwd(), inheritedOptions);
 };
 
+const optimizeImages = (sitePaths, inheritedOptions) => {
+  runGeneratorEntryPoint("optimize-content-images", [sitePaths.contentPath], sitePaths.root, inheritedOptions);
+};
+
 const buildSite = (
   sitePaths,
   contentPath = sitePaths.contentPath,
@@ -297,8 +301,17 @@ if (isDirectExecution) {
       process.exit(0);
     }
 
+    if (command === "optimize:images" || command === "images:optimize") {
+      const { sitePaths } = parseSiteCommandArgs(commandArgs);
+      console.log(
+        `Optimizing generated content images for ${path.relative(process.cwd(), sitePaths.root) || "."} with shared generator at ${generatorDir}.`,
+      );
+      optimizeImages(sitePaths);
+      process.exit(0);
+    }
+
     throw new Error(
-      "Usage: cruftless-site-gen <validate|build|build:site|prepare|dev:prepare|discover:images|lighthouse:ci|localize:landing-image> [site-dir]",
+      "Usage: cruftless-site-gen <validate|build|build:site|prepare|dev:prepare|discover:images|lighthouse:ci|localize:landing-image|optimize:images|images:optimize> [site-dir]",
     );
   } catch (error) {
     if (error instanceof Error) {
