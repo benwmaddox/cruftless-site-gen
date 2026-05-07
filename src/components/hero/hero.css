@@ -9,7 +9,7 @@
 .c-hero--has-background {
   overflow: hidden;
   min-height: clamp(28rem, 62vh, 46rem);
-  color: #fff;
+  color: var(--hero-background-fg, #fff);
 }
 
 .c-hero--align-center {
@@ -47,7 +47,11 @@
 }
 
 .c-hero--has-background .c-hero__subheadline {
-  color: rgb(255 255 255 / 88%);
+  color: var(--hero-background-muted-fg, rgb(255 255 255 / 88%));
+}
+
+.c-hero--has-background .c-hero__headline {
+  color: var(--hero-background-fg, #fff);
 }
 
 .c-hero__actions {

@@ -71,6 +71,11 @@ describe("theme validation", () => {
         ".demo { background-image: var(--site-page-background-image, none); }",
       ),
     ).toEqual([]);
+    expect(
+      findUnknownCssVarTokens(
+        ".demo { color: var(--hero-background-fg, #fff); }",
+      ),
+    ).toEqual([]);
   });
 
   it("rejects theme CSS that references unknown tokens", () => {
