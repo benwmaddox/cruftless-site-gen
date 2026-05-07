@@ -5,7 +5,7 @@ import { assertExactThemeTokens, themeTokenSet } from "../themes/tokens.js";
 import type { ValidationIssue } from "./site-validation.js";
 
 const CSS_VAR_PATTERN = /var\((--[a-z0-9-]+)/gi;
-const ALLOWED_NON_THEME_CSS_VAR_PREFIXES = ["--site-"] as const;
+const ALLOWED_NON_THEME_CSS_VAR_PREFIXES = ["--site-", "--hero-"] as const;
 const DECLARATION_PATTERN = /^\s*([a-z-]+|--[a-z0-9-]+)\s*:\s*(.*)$/i;
 const DISALLOWED_CSS_PROPERTIES = new Set([
   "float",

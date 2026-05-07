@@ -8,6 +8,7 @@ export const componentImageUsageNames = [
   "gallery-thumb-2",
   "gallery-thumb-3",
   "gallery-thumb-4",
+  "hero-background",
   "image-text",
   "page-background",
   "page-social",
