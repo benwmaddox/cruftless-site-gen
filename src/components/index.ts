@@ -212,7 +212,7 @@ export const componentDefinitions: readonly ComponentDefinition[] = [
   },
   {
     type: "hero",
-    render: (data) => renderHero(HeroSchema.parse(data)),
+    render: (data, renderContext) => renderHero(HeroSchema.parse(data), renderContext),
     cssPath: fileURLToPath(new URL("./hero/hero.css", import.meta.url)),
     classNames: heroClassNames,
   },
@@ -297,7 +297,7 @@ export const renderComponent = (
     case "google-maps":
       return renderGoogleMaps(data);
     case "hero":
-      return renderHero(data);
+      return renderHero(data, renderContext);
     case "hours":
       return renderHours(data);
     case "image-text":

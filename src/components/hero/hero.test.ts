@@ -26,6 +26,73 @@ describe("HeroSchema", () => {
     expect(html).not.toContain("<faster>");
   });
 
+  it("renders an optional background image on the hero section", () => {
+    const parsed = HeroSchema.parse({
+      type: "hero",
+      headline: "Built for custom rooms",
+      primaryCta: {
+        label: "Call now",
+        href: "tel:+15555555555",
+      },
+      backgroundImage: {
+        src: "/content/images/generated-hero.png",
+        alt: "Custom woodworking bench",
+        position: "center 35%",
+      },
+    });
+
+    const html = renderHero(parsed);
+
+    expect(html).toContain("c-hero--has-background");
+    expect(html).toContain("url('/content/images/generated-hero.png')");
+    expect(html).toContain("background-position: center, center 35%");
+    expect(html).not.toContain("Custom woodworking bench");
+  });
+
+  it("resolves background image paths through the render context", () => {
+    const parsed = HeroSchema.parse({
+      type: "hero",
+      headline: "Built for custom rooms",
+      primaryCta: {
+        label: "Call now",
+        href: "tel:+15555555555",
+      },
+      backgroundImage: {
+        src: "/content/images/generated-hero.png",
+      },
+    });
+
+    const html = renderHero(parsed, {
+      resolveImage: () => ({
+        src: "assets/images/generated-hero-hero-background-2400.avif?v=1234",
+      }),
+      resolveGalleryImage: () => ({
+        src: "",
+      }),
+    });
+
+    expect(html).toContain(
+      "url('assets/images/generated-hero-hero-background-2400.avif?v=1234')",
+    );
+  });
+
+  it("rejects unsafe background positioning", () => {
+    const parsed = HeroSchema.safeParse({
+      type: "hero",
+      headline: "Built for custom rooms",
+      primaryCta: {
+        label: "Call now",
+        href: "tel:+15555555555",
+      },
+      backgroundImage: {
+        src: "/content/images/generated-hero.png",
+        position: "center; color: red",
+      },
+    });
+
+    expect(parsed.success).toBe(false);
+  });
+
   it("rejects unknown fields and missing CTAs", () => {
     const extraField = HeroSchema.safeParse({
       type: "hero",

@@ -703,6 +703,32 @@
                                   "center"
                                 ],
                                 "default": "start"
+                              },
+                              "backgroundImage": {
+                                "type": "object",
+                                "properties": {
+                                  "src": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 2048
+                                  },
+                                  "alt": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 200
+                                  },
+                                  "position": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80,
+                                    "pattern": "^[a-z0-9% .-]+$",
+                                    "default": "center"
+                                  }
+                                },
+                                "required": [
+                                  "src"
+                                ],
+                                "additionalProperties": false
                               }
                             },
                             "required": [

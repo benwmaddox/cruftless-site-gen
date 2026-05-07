@@ -26,6 +26,7 @@ const usageOutputWidths: Record<ComponentImageUsage, number> = {
   "gallery-thumb-2": 720,
   "gallery-thumb-3": 560,
   "gallery-thumb-4": 420,
+  "hero-background": 2400,
   "image-text": 1200,
   "page-background": 2400,
   "page-social": 1200,
@@ -275,6 +276,11 @@ const collectImageUsages = (
           addUsage([...pathSegments, "images", imageIndex], image.src, "gallery-full");
         });
         return;
+      case "hero":
+        if (component.backgroundImage) {
+          addUsage([...pathSegments, "backgroundImage"], component.backgroundImage.src, "hero-background");
+        }
+        return;
       case "image-text":
         addUsage([...pathSegments, "image"], component.image.src, "image-text");
         return;
@@ -331,7 +337,12 @@ const collectImageUsages = (
 };
 
 const resolveOutputExtension = (extension: string, usage: ComponentImageUsage): string => {
-  if (usage === "page-background" || usage === "media-content" || usage === "media-wide") {
+  if (
+    usage === "page-background" ||
+    usage === "hero-background" ||
+    usage === "media-content" ||
+    usage === "media-wide"
+  ) {
     return ".avif";
   }
 
@@ -427,7 +438,7 @@ const processLocalImageVariant = async (
       outputBytes = sourceBytes;
     } else if (metadata.isRaster) {
       const transformer = sharp(sourceBytes).rotate();
-      outputBytes = await (usage === "page-background"
+      outputBytes = await (usage === "page-background" || usage === "hero-background"
         ? transformer
             .resize({
               fit: "inside",
