@@ -20,6 +20,7 @@ import {
   type SiteContentData,
 } from "../schemas/site.schema.js";
 import { explainHrefValidationFailure } from "../schemas/shared.js";
+import { escapeHtml } from "../renderer/escape-html.js";
 import { renderPageDocument } from "../renderer/render-page.js";
 import { emitThemeCss } from "../themes/emit-theme-css.js";
 import { themes } from "../themes/index.js";
@@ -401,6 +402,28 @@ const renderSiteJs = (siteContent: SiteContentData): string => {
     .join("\n\n");
 };
 
+const renderSiteFooter = (site: SiteData): string => {
+  if (site.footer?.enabled === false) {
+    return "";
+  }
+
+  const currentYear = new Date().getFullYear();
+  const companyName = site.footer?.companyName ?? site.name;
+  const showCredit = site.footer?.showCredit !== false;
+  const creditText = site.footer?.creditText ?? "Site created by";
+  const creditLabel = site.footer?.creditLabel ?? "Site by Email";
+  const creditHref = site.footer?.creditHref ?? "https://www.sitebyemail.com/";
+  const creditHtml = showCredit
+    ? ` ${escapeHtml(creditText)} <a href="${escapeHtml(creditHref)}">${escapeHtml(creditLabel)}</a>`
+    : "";
+
+  return [
+    '<footer class="l-site-footer" role="contentinfo">',
+    `  <p>&copy; Copyright ${currentYear} ${escapeHtml(companyName)} | All Rights Reserved.${creditHtml}</p>`,
+    "</footer>",
+  ].join("\n");
+};
+
 const createSinglePageSiteContent = (
   siteContent: SiteContentData,
   page: SiteContentData["pages"][number],
@@ -415,14 +438,17 @@ const renderPageBodyHtml = (
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string => {
   const layoutComponents = siteContent.site.layout?.components;
+  const footerHtml = renderSiteFooter(siteContent.site);
 
   if (!layoutComponents) {
-    return `<main class="l-page">\n${page.components
+    const mainHtml = `<main class="l-page">\n${page.components
       .map((component) => renderComponent(component, renderContext))
       .join("\n")}\n</main>`;
+
+    return [mainHtml, footerHtml].filter(Boolean).join("\n");
   }
 
-  return layoutComponents
+  const layoutHtml = layoutComponents
     .map((layoutComponent) => {
       if (isPageContentSlot(layoutComponent)) {
         const pageContentHtml = page.components
@@ -434,6 +460,8 @@ const renderPageBodyHtml = (
       return renderComponent(layoutComponent, renderContext);
     })
     .join("\n");
+
+  return [layoutHtml, footerHtml].filter(Boolean).join("\n");
 };
 
 const renderSitePageDocument = ({

@@ -33,7 +33,7 @@ The generator follows a few hard rules:
 
 Every site file has two top-level sections:
 
-- `site`: site-wide settings such as name, base URL, theme, theme overrides, optional background image, optional Google Analytics measurement ID, and optional shared layout
+- `site`: site-wide settings such as name, base URL, theme, theme overrides, optional background image, optional Google Analytics measurement ID, shared layout, and footer behavior
 - `pages`: page definitions with a slug, title, optional metadata, and an ordered list of components
 
 ### Shared layout
@@ -47,6 +47,16 @@ That slot is where each page's own `components` array is inserted. This lets the
 ### Google Analytics
 
 If `site.googleAnalyticsMeasurementId` is present, every generated page includes the standard Google Analytics loader and `gtag('config', ...)` call for that GA4 measurement ID.
+
+### Footer
+
+Every generated page includes a footer by default:
+
+```text
+&copy; Copyright [current year] [site name] | All Rights Reserved. Site created by Site by Email
+```
+
+Set `site.footer.companyName` to override the copyright name. Set `site.footer.enabled` to `false` to remove the whole footer, or `site.footer.showCredit` to `false` to keep copyright text while hiding the Site by Email credit.
 
 ### Available components
 
@@ -95,6 +105,9 @@ This is the rough shape of a site file:
     "name": "LaunchKit",
     "baseUrl": "https://launchkit.example",
     "theme": "corporate",
+    "footer": {
+      "companyName": "LaunchKit"
+    },
     "layout": {
       "components": [
         { "type": "navigation-bar", "brandText": "LaunchKit", "links": [] },
@@ -220,6 +233,14 @@ That reads `../my-site/content/site.json` and writes `../my-site/dist/`. If the 
 ```bash
 cruftless-site-gen build ../my-site
 ```
+
+To rebuild every refresh site under `F:\Refreshes` with this checkout's current generator code, run:
+
+```powershell
+npm run refreshes:regenerate
+```
+
+The script scans first-level folders that contain `content\site.json`, skips the older generator checkout at `F:\Refreshes\cruftless-site-gen` by default, rebuilds each site's `dist\`, and writes `_refresh_regeneration_report.json` under the refresh root. Use `-DryRun` when calling `scripts\regenerate-refreshes.ps1` directly to preview the site list.
 
 ### 5. Build or validate a specific content file
 

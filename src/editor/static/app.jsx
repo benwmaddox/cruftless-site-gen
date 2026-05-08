@@ -638,6 +638,27 @@ const SiteEditor = ({ browser, config, draft, refreshPreview, setDraft, validati
             refreshPreview={refreshPreview}
             validationErrors={validationErrors}
           />
+          <FieldRenderer
+            browser={browser}
+            draft={draft}
+            field={{
+              kind: "object",
+              key: "footer",
+              label: "Footer",
+              fields: [
+                { kind: "checkbox", key: "enabled", label: "Show footer" },
+                { kind: "text", key: "companyName", label: "Company name", optional: true },
+                { kind: "checkbox", key: "showCredit", label: "Show Site by Email credit" },
+                { kind: "text", key: "creditText", label: "Credit text", optional: true },
+                { kind: "text", key: "creditLabel", label: "Credit label", optional: true },
+                { kind: "text", key: "creditHref", label: "Credit link", optional: true },
+              ],
+            }}
+            path={[...sitePath, "footer"]}
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+            validationErrors={validationErrors}
+          />
         </div>
       </div>
       {draft.site.layout?.components ? (

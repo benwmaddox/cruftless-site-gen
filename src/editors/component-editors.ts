@@ -23,6 +23,11 @@ const emptyImage = {
   alt: "Example image",
 };
 
+const emptyHeroBackgroundImage = {
+  src: "/content/example.jpg",
+  position: "center",
+};
+
 const emptyLink = {
   label: "Learn more",
   href: "/",
@@ -319,6 +324,11 @@ export const heroEditor = hero.object({
       hero.select("align", "Alignment", [
         { label: "Start", value: "start" },
         { label: "Center", value: "center" },
+      ]),
+      hero.optionalObject("backgroundImage", "Background Image", emptyHeroBackgroundImage, [
+        { kind: "media", key: "src", label: "Source" },
+        { kind: "text", key: "alt", label: "Alt text", optional: true },
+        { kind: "text", key: "position", label: "Position", optional: true },
       ]),
       hero.optionalObject("primaryCta", "Primary CTA", emptyLink, linkFields),
       hero.optionalObject("secondaryCta", "Secondary CTA", emptyLink, linkFields),

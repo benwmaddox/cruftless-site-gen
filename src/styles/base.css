@@ -77,6 +77,31 @@ button:focus-visible {
   padding-block: var(--space-xl);
 }
 
+.l-site-footer {
+  padding-block: var(--space-md);
+  padding-inline: var(--space-md);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--muted);
+  font-size: var(--size-sm);
+  text-align: center;
+}
+
+.l-site-footer p {
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+.l-site-footer a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.l-site-footer a:hover {
+  color: var(--link-hover);
+}
+
 .l-container {
   width: calc(100% - (var(--space-md) * 2));
   max-width: var(--max-width);

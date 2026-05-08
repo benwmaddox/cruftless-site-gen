@@ -1,8 +1,19 @@
 import type { HeroData } from "./hero.schema.js";
 import { escapeHtml } from "../../renderer/escape-html.js";
+import {
+  defaultComponentRenderContext,
+  type ComponentRenderContext,
+} from "../render-context.js";
+
+const escapeCssSingleQuotedString = (value: string): string =>
+  value
+    .replace(/\\/gu, "\\\\")
+    .replace(/'/gu, "\\'")
+    .replace(/[\n\r\f]/gu, "");
 
 export const heroClassNames = [
   "c-hero",
+  "c-hero--has-background",
   "c-hero--align-start",
   "c-hero--align-center",
   "c-hero__body",
@@ -11,10 +22,31 @@ export const heroClassNames = [
   "c-hero__actions",
 ] as const;
 
-export const renderHero = (data: HeroData): string => {
+export const renderHero = (
+  data: HeroData,
+  renderContext: ComponentRenderContext = defaultComponentRenderContext,
+): string => {
   const ctas = [data.primaryCta, data.secondaryCta].filter(
     (cta): cta is NonNullable<typeof cta> => Boolean(cta),
   );
+  const className = [
+    "c-hero",
+    "l-container",
+    "l-section",
+    "l-section--hero",
+    `c-hero--align-${escapeHtml(data.align)}`,
+    data.backgroundImage ? "c-hero--has-background" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const resolvedBackgroundImage = data.backgroundImage
+    ? renderContext.resolveImage(data.backgroundImage, "hero-background")
+    : undefined;
+  const backgroundStyle = data.backgroundImage && resolvedBackgroundImage
+    ? ` style="background-image: linear-gradient(90deg, rgb(0 0 0 / 72%), rgb(0 0 0 / 38%) 54%, rgb(0 0 0 / 18%)), url('${escapeHtml(
+        escapeCssSingleQuotedString(resolvedBackgroundImage.src),
+      )}'); background-position: center, ${escapeHtml(data.backgroundImage.position)}; background-size: auto, cover; background-repeat: no-repeat;"`
+    : "";
 
   const actionHtml = ctas
     .map((cta, index) => {
@@ -27,7 +59,7 @@ export const renderHero = (data: HeroData): string => {
     .join("");
 
   return [
-    `<section class="c-hero l-container l-section l-section--hero c-hero--align-${escapeHtml(data.align)}">`,
+    `<section class="${className}"${backgroundStyle}>`,
     '  <div class="c-hero__body">',
     `    <h1 class="c-hero__headline">${escapeHtml(data.headline)}</h1>`,
     data.subheadline
