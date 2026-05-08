@@ -19,6 +19,7 @@
     "site": "node scripts/shared-site-gen.mjs",
     "site:build": "node scripts/shared-site-gen.mjs build",
     "site:validate": "node scripts/shared-site-gen.mjs validate",
+    "refreshes:regenerate": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/regenerate-refreshes.ps1",
     "images:optimize": "node scripts/shared-site-gen.mjs optimize:images",
     "build:example:baird": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive",
     "build:example:baird:watch": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive --watch",

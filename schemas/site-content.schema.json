@@ -1717,6 +1717,43 @@
                 "components"
               ],
               "additionalProperties": false
+            },
+            "footer": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "companyName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "showCredit": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "creditText": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80,
+                  "default": "Site created by"
+                },
+                "creditLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80,
+                  "default": "Site by Email"
+                },
+                "creditHref": {
+                  "type": "string",
+                  "format": "uri",
+                  "default": "https://www.sitebyemail.com/"
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
             }
           },
           "required": [

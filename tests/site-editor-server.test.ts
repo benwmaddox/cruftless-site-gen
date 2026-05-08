@@ -108,6 +108,27 @@ describe("createSiteEditorServer", () => {
     expect(filesPayload.selectedFile).toBe(path.join(tempDir, "site.json"));
   });
 
+  it("exposes hero background controls in the editor config", async () => {
+    const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
+    await writeJson(path.join(tempDir, "site.json"), createDraft("LaunchKit"));
+    const server = await createServer(tempDir);
+
+    const response = await fetch(`${server.origin}/__editor/config`);
+    const payload = await response.json() as {
+      componentSpecs: {
+        hero: {
+          fields: Array<{ fields: Array<{ key?: string }> }>;
+        };
+      };
+    };
+    const heroFieldKeys = payload.componentSpecs.hero.fields.flatMap((section) =>
+      section.fields.map((field) => field.key),
+    );
+
+    expect(response.status).toBe(200);
+    expect(heroFieldKeys).toContain("backgroundImage");
+  });
+
   it("lets you browse above the current content root, filters sibling project directories, and snaps into nested content", async () => {
     const tempDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-site-editor-"));
     const firstProjectDir = path.join(tempDir, "first");

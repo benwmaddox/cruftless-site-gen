@@ -73,6 +73,17 @@ const siteCssVariableSchemaEntries = Object.fromEntries(
 
 export const SiteCssVariablesSchema = z.object(siteCssVariableSchemaEntries).strict();
 
+export const SiteFooterSchema = z
+  .object({
+    enabled: z.boolean().default(true),
+    companyName: z.string().min(1).max(120).optional(),
+    showCredit: z.boolean().default(true),
+    creditText: z.string().min(1).max(80).default("Site created by"),
+    creditLabel: z.string().min(1).max(80).default("Site by Email"),
+    creditHref: z.string().url().default("https://www.sitebyemail.com/"),
+  })
+  .strict();
+
 export const SiteSchema = z
   .object({
     name: z.string().min(1).max(80),
@@ -90,6 +101,7 @@ export const SiteSchema = z
       .optional(),
     googleAnalyticsMeasurementId: GoogleAnalyticsMeasurementIdSchema.optional(),
     layout: SiteLayoutSchema.optional(),
+    footer: SiteFooterSchema.default({}),
   })
   .strict();
 
@@ -105,5 +117,6 @@ export type PageContentSlotData = z.infer<typeof PageContentSlotSchema>;
 export type SiteLayoutComponentData = z.infer<typeof SiteLayoutComponentSchema>;
 export type SiteLayoutData = z.infer<typeof SiteLayoutSchema>;
 export type SiteCssVariablesData = z.infer<typeof SiteCssVariablesSchema>;
+export type SiteFooterData = z.infer<typeof SiteFooterSchema>;
 export type SiteData = z.infer<typeof SiteSchema>;
 export type SiteContentData = z.infer<typeof SiteContentSchema>;

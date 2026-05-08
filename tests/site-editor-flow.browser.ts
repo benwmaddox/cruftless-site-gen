@@ -130,6 +130,16 @@ const runBrowserRegression = async (): Promise<void> => {
       return field instanceof HTMLInputElement && field.value === "SiblingKit";
     });
     assert.equal(await page.locator("[data-testid='field-name']").inputValue(), "SiblingKit");
+    await page.locator("label", { hasText: "Show footer" }).waitFor();
+    await page.locator("[data-testid='field-companyName']").fill("SiblingKit LLC");
+    await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("text=Copyright")
+      .waitFor();
+    await page
+      .frameLocator("[data-testid='preview-frame']")
+      .locator("text=SiblingKit LLC")
+      .waitFor();
     await page.locator("[data-testid='field-pageBackgroundImageUrl']").scrollIntoViewIfNeeded();
     await page.locator("[data-testid='field-pageBackgroundImageUrl']").fill("images/hero image.svg");
     await page.waitForFunction(() => {

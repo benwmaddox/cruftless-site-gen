@@ -196,6 +196,34 @@ const createAnalyticsSite = () =>
     ],
   });
 
+const createFooterSite = () =>
+  SiteContentSchema.parse({
+    site: {
+      name: "LaunchKit",
+      baseUrl: "https://launchkit.example",
+      theme: "friendly-modern",
+      footer: {
+        companyName: "LaunchKit & Partners",
+      },
+    },
+    pages: [
+      {
+        slug: "/",
+        title: "Home",
+        components: [
+          {
+            type: "hero",
+            headline: "Launch faster",
+            primaryCta: {
+              label: "Get started",
+              href: "/start",
+            },
+          },
+        ],
+      },
+    ],
+  });
+
 describe("buildSite output writes", () => {
   it("does not rewrite unchanged files on repeated builds", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-output-"));
@@ -356,6 +384,99 @@ describe("buildSite output writes", () => {
       );
       expect(html).toContain(`gtag("config","G-TEST1234");`);
       await expect(access(path.join(outDir, "assets", "site.js"))).rejects.toThrow();
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
+  it("renders the configured copyright footer with Site by Email credit", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-footer-"));
+
+    try {
+      await buildSite(createFooterSite(), outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+      const currentYear = new Date().getFullYear();
+
+      expect(html).toContain('<footer class="l-site-footer" role="contentinfo">');
+      expect(html).toContain(
+        `&copy; Copyright ${currentYear} LaunchKit &amp; Partners | All Rights Reserved. Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>`,
+      );
+      expect(css).toContain(".l-site-footer");
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
+  it("renders the copyright footer by default", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-footer-default-"));
+
+    try {
+      await buildSite(createStaticSite(), outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const currentYear = new Date().getFullYear();
+
+      expect(html).toContain(
+        `&copy; Copyright ${currentYear} LaunchKit | All Rights Reserved. Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>`,
+      );
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
+  it("can render the copyright footer without the Site by Email credit", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-footer-no-credit-"));
+
+    try {
+      const staticSite = createStaticSite();
+      const site = SiteContentSchema.parse({
+        ...staticSite,
+        site: {
+          ...staticSite.site,
+          footer: {
+            showCredit: false,
+          },
+        },
+      });
+
+      await buildSite(site, outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+      const currentYear = new Date().getFullYear();
+
+      expect(html).toContain(
+        `&copy; Copyright ${currentYear} LaunchKit | All Rights Reserved.</p>`,
+      );
+      expect(html).not.toContain("Site created by");
+      expect(html).not.toContain("sitebyemail.com");
+    } finally {
+      await removeDirectory(outDir);
+    }
+  });
+
+  it("can disable the copyright footer", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-build-footer-disabled-"));
+
+    try {
+      const staticSite = createStaticSite();
+      const site = SiteContentSchema.parse({
+        ...staticSite,
+        site: {
+          ...staticSite.site,
+          footer: {
+            enabled: false,
+          },
+        },
+      });
+
+      await buildSite(site, outDir);
+
+      const html = await readFile(path.join(outDir, "index.html"), "utf8");
+
+      expect(html).not.toContain("l-site-footer");
+      expect(html).not.toContain("All Rights Reserved");
     } finally {
       await removeDirectory(outDir);
     }
