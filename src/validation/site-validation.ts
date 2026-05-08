@@ -1,5 +1,6 @@
 import {
   countPageContentSlots,
+  hasMixedLayoutComponentModels,
   resolvePageComponentEntries,
 } from "../layout/page-layout.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
@@ -20,11 +21,18 @@ export const collectSiteValidationIssues = (
   const hasValidLayoutSlotCount =
     !layoutComponents || countPageContentSlots(layoutComponents) === 1;
 
+  if (hasMixedLayoutComponentModels(siteContent.site)) {
+    issues.push({
+      path: ["site", "layout"],
+      message: "site layout cannot mix legacy 'components' with headerComponents or footerComponents",
+    });
+  }
+
   if (layoutComponents) {
     if (!hasValidLayoutSlotCount) {
       issues.push({
         path: ["site", "layout", "components"],
-        message: "site layout must include exactly one 'page-content' slot",
+        message: "legacy site layout components must include exactly one 'page-content' slot",
       });
     }
   }
@@ -43,7 +51,7 @@ export const collectSiteValidationIssues = (
 
     let heroCount = 0;
     const resolvedEntries =
-      hasValidLayoutSlotCount
+      hasValidLayoutSlotCount && !hasMixedLayoutComponentModels(siteContent.site)
         ? resolvePageComponentEntries(siteContent.site, page, pageIndex)
         : page.components.map((component, componentIndex) => ({
             component,

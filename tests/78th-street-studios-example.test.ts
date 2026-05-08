@@ -16,7 +16,8 @@ describe("78th Street Studios example", () => {
     const siteContent = await loadValidatedSite(exampleContentPath);
 
     expect(siteContent.site.name).toBe("78th Street Studios");
-    expect(siteContent.site.layout?.components).toBeDefined();
+    expect(siteContent.site.layout?.headerComponents).toBeDefined();
+    expect(siteContent.site.layout?.footerComponents).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual(["/", "/about"]);
 
     const outDir = await mkdtemp(path.join(os.tmpdir(), "78th-street-studios-"));

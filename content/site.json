@@ -4,7 +4,7 @@
     "baseUrl": "https://launchkit.example",
     "theme": "brutalism",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "LaunchKit",
@@ -26,10 +26,9 @@
           "paragraphs": [
             "Start each page with the same clear promise, navigation, and brand voice."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "prose",
           "title": "Shared site footer",

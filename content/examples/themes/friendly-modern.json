@@ -4,7 +4,7 @@
     "baseUrl": "https://example.com/examples/friendly-modern/",
     "theme": "friendly-modern",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "Friendly Modern",
@@ -30,10 +30,9 @@
           "paragraphs": [
             "Use the shared layout wrapper to verify how global sections look in the friendly-modern theme."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "prose",
           "title": "Shared theme footer",

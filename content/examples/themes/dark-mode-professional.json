@@ -4,7 +4,7 @@
     "baseUrl": "https://example.com/examples/dark-mode-professional/",
     "theme": "dark-mode-professional",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "Dark Mode Professional",
@@ -30,10 +30,9 @@
           "paragraphs": [
             "Use the shared layout wrapper to verify how global sections look in the dark-mode-professional theme."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "prose",
           "title": "Shared theme footer",

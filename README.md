@@ -13,7 +13,7 @@ The current approach is to keep the authoring surface small and explicit:
 - real site migrations are treated as the proving ground, so components need to cover practical brochure-site patterns instead of abstract examples
 - themes control more than color tokens, so changing the theme can materially change spacing, typography, surfaces, and visual rhythm
 - visually rich and narrative-heavy pages are modeled with structured components such as `media`, `image-text`, `gallery`, and `prose`
-- repeated site chrome belongs in shared layout components, with `page-content` marking where each page's own sections render
+- repeated site chrome belongs in shared header and footer layout components that wrap each page's own sections
 - location-driven sites can use first-class contact, hours, store-location-hours, and Google Maps components
 - JSON Schema output keeps editing ergonomic in VS Code while preserving strict validation at build time
 
@@ -38,11 +38,9 @@ Every site file has two top-level sections:
 
 ### Shared layout
 
-If `site.layout.components` is present, those components wrap every page. One item in that layout can be:
+If `site.layout.headerComponents` or `site.layout.footerComponents` are present, those components wrap every page. Header components render before the page's own `components` array, and footer components render after it. This lets the repo reuse navigation, shared prose, calls to action, or footer content across every page without copying them into each page object.
 
-- `{ "type": "page-content" }`
-
-That slot is where each page's own `components` array is inserted. This lets the repo reuse headers, nav, shared prose, or footers across every page without copying them into each page object.
+Older content may still use `site.layout.components` with a `{ "type": "page-content" }` slot. The generator continues to read that legacy shape so existing sites can be migrated deliberately.
 
 ### Google Analytics
 
@@ -109,10 +107,10 @@ This is the rough shape of a site file:
       "companyName": "LaunchKit"
     },
     "layout": {
-      "components": [
-        { "type": "navigation-bar", "brandText": "LaunchKit", "links": [] },
-        { "type": "page-content" }
-      ]
+      "headerComponents": [
+        { "type": "navigation-bar", "brandText": "LaunchKit", "links": [] }
+      ],
+      "footerComponents": []
     }
   },
   "pages": [
@@ -345,7 +343,7 @@ If you change the schema, component registry, theme tokens, renderer behavior, o
 - `src/themes/`: theme definitions and theme CSS emission
 - `src/build/`: CLI entrypoints for build, validation, examples, and schema generation
 - `src/schemas/`: Zod schemas and JSON Schema generation helpers
-- `src/layout/`: shared layout logic, including the `page-content` slot
+- `src/layout/`: shared layout logic for site-level header and footer components, plus legacy `page-content` slot support
 - `tests/`: repo-level tests
 - `docs/`: supporting prompts and workflow docs
 - `reports/`: write-ups from migration experiments and mapping work

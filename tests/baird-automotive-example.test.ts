@@ -14,7 +14,8 @@ describe("Baird Automotive example", () => {
 
     expect(siteContent.site.name).toBe("Baird Automotive");
     expect(siteContent.site.theme).toBe("corporate");
-    expect(siteContent.site.layout?.components).toBeDefined();
+    expect(siteContent.site.layout?.headerComponents).toBeDefined();
+    expect(siteContent.site.layout?.footerComponents).toBeDefined();
     expect(siteContent.pages.map((page) => page.slug)).toEqual([
       "/",
       "/our-story",

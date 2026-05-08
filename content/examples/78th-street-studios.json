@@ -5,7 +5,7 @@
     "theme": "workshop",
     "pageBackgroundImageUrl": "https://78thstreetstudios.com/sites/78thstreetstudios.com/files/styles/adaptive/public/media/images/background/IMG_CFD448348658-1.jpeg?itok=FLmeLmsX",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "78th Street Studios",
@@ -35,10 +35,9 @@
           "paragraphs": [
             "Use About for the building story, Art Tours for guided visits, Maps for directions, Rent Space for private events, and Press for coverage."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "cta-band",
           "headline": "Third Fridays return on Friday, April 17, 2026",

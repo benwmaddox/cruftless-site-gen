@@ -4,7 +4,7 @@
     "baseUrl": "https://example.com/examples/corporate/",
     "theme": "corporate",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "Corporate",
@@ -30,10 +30,9 @@
           "paragraphs": [
             "Use the shared layout wrapper to verify how global sections look in the corporate theme."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "prose",
           "title": "Shared theme footer",

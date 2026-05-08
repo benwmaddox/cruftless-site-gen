@@ -567,11 +567,17 @@ const SiteEditor = ({ browser, config, draft, refreshPreview, setDraft, validati
   const enableSharedLayout = () => {
     setDraft((currentDraft) =>
       setAtPath(currentDraft, [...sitePath, "layout"], {
-        components: [{ type: "page-content" }],
+        headerComponents: [],
+        footerComponents: [],
       }),
     );
     refreshPreview();
   };
+  const layout = draft.site.layout;
+  const hasSharedLayout = Boolean(layout);
+  const hasLegacySharedLayout = Boolean(layout?.components);
+  const headerComponents = layout?.headerComponents ?? [];
+  const footerComponents = layout?.footerComponents ?? [];
 
   return (
     <>
@@ -661,19 +667,42 @@ const SiteEditor = ({ browser, config, draft, refreshPreview, setDraft, validati
           />
         </div>
       </div>
-      {draft.site.layout?.components ? (
-        <ComponentListEditor
-          browser={browser}
-          config={config}
-          draft={draft}
-          components={draft.site.layout.components}
-          componentsPath={["site", "layout", "components"]}
-          mode="layout"
-          setDraft={setDraft}
-          refreshPreview={refreshPreview}
-          title="Shared Layout Components"
-          validationErrors={validationErrors}
-        />
+      {hasSharedLayout ? (
+        <>
+          {hasLegacySharedLayout ? (
+            <div className="card">
+              <h2>Legacy Shared Layout</h2>
+              <div className="hint">
+                This file still uses layout.components. It will render, but use header and footer
+                components for new shared layout edits.
+              </div>
+            </div>
+          ) : null}
+          <ComponentListEditor
+            browser={browser}
+            config={config}
+            draft={draft}
+            components={headerComponents}
+            componentsPath={["site", "layout", "headerComponents"]}
+            mode="layout"
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+            title="Header Components"
+            validationErrors={validationErrors}
+          />
+          <ComponentListEditor
+            browser={browser}
+            config={config}
+            draft={draft}
+            components={footerComponents}
+            componentsPath={["site", "layout", "footerComponents"]}
+            mode="layout"
+            setDraft={setDraft}
+            refreshPreview={refreshPreview}
+            title="Footer Components"
+            validationErrors={validationErrors}
+          />
+        </>
       ) : (
         <div className="card">
           <div className="list-item-header">
@@ -958,15 +987,11 @@ const ComponentListEditor = ({
   validationErrors,
 }) => {
   const componentTypeRef = useRef(null);
-  const componentTypeOptions =
-    mode === "layout" ? ["page-content", ...config.componentTypes] : config.componentTypes;
+  const componentTypeOptions = config.componentTypes;
 
   const addComponent = () => {
     const componentType = componentTypeRef.current?.value ?? "prose";
-    const nextComponent =
-      componentType === "page-content"
-        ? { type: "page-content" }
-        : clone(config.componentSpecs[componentType].defaults);
+    const nextComponent = clone(config.componentSpecs[componentType].defaults);
 
     setDraft((currentDraft) => {
       const nextDraft = clone(currentDraft);
@@ -982,12 +1007,10 @@ const ComponentListEditor = ({
         <h2>{title}</h2>
         <div className="component-add-row">
           <div className="grow">
-            <select ref={componentTypeRef} defaultValue={mode === "layout" ? "page-content" : "prose"}>
+            <select ref={componentTypeRef} defaultValue="prose">
               {componentTypeOptions.map((componentType) => (
                 <option key={componentType} value={componentType}>
-                  {componentType === "page-content"
-                    ? "Page Content Slot"
-                    : config.componentSpecs[componentType].title}
+                  {config.componentSpecs[componentType].title}
                 </option>
               ))}
             </select>

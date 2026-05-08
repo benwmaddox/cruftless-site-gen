@@ -4,7 +4,7 @@
     "baseUrl": "https://example.com/examples/high-vis-service/",
     "theme": "high-vis-service",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "High-Vis Service",
@@ -30,10 +30,9 @@
           "paragraphs": [
             "Use the shared layout wrapper to verify how global sections look in the high-vis-service theme."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "prose",
           "title": "Shared theme footer",

@@ -4,7 +4,7 @@
     "baseUrl": "https://www.bairdautomotive.com",
     "theme": "corporate",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "Baird Automotive",
@@ -30,10 +30,9 @@
               "href": "/baird-automotive/contact"
             }
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "cta-band",
           "headline": "Book service or plan your visit",

@@ -20,7 +20,7 @@ const createDraft = (
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
       layout: {
-        components: [
+        headerComponents: [
           {
             type: "navigation-bar",
             brandText: siteName,
@@ -31,10 +31,8 @@ const createDraft = (
               },
             ],
           },
-          {
-            type: "page-content",
-          },
         ],
+        footerComponents: [],
       },
     },
     pages: [
@@ -287,7 +285,7 @@ const runBrowserRegression = async (): Promise<void> => {
     const savedDraft = SiteContentSchema.parse(JSON.parse(await readFile(siblingContentPath, "utf8")));
     const firstSavedComponent = savedDraft.pages[1]?.components[0];
     const secondSavedComponent = savedDraft.pages[1]?.components[1];
-    const sharedNav = savedDraft.site.layout?.components[0];
+    const sharedNav = savedDraft.site.layout?.headerComponents[0];
 
     if (firstSavedComponent?.type !== "cta-band" || secondSavedComponent?.type !== "prose") {
       throw new Error("Expected the saved about page components to be reordered.");

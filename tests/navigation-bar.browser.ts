@@ -28,7 +28,7 @@ const createNavigationBarFixture = () =>
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
       layout: {
-        components: [
+        headerComponents: [
           {
             type: "navigation-bar",
             brandText: "LaunchKit Enterprise",
@@ -51,10 +51,8 @@ const createNavigationBarFixture = () =>
               },
             ],
           },
-          {
-            type: "page-content",
-          },
         ],
+        footerComponents: [],
       },
     },
     pages: [

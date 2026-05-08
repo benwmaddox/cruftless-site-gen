@@ -63,7 +63,9 @@ export const SiteLayoutComponentSchema = z.union([ComponentSchema, PageContentSl
 
 export const SiteLayoutSchema = z
   .object({
-    components: z.array(SiteLayoutComponentSchema).min(1),
+    headerComponents: z.array(ComponentSchema).default([]),
+    footerComponents: z.array(ComponentSchema).default([]),
+    components: z.array(SiteLayoutComponentSchema).min(1).optional(),
   })
   .strict();
 

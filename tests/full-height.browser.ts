@@ -20,7 +20,7 @@ const createShortPageFixture = () =>
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
       layout: {
-        components: [
+        headerComponents: [
           {
             type: "navigation-bar",
             brandText: "LaunchKit",
@@ -35,10 +35,8 @@ const createShortPageFixture = () =>
               },
             ],
           },
-          {
-            type: "page-content",
-          },
         ],
+        footerComponents: [],
       },
     },
     pages: [
