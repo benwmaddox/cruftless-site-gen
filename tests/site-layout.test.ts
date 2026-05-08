@@ -16,15 +16,14 @@ describe("site layout", () => {
         baseUrl: "https://launchkit.example",
         theme: "friendly-modern",
         layout: {
-          components: [
+          headerComponents: [
             {
               type: "prose",
               title: "Shared header",
               paragraphs: ["This introduction appears on every page."],
             },
-            {
-              type: "page-content",
-            },
+          ],
+          footerComponents: [
             {
               type: "prose",
               title: "Shared footer",
@@ -99,16 +98,14 @@ describe("site layout", () => {
         baseUrl: "https://launchkit.example",
         theme: "friendly-modern",
         layout: {
-          components: [
+          headerComponents: [
             {
               type: "prose",
               title: "Shared header",
               paragraphs: ["This introduction appears on every page."],
             },
-            {
-              type: "page-content",
-            },
           ],
+          footerComponents: [],
         },
       },
       pages: [
@@ -169,7 +166,7 @@ describe("site layout", () => {
         baseUrl: "https://launchkit.example",
         theme: "friendly-modern",
         layout: {
-          components: [
+          headerComponents: [
             {
               type: "navigation-bar",
               brandText: "LaunchKit",
@@ -188,10 +185,8 @@ describe("site layout", () => {
                 },
               ],
             },
-            {
-              type: "page-content",
-            },
           ],
+          footerComponents: [],
         },
       },
       pages: [

@@ -13,7 +13,7 @@ import {
   defaultComponentRenderContext,
   type ComponentRenderContext,
 } from "../components/render-context.js";
-import { isPageContentSlot } from "../layout/page-layout.js";
+import { resolveSiteLayoutComponents } from "../layout/page-layout.js";
 import {
   SiteContentSchema,
   type SiteData,
@@ -106,7 +106,9 @@ const getComponentTypeForIssue = (
   const isSiteLayoutComponentPath =
     pathSegments[0] === "site" &&
     pathSegments[1] === "layout" &&
-    pathSegments[2] === "components" &&
+    (pathSegments[2] === "components" ||
+      pathSegments[2] === "headerComponents" ||
+      pathSegments[2] === "footerComponents") &&
     typeof pathSegments[3] === "number";
 
   if (!isPageComponentPath && !isSiteLayoutComponentPath) {
@@ -365,11 +367,13 @@ const renderSiteCss = async (
 
 const collectUsedComponentTypes = (siteContent: SiteContentData): Set<ComponentType> => {
   const componentTypes = new Set<ComponentType>();
+  const layoutComponents = resolveSiteLayoutComponents(siteContent.site);
 
-  siteContent.site.layout?.components.forEach((component) => {
-    if (component.type !== "page-content") {
-      componentTypes.add(component.type);
-    }
+  layoutComponents.headerComponents.forEach((component) => {
+    componentTypes.add(component.type);
+  });
+  layoutComponents.footerComponents.forEach((component) => {
+    componentTypes.add(component.type);
   });
 
   siteContent.pages.forEach((page) => {
@@ -437,33 +441,20 @@ const renderPageBodyHtml = (
   page: SiteContentData["pages"][number],
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string => {
-  const layoutComponents = siteContent.site.layout?.components;
+  const layoutComponents = resolveSiteLayoutComponents(siteContent.site);
   const footerHtml = renderSiteFooter(siteContent.site);
   const renderMain = (innerHtml: string): string =>
     `<main id="main-content" class="l-page" tabindex="-1">\n${innerHtml}\n</main>`;
+  const pageMainHtml = renderMain(
+    page.components.map((component) => renderComponent(component, renderContext)).join("\n"),
+  );
 
-  if (!layoutComponents) {
-    const mainHtml = renderMain(
-      page.components.map((component) => renderComponent(component, renderContext)).join("\n"),
-    );
-
-    return [mainHtml, footerHtml].filter(Boolean).join("\n");
-  }
-
-  const layoutHtml = layoutComponents
-    .map((layoutComponent) => {
-      if (isPageContentSlot(layoutComponent)) {
-        const pageContentHtml = page.components
-          .map((component) => renderComponent(component, renderContext))
-          .join("\n");
-        return renderMain(pageContentHtml);
-      }
-
-      return renderComponent(layoutComponent, renderContext);
-    })
-    .join("\n");
-
-  return [layoutHtml, footerHtml].filter(Boolean).join("\n");
+  return [
+    ...layoutComponents.headerComponents.map((component) => renderComponent(component, renderContext)),
+    pageMainHtml,
+    ...layoutComponents.footerComponents.map((component) => renderComponent(component, renderContext)),
+    footerHtml,
+  ].filter(Boolean).join("\n");
 };
 
 const renderSitePageDocument = ({

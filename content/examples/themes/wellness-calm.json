@@ -4,7 +4,7 @@
     "baseUrl": "https://example.com/examples/wellness-calm/",
     "theme": "wellness-calm",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "Wellness Calm",
@@ -30,10 +30,9 @@
           "paragraphs": [
             "Use the shared layout wrapper to verify how global sections look in the wellness-calm theme."
           ]
-        },
-        {
-          "type": "page-content"
-        },
+        }
+      ],
+      "footerComponents": [
         {
           "type": "prose",
           "title": "Shared theme footer",

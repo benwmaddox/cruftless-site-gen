@@ -4,7 +4,7 @@
     "baseUrl": "https://example.com/examples/",
     "theme": "corporate",
     "layout": {
-      "components": [
+      "headerComponents": [
         {
           "type": "navigation-bar",
           "brandText": "Theme Previews",
@@ -22,11 +22,9 @@
               "href": "/examples/"
             }
           ]
-        },
-        {
-          "type": "page-content"
         }
-      ]
+      ],
+      "footerComponents": []
     }
   },
   "pages": [

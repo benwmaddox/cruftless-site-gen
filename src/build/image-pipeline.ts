@@ -11,6 +11,7 @@ import type {
   ResolvedImageData,
   ResponsiveImageData,
 } from "../components/render-context.js";
+import { resolveSiteLayoutComponents } from "../layout/page-layout.js";
 import type { SiteContentData } from "../schemas/site.schema.js";
 import { appendVersionQuery, createContentVersion } from "./asset-version.js";
 
@@ -315,12 +316,13 @@ const collectImageUsages = (
     addUsage(["site", "pageBackgroundImageUrl"], siteContent.site.pageBackgroundImageUrl, "page-background");
   }
 
-  siteContent.site.layout?.components.forEach((component, componentIndex) => {
-    if (component.type === "page-content") {
-      return;
-    }
+  const layoutComponents = resolveSiteLayoutComponents(siteContent.site);
 
-    visitComponent(component, ["site", "layout", "components", componentIndex]);
+  layoutComponents.headerComponents.forEach((component, componentIndex) => {
+    visitComponent(component, ["site", "layout", "headerComponents", componentIndex]);
+  });
+  layoutComponents.footerComponents.forEach((component, componentIndex) => {
+    visitComponent(component, ["site", "layout", "footerComponents", componentIndex]);
   });
 
   siteContent.pages.forEach((page, pageIndex) => {

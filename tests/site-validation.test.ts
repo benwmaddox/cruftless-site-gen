@@ -63,7 +63,34 @@ describe("collectSiteValidationIssues", () => {
     expect(issues.some((issue) => issue.message.includes("only one hero"))).toBe(true);
   });
 
-  it("requires a shared site layout to include exactly one page-content slot", () => {
+  it("allows shared header and footer layout components without a page-content slot", () => {
+    const validLayoutSite = SiteContentSchema.parse({
+      ...validSite,
+      site: {
+        ...validSite.site,
+        layout: {
+          headerComponents: [
+            {
+              type: "prose",
+              title: "Shared intro",
+              paragraphs: ["This shows up before every page."],
+            },
+          ],
+          footerComponents: [
+            {
+              type: "prose",
+              title: "Shared footer",
+              paragraphs: ["This shows up after every page."],
+            },
+          ],
+        },
+      },
+    });
+
+    expect(collectSiteValidationIssues(validLayoutSite)).toEqual([]);
+  });
+
+  it("requires a legacy shared site layout to include exactly one page-content slot", () => {
     const invalidSite = SiteContentSchema.parse({
       ...validSite,
       site: {
@@ -83,12 +110,12 @@ describe("collectSiteValidationIssues", () => {
     expect(collectSiteValidationIssues(invalidSite)).toEqual([
       {
         path: ["site", "layout", "components"],
-        message: "site layout must include exactly one 'page-content' slot",
+        message: "legacy site layout components must include exactly one 'page-content' slot",
       },
     ]);
   });
 
-  it("rejects shared site layouts with more than one page-content slot", () => {
+  it("rejects legacy shared site layouts with more than one page-content slot", () => {
     const invalidSite = SiteContentSchema.parse({
       ...validSite,
       site: {
@@ -114,7 +141,37 @@ describe("collectSiteValidationIssues", () => {
     expect(collectSiteValidationIssues(invalidSite)).toEqual([
       {
         path: ["site", "layout", "components"],
-        message: "site layout must include exactly one 'page-content' slot",
+        message: "legacy site layout components must include exactly one 'page-content' slot",
+      },
+    ]);
+  });
+
+  it("rejects layouts that mix legacy and header or footer component models", () => {
+    const invalidSite = SiteContentSchema.parse({
+      ...validSite,
+      site: {
+        ...validSite.site,
+        layout: {
+          headerComponents: [
+            {
+              type: "prose",
+              title: "Shared intro",
+              paragraphs: ["This shows up before every page."],
+            },
+          ],
+          components: [
+            {
+              type: "page-content",
+            },
+          ],
+        },
+      },
+    });
+
+    expect(collectSiteValidationIssues(invalidSite)).toEqual([
+      {
+        path: ["site", "layout"],
+        message: "site layout cannot mix legacy 'components' with headerComponents or footerComponents",
       },
     ]);
   });
@@ -125,7 +182,7 @@ describe("collectSiteValidationIssues", () => {
       site: {
         ...validSite.site,
         layout: {
-          components: [
+          headerComponents: [
             {
               type: "hero",
               headline: "Shared site hero",
@@ -134,10 +191,8 @@ describe("collectSiteValidationIssues", () => {
                 href: "/learn-more",
               },
             },
-            {
-              type: "page-content",
-            },
           ],
+          footerComponents: [],
         },
       },
     });

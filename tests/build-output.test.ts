@@ -99,7 +99,7 @@ const createScriptedSite = () =>
       baseUrl: "https://launchkit.example",
       theme: "friendly-modern",
       layout: {
-        components: [
+        headerComponents: [
           {
             type: "navigation-bar",
             brandText: "LaunchKit",
@@ -110,10 +110,8 @@ const createScriptedSite = () =>
               },
             ],
           },
-          {
-            type: "page-content",
-          },
         ],
+        footerComponents: [],
       },
     },
     pages: [
@@ -843,7 +841,7 @@ describe("buildSite output writes", () => {
         baseUrl: "https://launchkit.example",
         theme: "friendly-modern",
         layout: {
-          components: [
+          headerComponents: [
             {
               type: "navigation-bar",
               brandText: "LaunchKit",
@@ -858,10 +856,8 @@ describe("buildSite output writes", () => {
                 },
               ],
             },
-            {
-              type: "page-content",
-            },
           ],
+          footerComponents: [],
         },
       },
       pages: [
@@ -880,7 +876,7 @@ describe("buildSite output writes", () => {
     };
 
     await writeFile(contentPath, `${JSON.stringify(siteContent, null, 2)}\n`, "utf8");
-    await buildSite(siteContent as Parameters<typeof buildSite>[0], outDir, { contentPath });
+    await buildSite(SiteContentSchema.parse(siteContent), outDir, { contentPath });
 
     const aboutHtml = await readFile(path.join(outDir, "about", "index.html"), "utf8");
     const optimizedBrandDir = path.join(outDir, "assets", "images");

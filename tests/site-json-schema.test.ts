@@ -161,13 +161,11 @@ describe("site JSON schema", async () => {
       buildSiteContentJsonSchema() as JsonSchemaValue,
     );
     const pageComponentTypes = [...componentTypeNames].sort();
-    const layoutComponentTypes = [...componentTypeNames, "page-content"].sort();
     const componentTypeSets = componentUnionSchemas.map((schema) =>
       [...((schema.properties as JsonSchemaObject).type as JsonSchemaObject).enum as string[]].sort(),
     );
 
     expect(componentTypeSets).toContainEqual(pageComponentTypes);
-    expect(componentTypeSets).toContainEqual(layoutComponentTypes);
   });
 
   it("generates default snippets for component unions", () => {

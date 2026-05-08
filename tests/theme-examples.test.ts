@@ -121,10 +121,11 @@ describe("theme examples", () => {
         const siteContent = SiteContentSchema.parse(JSON.parse(rawJson) as unknown);
         const page = siteContent.pages[0];
         const componentTypes = page.components.map((component) => component.type);
-        const layoutComponents = siteContent.site.layout?.components ?? [];
-        const sharedComponentTypes = layoutComponents
-          .filter((component) => component.type !== "page-content")
-          .map((component) => component.type);
+        const headerComponents = siteContent.site.layout?.headerComponents ?? [];
+        const footerComponents = siteContent.site.layout?.footerComponents ?? [];
+        const sharedComponentTypes = [...headerComponents, ...footerComponents].map(
+          (component) => component.type,
+        );
         const allComponentTypes = Array.from(
           new Set([...componentTypes, ...sharedComponentTypes]),
         ).sort();
@@ -132,7 +133,6 @@ describe("theme examples", () => {
         expect(siteContent.site.theme).toBe(themeName);
         expect(siteContent.pages).toHaveLength(1);
         expect(allComponentTypes).toEqual([...componentTypeNames].sort());
-        expect(layoutComponents.map((component) => component.type)).toContain("page-content");
         expect(sharedComponentTypes).toContain("navigation-bar");
         expect(sharedComponentTypes.length).toBeGreaterThan(0);
 
