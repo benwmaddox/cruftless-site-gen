@@ -439,11 +439,13 @@ const renderPageBodyHtml = (
 ): string => {
   const layoutComponents = siteContent.site.layout?.components;
   const footerHtml = renderSiteFooter(siteContent.site);
+  const renderMain = (innerHtml: string): string =>
+    `<main id="main-content" class="l-page" tabindex="-1">\n${innerHtml}\n</main>`;
 
   if (!layoutComponents) {
-    const mainHtml = `<main class="l-page">\n${page.components
-      .map((component) => renderComponent(component, renderContext))
-      .join("\n")}\n</main>`;
+    const mainHtml = renderMain(
+      page.components.map((component) => renderComponent(component, renderContext)).join("\n"),
+    );
 
     return [mainHtml, footerHtml].filter(Boolean).join("\n");
   }
@@ -454,7 +456,7 @@ const renderPageBodyHtml = (
         const pageContentHtml = page.components
           .map((component) => renderComponent(component, renderContext))
           .join("\n");
-        return `<main class="l-page">\n${pageContentHtml}\n</main>`;
+        return renderMain(pageContentHtml);
       }
 
       return renderComponent(layoutComponent, renderContext);

@@ -20,6 +20,7 @@
     "site:build": "node scripts/shared-site-gen.mjs build",
     "site:validate": "node scripts/shared-site-gen.mjs validate",
     "refreshes:regenerate": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/regenerate-refreshes.ps1",
+    "images:optimize": "node scripts/shared-site-gen.mjs optimize:images",
     "build:example:baird": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive",
     "build:example:baird:watch": "tsx src/build/build.ts content/examples/baird-automotive.json dist/baird-automotive --watch",
     "build:example:78th": "tsx src/build/build.ts content/examples/78th-street-studios.json dist/78th-street-studios",
@@ -28,6 +29,7 @@
     "schema:check": "tsx src/build/generate-json-schema.ts --check",
     "discover:images": "tsx src/build/discover-page-images.ts",
     "localize:landing-image": "tsx src/build/localize-landing-image.ts",
+    "optimize:images": "tsx src/build/optimize-content-images.ts",
     "edit": "tsx src/editor/edit.ts",
     "validate": "tsx src/build/validate.ts",
     "validate:examples": "tsx src/build/validate-examples.ts",
@@ -37,8 +39,9 @@
     "lint:ts": "tsc --noEmit",
     "test": "vitest run",
     "test:browser": "tsx tests/navigation-bar.browser.ts && tsx tests/example-previews.browser.ts && tsx tests/image-rich-components.browser.ts && tsx tests/full-height.browser.ts && tsx tests/editor-preview-flow.browser.ts && tsx tests/site-editor-flow.browser.ts",
+    "test:wcag": "tsx src/build/wcag-accessibility-ci.ts",
     "validate:dist-links": "node scripts/validate-dist-links.mjs",
-    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples && npm run validate:dist-links",
+    "validate:strict": "npm run schema:check && npm run lint:ts && npm run lint:css && npm run test && npm run test:browser && npm run validate && npm run validate:example:78th && npm run validate:example:baird && npm run validate:examples && npm run build && npm run build:example:78th && npm run build:example:baird && npm run build:examples && npm run test:wcag && npm run validate:dist-links",
     "check": "npm run validate:strict"
   },
   "dependencies": {
@@ -46,6 +49,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.2",
     "@types/node": "^22.10.2",
     "ajv": "^8.18.0",
     "ajv-formats": "^3.0.1",

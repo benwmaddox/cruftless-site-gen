@@ -267,6 +267,14 @@ npm run localize:landing-image -- https://example.com/
 
 That downloads the top-ranked candidate into `content/images/landing-page.*`, removes stale `landing-page.*` extension variants in that folder, and rewrites any existing `/content/images/landing-page.*` references in `content/site.json`. Use `--candidate-index 2` or another positive integer when the default ranking is not the image you want.
 
+### 5d. Optimize generated content images
+
+```bash
+npm run optimize:images -- --site-dir ../my-site
+```
+
+That converts referenced `content/images/generated-*.png` files to high-quality WebP when the result is at least 5% smaller, rewrites matching `content/site.json` references, and removes the original PNG. Use `--dry-run` to preview changes, `--keep-originals` to retain the PNG source files, or `--quality 90` to tune WebP quality. Refresh site wrappers can run the same operation with `npm run images:optimize`.
+
 ### 6. Build the bundled example sites
 
 ```bash

@@ -6,7 +6,7 @@ export const workshopTheme = createThemeDefinition(
     "--bg": "#fffbf4",
     "--text": "#2b1d12",
     "--muted": "#6b4f3b",
-    "--primary": "#c3512f",
+    "--primary": "#be4d2b",
     "--primary-fg": "#ffffff",
     "--accent": "#2f6f4e",
     "--accent-fg": "#ffffff",
