@@ -64,3 +64,47 @@
 .c-hero--align-center .c-hero__actions {
   justify-content: center;
 }
+
+@media (width <= 40rem) {
+  body[data-theme="high-vis-service"] {
+    background: var(--site-page-background-image, none) center / cover no-repeat fixed,
+      repeating-linear-gradient(
+        -45deg,
+        rgb(255 212 0 / 8%) 0 0.75rem,
+        transparent 0.75rem 1.75rem
+      ) fixed var(--bg);
+  }
+
+  .c-hero {
+    min-height: auto;
+  }
+
+  .c-hero--has-background {
+    min-height: clamp(22rem, 48vh, 31rem);
+  }
+
+  .c-hero__body {
+    gap: var(--space-md);
+  }
+
+  .c-hero__headline,
+  .c-hero__subheadline,
+  .c-hero__actions {
+    padding-inline: var(--space-sm);
+  }
+
+  .c-hero__headline {
+    font-size: clamp(var(--size-2xl), 7vw, var(--size-3xl));
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+
+  .c-hero__subheadline {
+    font-size: var(--size-lg);
+    line-height: 1.35;
+  }
+
+  .c-hero__actions {
+    gap: var(--space-sm);
+  }
+}

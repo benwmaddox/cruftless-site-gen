@@ -158,6 +158,55 @@ describe("site layout", () => {
     }
   });
 
+  it("emits mobile hero polish rules for generated first viewports", async () => {
+    const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-hero-mobile-"));
+    const site = SiteContentSchema.parse({
+      site: {
+        name: "LaunchKit",
+        baseUrl: "https://launchkit.example",
+        theme: "high-vis-service",
+      },
+      pages: [
+        {
+          slug: "/",
+          title: "Home",
+          components: [
+            {
+              type: "hero",
+              headline: "Zero-Residue Cleaning, 24-Hour Water Help",
+              subheadline:
+                "Licensed, insured, established in 1998, and IICRC certified.",
+              primaryCta: {
+                label: "Call now",
+                href: "tel:+15555550123",
+              },
+              backgroundImage: {
+                src: "/content/images/hero.jpg",
+                alt: "Carpet cleaning result",
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    try {
+      await buildSite(site, outDir);
+
+      const css = await readFile(path.join(outDir, "assets", "site.css"), "utf8");
+
+      expect(css).toContain("@media(width<=40rem)");
+      expect(css).toContain('body[data-theme=high-vis-service]');
+      expect(css).toContain(".c-hero--has-background{min-height:clamp(22rem,48vh,31rem)}");
+      expect(css).toContain(
+        ".c-hero__headline{font-size:clamp(var(--size-2xl),7vw,var(--size-3xl))",
+      );
+      expect(css).toContain(".c-hero__subheadline{font-size:var(--size-lg);line-height:1.35}");
+    } finally {
+      await rm(outDir, { recursive: true, force: true });
+    }
+  });
+
   it("renders a shared navigation bar and emits its measured-collapse runtime", async () => {
     const outDir = await mkdtemp(path.join(os.tmpdir(), "cruftless-navbar-layout-"));
     const site = SiteContentSchema.parse({
