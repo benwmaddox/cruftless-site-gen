@@ -1479,6 +1479,40 @@
                   "minLength": 1,
                   "maxLength": 120
                 },
+                "companyHref": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "additionalCredits": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "href": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    },
+                    "required": [
+                      "text",
+                      "label",
+                      "href"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 4,
+                  "default": []
+                },
                 "showCredit": {
                   "type": "boolean",
                   "default": true

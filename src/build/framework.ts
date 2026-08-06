@@ -413,6 +413,16 @@ const renderSiteFooter = (site: SiteData): string => {
 
   const currentYear = new Date().getFullYear();
   const companyName = site.footer?.companyName ?? site.name;
+  const companyHref = site.footer?.companyHref;
+  const companyHtml = companyHref
+    ? `<a href="${escapeHtml(companyHref)}">${escapeHtml(companyName)}</a>`
+    : escapeHtml(companyName);
+  const additionalCreditsHtml = (site.footer?.additionalCredits ?? [])
+    .map(
+      (credit) =>
+        ` ${escapeHtml(credit.text)} <a href="${escapeHtml(credit.href)}">${escapeHtml(credit.label)}</a>.`,
+    )
+    .join("");
   const showCredit = site.footer?.showCredit !== false;
   const creditText = site.footer?.creditText ?? "Site created by";
   const creditLabel = site.footer?.creditLabel ?? "Site by Email";
@@ -423,7 +433,7 @@ const renderSiteFooter = (site: SiteData): string => {
 
   return [
     '<footer class="l-site-footer" role="contentinfo">',
-    `  <p>&copy; Copyright ${currentYear} ${escapeHtml(companyName)} | All Rights Reserved.${creditHtml}</p>`,
+    `  <p>&copy; Copyright ${currentYear} ${companyHtml} | All Rights Reserved.${additionalCreditsHtml}${creditHtml}</p>`,
     "</footer>",
   ].join("\n");
 };
