@@ -407,7 +407,7 @@ describe("buildSite output writes", () => {
 
       expect(html).toContain('<footer class="l-site-footer" role="contentinfo">');
       expect(html).toContain(
-        `&copy; Copyright ${currentYear} <a href="https://launchkit.example/about">LaunchKit &amp; Partners</a> | All Rights Reserved. Built with <a href="https://technology.example/">Example Tech</a>. Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>`,
+        `&copy; Copyright ${currentYear} <a href="https://launchkit.example/about">LaunchKit &amp; Partners</a> | All Rights Reserved.&#32;<span class="l-site-footer__credit">Built with <a href="https://technology.example/">Example Tech</a>.</span>&#32;<span class="l-site-footer__credit">Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>.</span>`,
       );
       expect(css).toContain(".l-site-footer");
     } finally {
@@ -425,7 +425,7 @@ describe("buildSite output writes", () => {
       const currentYear = new Date().getFullYear();
 
       expect(html).toContain(
-        `&copy; Copyright ${currentYear} LaunchKit | All Rights Reserved. Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>`,
+        `&copy; Copyright ${currentYear} LaunchKit | All Rights Reserved.&#32;<span class="l-site-footer__credit">Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>.</span>`,
       );
     } finally {
       await removeDirectory(outDir);

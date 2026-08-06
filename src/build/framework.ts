@@ -420,7 +420,7 @@ const renderSiteFooter = (site: SiteData): string => {
   const additionalCreditsHtml = (site.footer?.additionalCredits ?? [])
     .map(
       (credit) =>
-        ` ${escapeHtml(credit.text)} <a href="${escapeHtml(credit.href)}">${escapeHtml(credit.label)}</a>.`,
+        `&#32;<span class="l-site-footer__credit">${escapeHtml(credit.text)} <a href="${escapeHtml(credit.href)}">${escapeHtml(credit.label)}</a>.</span>`,
     )
     .join("");
   const showCredit = site.footer?.showCredit !== false;
@@ -428,7 +428,7 @@ const renderSiteFooter = (site: SiteData): string => {
   const creditLabel = site.footer?.creditLabel ?? "Site by Email";
   const creditHref = site.footer?.creditHref ?? "https://www.sitebyemail.com/";
   const creditHtml = showCredit
-    ? ` ${escapeHtml(creditText)} <a href="${escapeHtml(creditHref)}">${escapeHtml(creditLabel)}</a>`
+    ? `&#32;<span class="l-site-footer__credit">${escapeHtml(creditText)} <a href="${escapeHtml(creditHref)}">${escapeHtml(creditLabel)}</a>.</span>`
     : "";
 
   return [

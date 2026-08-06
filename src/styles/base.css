@@ -126,10 +126,15 @@ button:focus-visible {
   margin-inline: auto;
 }
 
+.l-site-footer__credit {
+  white-space: nowrap;
+}
+
 .l-site-footer a {
   color: inherit;
   font-weight: 600;
   text-decoration: underline;
+  white-space: nowrap;
 }
 
 .l-site-footer a:hover {
