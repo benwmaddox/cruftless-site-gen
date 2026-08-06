@@ -75,10 +75,20 @@ const siteCssVariableSchemaEntries = Object.fromEntries(
 
 export const SiteCssVariablesSchema = z.object(siteCssVariableSchemaEntries).strict();
 
+const SiteFooterCreditSchema = z
+  .object({
+    text: z.string().min(1).max(120),
+    label: z.string().min(1).max(120),
+    href: z.string().url(),
+  })
+  .strict();
+
 export const SiteFooterSchema = z
   .object({
     enabled: z.boolean().default(true),
     companyName: z.string().min(1).max(120).optional(),
+    companyHref: z.string().url().optional(),
+    additionalCredits: z.array(SiteFooterCreditSchema).max(4).default([]),
     showCredit: z.boolean().default(true),
     creditText: z.string().min(1).max(80).default("Site created by"),
     creditLabel: z.string().min(1).max(80).default("Site by Email"),

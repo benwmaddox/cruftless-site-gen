@@ -202,6 +202,14 @@ const createFooterSite = () =>
       theme: "friendly-modern",
       footer: {
         companyName: "LaunchKit & Partners",
+        companyHref: "https://launchkit.example/about",
+        additionalCredits: [
+          {
+            text: "Built with",
+            label: "Example Tech",
+            href: "https://technology.example/",
+          },
+        ],
       },
     },
     pages: [
@@ -399,7 +407,7 @@ describe("buildSite output writes", () => {
 
       expect(html).toContain('<footer class="l-site-footer" role="contentinfo">');
       expect(html).toContain(
-        `&copy; Copyright ${currentYear} LaunchKit &amp; Partners | All Rights Reserved. Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>`,
+        `&copy; Copyright ${currentYear} <a href="https://launchkit.example/about">LaunchKit &amp; Partners</a> | All Rights Reserved. Built with <a href="https://technology.example/">Example Tech</a>. Site created by <a href="https://www.sitebyemail.com/">Site by Email</a>`,
       );
       expect(css).toContain(".l-site-footer");
     } finally {
