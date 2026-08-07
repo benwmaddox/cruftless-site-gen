@@ -26,7 +26,7 @@ export const renderHero = (
   data: HeroData,
   renderContext: ComponentRenderContext = defaultComponentRenderContext,
 ): string => {
-  const ctas = [data.primaryCta, data.secondaryCta].filter(
+  const ctas = [data.primaryCta, data.secondaryCta, ...(data.additionalCtas ?? [])].filter(
     (cta): cta is NonNullable<typeof cta> => Boolean(cta),
   );
   const className = [

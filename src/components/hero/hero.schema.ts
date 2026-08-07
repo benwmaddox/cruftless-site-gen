@@ -22,13 +22,14 @@ export const HeroSchemaBase = z
     subheadline: z.string().min(1).max(240).optional(),
     primaryCta: LinkSchema.optional(),
     secondaryCta: LinkSchema.optional(),
+    additionalCtas: z.array(LinkSchema).max(4).optional(),
     align: z.enum(["start", "center"]).default("start"),
     backgroundImage: HeroBackgroundImageSchema.optional(),
   })
   .strict();
 
 export const HeroSchema = HeroSchemaBase.superRefine((value, ctx) => {
-    if (!value.primaryCta && !value.secondaryCta) {
+    if (!value.primaryCta && !value.secondaryCta && !value.additionalCtas?.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "At least one CTA is required",

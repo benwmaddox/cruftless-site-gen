@@ -49,6 +49,26 @@ describe("HeroSchema", () => {
     expect(html).not.toContain("Custom woodworking bench");
   });
 
+  it("renders additional calls to action after the primary and secondary actions", () => {
+    const parsed = HeroSchema.parse({
+      type: "hero",
+      headline: "Choose a platform",
+      primaryCta: { label: "Android", href: "/android" },
+      secondaryCta: { label: "Windows", href: "/windows" },
+      additionalCtas: [
+        { label: "Linux", href: "/linux" },
+        { label: "macOS", href: "/macos" },
+      ],
+    });
+
+    const html = renderHero(parsed);
+
+    expect(html).toContain('c-button--primary" href="/android">Android</a>');
+    expect(html).toContain('c-button--secondary" href="/windows">Windows</a>');
+    expect(html).toContain('c-button--secondary" href="/linux">Linux</a>');
+    expect(html).toContain('c-button--secondary" href="/macos">macOS</a>');
+  });
+
   it("resolves background image paths through the render context", () => {
     const parsed = HeroSchema.parse({
       type: "hero",

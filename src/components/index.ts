@@ -108,7 +108,7 @@ export const ComponentSchemaBase = z.discriminatedUnion("type", [
 
 export const ComponentSchema = ComponentSchemaBase.superRefine((value, ctx) => {
   if (value.type === "hero") {
-    if (!value.primaryCta && !value.secondaryCta) {
+    if (!value.primaryCta && !value.secondaryCta && !value.additionalCtas?.length) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "At least one CTA is required",

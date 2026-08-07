@@ -694,6 +694,13 @@
                           "secondaryCta": {
                             "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/headerComponents/items/anyOf/3/properties/primaryCta"
                           },
+                          "additionalCtas": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/definitions/SiteContent/properties/site/properties/layout/properties/headerComponents/items/anyOf/3/properties/primaryCta"
+                            },
+                            "maxItems": 4
+                          },
                           "align": {
                             "type": "string",
                             "enum": [
