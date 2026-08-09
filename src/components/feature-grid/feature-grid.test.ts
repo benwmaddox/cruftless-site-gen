@@ -23,6 +23,8 @@ describe("FeatureGridSchema", () => {
           },
           imageLayout: "stacked",
           selected: true,
+          tag: "Player change",
+          tone: "primary",
           cta: {
             label: "See examples",
             href: "/examples",
@@ -39,10 +41,12 @@ describe("FeatureGridSchema", () => {
     expect(html).toContain('<ul class="c-feature-grid__items c-feature-grid__items--cols-2">');
     expect(html).toContain('c-feature-grid__item--has-image');
     expect(html).toContain('c-feature-grid__item--stacked-image');
+    expect(html).toContain('c-feature-grid__item--tone-primary');
     expect(html).toContain('<figure class="c-feature-grid__item-media">');
     expect(html).toContain('src="https://example.com/validation.jpg"');
     expect(html).toContain('width="1200" height="800"');
     expect(html).toContain("Current selection");
+    expect(html).toContain('<p class="c-feature-grid__item-tag">Player change</p>');
     expect(html).toContain("Strict validation");
     expect(html).toContain('class="c-feature-grid__item-cta c-button c-button--secondary"');
     expect(html).toContain('href="/examples"');

@@ -12,6 +12,8 @@ export const FeatureGridItemSchema = z
     imageLayout: z.enum(["inline", "stacked"]).optional(),
     cta: LinkSchema.optional(),
     selected: z.boolean().optional(),
+    tag: z.string().min(1).max(32).optional(),
+    tone: z.enum(["primary", "accent"]).optional(),
   })
   .strict();
 

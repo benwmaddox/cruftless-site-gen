@@ -573,6 +573,18 @@
                                 },
                                 "selected": {
                                   "type": "boolean"
+                                },
+                                "tag": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 32
+                                },
+                                "tone": {
+                                  "type": "string",
+                                  "enum": [
+                                    "primary",
+                                    "accent"
+                                  ]
                                 }
                               },
                               "required": [

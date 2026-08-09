@@ -231,6 +231,14 @@ export const featureGridEditor = featureGrid.object({
         [
           { kind: "text", key: "title", label: "Title" },
           { kind: "textarea", key: "body", label: "Body", optional: true },
+          { kind: "text", key: "tag", label: "Tag", optional: true },
+          {
+            kind: "select",
+            key: "tone",
+            label: "Tone",
+            options: ["primary", "accent"],
+            optional: true,
+          },
           {
             kind: "optional-object",
             key: "image",

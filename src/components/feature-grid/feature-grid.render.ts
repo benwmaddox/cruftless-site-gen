@@ -20,10 +20,13 @@ export const featureGridClassNames = [
   "c-feature-grid__item--stacked-image",
   "c-feature-grid__item--compact",
   "c-feature-grid__item--selected",
+  "c-feature-grid__item--tone-primary",
+  "c-feature-grid__item--tone-accent",
   "c-feature-grid__item-media",
   "c-feature-grid__item-image",
   "c-feature-grid__item-caption",
   "c-feature-grid__item-copy",
+  "c-feature-grid__item-tag",
   "c-feature-grid__item-title",
   "c-feature-grid__item-body",
   "c-feature-grid__item-status",
@@ -56,6 +59,10 @@ export const renderFeatureGrid = (
           itemClasses.push("c-feature-grid__item--selected");
         }
 
+        if (item.tone) {
+          itemClasses.push(`c-feature-grid__item--tone-${item.tone}`);
+        }
+
         if (isCompact) {
           itemClasses.push("c-feature-grid__item--compact");
         }
@@ -86,6 +93,9 @@ export const renderFeatureGrid = (
                 .join("\n")
             : "",
           '        <div class="c-feature-grid__item-copy">',
+          item.tag
+            ? `          <p class="c-feature-grid__item-tag">${escapeHtml(item.tag)}</p>`
+            : "",
           `          <h3 class="c-feature-grid__item-title">${escapeHtml(item.title)}</h3>`,
           item.body
             ? `          <p class="c-feature-grid__item-body">${escapeHtml(item.body)}</p>`
