@@ -1,0 +1,59 @@
+name: EOL policy
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Materialize a clean checkout with explicit Git EOL settings
+        shell: pwsh
+        run: |
+          git config --local core.autocrlf false
+          if ($LASTEXITCODE -ne 0) { throw "Could not set local core.autocrlf=false" }
+          git checkout-index --all --force
+          if ($LASTEXITCODE -ne 0) { throw "Could not rematerialize the checkout" }
+          $status = git status --porcelain --untracked-files=all
+          if ($LASTEXITCODE -ne 0) { throw "Could not inspect checkout status" }
+          if ($status) { throw "Checkout is not clean after rematerialization:`n$status" }
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium on Linux
+        if: runner.os == 'Linux'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Chromium on Windows
+        if: runner.os == 'Windows'
+        run: npx playwright install chromium
+
+      - name: Verify Git attributes and checkout bytes
+        run: node scripts/validate-eol-policy.mjs --require-clean
+
+      - name: Run strict validation
+        run: npm run validate:strict
